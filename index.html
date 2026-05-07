@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Ultra Shine Cleaning · Boca Raton</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,300..900,0..100&family=Outfit:wght@200..700&display=swap');
+
+:root {
+  --cream: #F4ECDB;
+  --cream-2: #EFE5D0;
+  --cream-3: #E8DDC4;
+  --navy: #1F3F77;
+  --navy-deep: #15294C;
+  --navy-soft: #2A4F8F;
+  --blush: #D9B5A8;
+  --blush-soft: #E8CFC4;
+  --gold: #C9A961;
+  --ink: #1A1A1A;
+  --line: rgba(31, 63, 119, 0.12);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 300;
+  background: var(--cream);
+  color: var(--navy-deep);
+  -webkit-font-smoothing: antialiased;
+  width: 1440px;
+  overflow-x: hidden;
+}
+
+.container { max-width: 1280px; margin: 0 auto; padding: 0 60px; }
+
+/* ============== TOP NAV ============== */
+.nav {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  z-index: 50;
+  padding: 28px 60px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--cream);
+}
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-family: 'Fraunces', serif;
+  font-weight: 400;
+  font-size: 22px;
+  letter-spacing: -0.005em;
+}
+.nav-logo .mark {
+  width: 38px; height: 38px;
+  border-radius: 8px;
+  background: rgba(244, 236, 219, 0.12);
+  border: 1px solid rgba(244, 236, 219, 0.3);
+  display: grid; place-items: center;
+  backdrop-filter: blur(8px);
+}
+.nav-logo .mark::after {
+  content: '✦';
+  font-family: 'Fraunces', serif;
+  color: var(--blush);
+  font-size: 18px;
+}
+.nav-logo small {
+  display: block;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 300;
+  font-size: 9px;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  opacity: 0.7;
+  margin-top: 2px;
+}
+.nav-menu {
+  display: flex;
+  gap: 38px;
+  align-items: center;
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+.nav-menu a { color: inherit; text-decoration: none; opacity: 0.85; }
+.nav-cta {
+  background: var(--cream);
+  color: var(--navy-deep);
+  padding: 12px 24px;
+  border-radius: 999px;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 500;
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.nav-phone {
+  font-family: 'Fraunces', serif;
+  font-weight: 400;
+  font-size: 16px;
+  letter-spacing: 0.005em;
+  text-transform: none;
+}
+
+/* ============== HERO ============== */
+.hero {
+  position: relative;
+  height: 920px;
+  width: 100%;
+  overflow: hidden;
+  background: var(--navy-deep);
+}
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  background-image: url('public/images/hero_kitchen.jpg');
+  background-size: cover;
+  background-position: center;
+}
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(21,41,76,0.5) 0%, rgba(21,41,76,0.35) 40%, rgba(21,41,76,0.85) 100%),
+    radial-gradient(ellipse at 80% 30%, rgba(217,181,168,0.18) 0%, transparent 60%);
+}
+.hero-content {
+  position: relative;
+  z-index: 10;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 0 100px 130px;
+  color: var(--cream);
+}
+.hero-eyebrow {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 400;
+  font-size: 13px;
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+  margin-bottom: 36px;
+  opacity: 0.9;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.hero-eyebrow::before {
+  content: '';
+  width: 40px;
+  height: 1px;
+  background: var(--blush);
+}
+.hero-headline {
+  font-family: 'Fraunces', serif;
+  font-weight: 300;
+  font-variation-settings: 'opsz' 144, 'SOFT' 50;
+  font-size: 130px;
+  line-height: 0.92;
+  letter-spacing: -0.025em;
+  max-width: 1100px;
+  margin-bottom: 40px;
+  text-shadow: 0 2px 50px rgba(0,0,0,0.25);
+}
+.hero-headline em {
+  font-style: italic;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100;
+  color: var(--blush);
+}
+.hero-sub {
+  font-family: 'Fraunces', serif;
+  font-weight: 300;
+  font-style: italic;
+  font-variation-settings: 'opsz' 36, 'SOFT' 100;
+  font-size: 24px;
+  line-height: 1.5;
+  max-width: 600px;
+  letter-spacing: 0.005em;
+  opacity: 0.92;
+  margin-bottom: 50px;
+}
+.hero-cta-row {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+.btn-primary {
+  background: var(--cream);
+  color: var(--navy-deep);
+  padding: 22px 38px;
+  border-radius: 999px;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  transition: all 0.3s ease;
+}
+.btn-primary::after {
+  content: '→';
+  font-family: 'Fraunces', serif;
+  font-size: 18px;
+  font-weight: 300;
+}
+.btn-secondary {
+  color: var(--cream);
+  padding: 22px 38px;
+  border-radius: 999px;
+  border: 1px solid rgba(244, 236, 219, 0.4);
+  font-family: 'Outfit', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+}
+
+/* Hero side accent (vertical eyebrow) */
+.hero-side {
+  position: absolute;
+  right: 100px; top: 50%;
+  transform: translateY(-50%) rotate(90deg);
+  transform-origin: right center;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 300;
+  font-size: 11px;
+  letter-spacing: 0.5em;
+  text-transform: uppercase;
+  color: var(--cream);
+  opacity: 0.5;
+  z-index: 10;
+}
+
+/* Trust strip below hero */
+.trust-strip {
+  background: var(--navy-deep);
+  color: var(--cream);
+  padding: 32px 100px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 40px;
+  border-top: 1px solid rgba(244, 236, 219, 0.1);
+}
+.trust-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.trust-mark {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  border: 1px solid rgba(217, 181, 168, 0.4);
+  display: grid; place-items: center;
+  color: var(--blush);
+  font-family: 'Fraunces', serif;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+.trust-text {
+  line-height: 1.3;
+}
+.trust-text .label {
+  font-family: 'Fraunces', serif;
+  font-weight: 400;
+  font-size: 16px;
+  letter-spacing: -0.005em;
+  margin-bottom: 2px;
+}
+.trust-text .desc {
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  opacity: 0.6;
+  font-weight: 300;
+}
+
+/* ============== INTRO / FOUNDER STORY ============== */
+.intro {
+  padding: 140px 100px 100px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 100px;
+  align-items: center;
+}
+.intro-photo {
+  position: relative;
+  aspect-ratio: 4/5;
+  background-size: cover;
+  background-position: center;
+  background-image: url('public/images/team_action.jpg');
+}
+.intro-photo::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border: 1px solid var(--navy);
+  opacity: 0.15;
+  pointer-events: none;
+  z-index: 1;
+  transform: translate(20px, 20px);
+}
+.intro-photo::after {
+  content: '— Established 2018 ·  CT to FL';
+  position: absolute;
+  bottom: -32px; left: 0;
+  font-family: 'Outfit', sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--navy);
+  opacity: 0.65;
+}
+.intro-content {
+  max-width: 540px;
+}
+.section-eyebrow {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 400;
+  font-size: 13px;
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+  color: var(--navy);
+  opacity: 0.55;
+  margin-bottom: 28px;
+}
+.section-eyebrow::before { content: '— '; }
+.intro-headline {
+  font-family: 'Fraunces', serif;
+  font-weight: 300;
+  font-variation-settings: 'opsz' 144, 'SOFT' 50;
+  font-size: 78px;
+  line-height: 0.95;
+  letter-spacing: -0.022em;
+  margin-bottom: 36px;
+  color: var(--navy-deep);
+}
+.intro-headline em {
+  font-style: italic;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100;
+  color: var(--blush);
+}
+.intro-body {
+  font-family: 'Fraunces', serif;
+  font-weight: 300;
+  font-size: 22px;
+  line-height: 1.55;
+  letter-spacing: 0.005em;
+  color: var(--navy-deep);
+  opacity: 0.85;
+  margin-bottom: 40px;
+}
+.intro-body em {
+  font-style: italic;
+  font-variation-settings: 'opsz' 36, 'SOFT' 100;
+}
+.intro-signature {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-variation-settings: 'opsz' 60, 'SOFT' 100;
+  font-size: 32px;
+  color: var(--navy);
+  letter-spacing: -0.005em;
+}
+.intro-signature small {
+  font-style: normal;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 300;
+  font-size: 11px;
+  letter-spacing: 0.36em;
+  text-transform: uppercase;
+  opacity: 0.55;
+}
+
+/* ============== SERVICES SECTION ============== */
+.services {
+  background: var(--navy-deep);
+  color: var(--cream);
+  padding: 140px 100px;
+  position: relative;
+}
+.services::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 100px; right: 100px;
+  height: 1px;
+  background: rgba(244, 236, 219, 0.12);
+}
+.services-head {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 100px;
+  margin-bottom: 100px;
+  align-items: end;
+}
+.services-eyebrow {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 400;
+  font-size: 13px;
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+  opacity: 0.65;
+  margin-bottom: 24px;
+}
+.services-eyebrow::before { content: '— '; }
+.services-headline {
+  font-family: 'Fraunces', serif;
+  font-weight: 300;
+  font-variation-settings: 'opsz' 144, 'SOFT' 50;
+  font-size: 92px;
+  line-height: 0.95;
+  letter-spacing: -0.022em;
+}
+.services-headline em {
+  font-style: italic;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100;
+  color: var(--blush);
+}
+.services-sub {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-variation-settings: 'opsz' 36, 'SOFT' 100;
+  font-weight: 300;
+  font-size: 22px;
+  line-height: 1.5;
+  letter-spacing: 0.005em;
+  opacity: 0.78;
+  max-width: 480px;
+}
+
+.services-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+}
+.service-card {
+  position: relative;
+  aspect-ratio: 16/10;
+  overflow: hidden;
+  cursor: pointer;
+  background-color: var(--navy);
+}
+.service-card-bg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  transition: transform 0.6s ease;
+}
+.service-card-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(21,41,76,0.2) 0%, rgba(21,41,76,0.85) 100%);
+}
+.service-card-content {
+  position: relative;
+  z-index: 2;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 40px;
+  color: var(--cream);
+}
+.service-num {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-variation-settings: 'opsz' 36, 'SOFT' 100;
+  font-weight: 300;
+  font-size: 16px;
+  color: var(--blush);
+  margin-bottom: 12px;
+  letter-spacing: 0.005em;
+}
+.service-title {
+  font-family: 'Fraunces', serif;
+  font-weight: 400;
+  font-variation-settings: 'opsz' 72, 'SOFT' 50;
+  font-size: 38px;
+  line-height: 1;
+  letter-spacing: -0.012em;
+  margin-bottom: 16px;
+}
+.service-desc {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 300;
+  font-size: 14px;
+  line-height: 1.5;
+  opacity: 0.88;
+  max-width: 380px;
+  margin-bottom: 22px;
+}
+.service-link {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 400;
+  font-size: 11px;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  opacity: 0.85;
+}
+.service-link::after { content: '→'; font-family: 'Fraunces', serif; font-size: 14px; }
+
+/* Wide card for primary service */
+.service-card.wide { grid-column: span 2; aspect-ratio: 32/9; }
+
+/* ============== PROOF / STATS ============== */
+.proof {
+  padding: 140px 100px;
+  background: var(--cream);
+  text-align: center;
+}
+.proof-eyebrow {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 400;
+  font-size: 13px;
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+  color: var(--navy);
+  opacity: 0.5;
+  margin-bottom: 24px;
+}
+.proof-eyebrow::before { content: '— '; }
+.proof-eyebrow::after { content: ' —'; }
+.proof-headline {
+  font-family: 'Fraunces', serif;
+  font-weight: 300;
+  font-variation-settings: 'opsz' 144, 'SOFT' 50;
+  font-size: 72px;
+  line-height: 1;
+  margin-bottom: 80px;
+  color: var(--navy-deep);
+  letter-spacing: -0.018em;
+}
+.proof-headline em {
+  font-style: italic;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100;
+  color: var(--blush);
+}
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+.stat {
+  padding: 60px 30px;
+  text-align: center;
+  border-right: 1px solid var(--line);
+}
+.stat:last-child { border-right: none; }
+.stat-num {
+  font-family: 'Fraunces', serif;
+  font-weight: 300;
+  font-variation-settings: 'opsz' 144, 'SOFT' 50;
+  font-size: 84px;
+  line-height: 1;
+  color: var(--navy);
+  letter-spacing: -0.025em;
+  margin-bottom: 16px;
+}
+.stat-num em {
+  font-style: italic;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100;
+  color: var(--blush);
+}
+.stat-label {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  opacity: 0.6;
+}
+</style>
+</head>
+<body>
+
+<!-- ============== NAV ============== -->
+<nav class="nav">
+  <div class="nav-logo">
+    <img src="public/images/logo_white_tight.png" alt="Ultra Shine Cleaning" style="width: 170px; height: auto;">
+  </div>
+  <div class="nav-menu">
+    <a href="#">Services</a>
+    <a href="#">Areas</a>
+    <a href="#">About</a>
+    <a href="#">Team</a>
+    <a href="#">Reviews</a>
+    <span class="nav-phone">(561) 583-6694</span>
+    <a href="#" class="nav-cta">Get Quote</a>
+  </div>
+</nav>
+
+<!-- ============== HERO ============== -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-side">Boca Raton · Est. 2018</div>
+
+  <div class="hero-content">
+    <div class="hero-eyebrow">South Florida's Local Cleaning Team</div>
+    <h1 class="hero-headline">A home that <em>shines.</em><br>Without lifting<br>a finger.</h1>
+    <p class="hero-sub">Trusted by 40+ Boca families. Background-checked, fully insured, and obsessive about the details — because your home deserves the kind of care we'd give our own.</p>
+    <div class="hero-cta-row">
+      <a href="#" class="btn-primary">Get Your Free Quote</a>
+      <a href="#" class="btn-secondary">View Services</a>
+    </div>
+  </div>
+</section>
+
+<!-- Trust strip -->
+<div class="trust-strip">
+  <div class="trust-item">
+    <div class="trust-mark">✦</div>
+    <div class="trust-text">
+      <div class="label">Fully Insured</div>
+      <div class="desc">& Bonded</div>
+    </div>
+  </div>
+  <div class="trust-item">
+    <div class="trust-mark">✦</div>
+    <div class="trust-text">
+      <div class="label">Background-Checked</div>
+      <div class="desc">Every Team Member</div>
+    </div>
+  </div>
+  <div class="trust-item">
+    <div class="trust-mark">✦</div>
+    <div class="trust-text">
+      <div class="label">4.9 ★ on Google</div>
+      <div class="desc">47+ Five-Star Reviews</div>
+    </div>
+  </div>
+  <div class="trust-item">
+    <div class="trust-mark">✦</div>
+    <div class="trust-text">
+      <div class="label">Palm Beach + Broward</div>
+      <div class="desc">Serving 13 Cities</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============== INTRO / FOUNDER STORY ============== -->
+<section class="intro">
+  <div class="intro-photo"></div>
+  <div class="intro-content">
+    <div class="section-eyebrow">Our Story</div>
+    <h2 class="intro-headline">From Connecticut<br>to Boca, with <em>care.</em></h2>
+    <p class="intro-body">We started Ultra Shine in 2018 with one rule: <em>clean every home like it's our own.</em> Eight years later, that's still the only rule — only now there's a small, hand-picked team of us, and we've followed our families south to South Florida.</p>
+    <p class="intro-body">We're not a franchise. We're not a national chain. We're <em>your</em> local cleaning team — and when you book us, you're not getting a stranger. You're getting someone we trust in our own homes.</p>
+    <div class="intro-signature">
+      Tiago & Francine Rena
+      <small>Founders</small>
+    </div>
+  </div>
+</section>
+
+<!-- ============== SERVICES ============== -->
+<section class="services">
+  <div class="services-head">
+    <div>
+      <div class="services-eyebrow">What We Offer</div>
+      <h2 class="services-headline">Five services,<br>one <em>standard.</em></h2>
+    </div>
+    <p class="services-sub">From weekly recurring care to post-construction details — every service follows the same checklist-driven, insured-and-bonded promise.</p>
+  </div>
+
+  <div class="services-grid">
+    <div class="service-card wide">
+      <div class="service-card-bg" style="background-image: url('public/images/living_room.jpg');"></div>
+      <div class="service-card-overlay"></div>
+      <div class="service-card-content">
+        <div class="service-num">No. 01 · Most Popular</div>
+        <div class="service-title">Regular Cleaning</div>
+        <div class="service-desc">Weekly, bi-weekly, or monthly visits that keep your home consistently fresh. Detailed checklists for every room — kitchen, bath, bedroom, living areas — so nothing is ever skipped.</div>
+        <div class="service-link">Explore Regular Cleaning</div>
+      </div>
+    </div>
+
+    <div class="service-card">
+      <div class="service-card-bg" style="background-image: url('public/images/bathroom.jpg');"></div>
+      <div class="service-card-overlay"></div>
+      <div class="service-card-content">
+        <div class="service-num">No. 02</div>
+        <div class="service-title">Deep Cleaning</div>
+        <div class="service-desc">Top-to-bottom reset. For homes that need extra attention — perfect first-time clean before starting recurring service.</div>
+        <div class="service-link">Explore Deep Cleaning</div>
+      </div>
+    </div>
+
+    <div class="service-card">
+      <div class="service-card-bg" style="background-image: url('public/images/bedroom.jpg');"></div>
+      <div class="service-card-overlay"></div>
+      <div class="service-card-content">
+        <div class="service-num">No. 03</div>
+        <div class="service-title">Move In / Out</div>
+        <div class="service-desc">Empty home, full attention. Get your deposit back or welcome new owners to a spotless space.</div>
+        <div class="service-link">Explore Move-In/Out</div>
+      </div>
+    </div>
+
+    <div class="service-card">
+      <div class="service-card-bg" style="background-image: url('public/images/team_van.jpg');"></div>
+      <div class="service-card-overlay"></div>
+      <div class="service-card-content">
+        <div class="service-num">No. 04</div>
+        <div class="service-title">Commercial</div>
+        <div class="service-desc">Offices, boutique spaces, retail. After-hours scheduling available so your team walks into clean every morning.</div>
+        <div class="service-link">Explore Commercial</div>
+      </div>
+    </div>
+
+    <div class="service-card">
+      <div class="service-card-bg" style="background-image: url('public/images/hero_kitchen.jpg');"></div>
+      <div class="service-card-overlay"></div>
+      <div class="service-card-content">
+        <div class="service-num">No. 05</div>
+        <div class="service-title">Post-Construction</div>
+        <div class="service-desc">Renovation done? Dust forgot to leave? We handle the detailed final clean so you can move in.</div>
+        <div class="service-link">Explore Post-Construction</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== PROOF ============== -->
+<section class="proof">
+  <div class="proof-eyebrow">By the Numbers</div>
+  <h2 class="proof-headline">Eight years.<br>Hundreds of <em>homes.</em></h2>
+
+  <div class="stats-grid">
+    <div class="stat">
+      <div class="stat-num"><em>8</em></div>
+      <div class="stat-label">Years in Business</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">42<em>+</em></div>
+      <div class="stat-label">Active Clients</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">4.9<em>★</em></div>
+      <div class="stat-label">Google Rating</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">13</div>
+      <div class="stat-label">Cities Served</div>
+    </div>
+  </div>
+</section>
+
+</body>
+</html>

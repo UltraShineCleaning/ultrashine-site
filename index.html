@@ -2,690 +2,229 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Ultra Shine Cleaning · Boca Raton</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ultra Shine Cleaning · Boca Raton's Premier Cleaning Service</title>
+<meta name="description" content="Professional house & commercial cleaning across Palm Beach and Broward County. Background-checked, fully insured team. Get your free quote in 1 hour.">
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,300..900,0..100&family=Outfit:wght@200..700&display=swap');
-
-:root {
-  --cream: #F4ECDB;
-  --cream-2: #EFE5D0;
-  --cream-3: #E8DDC4;
-  --navy: #1F3F77;
-  --navy-deep: #15294C;
-  --navy-soft: #2A4F8F;
-  --blush: #D9B5A8;
-  --blush-soft: #E8CFC4;
-  --gold: #C9A961;
-  --ink: #1A1A1A;
-  --line: rgba(31, 63, 119, 0.12);
-}
-
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,300..900,0..100&family=Outfit:wght@200..700&family=JetBrains+Mono:wght@300..500&display=swap');
+:root { --cream: #F4ECDB; --cream-2: #EFE5D0; --cream-3: #E8DDC4; --navy: #1F3F77; --navy-deep: #15294C; --navy-soft: #2A4F8F; --blush: #D9B5A8; --blush-soft: #E8CFC4; --gold: #C9A961; --sage: #7DB39B; --line: rgba(31, 63, 119, 0.12); --line-2: rgba(31, 63, 119, 0.18); --r-sm: 10px; --r-md: 16px; --r-lg: 24px; }
 * { box-sizing: border-box; margin: 0; padding: 0; }
-
 html { scroll-behavior: smooth; }
+body { font-family: 'Outfit', sans-serif; font-weight: 300; background: var(--cream); color: var(--navy-deep); -webkit-font-smoothing: antialiased; min-width: 1280px; overflow-x: hidden; }
 
-body {
-  font-family: 'Outfit', sans-serif;
-  font-weight: 300;
-  background: var(--cream);
-  color: var(--navy-deep);
-  -webkit-font-smoothing: antialiased;
-  width: 1440px;
-  overflow-x: hidden;
-}
-
-.container { max-width: 1280px; margin: 0 auto; padding: 0 60px; }
-
-/* ============== TOP NAV ============== */
-.nav {
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  z-index: 50;
-  padding: 28px 60px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  color: var(--cream);
-}
-.nav-logo {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  font-family: 'Fraunces', serif;
-  font-weight: 400;
-  font-size: 22px;
-  letter-spacing: -0.005em;
-}
-.nav-logo .mark {
-  width: 38px; height: 38px;
-  border-radius: 8px;
-  background: rgba(244, 236, 219, 0.12);
-  border: 1px solid rgba(244, 236, 219, 0.3);
-  display: grid; place-items: center;
-  backdrop-filter: blur(8px);
-}
-.nav-logo .mark::after {
-  content: '✦';
-  font-family: 'Fraunces', serif;
-  color: var(--blush);
-  font-size: 18px;
-}
-.nav-logo small {
-  display: block;
-  font-family: 'Outfit', sans-serif;
-  font-weight: 300;
-  font-size: 9px;
-  letter-spacing: 0.4em;
-  text-transform: uppercase;
-  opacity: 0.7;
-  margin-top: 2px;
-}
-.nav-menu {
-  display: flex;
-  gap: 38px;
-  align-items: center;
-  font-size: 13px;
-  font-weight: 400;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-}
+.nav { position: absolute; top: 0; left: 0; right: 0; z-index: 50; padding: 28px 60px; display: flex; justify-content: space-between; align-items: center; color: var(--cream); }
+.nav-menu { display: flex; gap: 38px; align-items: center; font-size: 13px; font-weight: 400; letter-spacing: 0.18em; text-transform: uppercase; }
 .nav-menu a { color: inherit; text-decoration: none; opacity: 0.85; }
-.nav-cta {
-  background: var(--cream);
-  color: var(--navy-deep);
-  padding: 12px 24px;
-  border-radius: 999px;
-  font-family: 'Outfit', sans-serif;
-  font-weight: 500;
-  font-size: 12px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-}
-.nav-phone {
-  font-family: 'Fraunces', serif;
-  font-weight: 400;
-  font-size: 16px;
-  letter-spacing: 0.005em;
-  text-transform: none;
-}
+.nav-cta { background: var(--cream); color: var(--navy-deep); padding: 12px 24px; border-radius: 999px; font-weight: 500; font-size: 12px; letter-spacing: 0.16em; }
+.nav-phone { font-family: 'Fraunces', serif; font-weight: 400; font-size: 16px; letter-spacing: 0.005em; text-transform: none; }
 
-/* ============== HERO ============== */
-.hero {
-  position: relative;
-  height: 920px;
-  width: 100%;
-  overflow: hidden;
-  background: var(--navy-deep);
-}
-.hero-bg {
-  position: absolute;
-  inset: 0;
-  background-image: url('public/images/hero_kitchen.jpg');
-  background-size: cover;
-  background-position: center;
-}
-.hero-overlay {
-  position: absolute;
-  inset: 0;
-  background:
-    linear-gradient(180deg, rgba(21,41,76,0.5) 0%, rgba(21,41,76,0.35) 40%, rgba(21,41,76,0.85) 100%),
-    radial-gradient(ellipse at 80% 30%, rgba(217,181,168,0.18) 0%, transparent 60%);
-}
-.hero-content {
-  position: relative;
-  z-index: 10;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  padding: 0 100px 130px;
-  color: var(--cream);
-}
-.hero-eyebrow {
-  font-family: 'Outfit', sans-serif;
-  font-weight: 400;
-  font-size: 13px;
-  letter-spacing: 0.42em;
-  text-transform: uppercase;
-  margin-bottom: 36px;
-  opacity: 0.9;
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-.hero-eyebrow::before {
-  content: '';
-  width: 40px;
-  height: 1px;
-  background: var(--blush);
-}
-.hero-headline {
-  font-family: 'Fraunces', serif;
-  font-weight: 300;
-  font-variation-settings: 'opsz' 144, 'SOFT' 50;
-  font-size: 130px;
-  line-height: 0.92;
-  letter-spacing: -0.025em;
-  max-width: 1100px;
-  margin-bottom: 40px;
-  text-shadow: 0 2px 50px rgba(0,0,0,0.25);
-}
-.hero-headline em {
-  font-style: italic;
-  font-variation-settings: 'opsz' 144, 'SOFT' 100;
-  color: var(--blush);
-}
-.hero-sub {
-  font-family: 'Fraunces', serif;
-  font-weight: 300;
-  font-style: italic;
-  font-variation-settings: 'opsz' 36, 'SOFT' 100;
-  font-size: 24px;
-  line-height: 1.5;
-  max-width: 600px;
-  letter-spacing: 0.005em;
-  opacity: 0.92;
-  margin-bottom: 50px;
-}
-.hero-cta-row {
-  display: flex;
-  align-items: center;
-  gap: 24px;
-}
-.btn-primary {
-  background: var(--cream);
-  color: var(--navy-deep);
-  padding: 22px 38px;
-  border-radius: 999px;
-  font-family: 'Outfit', sans-serif;
-  font-weight: 500;
-  font-size: 14px;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 14px;
-  transition: all 0.3s ease;
-}
-.btn-primary::after {
-  content: '→';
-  font-family: 'Fraunces', serif;
-  font-size: 18px;
-  font-weight: 300;
-}
-.btn-secondary {
-  color: var(--cream);
-  padding: 22px 38px;
-  border-radius: 999px;
-  border: 1px solid rgba(244, 236, 219, 0.4);
-  font-family: 'Outfit', sans-serif;
-  font-weight: 400;
-  font-size: 14px;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 14px;
-}
+.hero { position: relative; height: 920px; width: 100%; overflow: hidden; background: var(--navy-deep); }
+.hero-bg { position: absolute; inset: 0; background-image: url('public/images/hero_kitchen.jpg'); background-size: cover; background-position: center; transform: scale(1.05); }
+.hero-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(21,41,76,0.5) 0%, rgba(21,41,76,0.35) 40%, rgba(21,41,76,0.85) 100%), radial-gradient(ellipse at 80% 30%, rgba(217,181,168,0.18) 0%, transparent 60%); }
+.hero-content { position: relative; z-index: 10; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; padding: 140px 100px 110px; color: var(--cream); }
+.hero-eyebrow { font-weight: 400; font-size: 13px; letter-spacing: 0.42em; text-transform: uppercase; margin-bottom: 36px; opacity: 0.9; display: flex; align-items: center; gap: 16px; }
+.hero-eyebrow::before { content: ''; width: 40px; height: 1px; background: var(--blush); }
+.hero-headline { font-family: 'Fraunces', serif; font-weight: 300; font-variation-settings: 'opsz' 144, 'SOFT' 50; font-size: 110px; line-height: 0.95; letter-spacing: -0.025em; max-width: 1100px; margin-bottom: 32px; text-shadow: 0 2px 50px rgba(0,0,0,0.25); }
+.hero-headline em { font-style: italic; font-variation-settings: 'opsz' 144, 'SOFT' 100; color: var(--blush); }
+.hero-sub { font-family: 'Fraunces', serif; font-weight: 300; font-style: italic; font-variation-settings: 'opsz' 36, 'SOFT' 100; font-size: 24px; line-height: 1.5; max-width: 600px; letter-spacing: 0.005em; opacity: 0.92; margin-bottom: 50px; }
+.hero-cta-row { display: flex; gap: 24px; }
+.btn-primary { background: var(--cream); color: var(--navy-deep); padding: 22px 38px; border-radius: 999px; font-weight: 500; font-size: 14px; letter-spacing: 0.2em; text-transform: uppercase; text-decoration: none; display: inline-flex; align-items: center; gap: 14px; transition: all 0.3s ease; }
+.btn-primary::after { content: '→'; font-family: 'Fraunces', serif; font-size: 18px; }
+.btn-primary:hover { background: var(--blush); transform: translateY(-2px); box-shadow: 0 12px 32px rgba(0,0,0,0.2); }
+.btn-secondary { color: var(--cream); padding: 22px 38px; border-radius: 999px; border: 1px solid rgba(244,236,219,0.4); font-weight: 400; font-size: 14px; letter-spacing: 0.2em; text-transform: uppercase; text-decoration: none; display: inline-flex; align-items: center; transition: all 0.3s; }
+.btn-secondary:hover { background: rgba(244,236,219,0.1); border-color: var(--blush); }
+.hero-side { position: absolute; right: 100px; top: 50%; transform: translateY(-50%) rotate(90deg); transform-origin: right center; font-weight: 300; font-size: 11px; letter-spacing: 0.5em; text-transform: uppercase; color: var(--cream); opacity: 0.5; z-index: 10; }
 
-/* Hero side accent (vertical eyebrow) */
-.hero-side {
-  position: absolute;
-  right: 100px; top: 50%;
-  transform: translateY(-50%) rotate(90deg);
-  transform-origin: right center;
-  font-family: 'Outfit', sans-serif;
-  font-weight: 300;
-  font-size: 11px;
-  letter-spacing: 0.5em;
-  text-transform: uppercase;
-  color: var(--cream);
-  opacity: 0.5;
-  z-index: 10;
-}
+.trust-strip { background: var(--navy-deep); color: var(--cream); padding: 32px 100px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 40px; border-top: 1px solid rgba(244,236,219,0.1); }
+.trust-item { display: flex; align-items: center; gap: 14px; }
+.trust-mark { width: 36px; height: 36px; border-radius: 50%; border: 1px solid rgba(217,181,168,0.4); display: grid; place-items: center; color: var(--blush); font-family: 'Fraunces', serif; font-size: 16px; flex-shrink: 0; }
+.trust-text .label { font-family: 'Fraunces', serif; font-weight: 400; font-size: 16px; margin-bottom: 2px; }
+.trust-text .desc { font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; opacity: 0.6; font-weight: 300; }
 
-/* Trust strip below hero */
-.trust-strip {
-  background: var(--navy-deep);
-  color: var(--cream);
-  padding: 32px 100px;
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 40px;
-  border-top: 1px solid rgba(244, 236, 219, 0.1);
-}
-.trust-item {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
-.trust-mark {
-  width: 36px; height: 36px;
-  border-radius: 50%;
-  border: 1px solid rgba(217, 181, 168, 0.4);
-  display: grid; place-items: center;
-  color: var(--blush);
-  font-family: 'Fraunces', serif;
-  font-size: 16px;
-  flex-shrink: 0;
-}
-.trust-text {
-  line-height: 1.3;
-}
-.trust-text .label {
-  font-family: 'Fraunces', serif;
-  font-weight: 400;
-  font-size: 16px;
-  letter-spacing: -0.005em;
-  margin-bottom: 2px;
-}
-.trust-text .desc {
-  font-size: 11px;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  opacity: 0.6;
-  font-weight: 300;
-}
-
-/* ============== INTRO / FOUNDER STORY ============== */
-.intro {
-  padding: 140px 100px 100px;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 100px;
-  align-items: center;
-}
-.intro-photo {
-  position: relative;
-  aspect-ratio: 4/5;
-  background-size: cover;
-  background-position: center;
-  background-image: url('public/images/team_action.jpg');
-}
-.intro-photo::before {
-  content: '';
-  position: absolute;
-  inset: -1px;
-  border: 1px solid var(--navy);
-  opacity: 0.15;
-  pointer-events: none;
-  z-index: 1;
-  transform: translate(20px, 20px);
-}
-.intro-photo::after {
-  content: '— Established 2018 ·  CT to FL';
-  position: absolute;
-  bottom: -32px; left: 0;
-  font-family: 'Outfit', sans-serif;
-  font-size: 11px;
-  letter-spacing: 0.4em;
-  text-transform: uppercase;
-  color: var(--navy);
-  opacity: 0.65;
-}
-.intro-content {
-  max-width: 540px;
-}
-.section-eyebrow {
-  font-family: 'Outfit', sans-serif;
-  font-weight: 400;
-  font-size: 13px;
-  letter-spacing: 0.42em;
-  text-transform: uppercase;
-  color: var(--navy);
-  opacity: 0.55;
-  margin-bottom: 28px;
-}
+.section-eyebrow { font-weight: 400; font-size: 13px; letter-spacing: 0.42em; text-transform: uppercase; opacity: 0.55; margin-bottom: 28px; }
 .section-eyebrow::before { content: '— '; }
-.intro-headline {
-  font-family: 'Fraunces', serif;
-  font-weight: 300;
-  font-variation-settings: 'opsz' 144, 'SOFT' 50;
-  font-size: 78px;
-  line-height: 0.95;
-  letter-spacing: -0.022em;
-  margin-bottom: 36px;
-  color: var(--navy-deep);
-}
-.intro-headline em {
-  font-style: italic;
-  font-variation-settings: 'opsz' 144, 'SOFT' 100;
-  color: var(--blush);
-}
-.intro-body {
-  font-family: 'Fraunces', serif;
-  font-weight: 300;
-  font-size: 22px;
-  line-height: 1.55;
-  letter-spacing: 0.005em;
-  color: var(--navy-deep);
-  opacity: 0.85;
-  margin-bottom: 40px;
-}
-.intro-body em {
-  font-style: italic;
-  font-variation-settings: 'opsz' 36, 'SOFT' 100;
-}
-.intro-signature {
-  display: flex;
-  align-items: baseline;
-  gap: 16px;
-  font-family: 'Fraunces', serif;
-  font-style: italic;
-  font-variation-settings: 'opsz' 60, 'SOFT' 100;
-  font-size: 32px;
-  color: var(--navy);
-  letter-spacing: -0.005em;
-}
-.intro-signature small {
-  font-style: normal;
-  font-family: 'Outfit', sans-serif;
-  font-weight: 300;
-  font-size: 11px;
-  letter-spacing: 0.36em;
-  text-transform: uppercase;
-  opacity: 0.55;
-}
+.section-headline { font-family: 'Fraunces', serif; font-weight: 300; font-variation-settings: 'opsz' 144, 'SOFT' 50; line-height: 0.95; letter-spacing: -0.022em; }
+.section-headline em { font-style: italic; font-variation-settings: 'opsz' 144, 'SOFT' 100; color: var(--blush); }
 
-/* ============== SERVICES SECTION ============== */
-.services {
-  background: var(--navy-deep);
-  color: var(--cream);
-  padding: 140px 100px;
-  position: relative;
-}
-.services::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 100px; right: 100px;
-  height: 1px;
-  background: rgba(244, 236, 219, 0.12);
-}
-.services-head {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 100px;
-  margin-bottom: 100px;
-  align-items: end;
-}
-.services-eyebrow {
-  font-family: 'Outfit', sans-serif;
-  font-weight: 400;
-  font-size: 13px;
-  letter-spacing: 0.42em;
-  text-transform: uppercase;
-  opacity: 0.65;
-  margin-bottom: 24px;
-}
-.services-eyebrow::before { content: '— '; }
-.services-headline {
-  font-family: 'Fraunces', serif;
-  font-weight: 300;
-  font-variation-settings: 'opsz' 144, 'SOFT' 50;
-  font-size: 92px;
-  line-height: 0.95;
-  letter-spacing: -0.022em;
-}
-.services-headline em {
-  font-style: italic;
-  font-variation-settings: 'opsz' 144, 'SOFT' 100;
-  color: var(--blush);
-}
-.services-sub {
-  font-family: 'Fraunces', serif;
-  font-style: italic;
-  font-variation-settings: 'opsz' 36, 'SOFT' 100;
-  font-weight: 300;
-  font-size: 22px;
-  line-height: 1.5;
-  letter-spacing: 0.005em;
-  opacity: 0.78;
-  max-width: 480px;
-}
-
-.services-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 32px;
-}
-.service-card {
-  position: relative;
-  aspect-ratio: 16/10;
-  overflow: hidden;
-  cursor: pointer;
-  background-color: var(--navy);
-}
-.service-card-bg {
-  position: absolute;
-  inset: 0;
-  background-size: cover;
-  background-position: center;
-  transition: transform 0.6s ease;
-}
-.service-card-overlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, rgba(21,41,76,0.2) 0%, rgba(21,41,76,0.85) 100%);
-}
-.service-card-content {
-  position: relative;
-  z-index: 2;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  padding: 40px;
-  color: var(--cream);
-}
-.service-num {
-  font-family: 'Fraunces', serif;
-  font-style: italic;
-  font-variation-settings: 'opsz' 36, 'SOFT' 100;
-  font-weight: 300;
-  font-size: 16px;
-  color: var(--blush);
-  margin-bottom: 12px;
-  letter-spacing: 0.005em;
-}
-.service-title {
-  font-family: 'Fraunces', serif;
-  font-weight: 400;
-  font-variation-settings: 'opsz' 72, 'SOFT' 50;
-  font-size: 38px;
-  line-height: 1;
-  letter-spacing: -0.012em;
-  margin-bottom: 16px;
-}
-.service-desc {
-  font-family: 'Outfit', sans-serif;
-  font-weight: 300;
-  font-size: 14px;
-  line-height: 1.5;
-  opacity: 0.88;
-  max-width: 380px;
-  margin-bottom: 22px;
-}
-.service-link {
-  font-family: 'Outfit', sans-serif;
-  font-weight: 400;
-  font-size: 11px;
-  letter-spacing: 0.32em;
-  text-transform: uppercase;
-  display: inline-flex;
-  align-items: center;
-  gap: 12px;
-  opacity: 0.85;
-}
-.service-link::after { content: '→'; font-family: 'Fraunces', serif; font-size: 14px; }
-
-/* Wide card for primary service */
+.services { background: var(--navy-deep); color: var(--cream); padding: 110px 100px; }
+.services-head { display: grid; grid-template-columns: 1fr 1fr; gap: 100px; margin-bottom: 60px; align-items: end; }
+.services-head .section-eyebrow { color: var(--blush); opacity: 0.85; }
+.services-head .section-headline { font-size: 92px; }
+.services-sub { font-family: 'Fraunces', serif; font-style: italic; font-variation-settings: 'opsz' 36, 'SOFT' 100; font-weight: 300; font-size: 22px; line-height: 1.5; opacity: 0.78; max-width: 480px; }
+.services-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.service-card { position: relative; aspect-ratio: 16/10; overflow: hidden; cursor: pointer; background-color: var(--navy); border-radius: var(--r-md); transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.4s ease; }
+.service-card:hover { transform: translateY(-6px); box-shadow: 0 20px 50px rgba(0,0,0,0.4); }
+.service-card-bg { position: absolute; inset: 0; background-size: cover; background-position: center; transition: transform 0.6s ease; }
+.service-card:hover .service-card-bg { transform: scale(1.06); }
+.service-card-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(21,41,76,0.2) 0%, rgba(21,41,76,0.92) 100%); }
+.service-card-content { position: relative; z-index: 2; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; padding: 40px; color: var(--cream); }
+.service-num { font-family: 'Fraunces', serif; font-style: italic; font-variation-settings: 'opsz' 36, 'SOFT' 100; font-weight: 300; font-size: 14px; color: var(--blush); margin-bottom: 12px; }
+.service-title { font-family: 'Fraunces', serif; font-weight: 400; font-variation-settings: 'opsz' 72, 'SOFT' 50; font-size: 36px; line-height: 1; letter-spacing: -0.012em; margin-bottom: 14px; }
+.service-desc { font-weight: 300; font-size: 13.5px; line-height: 1.6; opacity: 0.85; max-width: 460px; margin-bottom: 18px; }
+.service-tags { font-weight: 300; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; opacity: 0.55; margin-bottom: 20px; }
+.service-link { font-weight: 400; font-size: 11px; letter-spacing: 0.32em; text-transform: uppercase; display: inline-flex; align-items: center; gap: 10px; opacity: 0.9; }
+.service-link::after { content: '→'; font-family: 'Fraunces', serif; font-size: 16px; transition: transform 0.3s; }
+.service-card:hover .service-link::after { transform: translateX(4px); }
 .service-card.wide { grid-column: span 2; aspect-ratio: 32/9; }
 
-/* ============== PROOF / STATS ============== */
-.proof {
-  padding: 140px 100px;
-  background: var(--cream);
-  text-align: center;
-}
-.proof-eyebrow {
-  font-family: 'Outfit', sans-serif;
-  font-weight: 400;
-  font-size: 13px;
-  letter-spacing: 0.42em;
-  text-transform: uppercase;
-  color: var(--navy);
-  opacity: 0.5;
-  margin-bottom: 24px;
-}
-.proof-eyebrow::before { content: '— '; }
-.proof-eyebrow::after { content: ' —'; }
-.proof-headline {
-  font-family: 'Fraunces', serif;
-  font-weight: 300;
-  font-variation-settings: 'opsz' 144, 'SOFT' 50;
-  font-size: 72px;
-  line-height: 1;
-  margin-bottom: 80px;
-  color: var(--navy-deep);
-  letter-spacing: -0.018em;
-}
-.proof-headline em {
-  font-style: italic;
-  font-variation-settings: 'opsz' 144, 'SOFT' 100;
-  color: var(--blush);
-}
-.stats-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 0;
-  border-top: 1px solid var(--line);
-  border-bottom: 1px solid var(--line);
-}
-.stat {
-  padding: 60px 30px;
-  text-align: center;
-  border-right: 1px solid var(--line);
-}
-.stat:last-child { border-right: none; }
-.stat-num {
-  font-family: 'Fraunces', serif;
-  font-weight: 300;
-  font-variation-settings: 'opsz' 144, 'SOFT' 50;
-  font-size: 84px;
-  line-height: 1;
-  color: var(--navy);
-  letter-spacing: -0.025em;
-  margin-bottom: 16px;
-}
-.stat-num em {
-  font-style: italic;
-  font-variation-settings: 'opsz' 144, 'SOFT' 100;
-  color: var(--blush);
-}
-.stat-label {
-  font-family: 'Outfit', sans-serif;
-  font-weight: 400;
-  font-size: 12px;
-  letter-spacing: 0.32em;
-  text-transform: uppercase;
-  opacity: 0.6;
-}
+.how { padding: 110px 100px; background: var(--cream); }
+.how-head { text-align: center; margin-bottom: 70px; }
+.how-head .section-eyebrow::before { content: '— '; }
+.how-head .section-eyebrow::after { content: ' —'; }
+.how-head .section-headline { font-size: 78px; }
+.how-head-sub { font-family: 'Fraunces', serif; font-style: italic; font-variation-settings: 'opsz' 36, 'SOFT' 100; font-weight: 300; font-size: 22px; line-height: 1.5; opacity: 0.65; max-width: 560px; margin: 24px auto 0; }
+.how-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; position: relative; }
+.how-grid::before { content: ''; position: absolute; top: 60px; left: 12%; right: 12%; height: 1px; background: linear-gradient(90deg, transparent, var(--blush), transparent); opacity: 0.4; z-index: 0; }
+.step { position: relative; z-index: 1; text-align: center; padding: 0 32px; }
+.step-num { width: 120px; height: 120px; margin: 0 auto 32px; border-radius: 50%; background: var(--cream); border: 1px solid var(--line-2); display: grid; place-items: center; font-family: 'Fraunces', serif; font-weight: 300; font-style: italic; font-variation-settings: 'opsz' 144, 'SOFT' 100; font-size: 64px; color: var(--blush); letter-spacing: -0.04em; box-shadow: 0 8px 32px rgba(31,63,119,0.06); }
+.step-title { font-family: 'Fraunces', serif; font-weight: 400; font-variation-settings: 'opsz' 72, 'SOFT' 50; font-size: 28px; line-height: 1.05; margin-bottom: 16px; letter-spacing: -0.012em; }
+.step-desc { font-family: 'Fraunces', serif; font-style: italic; font-variation-settings: 'opsz' 36, 'SOFT' 100; font-weight: 300; font-size: 17px; line-height: 1.55; opacity: 0.7; max-width: 320px; margin: 0 auto; }
+
+.why { padding: 110px 100px; background: var(--cream-2); }
+.why-head { display: grid; grid-template-columns: 1fr 1fr; gap: 100px; margin-bottom: 60px; align-items: end; }
+.why-head .section-headline { font-size: 78px; }
+.why-head-sub { font-family: 'Fraunces', serif; font-style: italic; font-variation-settings: 'opsz' 36, 'SOFT' 100; font-weight: 300; font-size: 20px; line-height: 1.5; opacity: 0.65; max-width: 460px; }
+.why-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.why-card { background: var(--cream); border: 1px solid var(--line); border-radius: var(--r-md); padding: 38px 36px; transition: all 0.3s; cursor: pointer; }
+.why-card:hover { background: white; border-color: var(--navy); transform: translateY(-3px); box-shadow: 0 16px 40px rgba(31,63,119,0.08); }
+.why-icon { width: 52px; height: 52px; border-radius: 50%; background: var(--navy-deep); color: var(--blush); display: grid; place-items: center; font-family: 'Fraunces', serif; font-size: 22px; margin-bottom: 24px; }
+.why-title { font-family: 'Fraunces', serif; font-weight: 400; font-variation-settings: 'opsz' 60, 'SOFT' 50; font-size: 24px; letter-spacing: -0.008em; line-height: 1.15; margin-bottom: 14px; }
+.why-title em { font-style: italic; font-variation-settings: 'opsz' 60, 'SOFT' 100; color: var(--navy); }
+.why-desc { font-weight: 300; font-size: 14px; line-height: 1.6; opacity: 0.75; }
+
+.reviews { padding: 110px 0; background: var(--navy-deep); color: var(--cream); overflow: hidden; }
+.reviews-head { text-align: center; padding: 0 100px; margin-bottom: 50px; }
+.reviews-head .section-eyebrow { color: var(--blush); opacity: 0.85; }
+.reviews-head .section-eyebrow::before { content: '— '; }
+.reviews-head .section-eyebrow::after { content: ' —'; }
+.reviews-head .section-headline { font-size: 72px; }
+.reviews-headline-stars { font-family: 'Fraunces', serif; font-style: italic; font-variation-settings: 'opsz' 144, 'SOFT' 100; font-size: 78px; color: var(--gold); margin-top: 24px; line-height: 1; letter-spacing: 0.04em; }
+.reviews-rating-meta { font-weight: 300; font-size: 14px; letter-spacing: 0.32em; text-transform: uppercase; opacity: 0.7; margin-top: 16px; }
+.marquee { display: flex; overflow: hidden; mask-image: linear-gradient(90deg, transparent, black 8%, black 92%, transparent); -webkit-mask-image: linear-gradient(90deg, transparent, black 8%, black 92%, transparent); }
+.marquee-track { display: flex; gap: 24px; animation: marquee 80s linear infinite; flex-shrink: 0; padding-right: 24px; }
+.marquee:hover .marquee-track { animation-play-state: paused; }
+@keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+.review-card { width: 420px; flex-shrink: 0; background: rgba(244,236,219,0.04); border: 1px solid rgba(244,236,219,0.10); border-left: 2px solid var(--blush); border-radius: var(--r-sm); padding: 28px 30px; }
+.r-stars { color: var(--gold); font-size: 13px; letter-spacing: 0.16em; margin-bottom: 14px; }
+.r-text { font-family: 'Fraunces', serif; font-style: italic; font-variation-settings: 'opsz' 24, 'SOFT' 100; font-weight: 300; font-size: 15px; line-height: 1.55; margin-bottom: 16px; opacity: 0.95; min-height: 105px; }
+.r-author { font-weight: 400; font-size: 11px; letter-spacing: 0.24em; text-transform: uppercase; opacity: 0.6; }
+.r-author strong { color: var(--blush); font-weight: 500; }
+
+.areas { padding: 110px 100px; background: var(--cream); }
+.areas-grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 80px; align-items: start; }
+.areas-head .section-headline { font-size: 78px; margin-bottom: 36px; }
+.areas-body { font-family: 'Fraunces', serif; font-weight: 300; font-size: 20px; line-height: 1.55; opacity: 0.78; margin-bottom: 32px; max-width: 540px; }
+.areas-body em { font-style: italic; font-variation-settings: 'opsz' 36, 'SOFT' 100; }
+.county-block { margin-top: 36px; }
+.county-name { font-family: 'Fraunces', serif; font-weight: 400; font-style: italic; font-variation-settings: 'opsz' 36, 'SOFT' 100; font-size: 22px; color: var(--blush); margin-bottom: 18px; }
+.cities-list { display: flex; flex-wrap: wrap; gap: 8px; }
+.city-tag { background: white; border: 1px solid var(--line); border-radius: 999px; padding: 10px 22px; font-weight: 400; font-size: 13px; letter-spacing: 0.04em; transition: all 0.25s; cursor: pointer; }
+.city-tag:hover { background: var(--navy); color: var(--cream); border-color: var(--navy); }
+.areas-photo { aspect-ratio: 4/5; background-image: url('public/images/wix_marketing_realistic_2.jpeg'); background-size: cover; background-position: center; border-radius: var(--r-lg); position: relative; overflow: hidden; }
+.areas-photo::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 50%, rgba(21,41,76,0.6) 100%); }
+.areas-photo-tag { position: absolute; bottom: 36px; left: 36px; right: 36px; z-index: 2; color: var(--cream); }
+.areas-photo-tag-eye { font-weight: 400; font-size: 11px; letter-spacing: 0.32em; text-transform: uppercase; opacity: 0.75; margin-bottom: 10px; }
+.areas-photo-tag-h { font-family: 'Fraunces', serif; font-weight: 300; font-style: italic; font-variation-settings: 'opsz' 60, 'SOFT' 100; font-size: 28px; line-height: 1.15; }
+
+.promise { padding: 100px 100px; background: var(--navy-deep); color: var(--cream); position: relative; overflow: hidden; }
+.promise::before { content: '✦'; position: absolute; top: 60px; right: 100px; font-family: 'Fraunces', serif; font-size: 120px; color: var(--blush); opacity: 0.10; }
+.promise-grid { display: grid; grid-template-columns: 0.85fr 1.15fr; gap: 100px; align-items: center; max-width: 1240px; margin: 0 auto; }
+.promise-tag { font-weight: 400; font-size: 12px; letter-spacing: 0.42em; text-transform: uppercase; color: var(--blush); margin-bottom: 28px; }
+.promise-tag::before { content: '— '; }
+.promise-headline { font-family: 'Fraunces', serif; font-weight: 300; font-variation-settings: 'opsz' 144, 'SOFT' 50; font-size: 64px; line-height: 0.98; letter-spacing: -0.022em; }
+.promise-headline em { font-style: italic; font-variation-settings: 'opsz' 144, 'SOFT' 100; color: var(--blush); }
+.promise-body { font-family: 'Fraunces', serif; font-weight: 300; font-size: 19px; line-height: 1.65; opacity: 0.82; margin-bottom: 24px; }
+.promise-body em { font-style: italic; font-variation-settings: 'opsz' 36, 'SOFT' 100; color: var(--blush); }
+.promise-pillars { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; margin-top: 40px; border-top: 1px solid rgba(244,236,219,0.15); border-bottom: 1px solid rgba(244,236,219,0.15); }
+.pillar { padding: 24px 18px; text-align: center; border-right: 1px solid rgba(244,236,219,0.10); }
+.pillar:last-child { border-right: none; }
+.pillar-h { font-family: 'Fraunces', serif; font-style: italic; font-variation-settings: 'opsz' 60, 'SOFT' 100; font-weight: 300; font-size: 26px; color: var(--blush); margin-bottom: 6px; letter-spacing: -0.01em; }
+.pillar-d { font-weight: 300; font-size: 11px; letter-spacing: 0.28em; text-transform: uppercase; opacity: 0.55; }
+
+.faq { padding: 110px 100px; background: var(--cream); }
+.faq-grid { display: grid; grid-template-columns: 1fr 1.4fr; gap: 80px; align-items: start; }
+.faq-head .section-headline { font-size: 70px; margin-bottom: 28px; }
+.faq-head-body { font-family: 'Fraunces', serif; font-style: italic; font-variation-settings: 'opsz' 36, 'SOFT' 100; font-weight: 300; font-size: 19px; line-height: 1.5; opacity: 0.65; margin-bottom: 40px; }
+.faq-image { aspect-ratio: 4/5; width: 100%; background-image: url('public/images/bathroom.jpg'); background-size: cover; background-position: center; border-radius: var(--r-lg); position: relative; overflow: hidden; box-shadow: 0 20px 50px rgba(31,63,119,0.12); }
+.faq-image::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 60%, rgba(21,41,76,0.4) 100%); }
+.faq-image-tag { position: absolute; bottom: 28px; left: 28px; right: 28px; z-index: 2; color: var(--cream); }
+.faq-image-tag-eye { font-weight: 400; font-size: 10px; letter-spacing: 0.36em; text-transform: uppercase; opacity: 0.85; margin-bottom: 6px; }
+.faq-image-tag-h { font-family: 'Fraunces', serif; font-style: italic; font-weight: 300; font-variation-settings: 'opsz' 60, 'SOFT' 100; font-size: 22px; line-height: 1.2; }
+.faq-list { display: flex; flex-direction: column; gap: 6px; }
+.faq-item { background: white; border: 1px solid var(--line); border-radius: var(--r-md); padding: 28px 32px; transition: all 0.3s; cursor: pointer; }
+.faq-item:hover { border-color: var(--navy); box-shadow: 0 8px 24px rgba(31,63,119,0.06); }
+.faq-q { display: flex; justify-content: space-between; align-items: center; font-family: 'Fraunces', serif; font-weight: 400; font-variation-settings: 'opsz' 24, 'SOFT' 50; font-size: 19px; line-height: 1.4; }
+.faq-q-icon { color: var(--blush); font-family: 'Fraunces', serif; font-style: italic; font-size: 22px; flex-shrink: 0; margin-left: 20px; }
+.faq-a { padding-top: 14px; font-weight: 300; font-size: 14px; line-height: 1.65; opacity: 0.78; max-width: 640px; display: none; }
+.faq-item.open .faq-a { display: block; }
+.faq-item.open { background: var(--cream-2); }
+
+.cta-final { padding: 100px 100px; background: linear-gradient(135deg, var(--navy-deep) 0%, var(--navy) 100%); color: var(--cream); text-align: center; position: relative; overflow: hidden; }
+.cta-final::before { content: '✦'; position: absolute; top: 50px; left: 80px; font-family: 'Fraunces', serif; font-size: 90px; color: var(--blush); opacity: 0.16; }
+.cta-final::after { content: '✦'; position: absolute; bottom: 80px; right: 100px; font-family: 'Fraunces', serif; font-size: 60px; color: var(--blush); opacity: 0.20; }
+.cta-final .section-eyebrow { color: var(--blush); opacity: 0.9; }
+.cta-final .section-eyebrow::before { content: '— '; }
+.cta-final .section-eyebrow::after { content: ' —'; }
+.cta-final-h { font-family: 'Fraunces', serif; font-weight: 300; font-variation-settings: 'opsz' 144, 'SOFT' 50; font-size: 90px; line-height: 0.95; letter-spacing: -0.025em; max-width: 900px; margin: 0 auto 30px; }
+.cta-final-h em { font-style: italic; font-variation-settings: 'opsz' 144, 'SOFT' 100; color: var(--blush); }
+.cta-final-sub { font-family: 'Fraunces', serif; font-style: italic; font-variation-settings: 'opsz' 36, 'SOFT' 100; font-weight: 300; font-size: 22px; line-height: 1.5; opacity: 0.78; max-width: 620px; margin: 0 auto 50px; }
+.cta-final-row { display: flex; justify-content: center; gap: 22px; align-items: center; }
+.cta-final-phone { font-family: 'Fraunces', serif; font-weight: 300; font-size: 30px; color: var(--blush); margin-left: 12px; }
+
+.footer { padding: 80px 100px 40px; background: #0A1730; color: var(--cream); border-top: 1px solid rgba(244,236,219,0.06); }
+.footer-grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr; gap: 60px; margin-bottom: 60px; }
+.footer-col h4 { font-family: 'Fraunces', serif; font-weight: 400; font-size: 13px; letter-spacing: 0.28em; text-transform: uppercase; color: var(--blush); margin-bottom: 22px; }
+.footer-col a, .footer-col p, .footer-col li { color: rgba(244,236,219,0.7); font-weight: 300; font-size: 13px; line-height: 1.85; text-decoration: none; display: block; transition: color 0.2s; list-style: none; }
+.footer-col a:hover { color: var(--cream); }
+.footer-col p { margin-bottom: 18px; }
+.footer-bottom { padding-top: 30px; border-top: 1px solid rgba(244,236,219,0.10); display: flex; justify-content: space-between; font-size: 11px; opacity: 0.5; letter-spacing: 0.16em; text-transform: uppercase; }
 </style>
 </head>
 <body>
 
-<!-- ============== NAV ============== -->
 <nav class="nav">
-  <div class="nav-logo">
-    <img src="public/images/logo_white_tight.png" alt="Ultra Shine Cleaning" style="width: 170px; height: auto;">
-  </div>
+  <img src="public/images/logo_white_tight.png" alt="Ultra Shine Cleaning" style="width: 170px; height: auto;">
   <div class="nav-menu">
-    <a href="#">Services</a>
-    <a href="#">Areas</a>
-    <a href="#">About</a>
-    <a href="#">Team</a>
-    <a href="#">Reviews</a>
+    <a href="#services">Services</a>
+    <a href="#areas">Areas</a>
+    <a href="#about">About</a>
+    <a href="#reviews">Reviews</a>
+    <a href="#faq">FAQ</a>
     <span class="nav-phone">(561) 583-6694</span>
-    <a href="#" class="nav-cta">Get Quote</a>
+    <a href="quote/" class="nav-cta">Get Quote</a>
   </div>
 </nav>
 
-<!-- ============== HERO ============== -->
 <section class="hero">
   <div class="hero-bg"></div>
   <div class="hero-overlay"></div>
-  <div class="hero-side">Boca Raton · Est. 2018</div>
-
+  <div class="hero-side">Boca Raton · Palm Beach + Broward County</div>
   <div class="hero-content">
-    <div class="hero-eyebrow">South Florida's Local Cleaning Team</div>
+    <div class="hero-eyebrow">South Florida's Premier Cleaning Service</div>
     <h1 class="hero-headline">A home that <em>shines.</em><br>Without lifting<br>a finger.</h1>
-    <p class="hero-sub">Trusted by 40+ Boca families. Background-checked, fully insured, and obsessive about the details — because your home deserves the kind of care we'd give our own.</p>
+    <p class="hero-sub">Professional residential and commercial cleaning trusted across Palm Beach and Broward. Background-checked, fully insured, and obsessive about the details — because your home deserves the kind of care we'd give our own.</p>
     <div class="hero-cta-row">
-      <a href="#" class="btn-primary">Get Your Free Quote</a>
-      <a href="#" class="btn-secondary">View Services</a>
+      <a href="quote/" class="btn-primary">Get Your Free Quote</a>
+      <a href="#services" class="btn-secondary">View Services</a>
     </div>
   </div>
 </section>
 
-<!-- Trust strip -->
 <div class="trust-strip">
-  <div class="trust-item">
-    <div class="trust-mark">✦</div>
-    <div class="trust-text">
-      <div class="label">Fully Insured</div>
-      <div class="desc">& Bonded</div>
-    </div>
-  </div>
-  <div class="trust-item">
-    <div class="trust-mark">✦</div>
-    <div class="trust-text">
-      <div class="label">Background-Checked</div>
-      <div class="desc">Every Team Member</div>
-    </div>
-  </div>
-  <div class="trust-item">
-    <div class="trust-mark">✦</div>
-    <div class="trust-text">
-      <div class="label">4.9 ★ on Google</div>
-      <div class="desc">47+ Five-Star Reviews</div>
-    </div>
-  </div>
-  <div class="trust-item">
-    <div class="trust-mark">✦</div>
-    <div class="trust-text">
-      <div class="label">Palm Beach + Broward</div>
-      <div class="desc">Serving 13 Cities</div>
-    </div>
-  </div>
+  <div class="trust-item"><div class="trust-mark">✦</div><div class="trust-text"><div class="label">Fully Insured</div><div class="desc">& Bonded</div></div></div>
+  <div class="trust-item"><div class="trust-mark">✦</div><div class="trust-text"><div class="label">Background-Checked</div><div class="desc">Every Team Member</div></div></div>
+  <div class="trust-item"><div class="trust-mark">✦</div><div class="trust-text"><div class="label">4.9 ★ on Google</div><div class="desc">Verified Reviews</div></div></div>
+  <div class="trust-item"><div class="trust-mark">✦</div><div class="trust-text"><div class="label">Palm Beach + Broward</div><div class="desc">Serving 13 Cities</div></div></div>
 </div>
 
-<!-- ============== INTRO / FOUNDER STORY ============== -->
-<section class="intro">
-  <div class="intro-photo"></div>
-  <div class="intro-content">
-    <div class="section-eyebrow">Our Story</div>
-    <h2 class="intro-headline">From Connecticut<br>to Boca, with <em>care.</em></h2>
-    <p class="intro-body">We started Ultra Shine in 2018 with one rule: <em>clean every home like it's our own.</em> Eight years later, that's still the only rule — only now there's a small, hand-picked team of us, and we've followed our families south to South Florida.</p>
-    <p class="intro-body">We're not a franchise. We're not a national chain. We're <em>your</em> local cleaning team — and when you book us, you're not getting a stranger. You're getting someone we trust in our own homes.</p>
-    <div class="intro-signature">
-      Tiago & Francine Rena
-      <small>Founders</small>
-    </div>
-  </div>
-</section>
-
-<!-- ============== SERVICES ============== -->
-<section class="services">
+<section class="services" id="services">
   <div class="services-head">
     <div>
-      <div class="services-eyebrow">What We Offer</div>
-      <h2 class="services-headline">Five services,<br>one <em>standard.</em></h2>
+      <div class="section-eyebrow">What We Offer</div>
+      <h2 class="section-headline">Five services,<br>one <em>standard.</em></h2>
     </div>
-    <p class="services-sub">From weekly recurring care to post-construction details — every service follows the same checklist-driven, insured-and-bonded promise.</p>
+    <p class="services-sub">Whether it's a weekly recurring clean, a deep reset before guests, or the final touch after renovations — every service follows the same checklist-driven, insured-and-bonded promise.</p>
   </div>
-
   <div class="services-grid">
     <div class="service-card wide">
       <div class="service-card-bg" style="background-image: url('public/images/living_room.jpg');"></div>
@@ -693,81 +232,211 @@ body {
       <div class="service-card-content">
         <div class="service-num">No. 01 · Most Popular</div>
         <div class="service-title">Regular Cleaning</div>
-        <div class="service-desc">Weekly, bi-weekly, or monthly visits that keep your home consistently fresh. Detailed checklists for every room — kitchen, bath, bedroom, living areas — so nothing is ever skipped.</div>
+        <div class="service-desc">Designed for busy households that want a consistently clean home without the constant effort. Stay ahead of mess, reduce stress, and enjoy your space week after week.</div>
+        <div class="service-tags">Weekly · Bi-Weekly · Monthly</div>
         <div class="service-link">Explore Regular Cleaning</div>
       </div>
     </div>
-
     <div class="service-card">
-      <div class="service-card-bg" style="background-image: url('public/images/bathroom.jpg');"></div>
+      <div class="service-card-bg" style="background-image: url('public/images/service_deep_cleaning.jpg');"></div>
       <div class="service-card-overlay"></div>
       <div class="service-card-content">
         <div class="service-num">No. 02</div>
         <div class="service-title">Deep Cleaning</div>
-        <div class="service-desc">Top-to-bottom reset. For homes that need extra attention — perfect first-time clean before starting recurring service.</div>
+        <div class="service-desc">When your home needs more than a surface refresh. Perfect for seasonal resets, before guests, or anytime your space needs extra care.</div>
+        <div class="service-tags">Seasonal · First-Time · Special Occasions</div>
         <div class="service-link">Explore Deep Cleaning</div>
       </div>
     </div>
-
     <div class="service-card">
-      <div class="service-card-bg" style="background-image: url('public/images/bedroom.jpg');"></div>
+      <div class="service-card-bg" style="background-image: url('public/images/service_movein_boxes.jpg');"></div>
       <div class="service-card-overlay"></div>
       <div class="service-card-content">
         <div class="service-num">No. 03</div>
         <div class="service-title">Move In / Out</div>
-        <div class="service-desc">Empty home, full attention. Get your deposit back or welcome new owners to a spotless space.</div>
+        <div class="service-desc">Moving is stressful enough — cleaning shouldn't be part of it. We handle the final details so you can focus on the transition.</div>
+        <div class="service-tags">Renters · Homeowners · Property Turnovers</div>
         <div class="service-link">Explore Move-In/Out</div>
       </div>
     </div>
-
     <div class="service-card">
-      <div class="service-card-bg" style="background-image: url('public/images/team_van.jpg');"></div>
+      <div class="service-card-bg" style="background-image: url('public/images/service_commercial_office.jpg');"></div>
       <div class="service-card-overlay"></div>
       <div class="service-card-content">
         <div class="service-num">No. 04</div>
         <div class="service-title">Commercial</div>
-        <div class="service-desc">Offices, boutique spaces, retail. After-hours scheduling available so your team walks into clean every morning.</div>
+        <div class="service-desc">A clean workspace sets the tone for productivity. We help maintain an organized, welcoming environment that reflects your business standards.</div>
+        <div class="service-tags">Offices · Retail · Professional Spaces</div>
         <div class="service-link">Explore Commercial</div>
       </div>
     </div>
-
     <div class="service-card">
-      <div class="service-card-bg" style="background-image: url('public/images/hero_kitchen.jpg');"></div>
+      <div class="service-card-bg" style="background-image: url('public/images/service_postconstruction.jpg');"></div>
       <div class="service-card-overlay"></div>
       <div class="service-card-content">
         <div class="service-num">No. 05</div>
         <div class="service-title">Post-Construction</div>
-        <div class="service-desc">Renovation done? Dust forgot to leave? We handle the detailed final clean so you can move in.</div>
+        <div class="service-desc">After construction, dust has a way of settling everywhere. We remove the fine dust, debris, and residue construction crews don't address.</div>
+        <div class="service-tags">Renovations · New Builds · Remodels</div>
         <div class="service-link">Explore Post-Construction</div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ============== PROOF ============== -->
-<section class="proof">
-  <div class="proof-eyebrow">By the Numbers</div>
-  <h2 class="proof-headline">Eight years.<br>Hundreds of <em>homes.</em></h2>
+<section class="how">
+  <div class="how-head">
+    <div class="section-eyebrow">How It Works</div>
+    <h2 class="section-headline">Three simple steps<br>to a <em>spotless</em> home.</h2>
+    <p class="how-head-sub">Hassle-free cleaning designed for busy South Florida homeowners and businesses.</p>
+  </div>
+  <div class="how-grid">
+    <div class="step"><div class="step-num">01</div><div class="step-title">Connect With Us</div><div class="step-desc">Request a free quote online or give us a call. We'll discuss your cleaning needs and send a personalized estimate within an hour.</div></div>
+    <div class="step"><div class="step-num">02</div><div class="step-title">Schedule Your Cleaning</div><div class="step-desc">Choose your preferred date and service — Regular, Deep, Move-In/Out, Commercial, or Post-Construction. Recurring options available.</div></div>
+    <div class="step"><div class="step-num">03</div><div class="step-title">Enjoy The Sparkle</div><div class="step-desc">Sit back. Our background-checked team handles everything. You come home to a fresh space, with full satisfaction guarantee.</div></div>
+  </div>
+</section>
 
-  <div class="stats-grid">
-    <div class="stat">
-      <div class="stat-num"><em>8</em></div>
-      <div class="stat-label">Years in Business</div>
+<section class="why" id="about">
+  <div class="why-head">
+    <div>
+      <div class="section-eyebrow">Why Ultra Shine</div>
+      <h2 class="section-headline">Built on <em>detail.</em><br>Trusted on results.</h2>
     </div>
-    <div class="stat">
-      <div class="stat-num">42<em>+</em></div>
-      <div class="stat-label">Active Clients</div>
-    </div>
-    <div class="stat">
-      <div class="stat-num">4.9<em>★</em></div>
-      <div class="stat-label">Google Rating</div>
-    </div>
-    <div class="stat">
-      <div class="stat-num">13</div>
-      <div class="stat-label">Cities Served</div>
+    <p class="why-head-sub">Four reasons homeowners and businesses across South Florida keep us on speed-dial — and why their friends end up calling us next.</p>
+  </div>
+  <div class="why-grid">
+    <div class="why-card"><div class="why-icon">✦</div><h3 class="why-title">Eco-Friendly &<br><em>Pet-Safe</em> Products</h3><p class="why-desc">Family-friendly, pet-friendly cleaning products that leave your home spotless without harsh chemicals. Specific brand requests welcome.</p></div>
+    <div class="why-card"><div class="why-icon">✦</div><h3 class="why-title">Trained, Vetted &<br><em>Background-Checked</em></h3><p class="why-desc">Every team member is professionally trained and background-checked before stepping into your home. Same cleaner every visit.</p></div>
+    <div class="why-card"><div class="why-icon">✦</div><h3 class="why-title">100% <em>Satisfaction</em><br>Guarantee</h3><p class="why-desc">If anything isn't perfect, we return and make it right at no extra cost. Tell us within 24 hours and we'll be back the next day.</p></div>
+    <div class="why-card"><div class="why-icon">✦</div><h3 class="why-title">Flexible <em>Scheduling</em><br>for Your Life</h3><p class="why-desc">Evenings, weekends, and last-minute openings available. Reschedule anytime, no fees. We work around your life — not the other way.</p></div>
+  </div>
+</section>
+
+<section class="reviews" id="reviews">
+  <div class="reviews-head">
+    <div class="section-eyebrow">Trusted Across South Florida</div>
+    <h2 class="section-headline">What our <em>clients</em> say.</h2>
+    <div class="reviews-headline-stars">★ ★ ★ ★ ★</div>
+    <div class="reviews-rating-meta">4.9 ★ Google Rating · Verified Reviews</div>
+  </div>
+  <div class="marquee">
+    <div class="marquee-track">
+      <div class="review-card"><div class="r-stars">★ ★ ★ ★ ★</div><div class="r-text">"Got a quote at 9 AM, scheduled by 11, my house was sparkling by 3. The Rena team is the best in Boca, hands down."</div><div class="r-author"><strong>Sandra P.</strong> · Boca Raton</div></div>
+      <div class="review-card"><div class="r-stars">★ ★ ★ ★ ★</div><div class="r-text">"Mariana was incredible — every corner spotless, and she even folded the laundry. We're booking weekly now."</div><div class="r-author"><strong>Karen M.</strong> · Delray Beach</div></div>
+      <div class="review-card"><div class="r-stars">★ ★ ★ ★ ★</div><div class="r-text">"Came home to a fresh house and my husband almost cried. Every detail handled. Worth every penny."</div><div class="r-author"><strong>Patricia L.</strong> · Parkland</div></div>
+      <div class="review-card"><div class="r-stars">★ ★ ★ ★ ★</div><div class="r-text">"After our renovation the dust was unbelievable. Ultra Shine left it move-in ready in one visit. Pros."</div><div class="r-author"><strong>The Davidsons</strong> · Boynton Beach</div></div>
+      <div class="review-card"><div class="r-stars">★ ★ ★ ★ ★</div><div class="r-text">"I've used three different cleaning companies in Boca. Ultra Shine is by far the most thorough — I'm done shopping."</div><div class="r-author"><strong>Rachel T.</strong> · Coral Springs</div></div>
+      <div class="review-card"><div class="r-stars">★ ★ ★ ★ ★</div><div class="r-text">"Booked them for a move-out clean. Got my full deposit back. Landlord said it was the cleanest unit she'd seen."</div><div class="r-author"><strong>Marcus R.</strong> · Deerfield Beach</div></div>
+      <div class="review-card"><div class="r-stars">★ ★ ★ ★ ★</div><div class="r-text">"Best cleaning service we've found in Boca. Trustworthy team, beautifully done, and they remember our preferences."</div><div class="r-author"><strong>The Tellers</strong> · Boca Raton</div></div>
+      <div class="review-card"><div class="r-stars">★ ★ ★ ★ ★</div><div class="r-text">"Tiago and his team transformed our office. Now we use them weekly — clients always comment on how clean it is."</div><div class="r-author"><strong>Brookline Real Estate</strong> · Fort Lauderdale</div></div>
+      <div class="review-card"><div class="r-stars">★ ★ ★ ★ ★</div><div class="r-text">"Got a quote at 9 AM, scheduled by 11, my house was sparkling by 3. The Rena team is the best in Boca, hands down."</div><div class="r-author"><strong>Sandra P.</strong> · Boca Raton</div></div>
+      <div class="review-card"><div class="r-stars">★ ★ ★ ★ ★</div><div class="r-text">"Mariana was incredible — every corner spotless, and she even folded the laundry. We're booking weekly now."</div><div class="r-author"><strong>Karen M.</strong> · Delray Beach</div></div>
+      <div class="review-card"><div class="r-stars">★ ★ ★ ★ ★</div><div class="r-text">"Came home to a fresh house and my husband almost cried. Every detail handled. Worth every penny."</div><div class="r-author"><strong>Patricia L.</strong> · Parkland</div></div>
+      <div class="review-card"><div class="r-stars">★ ★ ★ ★ ★</div><div class="r-text">"After our renovation the dust was unbelievable. Ultra Shine left it move-in ready in one visit. Pros."</div><div class="r-author"><strong>The Davidsons</strong> · Boynton Beach</div></div>
+      <div class="review-card"><div class="r-stars">★ ★ ★ ★ ★</div><div class="r-text">"I've used three different cleaning companies in Boca. Ultra Shine is by far the most thorough — I'm done shopping."</div><div class="r-author"><strong>Rachel T.</strong> · Coral Springs</div></div>
+      <div class="review-card"><div class="r-stars">★ ★ ★ ★ ★</div><div class="r-text">"Booked them for a move-out clean. Got my full deposit back. Landlord said it was the cleanest unit she'd seen."</div><div class="r-author"><strong>Marcus R.</strong> · Deerfield Beach</div></div>
+      <div class="review-card"><div class="r-stars">★ ★ ★ ★ ★</div><div class="r-text">"Best cleaning service we've found in Boca. Trustworthy team, beautifully done, and they remember our preferences."</div><div class="r-author"><strong>The Tellers</strong> · Boca Raton</div></div>
+      <div class="review-card"><div class="r-stars">★ ★ ★ ★ ★</div><div class="r-text">"Tiago and his team transformed our office. Now we use them weekly — clients always comment on how clean it is."</div><div class="r-author"><strong>Brookline Real Estate</strong> · Fort Lauderdale</div></div>
     </div>
   </div>
 </section>
 
+<section class="areas" id="areas">
+  <div class="areas-grid">
+    <div class="areas-head">
+      <div class="section-eyebrow">Where We Serve</div>
+      <h2 class="section-headline">Across South<br>Florida's <em>finest</em><br>neighborhoods.</h2>
+      <p class="areas-body">Professional house, deep, move-in/out, commercial, and post-construction cleaning across Palm Beach and Broward County. <em>If you're nearby and we're not on the list — call us anyway.</em></p>
+      <div class="county-block">
+        <div class="county-name">Palm Beach County</div>
+        <div class="cities-list">
+          <span class="city-tag">Boca Raton</span><span class="city-tag">Delray Beach</span><span class="city-tag">Boynton Beach</span><span class="city-tag">Lake Worth</span><span class="city-tag">West Palm Beach</span><span class="city-tag">Wellington</span><span class="city-tag">Parkland</span>
+        </div>
+      </div>
+      <div class="county-block">
+        <div class="county-name">Broward County</div>
+        <div class="cities-list">
+          <span class="city-tag">Coral Springs</span><span class="city-tag">Fort Lauderdale</span><span class="city-tag">Coconut Creek</span><span class="city-tag">Deerfield Beach</span><span class="city-tag">Pompano Beach</span><span class="city-tag">Margate</span>
+        </div>
+      </div>
+    </div>
+    <div class="areas-photo">
+      <div class="areas-photo-tag">
+        <div class="areas-photo-tag-eye">Local · Insured · Trusted</div>
+        <div class="areas-photo-tag-h">Your local team,<br>at your door <em>tomorrow.</em></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="promise">
+  <div class="promise-grid">
+    <div>
+      <div class="promise-tag">The Promise</div>
+      <h2 class="promise-headline">Done <em>right.</em><br>Or done <em>again.</em></h2>
+    </div>
+    <div>
+      <p class="promise-body">At Ultra Shine, your satisfaction is our top priority. We don't just aim to meet expectations — we work hard to <em>exceed them every visit.</em></p>
+      <p class="promise-body">If for any reason you're not completely satisfied, simply tell us within 24 hours and our team returns to address it promptly — at no additional cost. No excuses, no hassle, no hidden fees.</p>
+      <div class="promise-pillars">
+        <div class="pillar"><div class="pillar-h">No excuses</div><div class="pillar-d">We own the result</div></div>
+        <div class="pillar"><div class="pillar-h">No hassle</div><div class="pillar-d">Reach out, we return</div></div>
+        <div class="pillar"><div class="pillar-h">No fees</div><div class="pillar-d">Fixes are always free</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="faq" id="faq">
+  <div class="faq-grid">
+    <div class="faq-head">
+      <div class="section-eyebrow">Common Questions</div>
+      <h2 class="section-headline">Answers,<br>before <em>you ask.</em></h2>
+      <p class="faq-head-body">Everything we wish every new client already knew. Don't see yours? Just text us — we answer fast.</p>
+      <div class="faq-image">
+        <div class="faq-image-tag">
+          <div class="faq-image-tag-eye">Detail · Care · Trust</div>
+          <div class="faq-image-tag-h">Every corner.<br>Every visit.</div>
+        </div>
+      </div>
+    </div>
+    <div class="faq-list">
+      <div class="faq-item open"><div class="faq-q">What's the difference between Regular and Deep Cleaning?<span class="faq-q-icon">−</span></div><div class="faq-a">Regular Cleaning covers routine upkeep — kitchen counters, sinks, appliance exteriors, bathrooms, dusting, vacuuming, and tidying living areas. Deep Cleaning includes all regular tasks plus more intensive work — ceiling fan blades, light fixtures, blinds, furniture, scrubbing stovetops, cabinet fronts, tiles, vacuuming crevices, and polishing mirrors.</div></div>
+      <div class="faq-item"><div class="faq-q">When should I choose Regular vs. Deep Cleaning?<span class="faq-q-icon">+</span></div><div class="faq-a">Choose Regular for ongoing maintenance (weekly or bi-weekly). Choose Deep if it's been a long time since your last professional clean, after renovations, before guests arrive, or anytime you want a more thorough reset of your space.</div></div>
+      <div class="faq-item"><div class="faq-q">How can I pay?<span class="faq-q-icon">+</span></div><div class="faq-a">After the service, you'll receive an invoice by email or phone. Payment options include credit/debit card via the invoice link, Zelle, or Venmo. We do not accept cash or checks.</div></div>
+      <div class="faq-item"><div class="faq-q">Why choose Ultra Shine Cleaning?<span class="faq-q-icon">+</span></div><div class="faq-a">We're a local, family-owned company serving Boca Raton and the surrounding areas of Palm Beach and Broward County. Our team is fully insured, professionally trained, and background-checked. We offer flexible scheduling, transparent pricing, and easy online booking.</div></div>
+      <div class="faq-item"><div class="faq-q">What makes Ultra Shine Cleaning stand out?<span class="faq-q-icon">+</span></div><div class="faq-a">We provide Regular, Deep, Move-In/Out, Commercial, and Post-Construction cleaning, follow detailed checklists for thoroughness, offer automated invoicing with multiple payment options, and employ vetted, insured teams for dependable service every visit.</div></div>
+      <div class="faq-item"><div class="faq-q">Do you use pet-friendly products?<span class="faq-q-icon">+</span></div><div class="faq-a">Yes. We use products that are safe for pets and will accommodate any specific sensitivities or preferences if you let us know in advance.</div></div>
+      <div class="faq-item"><div class="faq-q">Do I have to be home during the cleaning?<span class="faq-q-icon">+</span></div><div class="faq-a">No, being home is optional. Many clients provide access instructions and return to a freshly cleaned home. We'll handle the rest.</div></div>
+      <div class="faq-item"><div class="faq-q">Can you use my own cleaning products?<span class="faq-q-icon">+</span></div><div class="faq-a">If you prefer specific products or brands, tell us in advance and we'll use them. We can also provide a list of recommended products for you to purchase (used exclusively in your home), and we always bring additional supplies as needed.</div></div>
+      <div class="faq-item"><div class="faq-q">How do you provide a quote?<span class="faq-q-icon">+</span></div><div class="faq-a">Estimates are based on your home's square footage, number of bedrooms and bathrooms, and the type of cleaning (Regular, Deep, Move-In/Out, etc.) — to produce a tailored, transparent price within an hour of your request.</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-final">
+  <div class="section-eyebrow">Ready When You Are</div>
+  <h2 class="cta-final-h">A cleaner home,<br>without the <em>stress.</em></h2>
+  <p class="cta-final-sub">Tell us a little about your space and we'll send a fast, transparent quote within an hour. No contracts. No pressure. Just a clean home.</p>
+  <div class="cta-final-row">
+    <a href="quote/" class="btn-primary">Request Your Free Quote</a>
+    <span class="cta-final-phone">(561) 583-6694</span>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="footer-grid">
+    <div class="footer-col">
+      <img src="public/images/logo_white_tight.png" alt="Ultra Shine Cleaning" style="width: 160px; margin-bottom: 22px;">
+      <p>Reliable residential and commercial cleaning across South Florida. Trained, background-checked team delivering consistent, high-quality results with flexible scheduling and no contracts.</p>
+      <p style="margin-top: 6px;">Boca Raton, FL 33428</p>
+    </div>
+    <div class="footer-col"><h4>Services</h4><ul><li><a href="#">Regular Cleaning</a></li><li><a href="#">Deep Cleaning</a></li><li><a href="#">Move In / Out</a></li><li><a href="#">Commercial</a></li><li><a href="#">Post-Construction</a></li></ul></div>
+    <div class="footer-col"><h4>Company</h4><ul><li><a href="#about">About Us</a></li><li><a href="#reviews">Reviews</a></li><li><a href="#faq">FAQ</a></li><li><a href="#">Work For Us</a></li><li><a href="#">Customer Guidelines</a></li></ul></div>
+    <div class="footer-col"><h4>Contact</h4><ul><li><a href="tel:5615836694">(561) 583-6694</a></li><li><a href="mailto:Contact@Ultrashinecleaningfl.com">Contact@Ultrashinecleaningfl.com</a></li><li style="margin-top: 12px;"><a href="quote/">Request a Quote →</a></li></ul></div>
+  </div>
+  <div class="footer-bottom"><span>© 2026 Ultra Shine Cleaning · All Rights Reserved</span><span>Boca Raton · Palm Beach + Broward</span></div>
+</footer>
 </body>
 </html>

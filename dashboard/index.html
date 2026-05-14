@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Owner Dashboard · Ultra Shine Cleaning</title>
+<meta name="robots" content="noindex, nofollow">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,300..900,0..100&family=Outfit:wght@200..700&display=swap');
+:root {
+  --cream: #F4ECDB; --cream-2: #EFE5D0; --cream-3: #E8DDC4;
+  --navy: #1F3F77; --navy-deep: #15294C; --navy-soft: #2A4F8F;
+  --blush: #D9B5A8; --blush-soft: #E8CFC4;
+  --gold: #C9A961; --sage: #7DB39B;
+  --line: rgba(31, 63, 119, 0.12); --line-2: rgba(31, 63, 119, 0.18);
+  --r-sm: 10px; --r-md: 16px; --r-lg: 24px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Outfit', sans-serif; font-weight: 300; background: var(--cream); color: var(--navy-deep); -webkit-font-smoothing: antialiased; min-height: 100vh; }
+.nav { padding: 24px 48px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--line); background: var(--cream); }
+.nav-brand { display: flex; align-items: baseline; gap: 14px; }
+.nav-brand h1 { font-family: 'Fraunces', serif; font-weight: 300; font-style: italic; font-variation-settings: 'opsz' 144, 'SOFT' 100; font-size: 28px; letter-spacing: -0.012em; }
+.nav-brand h1 em { color: var(--blush); }
+.nav-brand .sub { font-size: 11px; letter-spacing: 0.3em; text-transform: uppercase; opacity: 0.55; }
+.nav-meta { font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; opacity: 0.6; }
+.wrap { padding: 32px 48px 80px; max-width: 1480px; margin: 0 auto; }
+.section-eyebrow { font-weight: 400; font-size: 11px; letter-spacing: 0.42em; text-transform: uppercase; opacity: 0.55; margin-bottom: 12px; }
+.section-headline { font-family: 'Fraunces', serif; font-weight: 300; font-variation-settings: 'opsz' 144, 'SOFT' 50; font-size: 44px; line-height: 1; letter-spacing: -0.022em; margin-bottom: 28px; }
+.section-headline em { font-style: italic; font-variation-settings: 'opsz' 144, 'SOFT' 100; color: var(--blush); }
+.kpi-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; margin-bottom: 40px; }
+.kpi { background: white; border-radius: var(--r-md); padding: 20px; border: 1px solid var(--line); }
+.kpi-label { font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; opacity: 0.55; margin-bottom: 8px; }
+.kpi-value { font-family: 'Fraunces', serif; font-weight: 300; font-size: 32px; letter-spacing: -0.02em; }
+.kpi-value em { font-style: italic; font-variation-settings: 'opsz' 144, 'SOFT' 100; color: var(--blush); }
+.kpi-delta { font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; margin-top: 6px; opacity: 0.65; }
+.kpi-delta.up { color: var(--sage); }
+.kpi-delta.down { color: #A33; }
+.row-2col { display: grid; grid-template-columns: 1.4fr 1fr; gap: 24px; margin-bottom: 40px; }
+.card { background: white; border-radius: var(--r-md); padding: 28px; border: 1px solid var(--line); }
+.card h3 { font-family: 'Fraunces', serif; font-weight: 400; font-size: 22px; margin-bottom: 4px; }
+.card .card-sub { font-size: 12px; letter-spacing: 0.15em; text-transform: uppercase; opacity: 0.5; margin-bottom: 20px; }
+.upcoming-list { display: flex; flex-direction: column; gap: 14px; }
+.upcoming-item { display: grid; grid-template-columns: 80px 1fr auto; gap: 16px; align-items: center; padding: 14px 16px; border: 1px solid var(--line); border-radius: var(--r-sm); transition: background 0.15s; }
+.upcoming-item:hover { background: var(--cream-2); }
+.upcoming-date { font-family: 'Fraunces', serif; font-style: italic; font-size: 18px; line-height: 1; }
+.upcoming-date small { display: block; font-family: 'Outfit', sans-serif; font-style: normal; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; opacity: 0.55; margin-top: 4px; }
+.upcoming-title { font-size: 14px; }
+.upcoming-title .type { font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; opacity: 0.55; display: block; margin-bottom: 2px; }
+.upcoming-status { padding: 4px 12px; border-radius: 999px; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; }
+.status-done { background: rgba(125,179,155,0.18); color: var(--sage); }
+.status-pending { background: rgba(31,63,119,0.08); color: var(--navy); }
+.status-partial { background: rgba(201,169,97,0.18); color: var(--gold); }
+.status-posted { background: rgba(217,181,168,0.22); color: var(--blush); }
+.insights-block { padding: 22px 24px; background: var(--cream-2); border-radius: var(--r-sm); margin-bottom: 14px; }
+.insights-block h4 { font-family: 'Fraunces', serif; font-weight: 400; font-size: 16px; margin-bottom: 6px; }
+.insights-block .num { font-family: 'Fraunces', serif; font-weight: 300; font-size: 28px; }
+.insights-block .num em { font-style: italic; color: var(--blush); }
+.insights-block p { font-size: 12px; opacity: 0.65; }
+.placeholder { padding: 24px; background: linear-gradient(135deg, var(--cream-2), var(--cream-3)); border-radius: var(--r-md); border: 1px dashed var(--line-2); text-align: center; margin-bottom: 14px; }
+.placeholder h4 { font-family: 'Fraunces', serif; font-style: italic; font-weight: 300; font-size: 18px; margin-bottom: 4px; }
+.placeholder p { font-size: 12px; opacity: 0.65; max-width: 360px; margin: 0 auto; }
+.placeholder .meta { font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; opacity: 0.4; margin-top: 10px; }
+iframe { width: 100%; height: 1200px; border: none; border-radius: var(--r-md); display: block; }
+.calendar-wrap { margin-top: 24px; }
+.btn { display: inline-flex; align-items: center; gap: 10px; padding: 10px 18px; background: var(--navy-deep); color: var(--cream); border-radius: 999px; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; text-decoration: none; transition: all 0.2s; }
+.btn:hover { background: var(--navy); transform: translateY(-1px); }
+.btn.subtle { background: transparent; color: var(--navy-deep); border: 1px solid var(--line-2); }
+.btn.subtle:hover { background: var(--cream-2); }
+@media (max-width: 1000px) {
+  .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+  .row-2col { grid-template-columns: 1fr; }
+  .wrap { padding: 24px; }
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-brand">
+    <h1>Owner <em>Dashboard</em></h1>
+    <span class="sub">Ultra Shine · Internal</span>
+  </div>
+  <div class="nav-meta">
+    <span id="today-date"></span> ·
+    <a href="/" style="color: var(--navy-deep); opacity: 0.65;">← back to site</a>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <!-- KPI ROW -->
+  <div class="section-eyebrow">— This month at a glance</div>
+  <h2 class="section-headline">Where the <em>numbers</em> stand.</h2>
+
+  <div class="kpi-grid">
+    <div class="kpi">
+      <div class="kpi-label">Posts scheduled</div>
+      <div class="kpi-value">64</div>
+      <div class="kpi-delta">2 posts/day · 30 days</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Done</div>
+      <div class="kpi-value"><em id="kpi-done">8</em></div>
+      <div class="kpi-delta up">↑ Week 1 in production</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Posted live</div>
+      <div class="kpi-value" id="kpi-posted">2</div>
+      <div class="kpi-delta">May 10 · Mother's Day launch</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Pending</div>
+      <div class="kpi-value" id="kpi-pending">48</div>
+      <div class="kpi-delta">Weeks 2–5</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Stories planned</div>
+      <div class="kpi-value">96</div>
+      <div class="kpi-delta">3 per day · all 32 days</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Active campaigns</div>
+      <div class="kpi-value"><em>2</em></div>
+      <div class="kpi-delta">Mother's Day · Referral</div>
+    </div>
+  </div>
+
+  <!-- 2-COLUMN ROW: UPCOMING + ENGAGEMENT -->
+  <div class="row-2col">
+
+    <!-- UPCOMING POSTS -->
+    <div class="card">
+      <div class="card-sub">— Coming up next</div>
+      <h3>Upcoming this week</h3>
+      <div class="upcoming-list" style="margin-top: 20px;" id="upcoming-list"></div>
+    </div>
+
+    <!-- ENGAGEMENT METRICS -->
+    <div class="card">
+      <div class="card-sub">— Live social insights</div>
+      <h3>Engagement</h3>
+
+      <div class="placeholder" style="margin-top: 20px;">
+        <h4>Connect Instagram Business</h4>
+        <p>Real follower count, post reach, story views, and DM volume from your live IG account will appear here once Meta Graph API is connected.</p>
+        <div class="meta">Setup ~30 min · One-time</div>
+      </div>
+
+      <div class="insights-block">
+        <h4>Mother's Day campaign</h4>
+        <div class="num"><em id="mom-dms">—</em> DMs</div>
+        <p>Once IG is connected, this counts every DM with keyword "MOM" since May 10.</p>
+      </div>
+
+      <div class="insights-block">
+        <h4>Referral program (launches May 22)</h4>
+        <div class="num"><em>—</em> referrals tracked</div>
+        <p>Connect Jobber or Sheet for live referral attribution.</p>
+      </div>
+
+      <a href="#" class="btn" style="margin-top: 12px;" onclick="alert('To connect IG: 1) Convert account to Business or Creator. 2) Link to Facebook Page. 3) Create Meta Developer app at developers.facebook.com. 4) Get long-lived page access token. 5) Add token to Netlify env vars. I can wire the rest.'); return false;">Set up IG connection</a>
+    </div>
+  </div>
+
+  <!-- 30-DAY CALENDAR -->
+  <div class="section-eyebrow" style="margin-top: 12px;">— The full month</div>
+  <h2 class="section-headline">30-day <em>content</em> calendar.</h2>
+
+  <div class="calendar-wrap card" style="padding: 4px;">
+    <iframe src="/dashboard/calendar.html" title="Ultra Shine 30-day calendar"></iframe>
+  </div>
+
+  <!-- ADDITIONAL TOOLS -->
+  <div class="row-2col" style="margin-top: 40px;">
+    <div class="card">
+      <div class="card-sub">— Today's checklist</div>
+      <h3>What to ship today</h3>
+      <ul style="margin-top: 20px; list-style: none; font-size: 14px; line-height: 2;">
+        <li>✦ Review tomorrow's AM + PM captions</li>
+        <li>✦ Drop logo into any pending Canva designs</li>
+        <li>✦ Schedule stories via Later/Buffer (or post manually)</li>
+        <li>✦ Reply to DMs from yesterday's campaign</li>
+        <li>✦ Check engagement on yesterday's posts</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-sub">— Quick links</div>
+      <h3>Shortcuts</h3>
+      <div style="margin-top: 20px; display: flex; flex-direction: column; gap: 10px;">
+        <a href="/dashboard/calendar.html" class="btn subtle">Full calendar →</a>
+        <a href="https://www.canva.com" target="_blank" class="btn subtle">Open Canva →</a>
+        <a href="https://www.instagram.com/ultrashinecleaning" target="_blank" class="btn subtle">Open Instagram →</a>
+        <a href="/quote/" class="btn subtle">Public quote page →</a>
+        <a href="tel:5615836694" class="btn subtle">Call · (561) 583-6694</a>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const today = new Date();
+document.getElementById('today-date').textContent = today.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+
+const UPCOMING = [
+  { date: 'May 13', day: 'Wed', am: 'Dishwasher facts · 6-slide', pm: 'Bathroom Before/After · needs photos', status: 'partial' },
+  { date: 'May 14', day: 'Thu', am: 'Regular vs Deep · 6-slide', pm: 'Team morning prep', status: 'partial' },
+  { date: 'May 15', day: 'Fri', am: 'Founder Friday · 5-slide', pm: 'Mother\'s Day · 1 week left', status: 'partial' },
+  { date: 'May 16', day: 'Sat', am: '10-min weekend reset · 5-slide', pm: '13 cities map', status: 'partial' },
+  { date: 'May 17', day: 'Sun', am: 'Sunday energy', pm: 'Client review', status: 'done' }
+];
+
+const ul = document.getElementById('upcoming-list');
+UPCOMING.forEach(d => {
+  const [m, day] = d.date.split(' ');
+  ul.innerHTML += `
+    <div class="upcoming-item">
+      <div class="upcoming-date">${day}<small>${m} · ${d.day}</small></div>
+      <div class="upcoming-title">
+        <span class="type">AM · ${d.am}</span>
+        <span class="type">PM · ${d.pm}</span>
+      </div>
+      <div class="upcoming-status status-${d.status}">${d.status}</div>
+    </div>
+  `;
+});
+</script>
+
+</body>
+</html>

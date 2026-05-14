@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Ultra Shine · 30-Day Content Calendar</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  :root {
+    --navy: #0F2541;
+    --cream: #F5F1E8;
+    --blush: #E8C8B8;
+    --coral: #D85A30;
+    --gray: #888780;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
+    background: var(--cream);
+    color: var(--navy);
+    padding: 32px 24px;
+    line-height: 1.5;
+  }
+  .wrap { max-width: 1280px; margin: 0 auto; }
+  header { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 24px; }
+  h1 { font-family: 'Fraunces', Georgia, serif; font-size: 28px; font-weight: 700; font-style: italic; }
+  h1 em { color: var(--coral); font-style: italic; }
+  .meta { font-size: 12px; color: var(--gray); letter-spacing: 0.1em; text-transform: uppercase; }
+  .legend { display: flex; gap: 16px; margin: 20px 0 28px; flex-wrap: wrap; font-size: 12px; }
+  .legend-item { display: flex; align-items: center; gap: 6px; cursor: pointer; padding: 4px 10px; border-radius: 16px; border: 1px solid transparent; transition: all 0.15s; }
+  .legend-item:hover { background: rgba(15,37,65,0.04); }
+  .legend-item.active { background: var(--navy); color: var(--cream); }
+  .legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .stats { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; margin-bottom: 28px; }
+  .stat { background: white; padding: 14px 16px; border-radius: 10px; border: 1px solid rgba(15,37,65,0.08); }
+  .stat-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--gray); margin-bottom: 4px; }
+  .stat-value { font-size: 22px; font-weight: 700; font-family: 'Fraunces', Georgia, serif; }
+  .calendar { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; }
+  .col-head { font-size: 10px; text-transform: uppercase; letter-spacing: 0.15em; color: var(--gray); text-align: center; padding-bottom: 6px; font-weight: 600; }
+  .day { background: white; border-radius: 10px; padding: 10px; border: 1px solid rgba(15,37,65,0.08); min-height: 160px; cursor: pointer; transition: all 0.15s; position: relative; display: flex; flex-direction: column; }
+  .day:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(15,37,65,0.08); }
+  .day.empty { background: transparent; border: none; cursor: default; }
+  .day.empty:hover { transform: none; box-shadow: none; }
+  .day.posted { background: rgba(15,37,65,0.04); }
+  .day-num { font-size: 11px; font-weight: 600; color: var(--gray); margin-bottom: 6px; }
+  .day-num strong { color: var(--navy); font-size: 16px; font-weight: 700; font-family: 'Fraunces', Georgia, serif; }
+  .slot { padding: 6px 7px; border-radius: 6px; margin-bottom: 4px; font-size: 10.5px; line-height: 1.3; border-left: 3px solid var(--gray); background: rgba(0,0,0,0.02); }
+  .slot.am { background: rgba(232,200,184,0.18); }
+  .slot.pm { background: rgba(216,90,48,0.08); }
+  .slot-time { font-size: 8.5px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--gray); font-weight: 600; }
+  .slot-title { font-weight: 500; color: var(--navy); margin-top: 1px; }
+  .slot-type { font-size: 8.5px; text-transform: uppercase; letter-spacing: 0.08em; margin-top: 2px; opacity: 0.7; }
+  .slot.status-done { border-left-color: #1D9E75; }
+  .slot.status-partial { border-left-color: #BA7517; }
+  .slot.status-pending { border-left-color: #888780; }
+  .slot.status-posted { border-left-color: #534AB7; }
+  .stories-count { font-size: 9px; color: var(--gray); margin-top: auto; padding-top: 6px; border-top: 1px solid rgba(15,37,65,0.06); display: flex; justify-content: space-between; }
+  .week-tag { position: absolute; top: -8px; left: 8px; background: var(--navy); color: var(--cream); font-size: 8.5px; padding: 2px 7px; border-radius: 10px; letter-spacing: 0.1em; text-transform: uppercase; }
+  .detail-panel { position: fixed; right: 0; top: 0; bottom: 0; width: 420px; background: white; box-shadow: -6px 0 24px rgba(0,0,0,0.12); padding: 32px 28px; overflow-y: auto; transform: translateX(100%); transition: transform 0.25s; z-index: 100; }
+  .detail-panel.open { transform: translateX(0); }
+  .detail-close { background: none; border: none; font-size: 24px; position: absolute; top: 16px; right: 16px; cursor: pointer; color: var(--gray); }
+  .detail-day { font-family: 'Fraunces', Georgia, serif; font-size: 24px; font-style: italic; margin-bottom: 4px; }
+  .detail-day strong { color: var(--coral); }
+  .detail-slot { background: var(--cream); padding: 16px; border-radius: 8px; margin-top: 16px; }
+  .detail-slot h3 { font-size: 13px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--gray); margin-bottom: 8px; }
+  .detail-slot h4 { font-family: 'Fraunces', Georgia, serif; font-size: 18px; font-style: italic; margin-bottom: 8px; }
+  .detail-slot p { font-size: 13px; color: var(--navy); margin: 6px 0; line-height: 1.5; }
+  .pill { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; margin-right: 4px; }
+  .pill-done { background: #E1F5EE; color: #04342C; }
+  .pill-partial { background: #FAEEDA; color: #412402; }
+  .pill-pending { background: #F1EFE8; color: #444441; }
+  .pill-posted { background: #EEEDFE; color: #26215C; }
+  .stories-list { margin-top: 14px; padding-top: 12px; border-top: 1px solid rgba(15,37,65,0.1); }
+  .stories-list h5 { font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--gray); margin-bottom: 6px; }
+  .stories-list ul { list-style: none; padding-left: 0; font-size: 12px; }
+  .stories-list li { padding: 3px 0; padding-left: 14px; position: relative; }
+  .stories-list li::before { content: '✦'; position: absolute; left: 0; color: var(--coral); }
+  @media (max-width: 900px) {
+    .calendar { grid-template-columns: repeat(2, 1fr); }
+    .col-head { display: none; }
+    .stats { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Ultra Shine · 30-day <em>content</em> calendar</h1>
+    <span class="meta">May 10 — Jun 10 · 2026</span>
+  </header>
+
+  <div class="stats" id="stats"></div>
+
+  <div class="legend" id="legend"></div>
+
+  <div class="calendar" id="calendar"></div>
+</div>
+
+<div class="detail-panel" id="detailPanel">
+  <button class="detail-close" onclick="document.getElementById('detailPanel').classList.remove('open')">×</button>
+  <div id="detailContent"></div>
+</div>
+
+<script>
+const TYPES = {
+  educational: { label: 'Educational', color: '#534AB7' },
+  beforeafter: { label: 'Before / After', color: '#D85A30' },
+  team: { label: 'Team / BTS', color: '#0F6E56' },
+  founder: { label: 'Founder Story', color: '#185FA5' },
+  campaign: { label: 'Campaign Push', color: '#A32D2D' },
+  mood: { label: 'Mood / Reset', color: '#888780' },
+  review: { label: 'Client Review', color: '#3C3489' },
+  local: { label: 'Local / Coverage', color: '#0C447C' },
+  myth: { label: 'Myth Busting', color: '#993556' }
+};
+
+const CALENDAR = [
+  { date: '2026-05-10', day: 'Sun', week: 1, am: { time: '9:00 AM', title: 'Mother\'s Day Shine Reset launch', type: 'campaign', format: 'Carousel', status: 'posted' }, pm: { time: '5:00 PM', title: 'Mother\'s Day mood inspiration', type: 'campaign', format: 'Single image', status: 'posted' }, stories: ['Mother\'s Day teaser', 'Campaign launch CTA', 'Booking countdown'] },
+  { date: '2026-05-11', day: 'Mon', week: 1, am: { time: '8:00 AM', title: 'Fresh Week / Fresh House', type: 'mood', format: 'Single photo', status: 'done' }, pm: { time: '4:00 PM', title: 'Sponge bacteria fact', type: 'educational', format: '7-slide carousel', status: 'done' }, stories: ['Fresh start mood', '5.5B bacteria teaser', 'Microwave vs replace poll'] },
+  { date: '2026-05-12', day: 'Tue', week: 1, am: { time: '8:00 AM', title: 'Shower glass stay clear', type: 'educational', format: '5-slide carousel', status: 'partial', note: 'shipped as 1 image — needs 4 more slides' }, pm: { time: '4:00 PM', title: 'Caught the team mid-bathroom', type: 'team', format: 'Single photo', status: 'done' }, stories: ['Trick Tuesday teaser', 'BTS team in action', 'Question box for next deep clean'] },
+  { date: '2026-05-13', day: 'Wed', week: 1, am: { time: '8:00 AM', title: '5 things about your dishwasher', type: 'educational', format: '6-slide carousel', status: 'partial', note: 'shipped as 1 image — needs 5 more slides' }, pm: { time: '7:00 PM', title: 'Master bathroom transformation', type: 'beforeafter', format: 'Carousel · needs REAL photos', status: 'partial', note: 'AI split is placeholder' }, stories: ['Dishwasher fact tease', 'B+A sneak peek', 'Poll: oven vs dishwasher'] },
+  { date: '2026-05-14', day: 'Thu', week: 1, am: { time: '8:00 AM', title: 'Regular vs Deep clean', type: 'educational', format: '6-slide carousel', status: 'partial', note: 'shipped as 1 image — needs 5 more slides' }, pm: { time: '4:00 PM', title: 'Team morning supply prep', type: 'team', format: 'Single photo', status: 'done' }, stories: ['FAQ quiz sticker', '6:30 AM team ritual', 'DM "QUOTE" CTA'] },
+  { date: '2026-05-15', day: 'Fri', week: 1, am: { time: '8:00 AM', title: 'Why we built Ultra Shine', type: 'founder', format: '5-slide carousel', status: 'partial', note: 'shipped as 1 image — needs 4 more slides' }, pm: { time: '11:00 AM', title: 'Mother\'s Day · 1 week left', type: 'campaign', format: 'Designed graphic', status: 'done' }, stories: ['Founder POV', 'Mother\'s Day countdown 5d', 'Limited spots reminder'] },
+  { date: '2026-05-16', day: 'Sat', week: 1, am: { time: '9:00 AM', title: '10-minute weekend reset', type: 'educational', format: '5-slide carousel', status: 'partial', note: 'shipped as 1 image — needs 4 more slides' }, pm: { time: '3:00 PM', title: '13 cities served · map', type: 'local', format: 'Designed graphic', status: 'done' }, stories: ['Running the 10-min reset', 'Today\'s route map', 'Zip code question box'] },
+  { date: '2026-05-17', day: 'Sun', week: 1, am: { time: '10:00 AM', title: 'Sunday in a clean house', type: 'mood', format: 'Single photo', status: 'done' }, pm: { time: '4:00 PM', title: 'Client review · Sarah M.', type: 'review', format: 'Designed quote', status: 'done', note: 'redone after birthday-cake template glitch' }, stories: ['Slow Sunday vibe', 'Real review feature', 'Book your week CTA'] },
+
+  { date: '2026-05-18', day: 'Mon', week: 2, am: { time: '8:00 AM', title: 'Bare counter mood', type: 'mood', format: 'Single photo', status: 'pending' }, pm: { time: '4:00 PM', title: 'Dust facts you didn\'t ask for', type: 'educational', format: 'Carousel', status: 'pending' }, stories: ['Counter reset mood', 'Dust fact tease', 'Save the carousel'] },
+  { date: '2026-05-19', day: 'Tue', week: 2, am: { time: '8:00 AM', title: '5 spots you\'re missing in your kitchen', type: 'educational', format: '6-slide carousel', status: 'pending' }, pm: { time: '4:00 PM', title: 'Team mid-stove top', type: 'team', format: 'Single photo', status: 'pending' }, stories: ['Trick Tuesday tease', 'Stove BTS clip', 'Poll: hood or backsplash worst?'] },
+  { date: '2026-05-20', day: 'Wed', week: 2, am: { time: '8:00 AM', title: 'What\'s in your bathroom drain', type: 'educational', format: 'Carousel', status: 'pending' }, pm: { time: '5:00 PM', title: 'Kitchen grease vanish', type: 'beforeafter', format: 'Canva video 20s', status: 'pending' }, stories: ['Drain fact card', 'Grease vanish clip', 'DM for kitchen quote'] },
+  { date: '2026-05-21', day: 'Thu', week: 2, am: { time: '8:00 AM', title: 'Every thing in a deep clean', type: 'educational', format: 'Carousel', status: 'pending' }, pm: { time: '4:00 PM', title: 'Team uniform spotlight', type: 'team', format: 'Single photo', status: 'pending' }, stories: ['Deep clean checklist', 'Uniform color story', 'Tap to book deep'] },
+  { date: '2026-05-22', day: 'Fri', week: 2, am: { time: '8:00 AM', title: 'Why we won\'t lowball pricing', type: 'founder', format: 'Carousel', status: 'pending' }, pm: { time: '11:00 AM', title: 'REFERRAL PROGRAM LAUNCH', type: 'campaign', format: 'Designed graphic', status: 'pending', note: 'HERO POST · 1=20% / 2=30% / 3=FREE' }, stories: ['Pricing story', 'Referral launch', 'DM REFER'] },
+  { date: '2026-05-23', day: 'Sat', week: 2, am: { time: '9:00 AM', title: 'Microfiber vs paper towels', type: 'educational', format: 'Carousel', status: 'pending' }, pm: { time: '3:00 PM', title: 'Beach day sand rescue', type: 'local', format: 'Single photo', status: 'pending' }, stories: ['Microfiber facts', 'Beach sand BTS', 'Local Saturday vibes'] },
+  { date: '2026-05-24', day: 'Sun', week: 2, am: { time: '10:00 AM', title: 'Sunday only-clean-house', type: 'mood', format: 'Single photo', status: 'pending' }, pm: { time: '4:00 PM', title: '5-star Delray review', type: 'review', format: 'Designed quote', status: 'pending' }, stories: ['Sunday energy', 'Review feature', 'Refer + save'] },
+
+  { date: '2026-05-25', day: 'Mon', week: 3, am: { time: '8:00 AM', title: 'Memorial Day reset', type: 'mood', format: 'Single photo', status: 'pending' }, pm: { time: '4:00 PM', title: 'Florida mold + mildew facts', type: 'educational', format: 'Carousel', status: 'pending' }, stories: ['Memorial Day calm', 'Humidity fact', 'Schedule a deep clean'] },
+  { date: '2026-05-26', day: 'Tue', week: 3, am: { time: '8:00 AM', title: 'Florida humidity bathroom rescue', type: 'educational', format: 'Carousel', status: 'pending' }, pm: { time: '4:00 PM', title: 'Team mid-bathroom v2', type: 'team', format: 'Single photo', status: 'pending' }, stories: ['Trick Tuesday', 'Team mid-action', 'Humidity poll'] },
+  { date: '2026-05-27', day: 'Wed', week: 3, am: { time: '8:00 AM', title: 'Baseboards trap 70% of dust', type: 'educational', format: 'Carousel', status: 'pending' }, pm: { time: '5:00 PM', title: 'Baseboards reveal', type: 'beforeafter', format: 'Carousel', status: 'pending' }, stories: ['Baseboard fact', 'Reveal slider', 'Save the post'] },
+  { date: '2026-05-28', day: 'Thu', week: 3, am: { time: '8:00 AM', title: 'Do I need to be home?', type: 'educational', format: 'Carousel', status: 'pending' }, pm: { time: '4:00 PM', title: 'Toilet paper triangle review', type: 'review', format: 'Designed quote', status: 'pending' }, stories: ['Quiz: home or away', 'TP triangle moment', 'DM QUOTE'] },
+  { date: '2026-05-29', day: 'Fri', week: 3, am: { time: '8:00 AM', title: 'From one van to 13 cities', type: 'founder', format: 'Carousel', status: 'pending' }, pm: { time: '11:00 AM', title: 'Late Mother\'s Day gift', type: 'campaign', format: 'Single image', status: 'pending' }, stories: ['Origin story', 'Mom\'s reset reminder', 'Refer + save tier 2'] },
+  { date: '2026-05-30', day: 'Sat', week: 3, am: { time: '9:00 AM', title: '10-min pre-guest reset', type: 'educational', format: 'Carousel', status: 'pending' }, pm: { time: '3:00 PM', title: 'Service map · expanded', type: 'local', format: 'Designed graphic', status: 'pending' }, stories: ['Pre-guest timer', 'Coverage map', 'Local Saturday'] },
+  { date: '2026-05-31', day: 'Sun', week: 3, am: { time: '10:00 AM', title: 'End of month reset', type: 'mood', format: 'Single photo', status: 'pending' }, pm: { time: '4:00 PM', title: 'Review wall part 1', type: 'review', format: 'Designed quote', status: 'pending' }, stories: ['Monthly reset', 'Review wall preview', 'Book June calls'] },
+
+  { date: '2026-06-01', day: 'Mon', week: 4, am: { time: '8:00 AM', title: 'June 1 reset', type: 'mood', format: 'Single photo', status: 'pending' }, pm: { time: '4:00 PM', title: 'Summer prep checklist', type: 'educational', format: 'Carousel', status: 'pending' }, stories: ['New month mood', 'Summer prep tease', 'Save the checklist'] },
+  { date: '2026-06-02', day: 'Tue', week: 4, am: { time: '8:00 AM', title: '3 products we love · 2 we don\'t', type: 'educational', format: 'Carousel', status: 'pending', note: 'honest review angle' }, pm: { time: '4:00 PM', title: 'Team mid-music kitchen', type: 'team', format: 'Single photo', status: 'pending' }, stories: ['Product opinions', 'Music BTS', 'DM your product Qs'] },
+  { date: '2026-06-03', day: 'Wed', week: 4, am: { time: '8:00 AM', title: 'Your shower glass isn\'t actually clear', type: 'educational', format: 'Carousel', status: 'pending' }, pm: { time: '5:00 PM', title: 'Shower glass restore', type: 'beforeafter', format: 'Canva video 20s', status: 'pending' }, stories: ['Glass fact', 'Restore clip', 'DM glass quote'] },
+  { date: '2026-06-04', day: 'Thu', week: 4, am: { time: '8:00 AM', title: 'What products do you use?', type: 'educational', format: 'Carousel', status: 'pending', note: 'kid + pet safe' }, pm: { time: '4:00 PM', title: 'Day in the life · 6 hours', type: 'team', format: 'Carousel', status: 'pending' }, stories: ['Product safety FAQ', 'Day in life clip', 'DM about pet-safe'] },
+  { date: '2026-06-05', day: 'Fri', week: 4, am: { time: '8:00 AM', title: 'What "Ultra Shine" actually means', type: 'founder', format: 'Carousel', status: 'pending' }, pm: { time: '11:00 AM', title: 'Referral reminder', type: 'campaign', format: 'Designed graphic', status: 'pending' }, stories: ['Standards story', 'Refer + earn', 'Tier 3 FREE'] },
+  { date: '2026-06-06', day: 'Sat', week: 4, am: { time: '9:00 AM', title: 'Microwave deep clean with lemon', type: 'educational', format: 'Carousel', status: 'pending' }, pm: { time: '3:00 PM', title: 'Local Saturday vibes', type: 'local', format: 'Single photo', status: 'pending' }, stories: ['Lemon hack tease', 'Local moment', 'Refer + save'] },
+  { date: '2026-06-07', day: 'Sun', week: 4, am: { time: '10:00 AM', title: 'Quiet Sunday in a quiet clean house', type: 'mood', format: 'Single photo', status: 'pending' }, pm: { time: '4:00 PM', title: 'Review wall part 2', type: 'review', format: 'Designed quote', status: 'pending' }, stories: ['Quiet Sunday', 'Reviews compilation', 'Book your reset'] },
+
+  { date: '2026-06-08', day: 'Mon', week: 5, am: { time: '8:00 AM', title: 'Made bed mood', type: 'mood', format: 'Single photo', status: 'pending' }, pm: { time: '4:00 PM', title: '5 hidden dirt spots most never clean', type: 'educational', format: 'Carousel', status: 'pending' }, stories: ['Bed mood', 'Hidden dirt tease', 'Save the carousel'] },
+  { date: '2026-06-09', day: 'Tue', week: 5, am: { time: '8:00 AM', title: '15-min pre-guest reset', type: 'educational', format: 'Carousel', status: 'pending' }, pm: { time: '4:00 PM', title: 'Final wipe-down moment', type: 'team', format: 'Single photo', status: 'pending' }, stories: ['Pre-guest timer', 'Final wipe BTS', 'Last call for June'] },
+  { date: '2026-06-10', day: 'Wed', week: 5, am: { time: '8:00 AM', title: 'Why cleaning gifts have highest follow-through', type: 'educational', format: 'Carousel', status: 'pending' }, pm: { time: '5:00 PM', title: 'Mother\'s Day campaign CLOSE', type: 'campaign', format: 'Carousel · HERO', status: 'pending', note: 'final push · last chance' }, stories: ['Gift fact', 'Campaign close', 'Last call CTA'] }
+];
+
+let activeFilter = null;
+
+function renderStats() {
+  const total = CALENDAR.length * 2;
+  const done = CALENDAR.reduce((n, d) => n + (d.am.status === 'done' ? 1 : 0) + (d.pm.status === 'done' ? 1 : 0), 0);
+  const posted = CALENDAR.reduce((n, d) => n + (d.am.status === 'posted' ? 1 : 0) + (d.pm.status === 'posted' ? 1 : 0), 0);
+  const partial = CALENDAR.reduce((n, d) => n + (d.am.status === 'partial' ? 1 : 0) + (d.pm.status === 'partial' ? 1 : 0), 0);
+  const pending = CALENDAR.reduce((n, d) => n + (d.am.status === 'pending' ? 1 : 0) + (d.pm.status === 'pending' ? 1 : 0), 0);
+  const stories = CALENDAR.reduce((n, d) => n + d.stories.length, 0);
+
+  document.getElementById('stats').innerHTML = `
+    <div class="stat"><div class="stat-label">Total posts</div><div class="stat-value">${total}</div></div>
+    <div class="stat"><div class="stat-label">Posted live</div><div class="stat-value">${posted}</div></div>
+    <div class="stat"><div class="stat-label">Done</div><div class="stat-value">${done}</div></div>
+    <div class="stat"><div class="stat-label">Partial</div><div class="stat-value">${partial}</div></div>
+    <div class="stat"><div class="stat-label">Pending</div><div class="stat-value">${pending}</div></div>
+    <div class="stat"><div class="stat-label">Stories</div><div class="stat-value">${stories}</div></div>
+  `;
+}
+
+function renderLegend() {
+  const html = Object.entries(TYPES).map(([k, v]) => `
+    <div class="legend-item ${activeFilter === k ? 'active' : ''}" data-type="${k}">
+      <span class="legend-dot" style="background:${v.color}"></span>${v.label}
+    </div>
+  `).join('');
+  document.getElementById('legend').innerHTML = `<div class="legend-item ${activeFilter === null ? 'active' : ''}" data-type="all">All</div>` + html;
+
+  document.querySelectorAll('.legend-item').forEach(el => {
+    el.addEventListener('click', () => {
+      const t = el.dataset.type;
+      activeFilter = (t === 'all' || activeFilter === t) ? null : t;
+      renderLegend();
+      renderCalendar();
+    });
+  });
+}
+
+function renderCalendar() {
+  const dayHeads = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  let html = dayHeads.map(d => `<div class="col-head">${d}</div>`).join('');
+
+  CALENDAR.forEach(d => {
+    const dim = (activeFilter && d.am.type !== activeFilter && d.pm.type !== activeFilter) ? 'opacity:0.3;' : '';
+    const date = new Date(d.date + 'T12:00:00');
+    const isFirstOfWeek = d.day === 'Mon' || (d === CALENDAR[0]);
+    const weekTag = (d.day === 'Mon') ? `<div class="week-tag">Week ${d.week}</div>` : '';
+    const dayClass = d.am.status === 'posted' || d.pm.status === 'posted' ? 'day posted' : 'day';
+    html += `
+      <div class="${dayClass}" style="${dim}" data-date="${d.date}" onclick="showDetail('${d.date}')">
+        ${weekTag}
+        <div class="day-num"><strong>${date.getDate()}</strong> ${d.day}</div>
+        <div class="slot am status-${d.am.status}" style="border-left-color:${TYPES[d.am.type].color}">
+          <div class="slot-time">${d.am.time} · AM</div>
+          <div class="slot-title">${d.am.title}</div>
+          <div class="slot-type">${TYPES[d.am.type].label}</div>
+        </div>
+        <div class="slot pm status-${d.pm.status}" style="border-left-color:${TYPES[d.pm.type].color}">
+          <div class="slot-time">${d.pm.time} · PM</div>
+          <div class="slot-title">${d.pm.title}</div>
+          <div class="slot-type">${TYPES[d.pm.type].label}</div>
+        </div>
+        <div class="stories-count">
+          <span>${d.stories.length} stories</span>
+          <span>→</span>
+        </div>
+      </div>
+    `;
+  });
+
+  document.getElementById('calendar').innerHTML = html;
+}
+
+function showDetail(date) {
+  const d = CALENDAR.find(x => x.date === date);
+  if (!d) return;
+  const dt = new Date(date + 'T12:00:00');
+  const long = dt.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+
+  const slotHTML = (slot) => `
+    <div class="detail-slot" style="border-left: 4px solid ${TYPES[slot.type].color};">
+      <h3>${slot.time}</h3>
+      <h4>${slot.title}</h4>
+      <p><span class="pill pill-${slot.status}">${slot.status}</span> <span style="color:${TYPES[slot.type].color}">${TYPES[slot.type].label}</span></p>
+      <p style="color:var(--gray); font-size:12px;">${slot.format}</p>
+      ${slot.note ? `<p style="font-style:italic; color:#A32D2D; font-size:12px;">⚠ ${slot.note}</p>` : ''}
+    </div>
+  `;
+
+  document.getElementById('detailContent').innerHTML = `
+    <div class="detail-day">${long.split(',')[0]}<br/><strong>${long.split(',').slice(1).join(',')}</strong></div>
+    <p style="color:var(--gray); font-size:12px; margin-top:4px;">Week ${d.week}</p>
+    ${slotHTML(d.am)}
+    ${slotHTML(d.pm)}
+    <div class="stories-list">
+      <h5>3 stories · matched to today's posts</h5>
+      <ul>
+        ${d.stories.map(s => `<li>${s}</li>`).join('')}
+      </ul>
+    </div>
+  `;
+  document.getElementById('detailPanel').classList.add('open');
+}
+
+renderStats();
+renderLegend();
+renderCalendar();
+</script>
+</body>
+</html>

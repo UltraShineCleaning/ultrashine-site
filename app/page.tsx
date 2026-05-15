@@ -7,6 +7,7 @@ import MotionSection, { MotionItem } from './_components/MotionSection';
 import TiltCard from './_components/TiltCard';
 import CountUp from './_components/CountUp';
 import MobileNav from './_components/MobileNav';
+import AreasImage from './_components/AreasImage';
 
 const TESTIMONIALS = [
   { name: 'Sandra P.', city: 'Boca Raton', text: 'Got a quote at 9 AM, scheduled by 11, my house was sparkling by 3. The Rena team is the best in Boca, hands down.' },
@@ -203,15 +204,7 @@ export default function HomePage() {
               </div>
             </div>
           </div>
-          <div
-            className={styles.areasPhoto}
-            style={{ backgroundImage: 'url(/images/flow_living_areas.jpg)' }}
-          >
-            <div className={styles.areasPhotoTag}>
-              <div className={styles.photoTagEye}>LOCAL · INSURED · TRUSTED</div>
-              <div className={`fraunces ${styles.photoTagH}`}>Your local team,<br />at your door <em>tomorrow.</em></div>
-            </div>
-          </div>
+          <AreasImage image="/images/flow_living_areas.jpg" />
         </div>
       </MotionSection>
 

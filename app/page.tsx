@@ -122,21 +122,21 @@ export default function HomePage() {
           Three simple steps to a <em>spotless</em> home.
         </h2>
         <div className={styles.steps}>
-          <div className={styles.step}>
+          <Link href="/quote" className={styles.step}>
             <div className={`mono ${styles.stepNum}`}>01</div>
             <h3 className="fraunces">Connect</h3>
             <p>Tell us about your home — size, frequency, anything special. Quote in your inbox within an hour.</p>
-          </div>
-          <div className={styles.step}>
+          </Link>
+          <Link href="/quote" className={styles.step}>
             <div className={`mono ${styles.stepNum}`}>02</div>
             <h3 className="fraunces">Schedule</h3>
             <p>Pick a date that works for you. We confirm by text. Your team is locked in.</p>
-          </div>
-          <div className={styles.step}>
+          </Link>
+          <Link href="/quote" className={styles.step}>
             <div className={`mono ${styles.stepNum}`}>03</div>
             <h3 className="fraunces">Enjoy The Sparkle</h3>
             <p>We arrive on time, clean to the standard, and leave the keys exactly where you asked.</p>
-          </div>
+          </Link>
         </div>
       </MotionSection>
 

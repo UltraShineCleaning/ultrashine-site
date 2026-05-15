@@ -48,7 +48,10 @@ export default function TiltCard({ href, image, label, description, wide }: Prop
   }
 
   return (
-    <motion.div style={{ perspective: 1200 }}>
+    <motion.div
+      style={{ perspective: 1200 }}
+      className={wide ? styles.serviceCardWideWrapper : ''}
+    >
       <motion.a
         ref={ref}
         href={href}

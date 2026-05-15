@@ -170,10 +170,13 @@
   box-shadow: var(--shadow-strong);
   text-decoration: none;
 }
-.serviceCardWide {
+.serviceCardWideWrapper {
   grid-column: span 2;
+}
+.serviceCardWide {
   flex-direction: row;
   min-height: 360px;
+  height: 100%;
 }
 .serviceCardWide .serviceImg { flex: 1.4; }
 .serviceCardWide .serviceContent { flex: 1; }
@@ -223,6 +226,27 @@
 }
 .step {
   text-align: center;
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  padding: 24px 16px;
+  border-radius: var(--r-md);
+  transition: background 0.25s, transform 0.25s;
+  cursor: pointer;
+}
+.step:hover {
+  background: rgba(31, 63, 119, 0.04);
+  transform: translateY(-4px);
+  text-decoration: none;
+}
+.step:hover .stepNum {
+  color: var(--coral, var(--blush));
+}
+.step h3 {
+  transition: color 0.2s;
+}
+.step:hover h3 {
+  color: var(--navy);
 }
 .stepNum {
   font-size: 64px;
@@ -739,7 +763,8 @@
   .promise { padding: 64px 32px; }
   .sectionHeadline { font-size: 36px; margin-bottom: 32px; }
   .servicesGrid { grid-template-columns: 1fr 1fr; }
-  .serviceCardWide { grid-column: span 2; flex-direction: column; min-height: 320px; }
+  .serviceCardWideWrapper { grid-column: span 2; }
+  .serviceCardWide { flex-direction: column; min-height: 320px; }
   .steps { grid-template-columns: 1fr; gap: 40px; }
   .whyGrid { grid-template-columns: 1fr 1fr; }
   .areasGrid, .faqGrid, .promiseGrid { grid-template-columns: 1fr; gap: 40px; }
@@ -765,7 +790,7 @@
   .services, .how, .why, .finalCta, .promise, .faq, .areas { padding: 56px 20px; }
   .reviewsHead { padding: 0 20px; }
   .servicesGrid, .whyGrid { grid-template-columns: 1fr; gap: 16px; }
-  .serviceCardWide { grid-column: span 1; }
+  .serviceCardWideWrapper { grid-column: span 1; }
   .serviceContent h3 { font-size: 24px; }
   .footer { grid-template-columns: 1fr; gap: 28px; padding: 40px 20px; }
   .sectionHeadline { font-size: 28px; }

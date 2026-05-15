@@ -28,7 +28,7 @@ export default function HeroParallax() {
       <motion.div
         className={styles.heroBg}
         style={{
-          backgroundImage: 'url(/images/hero_kitchen.jpg)',
+          backgroundImage: 'url(/images/flow_hero_kitchen.jpg)',
           y: reducedMotion ? '0%' : photoY,
           scale: reducedMotion ? 1.05 : photoScale,
         }}

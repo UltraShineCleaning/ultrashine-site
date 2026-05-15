@@ -149,7 +149,7 @@
 }
 .servicesGrid {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr;
   gap: 20px;
 }
 .serviceCard {
@@ -171,9 +171,9 @@
   text-decoration: none;
 }
 .serviceCardWide {
-  grid-column: span 3;
+  grid-column: span 2;
   flex-direction: row;
-  min-height: 380px;
+  min-height: 360px;
 }
 .serviceCardWide .serviceImg { flex: 1.4; }
 .serviceCardWide .serviceContent { flex: 1; }
@@ -466,7 +466,9 @@
 /* ============ PROMISE ============ */
 .promise {
   padding: 100px 100px;
-  background: var(--navy-deep);
+  background:
+    linear-gradient(rgba(21, 41, 76, 0.88), rgba(21, 41, 76, 0.92)),
+    url('/images/flow_sparkles.jpg') center/cover no-repeat;
   color: var(--cream);
   position: relative;
   overflow: hidden;
@@ -727,30 +729,60 @@
 @media (max-width: 1024px) {
   .nav { padding: 20px 32px; }
   .navMenu { display: none; }
-  .heroContent { padding: 120px 32px 80px; }
-  .heroHeadline { font-size: 64px; }
-  .heroSub { font-size: 18px; }
-  .trustStrip { grid-template-columns: 1fr 1fr; padding: 24px 32px; }
-  .services, .how, .why, .finalCta { padding: 80px 32px; }
-  .sectionHeadline { font-size: 38px; margin-bottom: 36px; }
+  .heroContent { padding: 120px 32px 80px; min-height: 700px; }
+  .hero, .heroContent { min-height: 700px; }
+  .heroHeadline { font-size: 56px; line-height: 1; }
+  .heroSub { font-size: 17px; }
+  .trustStrip { grid-template-columns: 1fr 1fr; padding: 24px 32px; gap: 24px; }
+  .services, .how, .why, .finalCta { padding: 64px 32px; }
+  .areas, .promise, .faq, .reviewsHead { padding-left: 32px; padding-right: 32px; }
+  .promise { padding: 64px 32px; }
+  .sectionHeadline { font-size: 36px; margin-bottom: 32px; }
   .servicesGrid { grid-template-columns: 1fr 1fr; }
-  .serviceCardWide { grid-column: span 2; flex-direction: column; }
-  .steps { grid-template-columns: 1fr; gap: 48px; }
+  .serviceCardWide { grid-column: span 2; flex-direction: column; min-height: 320px; }
+  .steps { grid-template-columns: 1fr; gap: 40px; }
   .whyGrid { grid-template-columns: 1fr 1fr; }
-  .finalHeadline { font-size: 44px; }
-  .footer { grid-template-columns: 1fr 1fr; padding: 50px 32px; }
+  .areasGrid, .faqGrid, .promiseGrid { grid-template-columns: 1fr; gap: 40px; }
+  .areasPhoto, .faqImage { aspect-ratio: 16/10; max-height: 400px; }
+  .reviewsHeadlineStars { font-size: 56px; }
+  .reviewsHead .sectionHeadline { font-size: 48px; }
+  .finalHeadline { font-size: 40px; }
+  .footer { grid-template-columns: 1fr 1fr; padding: 50px 32px; gap: 32px; }
 }
 @media (max-width: 640px) {
-  .nav { padding: 16px 20px; }
-  .navRight { gap: 12px; }
+  .nav { padding: 14px 20px; }
+  .navRight { gap: 10px; }
   .navPhone { display: none; }
-  .heroContent { padding: 100px 20px 60px; }
-  .heroHeadline { font-size: 44px; }
-  .trustStrip { grid-template-columns: 1fr; }
-  .trustBadge { border-left: none; border-top: 1px solid rgba(244,236,219,0.15); padding-top: 16px; }
+  .heroContent { padding: 90px 20px 60px; min-height: 600px; }
+  .hero, .heroContent { min-height: 600px; }
+  .heroHeadline { font-size: 40px; line-height: 1.02; }
+  .heroSub { font-size: 16px; margin-bottom: 32px; }
+  .heroCtaRow { gap: 12px; }
+  .trustStrip { grid-template-columns: 1fr; padding: 20px; }
+  .trustBadge { border-left: none; border-top: 1px solid rgba(244,236,219,0.15); padding: 16px; }
   .trustBadge:first-child { border-top: none; }
-  .servicesGrid, .whyGrid { grid-template-columns: 1fr; }
+  .trustValue { font-size: 16px; }
+  .services, .how, .why, .finalCta, .promise, .faq, .areas { padding: 56px 20px; }
+  .reviewsHead { padding: 0 20px; }
+  .servicesGrid, .whyGrid { grid-template-columns: 1fr; gap: 16px; }
   .serviceCardWide { grid-column: span 1; }
-  .footer { grid-template-columns: 1fr; gap: 32px; }
-  .finalHeadline { font-size: 32px; }
+  .serviceContent h3 { font-size: 24px; }
+  .footer { grid-template-columns: 1fr; gap: 28px; padding: 40px 20px; }
+  .sectionHeadline { font-size: 28px; }
+  .finalHeadline { font-size: 30px; line-height: 1.05; }
+  .promiseHeadline { font-size: 38px; }
+  .promiseGrid, .areasGrid, .faqGrid { gap: 32px; }
+  .promisePillars { grid-template-columns: 1fr; }
+  .pillar { border-right: none; border-bottom: 1px solid rgba(244,236,219,0.10); }
+  .pillar:last-child { border-bottom: none; }
+  .reviewCard { width: 300px; padding: 22px 24px; }
+  .reviewsHeadlineStars { font-size: 40px; }
+  .reviewsHead .sectionHeadline { font-size: 32px; }
+  .stepNum { font-size: 48px; }
+  .step h3 { font-size: 22px; }
+  .areasBody { font-size: 17px; }
+  .faqHeadBody { font-size: 17px; }
+  .faqQ { font-size: 16px; }
+  .citiesList { gap: 6px; }
+  .cityTag { padding: 8px 16px; font-size: 12px; }
 }

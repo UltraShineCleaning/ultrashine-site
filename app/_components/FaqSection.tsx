@@ -58,7 +58,7 @@ export default function FaqSection() {
           </p>
           <div
             className={styles.faqImage}
-            style={{ backgroundImage: 'url(/images/bathroom.jpg)' }}
+            style={{ backgroundImage: 'url(/images/flow_bathroom_sunset.jpg)' }}
           >
             <div className={styles.faqImageTag}>
               <div className={styles.photoTagEye}>DETAIL · CARE · TRUST</div>

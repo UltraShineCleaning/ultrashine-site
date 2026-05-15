@@ -6,6 +6,7 @@ import HeroParallax from './_components/HeroParallax';
 import MotionSection, { MotionItem } from './_components/MotionSection';
 import TiltCard from './_components/TiltCard';
 import CountUp from './_components/CountUp';
+import MobileNav from './_components/MobileNav';
 
 const TESTIMONIALS = [
   { name: 'Sandra P.', city: 'Boca Raton', text: 'Got a quote at 9 AM, scheduled by 11, my house was sparkling by 3. The Rena team is the best in Boca, hands down.' },
@@ -42,6 +43,7 @@ export default function HomePage() {
         <div className={styles.navRight}>
           <a href="tel:5615836694" className={styles.navPhone}>(561) 583-6694</a>
           <Link href="/quote" className="btn btn-primary">Get Quote</Link>
+          <MobileNav />
         </div>
       </nav>
 
@@ -81,14 +83,14 @@ export default function HomePage() {
         <div className={styles.servicesGrid}>
           <TiltCard
             href="/services/regular-cleaning"
-            image="/images/living_room.jpg"
+            image="/images/flow_living_room_navy.jpg"
             label="Regular Cleaning"
             description="Weekly, bi-weekly, or monthly maintenance to keep your home consistently clean."
             wide
           />
           <TiltCard
             href="/services/deep-cleaning"
-            image="/images/service_deep_cleaning.jpg"
+            image="/images/flow_hand_marble.jpg"
             label="Deep Cleaning"
             description="Quarterly reset for baseboards, ovens, grout, fixtures — the works."
           />
@@ -203,7 +205,7 @@ export default function HomePage() {
           </div>
           <div
             className={styles.areasPhoto}
-            style={{ backgroundImage: 'url(/images/wix_marketing_realistic_2.jpeg)' }}
+            style={{ backgroundImage: 'url(/images/flow_living_areas.jpg)' }}
           >
             <div className={styles.areasPhotoTag}>
               <div className={styles.photoTagEye}>LOCAL · INSURED · TRUSTED</div>

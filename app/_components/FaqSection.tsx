@@ -1,5 +1,6 @@
 'use client';
 import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import styles from '../page.module.css';
 
 const FAQS = [
@@ -69,17 +70,39 @@ export default function FaqSection() {
           {FAQS.map((item, i) => {
             const open = openIndex === i;
             return (
-              <div
+              <motion.div
                 key={i}
                 className={`${styles.faqItem} ${open ? styles.faqItemOpen : ''}`}
                 onClick={() => setOpenIndex(open ? null : i)}
+                whileHover={{ y: -2 }}
+                transition={{ duration: 0.2 }}
+                layout
               >
                 <div className={`fraunces ${styles.faqQ}`}>
                   <span>{item.q}</span>
-                  <span className={styles.faqQIcon}>{open ? '−' : '+'}</span>
+                  <motion.span
+                    className={styles.faqQIcon}
+                    animate={{ rotate: open ? 180 : 0 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    {open ? '−' : '+'}
+                  </motion.span>
                 </div>
-                {open && <div className={styles.faqA}>{item.a}</div>}
-              </div>
+                <AnimatePresence initial={false}>
+                  {open && (
+                    <motion.div
+                      key="content"
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: 'auto', opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                      style={{ overflow: 'hidden' }}
+                    >
+                      <div className={styles.faqA}>{item.a}</div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </motion.div>
             );
           })}
         </div>

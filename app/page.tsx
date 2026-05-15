@@ -4,6 +4,8 @@ import styles from './page.module.css';
 import FaqSection from './_components/FaqSection';
 import HeroParallax from './_components/HeroParallax';
 import MotionSection, { MotionItem } from './_components/MotionSection';
+import TiltCard from './_components/TiltCard';
+import CountUp from './_components/CountUp';
 
 const TESTIMONIALS = [
   { name: 'Sandra P.', city: 'Boca Raton', text: 'Got a quote at 9 AM, scheduled by 11, my house was sparkling by 3. The Rena team is the best in Boca, hands down.' },
@@ -57,11 +59,15 @@ export default function HomePage() {
           <div className={styles.trustLabel}>Every team member</div>
         </div>
         <div className={styles.trustBadge}>
-          <div className={styles.trustValue}>★ 4.9 Google</div>
+          <div className={styles.trustValue}>
+            ★ <CountUp to={4.9} decimals={1} duration={1.4} /> Google
+          </div>
           <div className={styles.trustLabel}>Verified reviews</div>
         </div>
         <div className={styles.trustBadge}>
-          <div className={styles.trustValue}>13 Cities Served</div>
+          <div className={styles.trustValue}>
+            <CountUp to={13} duration={1.6} /> Cities Served
+          </div>
           <div className={styles.trustLabel}>Palm Beach + Broward</div>
         </div>
       </MotionSection>
@@ -73,32 +79,32 @@ export default function HomePage() {
           Five services, one <em>standard</em>.
         </h2>
         <div className={styles.servicesGrid}>
-          <ServiceCard
+          <TiltCard
             href="/services/regular-cleaning"
             image="/images/living_room.jpg"
             label="Regular Cleaning"
             description="Weekly, bi-weekly, or monthly maintenance to keep your home consistently clean."
             wide
           />
-          <ServiceCard
+          <TiltCard
             href="/services/deep-cleaning"
             image="/images/service_deep_cleaning.jpg"
             label="Deep Cleaning"
             description="Quarterly reset for baseboards, ovens, grout, fixtures — the works."
           />
-          <ServiceCard
+          <TiltCard
             href="/services/move-in-out"
             image="/images/service_movein_boxes.jpg"
             label="Move-In / Move-Out"
             description="Landlord-grade clean to get your full deposit back."
           />
-          <ServiceCard
+          <TiltCard
             href="/services/commercial"
             image="/images/service_commercial_office.jpg"
             label="Commercial"
             description="Offices that close more clients. Custom schedules around your hours."
           />
-          <ServiceCard
+          <TiltCard
             href="/services/post-construction"
             image="/images/service_postconstruction.jpg"
             label="Post-Construction"
@@ -298,31 +304,6 @@ export default function HomePage() {
 }
 
 /* ---------- Sub-components ---------- */
-function ServiceCard({
-  href,
-  image,
-  label,
-  description,
-  wide,
-}: {
-  href: string;
-  image: string;
-  label: string;
-  description: string;
-  wide?: boolean;
-}) {
-  return (
-    <Link href={href} className={`${styles.serviceCard} ${wide ? styles.serviceCardWide : ''}`}>
-      <div className={styles.serviceImg} style={{ backgroundImage: `url(${image})` }} />
-      <div className={styles.serviceContent}>
-        <h3 className="fraunces">{label}</h3>
-        <p>{description}</p>
-        <span className={styles.serviceArrow}>→</span>
-      </div>
-    </Link>
-  );
-}
-
 function WhyCard({ title, body }: { title: string; body: string }) {
   return (
     <div className={styles.whyCard}>

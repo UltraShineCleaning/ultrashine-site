@@ -95,6 +95,14 @@
   gap: 24px;
   flex-wrap: wrap;
 }
+.scrollIndicator {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: var(--cream);
+  pointer-events: none;
+}
 
 /* ============ TRUST STRIP ============ */
 .trustStrip {
@@ -130,13 +138,13 @@
   font-size: 56px;
   line-height: 1;
   letter-spacing: -0.022em;
-  margin-top: 16px;
-  margin-bottom: 56px;
+  margin-top: 14px;
+  margin-bottom: 44px;
 }
 
 /* ============ SERVICES ============ */
 .services {
-  padding: 110px 60px;
+  padding: 80px 60px;
   background: var(--cream);
 }
 .servicesGrid {
@@ -202,7 +210,7 @@
 
 /* ============ HOW IT WORKS ============ */
 .how {
-  padding: 110px 60px;
+  padding: 80px 60px;
   background: var(--cream-2);
   text-align: center;
 }
@@ -239,7 +247,7 @@
 
 /* ============ WHY ============ */
 .why {
-  padding: 110px 60px;
+  padding: 80px 60px;
   background: var(--cream);
   text-align: center;
 }
@@ -271,7 +279,7 @@
 
 /* ============ REVIEWS MARQUEE ============ */
 .reviews {
-  padding: 110px 0;
+  padding: 80px 0;
   background: var(--navy-deep);
   color: var(--cream);
   overflow: hidden;
@@ -364,7 +372,7 @@
 
 /* ============ AREAS ============ */
 .areas {
-  padding: 110px 100px;
+  padding: 80px 100px;
   background: var(--cream);
 }
 .areasGrid {
@@ -549,7 +557,7 @@
 
 /* ============ FAQ ============ */
 .faq {
-  padding: 110px 100px;
+  padding: 80px 100px;
   background: var(--cream);
 }
 .faqGrid {
@@ -644,7 +652,7 @@
   background:
     linear-gradient(135deg, var(--navy-deep) 0%, var(--navy) 100%),
     radial-gradient(ellipse at 80% 30%, rgba(217,181,168,0.18) 0%, transparent 60%);
-  padding: 130px 60px;
+  padding: 100px 60px;
   text-align: center;
   color: var(--cream);
 }

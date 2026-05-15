@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Fraunces, Outfit, JetBrains_Mono } from 'next/font/google';
 import './globals.css';
+import SmoothScrollProvider from './_components/SmoothScrollProvider';
 
 // Brand fonts loaded via next/font (auto-optimized, self-hosted, no external Google CDN call)
 const fraunces = Fraunces({
@@ -57,7 +58,9 @@ export default function RootLayout({
       lang="en"
       className={`${fraunces.variable} ${outfit.variable} ${jetbrainsMono.variable}`}
     >
-      <body>{children}</body>
+      <body>
+        <SmoothScrollProvider>{children}</SmoothScrollProvider>
+      </body>
     </html>
   );
 }

@@ -2,6 +2,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import styles from './page.module.css';
 import FaqSection from './_components/FaqSection';
+import HeroParallax from './_components/HeroParallax';
+import MotionSection, { MotionItem } from './_components/MotionSection';
 
 const TESTIMONIALS = [
   { name: 'Sandra P.', city: 'Boca Raton', text: 'Got a quote at 9 AM, scheduled by 11, my house was sparkling by 3. The Rena team is the best in Boca, hands down.' },
@@ -41,33 +43,11 @@ export default function HomePage() {
         </div>
       </nav>
 
-      {/* ============ HERO ============ */}
-      <section className={styles.hero}>
-        <div
-          className={styles.heroBg}
-          style={{ backgroundImage: 'url(/images/hero_kitchen.jpg)' }}
-        />
-        <div className={styles.heroOverlay} />
-        <div className={styles.heroContent}>
-          <p className="eyebrow" style={{ color: 'var(--cream)', display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '36px' }}>
-            <span style={{ display: 'inline-block', width: '40px', height: '1px', background: 'var(--blush)' }} />
-            READY WHEN YOU ARE
-          </p>
-          <h1 className={`fraunces ${styles.heroHeadline}`}>
-            A home that <em>shines</em>. Without lifting a <em>finger</em>.
-          </h1>
-          <p className={`fraunces ${styles.heroSub}`}>
-            Boutique cleaning across Palm Beach + Broward County. Background-checked team, fully insured, no detail missed.
-          </p>
-          <div className={styles.heroCtaRow}>
-            <Link href="/quote" className="btn btn-primary">Request Your Free Quote</Link>
-            <a href="#services" className="btn btn-secondary">View Services</a>
-          </div>
-        </div>
-      </section>
+      {/* ============ HERO (parallax + motion) ============ */}
+      <HeroParallax />
 
       {/* ============ TRUST STRIP ============ */}
-      <section className={styles.trustStrip}>
+      <MotionSection className={styles.trustStrip}>
         <div className={styles.trustBadge}>
           <div className={styles.trustValue}>Fully Insured</div>
           <div className={styles.trustLabel}>+ Bonded</div>
@@ -84,10 +64,10 @@ export default function HomePage() {
           <div className={styles.trustValue}>13 Cities Served</div>
           <div className={styles.trustLabel}>Palm Beach + Broward</div>
         </div>
-      </section>
+      </MotionSection>
 
       {/* ============ SERVICES ============ */}
-      <section id="services" className={`${styles.services} dot-grid`}>
+      <MotionSection id="services" className={`${styles.services} dot-grid`}>
         <p className="eyebrow">WHAT WE OFFER</p>
         <h2 className={`fraunces ${styles.sectionHeadline}`}>
           Five services, one <em>standard</em>.
@@ -125,10 +105,10 @@ export default function HomePage() {
             description="HEPA-filtered, wall-to-wall — the dust the contractor leaves behind."
           />
         </div>
-      </section>
+      </MotionSection>
 
       {/* ============ HOW IT WORKS ============ */}
-      <section className={styles.how}>
+      <MotionSection className={styles.how}>
         <p className="eyebrow">HOW IT WORKS</p>
         <h2 className={`fraunces ${styles.sectionHeadline}`}>
           Three simple steps to a <em>spotless</em> home.
@@ -150,10 +130,10 @@ export default function HomePage() {
             <p>We arrive on time, clean to the standard, and leave the keys exactly where you asked.</p>
           </div>
         </div>
-      </section>
+      </MotionSection>
 
       {/* ============ WHY ULTRA SHINE ============ */}
-      <section className={`${styles.why} dot-grid`}>
+      <MotionSection className={`${styles.why} dot-grid`}>
         <p className="eyebrow">WHY ULTRA SHINE</p>
         <h2 className={`fraunces ${styles.sectionHeadline}`}>
           Built on <em>detail</em>. Trusted on results.
@@ -164,10 +144,10 @@ export default function HomePage() {
           <WhyCard title="Satisfaction Guaranteed" body="100% guarantee. If you're not happy, we come back free until you are." />
           <WhyCard title="Flexible Scheduling" body="Weekly, bi-weekly, monthly, or one-time. Reschedule with one text." />
         </div>
-      </section>
+      </MotionSection>
 
       {/* ============ REVIEWS MARQUEE ============ */}
-      <section id="reviews" className={styles.reviews}>
+      <MotionSection id="reviews" className={styles.reviews}>
         <div className={styles.reviewsHead}>
           <p className={`eyebrow ${styles.reviewsEyebrow}`}>TRUSTED ACROSS SOUTH FLORIDA</p>
           <h2 className={`fraunces ${styles.sectionHeadline}`}>What our <em>clients</em> say.</h2>
@@ -185,10 +165,10 @@ export default function HomePage() {
             ))}
           </div>
         </div>
-      </section>
+      </MotionSection>
 
       {/* ============ AREAS ============ */}
-      <section id="areas" className={styles.areas}>
+      <MotionSection id="areas" className={styles.areas}>
         <div className={styles.areasGrid}>
           <div>
             <p className="eyebrow">WHERE WE SERVE</p>
@@ -225,10 +205,10 @@ export default function HomePage() {
             </div>
           </div>
         </div>
-      </section>
+      </MotionSection>
 
       {/* ============ PROMISE ============ */}
-      <section className={styles.promise}>
+      <MotionSection className={styles.promise}>
         <div className={styles.promiseGrid}>
           <div>
             <div className={styles.promiseTag}>THE PROMISE</div>
@@ -259,13 +239,13 @@ export default function HomePage() {
             </div>
           </div>
         </div>
-      </section>
+      </MotionSection>
 
       {/* ============ FAQ ============ */}
       <FaqSection />
 
       {/* ============ FINAL CTA ============ */}
-      <section className={styles.finalCta}>
+      <MotionSection className={styles.finalCta}>
         <p className="eyebrow" style={{ color: 'var(--blush)' }}>READY WHEN YOU ARE</p>
         <h2 className={`fraunces ${styles.finalHeadline}`}>
           A cleaner home, <em>without the stress</em>.
@@ -274,7 +254,7 @@ export default function HomePage() {
           Request Your Free Quote
         </Link>
         <p className={styles.finalNote}>Custom quote in 1 hour · No pricing surprises · Trusted across 13 South Florida cities</p>
-      </section>
+      </MotionSection>
 
       {/* ============ FOOTER ============ */}
       <footer className={styles.footer}>

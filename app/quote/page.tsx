@@ -242,10 +242,10 @@ export default function QuotePage() {
                 Got it, {first}. <em>You're set.</em>
               </h2>
               <p className={styles.successBody}>
-                Tiago or Francine will reach out at <strong>{phone}</strong> within
-                the hour to confirm details and set up a quick walkthrough of your
-                home. Once we see the space, we'll send you a precise quote — every
-                home is different, so there's no one-size-fits-all number.
+                Our team will reach out at <strong>{phone}</strong> within the hour
+                to confirm details and set up a quick walkthrough of your home.
+                Once we see the space, we'll send you a precise quote — every home
+                is different, so there's no one-size-fits-all number.
               </p>
               <a href="tel:5615836694" className={styles.successCallCta}>
                 ✦ Call (561) 583-6694

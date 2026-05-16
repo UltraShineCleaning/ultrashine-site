@@ -263,6 +263,177 @@
   border-color: var(--blush);
 }
 
+/* ===== STATS ROW ===== */
+.statsRow {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin-bottom: 36px;
+}
+.statCard {
+  background: rgba(244, 236, 219, 0.05);
+  border: 1px solid rgba(244, 236, 219, 0.12);
+  border-radius: 12px;
+  padding: 22px 22px 18px;
+  position: relative;
+  overflow: hidden;
+}
+.statCardHi {
+  background: rgba(217, 181, 168, 0.10);
+  border-color: rgba(217, 181, 168, 0.30);
+}
+.statLabel {
+  font-family: var(--font-outfit), sans-serif;
+  font-weight: 400;
+  font-size: 10px;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--cream);
+  opacity: 0.7;
+  margin-bottom: 10px;
+}
+.statValue {
+  font-family: var(--font-fraunces), serif;
+  font-weight: 300;
+  font-variation-settings: 'opsz' 144, 'SOFT' 50;
+  font-size: 48px;
+  line-height: 1;
+  letter-spacing: -0.025em;
+  color: var(--cream);
+}
+.statValue em {
+  font-style: italic;
+  color: var(--blush);
+  font-variation-settings: 'opsz' 144, 'SOFT' 100;
+}
+.statSub {
+  font-family: var(--font-outfit), sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: var(--cream);
+  opacity: 0.65;
+  margin-top: 8px;
+}
+
+/* ===== LEADS LIST ===== */
+.leadsWrap {
+  margin-bottom: 36px;
+}
+.leadsList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.leadCard {
+  background: rgba(244, 236, 219, 0.05);
+  border: 1px solid rgba(244, 236, 219, 0.12);
+  border-radius: 12px;
+  padding: 18px 22px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 16px;
+  align-items: center;
+  transition: border-color 0.2s, background 0.2s;
+}
+.leadCard:hover {
+  border-color: rgba(217, 181, 168, 0.3);
+  background: rgba(244, 236, 219, 0.07);
+}
+.leadInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+.leadType {
+  font-family: var(--font-outfit), sans-serif;
+  font-weight: 400;
+  font-size: 9px;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--blush);
+  opacity: 0.9;
+}
+.leadName {
+  font-family: var(--font-fraunces), serif;
+  font-weight: 400;
+  font-size: 17px;
+  letter-spacing: -0.005em;
+  color: var(--cream);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.leadMeta {
+  font-family: var(--font-outfit), sans-serif;
+  font-size: 12px;
+  color: var(--cream);
+  opacity: 0.65;
+}
+.leadStatus {
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.statusDelivered { color: #9BD9A8; }
+.statusBounced  { color: #FDB5A8; }
+.statusOther    { color: var(--cream); opacity: 0.6; }
+
+.leadActions {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+}
+.actBtn {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: rgba(244, 236, 219, 0.08);
+  border: 1px solid rgba(244, 236, 219, 0.18);
+  display: grid;
+  place-items: center;
+  color: var(--cream);
+  text-decoration: none;
+  font-size: 15px;
+  transition: all 0.2s;
+}
+.actBtn:hover {
+  background: var(--blush);
+  color: var(--navy-deep);
+  border-color: var(--blush);
+}
+.actBtnPrimary {
+  background: var(--blush);
+  color: var(--navy-deep);
+  border-color: var(--blush);
+}
+
+.emptyState {
+  background: rgba(244, 236, 219, 0.04);
+  border: 1px dashed rgba(244, 236, 219, 0.20);
+  border-radius: 12px;
+  padding: 28px 24px;
+  text-align: center;
+  font-family: var(--font-fraunces), serif;
+  font-style: italic;
+  color: var(--cream);
+  opacity: 0.75;
+  font-variation-settings: 'opsz' 24, 'SOFT' 100;
+  font-size: 15px;
+}
+.errorState {
+  background: rgba(254, 202, 202, 0.06);
+  border: 1px solid rgba(254, 202, 202, 0.30);
+  border-radius: 10px;
+  padding: 14px 18px;
+  font-family: var(--font-outfit), sans-serif;
+  font-size: 12px;
+  color: #FDB5A8;
+  margin-bottom: 18px;
+}
+
 /* ===== HELP CARD ===== */
 .helpCard {
   background: rgba(244, 236, 219, 0.04);
@@ -396,6 +567,10 @@
   .tileWide { grid-column: span 1; }
   .quickActions { grid-template-columns: 1fr 1fr; }
   .heroTitle { font-size: 42px; }
+  .statsRow { grid-template-columns: 1fr 1fr; }
+  .statValue { font-size: 38px; }
+  .leadCard { grid-template-columns: 1fr; gap: 12px; }
+  .leadActions { justify-content: flex-start; }
 }
 @media (max-width: 480px) {
   .page { padding: 28px 18px 60px; }

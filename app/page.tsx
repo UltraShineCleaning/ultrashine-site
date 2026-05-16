@@ -7,7 +7,6 @@ import MotionSection, { MotionItem } from './_components/MotionSection';
 import TiltCard from './_components/TiltCard';
 import CountUp from './_components/CountUp';
 import MobileNav from './_components/MobileNav';
-import AreasImage from './_components/AreasImage';
 
 const TESTIMONIALS = [
   { name: 'Sandra P.', city: 'Boca Raton', text: 'Got a quote at 9 AM, scheduled by 11, my house was sparkling by 3. The Rena team is the best in Boca, hands down.' },
@@ -176,17 +175,23 @@ export default function HomePage() {
         </div>
       </MotionSection>
 
-      {/* ============ AREAS ============ */}
-      <MotionSection id="areas" className={styles.areas}>
-        <div className={styles.areasGrid}>
-          <div>
-            <p className="eyebrow">WHERE WE SERVE</p>
-            <h2 className={`fraunces ${styles.sectionHeadline}`} style={{ fontSize: 72 }}>
-              Across South Florida's <em>finest</em><br />neighborhoods.
-            </h2>
-            <p className={`fraunces ${styles.areasBody}`}>
-              Professional house, deep, move-in/out, commercial, and post-construction cleaning across Palm Beach and Broward County. <em>If you're nearby and we're not on the list — call us anyway.</em>
-            </p>
+      {/* ============ AREAS — full-bleed background photo ============ */}
+      <section id="areas" className={styles.areas}>
+        <div
+          className={styles.areasBg}
+          style={{ backgroundImage: 'url(/images/flow_living_areas.jpg)' }}
+        />
+        <div className={styles.areasOverlay} />
+        <MotionSection className={styles.areasContent}>
+          <p className={styles.areasEyebrow}>WHERE WE SERVE · 13 CITIES</p>
+          <h2 className={`fraunces ${styles.areasHeadline}`}>
+            Across South Florida's <em>finest</em> neighborhoods.
+          </h2>
+          <p className={`fraunces ${styles.areasBody}`}>
+            Professional house, deep, move-in/out, commercial, and post-construction cleaning across Palm Beach and Broward County. <em>If you're nearby and we're not on the list — call us anyway.</em>
+          </p>
+
+          <div className={styles.countyRow}>
             <div className={styles.countyBlock}>
               <div className={`fraunces ${styles.countyName}`}>Palm Beach County</div>
               <div className={styles.citiesList}>
@@ -204,9 +209,8 @@ export default function HomePage() {
               </div>
             </div>
           </div>
-          <AreasImage image="/images/flow_living_areas.jpg" />
-        </div>
-      </MotionSection>
+        </MotionSection>
+      </section>
 
       {/* ============ PROMISE ============ */}
       <MotionSection className={styles.promise}>

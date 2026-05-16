@@ -149,7 +149,7 @@
 
 /* ============ SERVICES ============ */
 .services {
-  padding: 80px 60px;
+  padding: 64px 60px 72px;
   background: var(--cream);
 }
 .servicesGrid {
@@ -219,7 +219,7 @@
 
 /* ============ HOW IT WORKS ============ */
 .how {
-  padding: 80px 60px;
+  padding: 64px 60px 72px;
   background: var(--cream-2);
   text-align: center;
 }
@@ -278,7 +278,7 @@
 
 /* ============ WHY ============ */
 .why {
-  padding: 80px 60px;
+  padding: 64px 60px 72px;
   background: var(--cream);
   text-align: center;
 }
@@ -405,7 +405,7 @@
 /* ============ AREAS — full-bleed background photo ============ */
 .areas {
   position: relative;
-  padding: 110px 60px;
+  padding: 88px 60px;
   overflow: hidden;
   background: var(--navy-deep);
   color: var(--cream);
@@ -590,7 +590,7 @@
 
 /* ============ PROMISE ============ */
 .promise {
-  padding: 100px 100px;
+  padding: 72px 80px;
   background:
     linear-gradient(rgba(21, 41, 76, 0.88), rgba(21, 41, 76, 0.92)),
     url('/images/flow_sparkles.jpg') center/cover no-repeat;
@@ -684,7 +684,7 @@
 
 /* ============ FAQ ============ */
 .faq {
-  padding: 80px 100px;
+  padding: 64px 80px 72px;
   background: var(--cream);
 }
 .faqGrid {
@@ -781,7 +781,7 @@
   background:
     linear-gradient(135deg, var(--navy-deep) 0%, var(--navy) 100%),
     radial-gradient(ellipse at 80% 30%, rgba(217,181,168,0.18) 0%, transparent 60%);
-  padding: 100px 60px;
+  padding: 80px 60px;
   text-align: center;
   color: var(--cream);
 }
@@ -861,7 +861,8 @@
   .heroHeadline { font-size: 56px; line-height: 1; }
   .heroSub { font-size: 17px; }
   .trustStrip { grid-template-columns: 1fr 1fr; padding: 24px 32px; gap: 24px; }
-  .services, .how, .why, .finalCta { padding: 64px 32px; }
+  .services, .how, .why, .finalCta { padding: 56px 32px 60px; }
+  .reviews { padding: 56px 32px; }
   .areas { padding: 72px 32px; }
   .promise, .faq, .reviewsHead { padding-left: 32px; padding-right: 32px; }
   .areasHeadline { font-size: 44px; }

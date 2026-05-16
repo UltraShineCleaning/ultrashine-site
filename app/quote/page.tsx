@@ -25,12 +25,12 @@ const FREQS: { key: FreqKey; label: string; sub: string }[] = [
   { key: 'weekly', label: 'Weekly', sub: 'kids + pets' },
 ];
 
-const ADD_ONS: { key: AddOnKey; name: string; label: string }[] = [
-  { key: 'oven', name: 'Inside Oven', label: '+$40' },
-  { key: 'fridge', name: 'Inside Fridge', label: '+$40' },
-  { key: 'windows', name: 'Inside Windows', label: '+$60' },
-  { key: 'cabinets', name: 'Inside Cabinets', label: '+$80' },
-  { key: 'laundry', name: 'Laundry Fold', label: '+$35' },
+const ADD_ONS: { key: AddOnKey; name: string; label: string; note?: string }[] = [
+  { key: 'oven', name: 'Inside Oven', label: '+$40–$60' },
+  { key: 'fridge', name: 'Inside Fridge', label: '+$40–$100' },
+  { key: 'windows', name: 'Inside Windows', label: '+$5–$10 / window' },
+  { key: 'cabinets', name: 'Inside Cabinets', label: '+$5–$10 / cabinet' },
+  { key: 'laundry', name: 'Laundry Fold', label: '+$35 up' },
   { key: 'pet', name: 'Pet-Safe Products', label: 'Free' },
 ];
 
@@ -247,9 +247,11 @@ export default function QuotePage() {
                 home. Once we see the space, we'll send you a precise quote — every
                 home is different, so there's no one-size-fits-all number.
               </p>
-              <p className={styles.btnCall}>
-                Need it sooner? Call us
-                <a href="tel:5615836694">(561) 583-6694</a>
+              <a href="tel:5615836694" className={styles.successCallCta}>
+                ✦ Call (561) 583-6694
+              </a>
+              <p className={styles.btnCall} style={{ marginTop: 14 }}>
+                Or wait for us to reach out
               </p>
             </motion.div>
           ) : (

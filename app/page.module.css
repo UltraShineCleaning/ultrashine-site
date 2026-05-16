@@ -97,11 +97,16 @@
 }
 .scrollIndicator {
   position: absolute;
-  bottom: 40px;
+  bottom: 28px;
   left: 50%;
   transform: translateX(-50%);
   color: var(--cream);
   pointer-events: none;
+  opacity: 0.85;
+}
+/* Hide scroll indicator on small screens — it collides with the hero CTAs */
+@media (max-width: 1024px) {
+  .scrollIndicator { display: none; }
 }
 
 /* ============ TRUST STRIP ============ */

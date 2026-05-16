@@ -23,7 +23,7 @@
 }
 
 .section {
-  padding: 80px 60px;
+  padding: 56px 60px 64px;
   background: var(--cream);
 }
 
@@ -92,7 +92,7 @@
 
 /* ===== SCENARIOS ===== */
 .scenariosSection {
-  padding: 80px 60px;
+  padding: 56px 60px 64px;
   background: var(--cream-2);
   text-align: center;
 }
@@ -138,7 +138,7 @@
 
 /* ===== HOW IT DIFFERS ===== */
 .differsSection {
-  padding: 80px 60px;
+  padding: 56px 60px 64px;
   background: var(--cream);
   text-align: center;
 }
@@ -189,7 +189,7 @@
 
 /* ===== FAQ ===== */
 .faqSection {
-  padding: 80px 60px;
+  padding: 56px 60px 64px;
   background: var(--cream-2);
 }
 .faqList {
@@ -243,7 +243,7 @@
 /* ===== MOBILE ===== */
 @media (max-width: 1024px) {
   .section, .scenariosSection, .differsSection, .faqSection {
-    padding: 60px 32px;
+    padding: 44px 32px 56px;
   }
   .sectionHeadline { font-size: 38px; margin-bottom: 36px; }
   .includedGrid { grid-template-columns: 1fr 1fr; gap: 20px; }
@@ -251,7 +251,7 @@
 }
 @media (max-width: 640px) {
   .section, .scenariosSection, .differsSection, .faqSection {
-    padding: 48px 20px;
+    padding: 36px 20px 44px;
   }
   .sectionHeadline { font-size: 28px; margin-bottom: 28px; }
   .includedGrid { grid-template-columns: 1fr; }

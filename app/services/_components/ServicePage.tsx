@@ -142,26 +142,6 @@ export default function ServicePage({ data }: { data: ServiceData }) {
         </motion.div>
       </section>
 
-      {/* TRUST STRIP — same as homepage for consistency */}
-      <MotionSection className={styles.trustStrip}>
-        <div className={styles.trustBadge}>
-          <div className={styles.trustValue}>Fully Insured</div>
-          <div className={styles.trustLabel}>+ Bonded</div>
-        </div>
-        <div className={styles.trustBadge}>
-          <div className={styles.trustValue}>Background-Checked</div>
-          <div className={styles.trustLabel}>Every team member</div>
-        </div>
-        <div className={styles.trustBadge}>
-          <div className={styles.trustValue}>★ 4.9 Google</div>
-          <div className={styles.trustLabel}>Verified reviews</div>
-        </div>
-        <div className={styles.trustBadge}>
-          <div className={styles.trustValue}>13 Cities Served</div>
-          <div className={styles.trustLabel}>Palm Beach + Broward</div>
-        </div>
-      </MotionSection>
-
       {/* WHAT'S INCLUDED */}
       <MotionSection id="whats-included" className={`${service.section} ${styles['dot-grid'] || ''} dot-grid`}>
         <p className="eyebrow">EVERY VISIT</p>

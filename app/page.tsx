@@ -2,7 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import styles from './page.module.css';
 import FaqSection from './_components/FaqSection';
-import HeroParallax from './_components/HeroParallax';
+import HeroScrollHome from './_components/HeroScrollHome';
 import MotionSection, { MotionItem } from './_components/MotionSection';
 import TiltCard from './_components/TiltCard';
 import CountUp from './_components/CountUp';
@@ -47,8 +47,8 @@ export default function HomePage() {
         </div>
       </nav>
 
-      {/* ============ HERO (parallax + motion) ============ */}
-      <HeroParallax />
+      {/* ============ HERO (cinematic 4-scene scroll-through) ============ */}
+      <HeroScrollHome />
 
       {/* ============ TRUST STRIP ============ */}
       <MotionSection className={styles.trustStrip}>

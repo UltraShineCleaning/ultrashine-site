@@ -1,0 +1,249 @@
+/* ==========================================================
+   HeroScrollHome · Pinned 4-scene cinematic scroll-through
+   Desktop: 400vh tall container, viewport pinned, crossfade scenes
+   Mobile: collapses to a single static hero (uses scene 1)
+   ========================================================== */
+
+.container {
+  position: relative;
+  height: 400vh; /* 4 scenes × 100vh = scrollable space */
+  background: var(--navy-deep);
+}
+
+.sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* Each scene fills the viewport, stacked on top of each other */
+.scene {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.bg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  will-change: transform, opacity;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(15, 30, 60, 0.35) 0%, transparent 25%, transparent 55%, rgba(10, 20, 45, 0.85) 100%),
+    radial-gradient(ellipse 800px 600px at 70% 0%, rgba(217, 181, 168, 0.08) 0%, transparent 60%);
+}
+
+.content {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 0 60px 100px;
+  z-index: 2;
+  pointer-events: auto;
+  color: var(--cream);
+  display: flex;
+  flex-direction: column;
+}
+
+.eyebrow {
+  font-family: var(--font-outfit), sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+  color: var(--cream);
+  opacity: 0.85;
+  display: inline-flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 26px;
+  width: fit-content;
+}
+.eyebrow::before {
+  content: '';
+  display: inline-block;
+  width: 40px;
+  height: 1px;
+  background: var(--blush);
+}
+
+.headline {
+  font-family: var(--font-fraunces), serif;
+  font-weight: 300;
+  font-variation-settings: 'opsz' 144, 'SOFT' 50;
+  font-size: 92px;
+  line-height: 0.96;
+  letter-spacing: -0.025em;
+  margin-bottom: 22px;
+  max-width: 1100px;
+  color: var(--cream);
+}
+.headline em {
+  font-style: italic;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100;
+  color: var(--blush);
+}
+
+.body {
+  font-family: var(--font-fraunces), serif;
+  font-style: italic;
+  font-weight: 300;
+  font-size: 22px;
+  line-height: 1.5;
+  font-variation-settings: 'opsz' 36, 'SOFT' 100;
+  max-width: 680px;
+  opacity: 0.9;
+  margin-bottom: 36px;
+}
+
+/* CTA row only shown on last scene */
+.ctaRow {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+
+/* ===== PROGRESS DOTS (4 across, fill as you scroll) ===== */
+.progress {
+  position: absolute;
+  bottom: 36px;
+  right: 60px;
+  z-index: 5;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  pointer-events: none;
+}
+.progressDot {
+  width: 32px;
+  height: 2px;
+  background: rgba(244, 236, 219, 0.3);
+  border-radius: 1px;
+  position: relative;
+  overflow: hidden;
+}
+.progressDot::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--blush);
+  transform-origin: left;
+}
+.progressDotActive::after { transform: scaleX(1); transition: transform 0.4s ease-out; }
+.progressDotInactive::after { transform: scaleX(0); }
+
+.progressLabel {
+  font-family: var(--font-outfit), sans-serif;
+  font-size: 10px;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--cream);
+  opacity: 0.7;
+  margin-left: 12px;
+}
+
+/* ===== SKIP INTRO ===== */
+.skipBtn {
+  position: absolute;
+  top: 28px;
+  right: 60px;
+  z-index: 5;
+  background: rgba(244, 236, 219, 0.08);
+  border: 1px solid rgba(244, 236, 219, 0.18);
+  color: var(--cream);
+  padding: 10px 20px;
+  border-radius: 999px;
+  font-family: var(--font-outfit), sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.skipBtn:hover {
+  background: var(--blush);
+  color: var(--navy-deep);
+  border-color: var(--blush);
+}
+
+/* ===== SCROLL CUE (only on first scene) ===== */
+.scrollCue {
+  position: absolute;
+  bottom: 28px;
+  left: 60px;
+  z-index: 5;
+  font-family: var(--font-outfit), sans-serif;
+  font-size: 10px;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--cream);
+  opacity: 0.7;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  pointer-events: none;
+}
+.scrollCueArrow {
+  font-family: var(--font-fraunces), serif;
+  font-size: 18px;
+  color: var(--blush);
+  animation: bounce 1.8s ease-in-out infinite;
+}
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); opacity: 0.7; }
+  50% { transform: translateY(8px); opacity: 1; }
+}
+
+/* ===== MOBILE FALLBACK ===== */
+/* Below 1024px, the pinned scroll-through is too janky on touch.
+   Collapse to a normal stacked hero showing scene 1 only +
+   below the fold, stack scenes 2-4 as normal sections. */
+@media (max-width: 1024px) {
+  .container {
+    height: auto;
+  }
+  .sticky {
+    position: relative;
+    height: 100vh;
+    min-height: 600px;
+  }
+  /* On mobile, only show scene 1 in the pinned area */
+  .scene { position: absolute; opacity: 1 !important; }
+  .scene:not(:first-child) {
+    position: relative;
+    height: 80vh;
+    min-height: 540px;
+    opacity: 1 !important;
+  }
+  .content { padding: 0 32px 56px; }
+  .headline { font-size: 56px; }
+  .body { font-size: 18px; }
+  .skipBtn { display: none; }
+  .progress { right: 32px; bottom: 28px; }
+  .scrollCue { left: 32px; }
+  .progressLabel { display: none; }
+}
+@media (max-width: 640px) {
+  .content { padding: 0 22px 44px; }
+  .headline { font-size: 38px; line-height: 1; margin-bottom: 18px; }
+  .body { font-size: 16px; margin-bottom: 24px; }
+  .eyebrow { font-size: 10px; letter-spacing: 0.3em; margin-bottom: 18px; }
+  .eyebrow::before { width: 24px; }
+  .progress { right: 22px; }
+  .scrollCue { left: 22px; bottom: 22px; }
+  .ctaRow { gap: 10px; }
+}

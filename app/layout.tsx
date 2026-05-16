@@ -1,7 +1,16 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { Fraunces, Outfit, JetBrains_Mono } from 'next/font/google';
 import './globals.css';
 import SmoothScrollProvider from './_components/SmoothScrollProvider';
+
+// Mobile viewport — without this, mobile browsers render at desktop width
+// and zoom out, leaving an empty band on the right side of the screen.
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+  themeColor: '#15294C',
+};
 
 // Brand fonts loaded via next/font (auto-optimized, self-hosted, no external Google CDN call)
 const fraunces = Fraunces({

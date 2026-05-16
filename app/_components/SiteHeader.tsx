@@ -28,7 +28,7 @@ export default function SiteHeader({ inPage = true }: Props) {
       <div className={styles.navMenu}>
         <a href={`${prefix}#services`}>Services</a>
         <a href={`${prefix}#areas`}>Areas</a>
-        <a href={`${prefix}#about`}>About</a>
+        <Link href="/about">About</Link>
         <a href={`${prefix}#reviews`}>Reviews</a>
         <a href={`${prefix}#faq`}>FAQ</a>
       </div>

@@ -11,62 +11,28 @@ type ServiceKey = 'regular' | 'deep' | 'move' | 'post';
 type FreqKey = 'one' | 'monthly' | 'biweekly' | 'weekly';
 type AddOnKey = 'oven' | 'fridge' | 'windows' | 'cabinets' | 'laundry' | 'pet';
 
-const SERVICES: { key: ServiceKey; name: string; desc: string; mult: number }[] = [
-  { key: 'regular', name: 'Regular Cleaning', desc: 'Recurring weekly, bi-weekly, or monthly', mult: 1.0 },
-  { key: 'deep', name: 'Deep Cleaning', desc: 'Top-to-bottom reset · 2× the time', mult: 1.85 },
-  { key: 'move', name: 'Move In / Out', desc: 'Empty home, deposit-back clean', mult: 2.2 },
-  { key: 'post', name: 'Post-Construction', desc: 'After renovation, dust + detail', mult: 2.6 },
+const SERVICES: { key: ServiceKey; name: string; desc: string }[] = [
+  { key: 'regular', name: 'Regular Cleaning', desc: 'Recurring weekly, bi-weekly, or monthly' },
+  { key: 'deep', name: 'Deep Cleaning', desc: 'Top-to-bottom reset · 2× the time' },
+  { key: 'move', name: 'Move In / Out', desc: 'Empty home, deposit-back clean' },
+  { key: 'post', name: 'Post-Construction', desc: 'After renovation, dust + detail' },
 ];
 
-const FREQS: { key: FreqKey; label: string; sub: string; mult: number }[] = [
-  { key: 'one', label: 'One-Time', sub: 'full price', mult: 1.0 },
-  { key: 'monthly', label: 'Monthly', sub: 'save 5%', mult: 0.95 },
-  { key: 'biweekly', label: 'Bi-Weekly', sub: 'save 15% · most popular', mult: 0.85 },
-  { key: 'weekly', label: 'Weekly', sub: 'save 20%', mult: 0.80 },
+const FREQS: { key: FreqKey; label: string; sub: string }[] = [
+  { key: 'one', label: 'One-Time', sub: 'just once' },
+  { key: 'monthly', label: 'Monthly', sub: 'every 30 days' },
+  { key: 'biweekly', label: 'Bi-Weekly', sub: 'most popular' },
+  { key: 'weekly', label: 'Weekly', sub: 'kids + pets' },
 ];
 
-const ADD_ONS: { key: AddOnKey; name: string; price: number; label: string }[] = [
-  { key: 'oven', name: 'Inside Oven', price: 40, label: '+$40' },
-  { key: 'fridge', name: 'Inside Fridge', price: 40, label: '+$40' },
-  { key: 'windows', name: 'Inside Windows', price: 60, label: '+$60' },
-  { key: 'cabinets', name: 'Inside Cabinets', price: 80, label: '+$80' },
-  { key: 'laundry', name: 'Laundry Fold', price: 35, label: '+$35' },
-  { key: 'pet', name: 'Pet-Safe Products', price: 0, label: 'Free' },
+const ADD_ONS: { key: AddOnKey; name: string; label: string }[] = [
+  { key: 'oven', name: 'Inside Oven', label: '+$40' },
+  { key: 'fridge', name: 'Inside Fridge', label: '+$40' },
+  { key: 'windows', name: 'Inside Windows', label: '+$60' },
+  { key: 'cabinets', name: 'Inside Cabinets', label: '+$80' },
+  { key: 'laundry', name: 'Laundry Fold', label: '+$35' },
+  { key: 'pet', name: 'Pet-Safe Products', label: 'Free' },
 ];
-
-/* ----- Quote estimate logic ----- */
-function calcEstimate(opts: {
-  service: ServiceKey;
-  freq: FreqKey;
-  bedrooms: number;
-  bathrooms: number;
-  sqft: number;
-  addOns: Set<AddOnKey>;
-}) {
-  const svc = SERVICES.find((s) => s.key === opts.service)!;
-  const frq = FREQS.find((f) => f.key === opts.freq)!;
-
-  // Base = $100 floor + sqft * $0.045 + bedrooms over 2 * $20 + baths over 1 * $25
-  const baseSqft = 100 + Math.max(opts.sqft, 800) * 0.045;
-  const bedExtra = Math.max(0, opts.bedrooms - 2) * 20;
-  const bathExtra = Math.max(0, opts.bathrooms - 1) * 25;
-  let base = (baseSqft + bedExtra + bathExtra) * svc.mult;
-
-  // Frequency discount only applies when not One-Time
-  base = base * frq.mult;
-
-  // Add-ons summed (no multiplier)
-  const addOnTotal = Array.from(opts.addOns).reduce((sum, k) => {
-    const ao = ADD_ONS.find((a) => a.key === k);
-    return sum + (ao?.price ?? 0);
-  }, 0);
-
-  const total = base + addOnTotal;
-  // ±10% range
-  const low = Math.round((total * 0.92) / 5) * 5;
-  const high = Math.round((total * 1.08) / 5) * 5;
-  return { low, high };
-}
 
 export default function QuotePage() {
   /* ----- State ----- */
@@ -86,12 +52,6 @@ export default function QuotePage() {
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
-  /* ----- Live estimate ----- */
-  const estimate = useMemo(
-    () => calcEstimate({ service, freq, bedrooms, bathrooms, sqft, addOns }),
-    [service, freq, bedrooms, bathrooms, sqft, addOns]
-  );
 
   /* ----- Helpers ----- */
   const toggleAddOn = (k: AddOnKey) => {
@@ -132,7 +92,6 @@ export default function QuotePage() {
         addOns: Array.from(addOns).map((k) => ADD_ONS.find((a) => a.key === k)?.name),
         contact: { first, last, phone, email },
         notes,
-        estimate,
         submittedAt: new Date().toISOString(),
       };
 
@@ -283,9 +242,10 @@ export default function QuotePage() {
                 Got it, {first}. <em>You're set.</em>
               </h2>
               <p className={styles.successBody}>
-                Your custom quote is on its way. Tiago or Francine will text you at{' '}
-                <strong>{phone}</strong> within the hour with the final number, available
-                dates, and any questions.
+                Tiago or Francine will reach out at <strong>{phone}</strong> within
+                the hour to confirm details and set up a quick walkthrough of your
+                home. Once we see the space, we'll send you a precise quote — every
+                home is different, so there's no one-size-fits-all number.
               </p>
               <p className={styles.btnCall}>
                 Need it sooner? Call us
@@ -557,28 +517,22 @@ export default function QuotePage() {
                 </div>
               </div>
 
-              {/* Live Estimate */}
+              {/* Custom-Quote Promise (no pricing — every home is different) */}
               <div className={styles.estimatePanel}>
-                <div className={styles.estLabel}>Your Estimated Quote</div>
-                <motion.div
-                  className={styles.estFigure}
-                  key={`${estimate.low}-${estimate.high}`}
-                  initial={{ opacity: 0.5, y: 4 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.25 }}
-                >
-                  <span className={styles.currency}>$</span>
-                  {estimate.low}
-                  <span className={styles.range}>—</span>
-                  <span className={styles.currency}>$</span>
-                  {estimate.high}
-                </motion.div>
+                <div className={styles.estLabel}>What happens next</div>
+                <div className={styles.promiseHead}>
+                  Every home is <em>different.</em>
+                </div>
                 <div className={styles.estNote}>
-                  Based on a {bedrooms}-bedroom, {bathrooms}-bathroom, {sqft.toLocaleString()} sq ft home in{' '}
-                  {city || 'your city'} on a{' '}
-                  {FREQS.find((f) => f.key === freq)?.label.toLowerCase()} schedule
-                  {addOns.size > 0 ? ` with ${addOns.size} add-on${addOns.size > 1 ? 's' : ''}` : ''}.
-                  Final quote sent within 1 hour after you submit.
+                  Once you submit, Tiago or Francine will reach out within the hour to
+                  arrange a quick in-person walkthrough — usually the same week. We
+                  see your space, ask the right questions, and only then give you a
+                  precise quote. No guesses, no inflated estimates, no pressure.
+                </div>
+                <div className={styles.promiseChips}>
+                  <span className={styles.promiseChip}>✦ Reply within 1 hour</span>
+                  <span className={styles.promiseChip}>✦ Free walkthrough</span>
+                  <span className={styles.promiseChip}>✦ Custom quote, no pressure</span>
                 </div>
               </div>
 

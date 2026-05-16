@@ -646,29 +646,41 @@
   opacity: 0.65;
   margin-bottom: 12px;
 }
-.estFigure {
+.promiseHead {
   font-family: var(--font-fraunces), serif;
   font-weight: 300;
   font-variation-settings: 'opsz' 144, 'SOFT' 50;
-  font-size: 64px;
-  line-height: 1;
-  letter-spacing: -0.025em;
-  margin-bottom: 12px;
+  font-size: 38px;
+  line-height: 1.05;
+  letter-spacing: -0.022em;
+  margin-bottom: 14px;
+  color: var(--cream);
 }
-.estFigure .currency {
-  font-size: 30px;
-  vertical-align: top;
+.promiseHead em {
   font-style: italic;
-  opacity: 0.65;
-  margin-right: 2px;
-  font-variation-settings: 'opsz' 36, 'SOFT' 100;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100;
+  color: var(--blush);
 }
-.estFigure .range {
-  font-style: italic;
-  font-size: 30px;
-  opacity: 0.55;
-  font-variation-settings: 'opsz' 36, 'SOFT' 100;
-  margin: 0 8px;
+.promiseChips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 18px;
+}
+.promiseChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 7px 14px;
+  border-radius: 999px;
+  background: rgba(244, 236, 219, 0.08);
+  border: 1px solid rgba(244, 236, 219, 0.14);
+  color: var(--cream);
+  font-family: var(--font-outfit), sans-serif;
+  font-weight: 300;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  opacity: 0.92;
 }
 .estNote {
   font-family: var(--font-fraunces), serif;
@@ -814,7 +826,7 @@
   .inputRowSplit, .inputRowThree { grid-template-columns: 1fr; }
   .addonGrid { grid-template-columns: 1fr; }
   .estimatePanel { padding: 24px 22px; }
-  .estFigure { font-size: 48px; }
+  .promiseHead { font-size: 28px; }
   .btnSubmit { padding: 18px 24px; font-size: 12px; }
   .successPanel { padding: 40px 24px; }
   .successTitle { font-size: 34px; }

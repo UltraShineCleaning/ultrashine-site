@@ -33,7 +33,11 @@
   --blush:      #1C61F0;        /* accent role → primary blue */
   --blush-soft: #5E8FFF;        /* lighter accent */
 
-  --gold:       #1C61F0;        /* was warm gold — now primary blue */
+  /* Gold is an INTENTIONAL exception to the brand book — review stars
+     need to read as actual gold (universal '5-star review' color), not
+     as brand-blue blending into navy backgrounds. */
+  --gold:       #FFC857;        /* warm gold for ★ ratings (pops on navy) */
+  --gold-bright:#FFD976;        /* slightly lighter for glow/highlights */
   --sage:       #5E8FFF;        /* unused but mapped for safety */
 
   --line:       rgba(28, 97, 240, 0.12);
@@ -157,12 +161,18 @@ h1.fraunces em, h2.fraunces em, h3.fraunces em, h4.fraunces em {
   color: var(--blue-deep);
 }
 
-/* Coral button: was blush — now primary blue (the on-brand CTA color) */
+/* Coral button: was blush — now primary blue (the on-brand CTA color).
+   Glow on hover so it reads as the "main action" button on any page. */
 .btn-coral {
   background: var(--blue);
   color: var(--white);
+  box-shadow: 0 4px 16px rgba(28, 97, 240, 0.25);
 }
-.btn-coral:hover { background: var(--blue-deep); }
+.btn-coral:hover {
+  background: var(--blue-deep);
+  box-shadow: 0 8px 28px rgba(28, 97, 240, 0.40),
+              0 0 0 1px rgba(255, 255, 255, 0.05);
+}
 
 /* ===== LINKS ===== */
 a { color: inherit; text-decoration: none; }
@@ -170,4 +180,42 @@ a:hover {
   text-decoration: underline;
   text-decoration-color: var(--blue);
   text-underline-offset: 4px;
+}
+
+/* ===== STARS POP — actual gold with subtle warm glow ===== */
+/* Applied to any element containing literal ★ stars (or .stars className).
+   The text-shadow gives stars a soft warm halo so they read as proper
+   review stars even on dark navy backgrounds. */
+.stars,
+.tStars,
+.cardStars,
+.reviewsHeadlineStars {
+  color: var(--gold) !important;
+  text-shadow: 0 0 14px rgba(255, 200, 87, 0.45);
+  letter-spacing: 0.18em;
+}
+
+/* ===== EMPHASIS — make em pop harder ===== */
+/* Brand-book "Shine" wordmark treatment: ExtraBold weight + slight
+   text-shadow glow to make emphasized words visually launch off the page. */
+.fraunces em,
+h1.fraunces em, h2.fraunces em, h3.fraunces em, h4.fraunces em {
+  text-shadow: 0 0 24px rgba(28, 97, 240, 0.18);
+}
+
+/* ===== SUBTLE PULSE for trust badges (background animation) ===== */
+@keyframes shinePulse {
+  0%, 100% { opacity: 0.85; }
+  50% { opacity: 1; }
+}
+
+/* ===== UNIVERSAL CARD LIFT — any clickable card gets this ===== */
+.card-lift {
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.2s;
+}
+.card-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 40px rgba(28, 97, 240, 0.12);
 }

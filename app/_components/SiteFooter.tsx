@@ -18,6 +18,7 @@ export default function SiteFooter() {
         </div>
         <div className={styles.footerCol}>
           <h4>Services</h4>
+          <Link href="/services">All Services</Link>
           <Link href="/services/regular-cleaning">Regular Cleaning</Link>
           <Link href="/services/deep-cleaning">Deep Cleaning</Link>
           <Link href="/services/move-in-out">Move-In / Out</Link>

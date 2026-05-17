@@ -1,0 +1,367 @@
+/* ==========================================================
+   /services hub page
+   ========================================================== */
+
+/* ===== HERO ===== */
+.hero {
+  position: relative;
+  min-height: 460px;
+  width: 100%;
+  overflow: hidden;
+  background: var(--navy-deep);
+}
+.heroBg {
+  position: absolute;
+  inset: 0;
+  background-image: url('/images/flow_hero_kitchen.jpg');
+  background-size: cover;
+  background-position: center;
+  transform: scale(1.05);
+  opacity: 0.55;
+}
+.heroOverlay {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(0, 44, 152, 0.55) 0%, rgba(0, 44, 152, 0.4) 35%, rgba(0, 44, 152, 0.9) 100%),
+    radial-gradient(ellipse at 80% 30%, rgba(28, 97, 240, 0.18) 0%, transparent 60%);
+}
+.heroContent {
+  position: relative;
+  z-index: 10;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 140px 60px 64px;
+  color: var(--white);
+}
+.breadcrumb {
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  opacity: 0.85;
+  margin-bottom: 28px;
+}
+.breadcrumb a {
+  color: inherit;
+  text-decoration: none;
+  opacity: 0.85;
+}
+.breadcrumb a:hover {
+  opacity: 1;
+  color: var(--blue-soft);
+}
+.heroEyebrow {
+  font-family: var(--font-poppins), sans-serif;
+  font-weight: 500;
+  font-size: 12px;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--blue-soft);
+  margin-bottom: 18px;
+}
+.heroHeadline {
+  font-size: 72px;
+  line-height: 1;
+  letter-spacing: -0.025em;
+  max-width: 900px;
+  margin-bottom: 22px;
+  color: var(--white);
+}
+.heroHeadline em {
+  color: var(--blue-soft);
+}
+.heroSub {
+  font-size: 18px;
+  line-height: 1.55;
+  max-width: 720px;
+  opacity: 0.9;
+  font-weight: 400;
+}
+
+/* ===== GRID SECTION ===== */
+.gridSection {
+  padding: 80px 60px 96px;
+  background: var(--cream);
+}
+.gridInner {
+  max-width: 1320px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+.card {
+  position: relative;
+  display: block;
+  min-height: 420px;
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  text-decoration: none;
+  color: var(--white);
+  background: var(--navy-deep);
+  box-shadow: var(--shadow-soft);
+  isolation: isolate;
+}
+.cardWide {
+  grid-column: span 2;
+  min-height: 480px;
+}
+.cardImage {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 1;
+}
+.card:hover .cardImage {
+  transform: scale(1.04);
+}
+.cardOverlay {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(0, 20, 75, 0.20) 0%, rgba(0, 20, 75, 0.55) 50%, rgba(0, 20, 75, 0.92) 100%);
+  z-index: 2;
+}
+.cardContent {
+  position: relative;
+  z-index: 3;
+  height: 100%;
+  min-height: inherit;
+  padding: 32px 36px 34px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.cardTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+.cardNumber {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  color: var(--blue-soft);
+  opacity: 0.95;
+}
+.cardTagline {
+  font-family: var(--font-poppins), sans-serif;
+  font-weight: 500;
+  font-size: 11px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--white);
+  opacity: 0.7;
+  text-align: right;
+}
+.cardBody {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 24px;
+}
+.cardName {
+  font-weight: 800;
+  font-size: 38px;
+  line-height: 1.02;
+  letter-spacing: -0.022em;
+  color: var(--white);
+}
+.cardDescription {
+  font-size: 15px;
+  line-height: 1.55;
+  opacity: 0.88;
+  max-width: 540px;
+}
+.cardFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 16px;
+  margin-top: 18px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(255, 255, 255, 0.18);
+}
+.cardBestFor {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+.cardBestForLabel {
+  font-size: 10px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  opacity: 0.55;
+}
+.cardBestForValue {
+  font-size: 13px;
+  font-weight: 500;
+  opacity: 0.95;
+  line-height: 1.3;
+}
+.cardArrow {
+  font-family: var(--font-poppins), sans-serif;
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--white);
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: transform 0.25s;
+}
+.card:hover .cardArrow {
+  transform: translateX(4px);
+}
+
+/* ===== "NOT SURE WHICH" HELP SECTION ===== */
+.helpSection {
+  padding: 80px 60px;
+  background: var(--cream-2);
+}
+.helpInner {
+  max-width: 880px;
+  margin: 0 auto;
+  text-align: center;
+}
+.helpHead {
+  font-weight: 800;
+  font-size: 44px;
+  line-height: 1.05;
+  letter-spacing: -0.022em;
+  color: var(--navy-deep);
+  margin-top: 14px;
+  margin-bottom: 22px;
+}
+.helpHead em {
+  color: var(--blue);
+}
+.helpBody {
+  font-size: 17px;
+  line-height: 1.65;
+  color: var(--navy-deep);
+  opacity: 0.88;
+  max-width: 700px;
+  margin: 0 auto 36px;
+}
+.helpRow {
+  display: inline-flex;
+  align-items: center;
+  gap: 24px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.helpSecondary {
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--blue);
+  text-decoration: none;
+  transition: opacity 0.15s;
+}
+.helpSecondary:hover {
+  opacity: 0.7;
+  text-decoration: none;
+}
+
+/* ===== FINAL CTA ===== */
+.finalCta {
+  background:
+    linear-gradient(135deg, var(--navy-deep) 0%, var(--navy) 100%),
+    radial-gradient(ellipse at 80% 30%, rgba(28, 97, 240, 0.18) 0%, transparent 60%);
+  padding: 88px 60px 96px;
+  text-align: center;
+  color: var(--white);
+}
+.finalInner {
+  max-width: 880px;
+  margin: 0 auto;
+}
+.finalHead {
+  font-weight: 800;
+  font-size: 56px;
+  line-height: 1.04;
+  letter-spacing: -0.025em;
+  margin-top: 16px;
+  margin-bottom: 18px;
+  color: var(--white);
+}
+.finalHead em {
+  color: var(--blue-soft);
+}
+.finalSub {
+  font-size: 17px;
+  line-height: 1.55;
+  opacity: 0.85;
+  max-width: 580px;
+  margin: 0 auto 36px;
+}
+.finalRow {
+  display: inline-flex;
+  align-items: center;
+  gap: 24px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.finalPhone {
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--white);
+  opacity: 0.85;
+  text-decoration: none;
+}
+.finalPhone:hover {
+  opacity: 1;
+  text-decoration: none;
+}
+
+/* ===== MOBILE ===== */
+@media (max-width: 1024px) {
+  .heroContent { padding: 120px 32px 56px; }
+  .heroHeadline { font-size: 52px; }
+  .heroSub { font-size: 17px; }
+  .gridSection { padding: 56px 32px 64px; }
+  .gridInner { gap: 18px; }
+  .card { min-height: 360px; }
+  .cardWide { min-height: 420px; }
+  .cardName { font-size: 32px; }
+  .helpSection { padding: 60px 32px; }
+  .helpHead { font-size: 34px; }
+  .helpBody { font-size: 16px; }
+  .finalCta { padding: 64px 32px 72px; }
+  .finalHead { font-size: 40px; }
+}
+@media (max-width: 640px) {
+  .hero { min-height: 380px; }
+  .heroContent { padding: 90px 22px 44px; }
+  .heroEyebrow { font-size: 10px; letter-spacing: 0.26em; }
+  .heroHeadline { font-size: 36px; margin-bottom: 18px; }
+  .heroSub { font-size: 15px; }
+  .gridSection { padding: 44px 20px 56px; }
+  .gridInner { grid-template-columns: 1fr; gap: 16px; }
+  .card, .cardWide { min-height: 320px; grid-column: span 1; }
+  .cardContent { padding: 22px 24px 24px; }
+  .cardTop { flex-direction: row; }
+  .cardTagline { font-size: 10px; letter-spacing: 0.22em; }
+  .cardName { font-size: 26px; }
+  .cardDescription { font-size: 14px; }
+  .cardFooter { flex-direction: column; align-items: flex-start; gap: 14px; }
+  .cardArrow { font-size: 12px; }
+  .helpSection { padding: 48px 22px; }
+  .helpHead { font-size: 26px; }
+  .helpBody { font-size: 15px; margin-bottom: 28px; }
+  .helpRow { gap: 16px; }
+  .finalCta { padding: 56px 22px 64px; }
+  .finalHead { font-size: 30px; margin-bottom: 14px; }
+  .finalSub { font-size: 15px; margin-bottom: 28px; }
+  .finalRow { gap: 14px; }
+}

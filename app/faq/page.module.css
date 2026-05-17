@@ -1,0 +1,298 @@
+/* ==========================================================
+   /faq · Comprehensive Q&A page with category grouping
+   ========================================================== */
+
+.hero {
+  position: relative;
+  padding: 64px 60px 56px;
+  background:
+    radial-gradient(ellipse 800px 600px at 70% 0%, rgba(28, 97, 240, 0.10) 0%, transparent 60%),
+    linear-gradient(165deg, #002C98 0%, #001E6B 60%, #001045 100%);
+  color: var(--cream);
+  text-align: center;
+  overflow: hidden;
+}
+.heroContent {
+  position: relative;
+  z-index: 2;
+  max-width: 900px;
+  margin: 0 auto;
+}
+.breadcrumb {
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--cream);
+  opacity: 0.85;
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  margin-bottom: 24px;
+  justify-content: center;
+}
+.breadcrumb a { color: inherit; text-decoration: none; }
+.breadcrumb a:hover { color: var(--blush); }
+
+.eyebrow {
+  font-family: var(--font-poppins), sans-serif;
+  font-weight: 500;
+  font-size: 12px;
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+  color: var(--cream);
+  opacity: 0.85;
+  display: inline-flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 22px;
+}
+.eyebrow::before, .eyebrow::after {
+  content: '';
+  display: inline-block;
+  width: 32px;
+  height: 1px;
+  background: var(--blush);
+}
+.h1 {
+  font-weight: 800;
+  font-size: 64px;
+  line-height: 1;
+  letter-spacing: -0.025em;
+  color: var(--cream);
+  margin-bottom: 16px;
+}
+.h1 em {
+  font-style: normal;
+  font-weight: 900;
+  color: var(--blush);
+}
+.heroSub {
+  font-family: var(--font-poppins), sans-serif;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 1.55;
+  opacity: 0.9;
+  max-width: 620px;
+  margin: 0 auto;
+}
+
+/* ===== JUMP LINKS (sticky-ish category nav) ===== */
+.jumpNav {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--line);
+  padding: 14px 60px;
+}
+.jumpInner {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.jumpLink {
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--navy-deep);
+  text-decoration: none;
+  padding: 8px 18px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: white;
+  transition: all 0.2s;
+}
+.jumpLink:hover {
+  background: var(--blue);
+  color: var(--white);
+  border-color: var(--blue);
+  text-decoration: none;
+}
+
+/* ===== FAQ SECTIONS ===== */
+.section {
+  padding: 64px 60px 32px;
+  background: var(--cream);
+}
+.sectionAlt { background: var(--cream-2); }
+
+.sectionWrap {
+  max-width: 920px;
+  margin: 0 auto;
+}
+.sectionLabel {
+  font-family: var(--font-poppins), sans-serif;
+  font-weight: 500;
+  font-size: 12px;
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+  color: var(--blue);
+  opacity: 0.9;
+  margin-bottom: 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+}
+.sectionLabel::before {
+  content: '';
+  display: inline-block;
+  width: 32px;
+  height: 1px;
+  background: var(--blush);
+}
+.sectionHead {
+  font-weight: 800;
+  font-size: 38px;
+  line-height: 1.1;
+  letter-spacing: -0.022em;
+  color: var(--navy-deep);
+  margin-bottom: 28px;
+  max-width: 700px;
+}
+
+.faqList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.faqItem {
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 22px 26px;
+  cursor: pointer;
+  transition: border-color 0.25s, box-shadow 0.25s;
+}
+.faqItem:hover {
+  border-color: var(--blue);
+  box-shadow: 0 4px 16px rgba(28, 97, 240, 0.06);
+}
+.faqItemOpen {
+  border-color: var(--blue);
+  box-shadow: 0 8px 24px rgba(28, 97, 240, 0.10);
+}
+
+.faqQ {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  font-family: var(--font-poppins), sans-serif;
+  font-weight: 600;
+  font-size: 17px;
+  line-height: 1.4;
+  color: var(--navy-deep);
+}
+.faqQIcon {
+  flex-shrink: 0;
+  color: var(--blue);
+  font-size: 22px;
+  font-weight: 400;
+  transition: transform 0.25s;
+}
+.faqItemOpen .faqQIcon {
+  transform: rotate(45deg);
+}
+
+.faqA {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+  font-family: var(--font-poppins), sans-serif;
+  font-weight: 400;
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--navy-deep);
+  opacity: 0.92;
+  max-width: 720px;
+}
+
+/* ===== STILL HAVE QUESTIONS CTA ===== */
+.cta {
+  background: var(--cream-2);
+  padding: 72px 60px;
+  text-align: center;
+}
+.ctaCard {
+  background: linear-gradient(135deg, #1C61F0 0%, #002C98 100%);
+  color: var(--cream);
+  border-radius: 16px;
+  padding: 56px 48px;
+  max-width: 720px;
+  margin: 0 auto;
+  position: relative;
+  overflow: hidden;
+}
+.ctaCard::before {
+  content: '✦';
+  position: absolute;
+  top: 20px;
+  right: 26px;
+  color: var(--blush);
+  font-size: 22px;
+  opacity: 0.55;
+}
+.ctaHead {
+  font-weight: 800;
+  font-size: 38px;
+  line-height: 1.1;
+  letter-spacing: -0.022em;
+  margin-bottom: 18px;
+}
+.ctaHead em {
+  font-style: normal;
+  font-weight: 900;
+  color: var(--blush);
+}
+.ctaBody {
+  font-family: var(--font-poppins), sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  opacity: 0.9;
+  margin-bottom: 28px;
+  max-width: 460px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.ctaRow {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* ===== MOBILE ===== */
+@media (max-width: 1024px) {
+  .hero { padding: 44px 32px 36px; }
+  .jumpNav { padding: 12px 24px; }
+  .section, .cta { padding: 48px 32px; }
+  .h1 { font-size: 42px; }
+  .heroSub { font-size: 16px; }
+  .sectionHead { font-size: 30px; margin-bottom: 22px; }
+  .ctaCard { padding: 40px 28px; }
+  .ctaHead { font-size: 30px; }
+}
+@media (max-width: 640px) {
+  .hero { padding: 32px 22px 28px; }
+  .jumpNav { padding: 10px 16px; }
+  .jumpLink { padding: 6px 12px; font-size: 10px; letter-spacing: 0.06em; }
+  .section, .cta { padding: 40px 20px; }
+  .h1 { font-size: 30px; margin-bottom: 12px; }
+  .heroSub { font-size: 14px; }
+  .sectionHead { font-size: 24px; margin-bottom: 18px; }
+  .faqItem { padding: 18px 20px; }
+  .faqQ { font-size: 15px; }
+  .faqA { font-size: 14px; line-height: 1.6; }
+  .ctaCard { padding: 32px 22px; }
+  .ctaHead { font-size: 24px; }
+  .ctaBody { font-size: 14px; }
+}

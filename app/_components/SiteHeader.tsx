@@ -30,7 +30,7 @@ export default function SiteHeader({ inPage = true }: Props) {
         <Link href="/areas">Areas</Link>
         <Link href="/about">About</Link>
         <Link href="/reviews">Reviews</Link>
-        <a href={`${prefix}#faq`}>FAQ</a>
+        <Link href="/faq">FAQ</Link>
       </div>
       <div className={styles.navRight}>
         <a href="tel:5615836694" className={styles.navPhone}>(561) 583-6694</a>

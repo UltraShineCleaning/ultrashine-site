@@ -14,10 +14,11 @@
 .navBrand { display: flex; align-items: center; }
 .navMenu {
   display: flex;
-  gap: 38px;
+  gap: 32px;
   align-items: center;
-  font-size: 13px;
-  font-weight: 400;
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 12px;
+  font-weight: 500;
   letter-spacing: 0.18em;
   text-transform: uppercase;
 }
@@ -31,14 +32,22 @@
 .navRight {
   display: flex;
   align-items: center;
-  gap: 24px;
+  gap: 20px;
 }
 .navPhone {
-  font-family: var(--font-fraunces), serif;
-  font-weight: 400;
-  font-size: 16px;
-  letter-spacing: 0.005em;
+  /* Match button visual weight so it doesn't look like floating text next to a pill */
+  font-family: var(--font-poppins), sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+  opacity: 0.95;
+  /* Vertical center fix: ensure baseline aligns with the button */
+  display: inline-flex;
+  align-items: center;
+  height: 44px;
 }
+.navPhone:hover { text-decoration: none; opacity: 1; }
 
 /* ============ HERO ============ */
 .hero {
@@ -82,8 +91,7 @@
 }
 .heroSub {
   font-size: 24px;
-  font-style: italic;
-  font-variation-settings: 'opsz' 36, 'SOFT' 100;
+  font-weight: 700;
   line-height: 1.5;
   max-width: 600px;
   letter-spacing: 0.005em;
@@ -111,31 +119,34 @@
 
 /* ============ TRUST STRIP ============ */
 .trustStrip {
-  background: var(--navy-deep);
+  /* Brand-book gradient breaks up the solid bright blue feel */
+  background: linear-gradient(95deg, #001045 0%, #002C98 60%, #001E6B 100%);
   color: var(--cream);
-  padding: 36px 60px;
+  padding: 24px 60px;     /* tightened from 36px → 24px so it doesn't dominate */
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
 }
 .trustBadge {
   text-align: center;
   border-left: 1px solid rgba(255, 255, 255, 0.15);
-  padding: 8px 16px;
+  padding: 6px 16px;      /* slightly tighter */
 }
 .trustBadge:first-child { border-left: none; }
 .trustValue {
-  font-family: var(--font-fraunces), serif;
-  font-weight: 400;
-  font-size: 18px;
-  letter-spacing: -0.01em;
+  font-family: var(--font-poppins), sans-serif;
+  font-weight: 600;       /* SemiBold for clearer punch in Poppins */
+  font-size: 16px;        /* down from 18px — strip is now tighter */
+  letter-spacing: -0.005em;
 }
 .trustLabel {
-  font-size: 11px;
-  letter-spacing: 0.2em;
+  font-size: 10px;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
-  opacity: 0.65;
-  margin-top: 6px;
+  opacity: 0.7;
+  margin-top: 4px;
 }
 
 /* ============ SHARED SECTION HEADLINE ============ */
@@ -329,8 +340,7 @@
 .reviewsEyebrow::after { content: ' —'; }
 .reviewsHeadlineStars {
   font-family: var(--font-fraunces), serif;
-  font-style: italic;
-  font-variation-settings: 'opsz' 144, 'SOFT' 100;
+  font-weight: 700;
   font-size: 78px;
   color: var(--gold);
   margin-top: 24px;
@@ -338,7 +348,7 @@
   letter-spacing: 0.04em;
 }
 .reviewsMeta {
-  font-weight: 300;
+  font-weight: 400;
   font-size: 14px;
   letter-spacing: 0.32em;
   text-transform: uppercase;
@@ -381,9 +391,8 @@
   margin-bottom: 14px;
 }
 .rText {
-  font-style: italic;
-  font-variation-settings: 'opsz' 24, 'SOFT' 100;
-  font-weight: 300;
+  font-weight: 700;
+  font-weight: 400;
   font-size: 15px;
   line-height: 1.55;
   margin-bottom: 16px;
@@ -453,8 +462,7 @@
   background: var(--blush);
 }
 .areasHeadline {
-  font-weight: 300;
-  font-variation-settings: 'opsz' 144, 'SOFT' 50;
+  font-weight: 400;
   font-size: 64px;
   line-height: 1;
   letter-spacing: -0.022em;
@@ -465,23 +473,20 @@
   margin-right: auto;
 }
 .areasHeadline em {
-  font-style: italic;
-  font-variation-settings: 'opsz' 144, 'SOFT' 100;
+  font-weight: 700;
   color: var(--blush);
 }
 .areasBody {
-  font-weight: 300;
-  font-style: italic;
+  font-weight: 400;
+  font-weight: 700;
   font-size: 19px;
   line-height: 1.55;
   opacity: 0.9;
   color: var(--cream);
   margin: 0 auto 48px;
   max-width: 640px;
-  font-variation-settings: 'opsz' 36, 'SOFT' 100;
 }
 .areasBody em {
-  font-variation-settings: 'opsz' 36, 'SOFT' 100;
   color: var(--blush);
   opacity: 1;
 }
@@ -502,8 +507,7 @@
 }
 .countyName {
   font-weight: 400;
-  font-style: italic;
-  font-variation-settings: 'opsz' 36, 'SOFT' 100;
+  font-weight: 700;
   font-size: 22px;
   color: var(--blush);
   margin-bottom: 16px;
@@ -581,9 +585,8 @@
   margin-bottom: 10px;
 }
 .photoTagH {
-  font-weight: 300;
-  font-style: italic;
-  font-variation-settings: 'opsz' 60, 'SOFT' 100;
+  font-weight: 400;
+  font-weight: 700;
   font-size: 28px;
   line-height: 1.15;
 }
@@ -626,27 +629,24 @@
 }
 .promiseTag::before { content: '— '; }
 .promiseHeadline {
-  font-weight: 300;
-  font-variation-settings: 'opsz' 144, 'SOFT' 50;
+  font-weight: 400;
   font-size: 64px;
   line-height: 0.98;
   letter-spacing: -0.022em;
 }
 .promiseHeadline em {
-  font-style: italic;
-  font-variation-settings: 'opsz' 144, 'SOFT' 100;
+  font-weight: 700;
   color: var(--blush);
 }
 .promiseBody {
-  font-weight: 300;
+  font-weight: 400;
   font-size: 19px;
   line-height: 1.65;
   opacity: 0.82;
   margin-bottom: 24px;
 }
 .promiseBody em {
-  font-style: italic;
-  font-variation-settings: 'opsz' 36, 'SOFT' 100;
+  font-weight: 700;
   color: var(--blush);
 }
 .promisePillars {
@@ -666,16 +666,15 @@
   border-right: none;
 }
 .pillarH {
-  font-style: italic;
-  font-variation-settings: 'opsz' 60, 'SOFT' 100;
-  font-weight: 300;
+  font-weight: 700;
+  font-weight: 400;
   font-size: 26px;
   color: var(--blush);
   margin-bottom: 6px;
   letter-spacing: -0.01em;
 }
 .pillarD {
-  font-weight: 300;
+  font-weight: 400;
   font-size: 11px;
   letter-spacing: 0.28em;
   text-transform: uppercase;
@@ -697,8 +696,7 @@
   margin-bottom: 28px;
 }
 .faqHeadBody {
-  font-style: italic;
-  font-variation-settings: 'opsz' 36, 'SOFT' 100;
+  font-weight: 700;
   font-weight: 400;
   font-size: 19px;
   line-height: 1.5;
@@ -752,13 +750,12 @@
   justify-content: space-between;
   align-items: center;
   font-weight: 400;
-  font-variation-settings: 'opsz' 24, 'SOFT' 50;
   font-size: 19px;
   line-height: 1.4;
 }
 .faqQIcon {
   color: var(--blush);
-  font-style: italic;
+  font-weight: 700;
   font-size: 22px;
   flex-shrink: 0;
   margin-left: 20px;
@@ -831,7 +828,7 @@
 .footerCol a:hover { opacity: 1; }
 .footerTagline {
   font-family: var(--font-fraunces), serif;
-  font-style: italic;
+  font-weight: 700;
   font-size: 18px;
   margin-top: 14px;
   margin-bottom: 6px;

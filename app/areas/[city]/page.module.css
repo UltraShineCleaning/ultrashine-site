@@ -70,8 +70,7 @@
 }
 .heroHeadline {
   font-family: var(--font-fraunces), serif;
-  font-weight: 300;
-  font-variation-settings: 'opsz' 144, 'SOFT' 50;
+  font-weight: 400;
   font-size: 76px;
   line-height: 0.98;
   letter-spacing: -0.025em;
@@ -79,17 +78,15 @@
   max-width: 1000px;
 }
 .heroHeadline em {
-  font-style: italic;
-  font-variation-settings: 'opsz' 144, 'SOFT' 100;
+  font-weight: 700;
   color: var(--blush);
 }
 .heroSub {
   font-family: var(--font-fraunces), serif;
-  font-style: italic;
-  font-weight: 300;
+  font-weight: 700;
+  font-weight: 400;
   font-size: 20px;
   line-height: 1.5;
-  font-variation-settings: 'opsz' 36, 'SOFT' 100;
   max-width: 720px;
   opacity: 0.9;
 }
@@ -122,8 +119,7 @@
 }
 .h2 {
   font-family: var(--font-fraunces), serif;
-  font-weight: 300;
-  font-variation-settings: 'opsz' 144, 'SOFT' 50;
+  font-weight: 400;
   font-size: 48px;
   line-height: 1.05;
   letter-spacing: -0.022em;
@@ -132,8 +128,7 @@
   color: var(--navy-deep);
 }
 .h2 em {
-  font-style: italic;
-  font-variation-settings: 'opsz' 144, 'SOFT' 100;
+  font-weight: 700;
   color: var(--blush);
 }
 
@@ -144,11 +139,10 @@
 }
 .introProse {
   font-family: var(--font-fraunces), serif;
-  font-weight: 300;
+  font-weight: 400;
   font-size: 19px;
   line-height: 1.65;
   color: var(--navy-deep);
-  font-variation-settings: 'opsz' 36, 'SOFT' 50;
   margin-bottom: 28px;
 }
 .whyList {
@@ -164,7 +158,7 @@
   align-items: flex-start;
   gap: 14px;
   font-family: var(--font-outfit), sans-serif;
-  font-weight: 300;
+  font-weight: 400;
   font-size: 16px;
   line-height: 1.55;
   color: var(--navy-deep);
@@ -205,11 +199,10 @@
 }
 .serviceNum {
   font-family: var(--font-fraunces), serif;
-  font-style: italic;
-  font-weight: 300;
+  font-weight: 700;
+  font-weight: 400;
   color: var(--blush);
   font-size: 14px;
-  font-variation-settings: 'opsz' 24, 'SOFT' 100;
 }
 .serviceName {
   font-family: var(--font-fraunces), serif;
@@ -223,7 +216,7 @@
   color: var(--blush);
   font-family: var(--font-fraunces), serif;
   font-size: 18px;
-  font-style: italic;
+  font-weight: 700;
 }
 
 /* NEIGHBORHOODS */
@@ -289,7 +282,7 @@
   font-family: var(--font-fraunces), serif;
   color: var(--blush);
   font-size: 14px;
-  font-style: italic;
+  font-weight: 700;
 }
 
 /* FINAL CTA */
@@ -300,8 +293,7 @@
 }
 .ctaHead {
   font-family: var(--font-fraunces), serif;
-  font-weight: 300;
-  font-variation-settings: 'opsz' 144, 'SOFT' 50;
+  font-weight: 400;
   font-size: 56px;
   line-height: 1.05;
   letter-spacing: -0.022em;
@@ -309,17 +301,15 @@
   color: var(--navy-deep);
 }
 .ctaHead em {
-  font-style: italic;
+  font-weight: 700;
   color: var(--blush);
-  font-variation-settings: 'opsz' 144, 'SOFT' 100;
 }
 .ctaSub {
   font-family: var(--font-fraunces), serif;
-  font-style: italic;
-  font-weight: 300;
+  font-weight: 700;
+  font-weight: 400;
   font-size: 18px;
   opacity: 0.78;
-  font-variation-settings: 'opsz' 36, 'SOFT' 100;
   max-width: 580px;
   margin: 0 auto 32px;
   color: var(--navy-deep);

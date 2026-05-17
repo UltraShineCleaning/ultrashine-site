@@ -63,8 +63,7 @@
 }
 .h1 {
   font-family: var(--font-fraunces), serif;
-  font-weight: 300;
-  font-variation-settings: 'opsz' 144, 'SOFT' 50;
+  font-weight: 400;
   font-size: 64px;
   line-height: 1;
   letter-spacing: -0.025em;
@@ -72,16 +71,14 @@
   margin-bottom: 18px;
 }
 .h1 em {
-  font-style: italic;
-  font-variation-settings: 'opsz' 144, 'SOFT' 100;
+  font-weight: 700;
   color: var(--blush);
 }
 .heroSub {
   font-family: var(--font-fraunces), serif;
-  font-style: italic;
-  font-weight: 300;
+  font-weight: 700;
+  font-weight: 400;
   font-size: 19px;
-  font-variation-settings: 'opsz' 36, 'SOFT' 100;
   opacity: 0.9;
   max-width: 620px;
   margin: 0 auto 28px;
@@ -104,11 +101,10 @@
 }
 .ratingValue {
   font-family: var(--font-fraunces), serif;
-  font-weight: 300;
-  font-style: italic;
+  font-weight: 400;
+  font-weight: 700;
   font-size: 16px;
   color: var(--blush);
-  font-variation-settings: 'opsz' 24, 'SOFT' 100;
 }
 .ratingLabel {
   font-family: var(--font-outfit), sans-serif;
@@ -153,12 +149,11 @@
 }
 .cardQuote {
   font-family: var(--font-fraunces), serif;
-  font-style: italic;
-  font-weight: 300;
+  font-weight: 700;
+  font-weight: 400;
   font-size: 16px;
   line-height: 1.55;
   color: var(--navy-deep);
-  font-variation-settings: 'opsz' 24, 'SOFT' 100;
 }
 .cardAuthor {
   font-family: var(--font-outfit), sans-serif;
@@ -171,7 +166,7 @@
   margin-top: auto;
 }
 .cardAuthor span {
-  font-weight: 300;
+  font-weight: 400;
   opacity: 0.65;
 }
 
@@ -213,8 +208,7 @@
 }
 .ctaTitle {
   font-family: var(--font-fraunces), serif;
-  font-weight: 300;
-  font-variation-settings: 'opsz' 144, 'SOFT' 50;
+  font-weight: 400;
   font-size: 42px;
   line-height: 1.05;
   letter-spacing: -0.022em;
@@ -222,17 +216,15 @@
   margin-bottom: 18px;
 }
 .ctaTitle em {
-  font-style: italic;
-  font-variation-settings: 'opsz' 144, 'SOFT' 100;
+  font-weight: 700;
   color: var(--blush);
 }
 .ctaBody {
   font-family: var(--font-fraunces), serif;
-  font-style: italic;
-  font-weight: 300;
+  font-weight: 700;
+  font-weight: 400;
   font-size: 17px;
   opacity: 0.85;
-  font-variation-settings: 'opsz' 24, 'SOFT' 100;
   margin-bottom: 28px;
   max-width: 520px;
   margin-left: auto;

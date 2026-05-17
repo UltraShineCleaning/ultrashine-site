@@ -44,10 +44,9 @@
 }
 .brandText {
   font-family: var(--font-fraunces), serif;
-  font-weight: 300;
-  font-style: italic;
+  font-weight: 400;
+  font-weight: 700;
   font-size: 22px;
-  font-variation-settings: 'opsz' 36, 'SOFT' 100;
   color: var(--cream);
   letter-spacing: -0.005em;
 }
@@ -104,8 +103,7 @@
 }
 .heroTitle {
   font-family: var(--font-fraunces), serif;
-  font-weight: 300;
-  font-variation-settings: 'opsz' 144, 'SOFT' 50;
+  font-weight: 400;
   font-size: 64px;
   line-height: 1.02;
   letter-spacing: -0.025em;
@@ -113,17 +111,15 @@
   color: var(--cream);
 }
 .heroTitle em {
-  font-style: italic;
-  font-variation-settings: 'opsz' 144, 'SOFT' 100;
+  font-weight: 700;
   color: var(--blush);
 }
 .heroSub {
   font-family: var(--font-fraunces), serif;
-  font-style: italic;
-  font-weight: 300;
+  font-weight: 700;
+  font-weight: 400;
   font-size: 18px;
   opacity: 0.85;
-  font-variation-settings: 'opsz' 36, 'SOFT' 100;
   max-width: 620px;
 }
 
@@ -180,7 +176,7 @@
 }
 .tileBody {
   font-family: var(--font-outfit), sans-serif;
-  font-weight: 300;
+  font-weight: 400;
   font-size: 13px;
   line-height: 1.55;
   color: var(--cream);
@@ -294,17 +290,15 @@
 }
 .statValue {
   font-family: var(--font-fraunces), serif;
-  font-weight: 300;
-  font-variation-settings: 'opsz' 144, 'SOFT' 50;
+  font-weight: 400;
   font-size: 48px;
   line-height: 1;
   letter-spacing: -0.025em;
   color: var(--cream);
 }
 .statValue em {
-  font-style: italic;
+  font-weight: 700;
   color: var(--blush);
-  font-variation-settings: 'opsz' 144, 'SOFT' 100;
 }
 .statSub {
   font-family: var(--font-outfit), sans-serif;
@@ -417,10 +411,9 @@
   padding: 28px 24px;
   text-align: center;
   font-family: var(--font-fraunces), serif;
-  font-style: italic;
+  font-weight: 700;
   color: var(--cream);
   opacity: 0.75;
-  font-variation-settings: 'opsz' 24, 'SOFT' 100;
   font-size: 15px;
 }
 .errorState {
@@ -444,15 +437,14 @@
 }
 .helpTitle {
   font-family: var(--font-fraunces), serif;
-  font-style: italic;
+  font-weight: 700;
   font-size: 17px;
   color: var(--blush);
-  font-variation-settings: 'opsz' 24, 'SOFT' 100;
   margin-bottom: 8px;
 }
 .helpBody {
   font-family: var(--font-outfit), sans-serif;
-  font-weight: 300;
+  font-weight: 400;
   font-size: 13px;
   line-height: 1.65;
   color: var(--cream);
@@ -502,23 +494,20 @@
 }
 .loginTitle {
   font-family: var(--font-fraunces), serif;
-  font-weight: 300;
-  font-variation-settings: 'opsz' 144, 'SOFT' 50;
+  font-weight: 400;
   font-size: 36px;
   line-height: 1;
   margin-bottom: 8px;
 }
 .loginTitle em {
-  font-style: italic;
-  font-variation-settings: 'opsz' 144, 'SOFT' 100;
+  font-weight: 700;
   color: var(--blush);
 }
 .loginSub {
   font-family: var(--font-fraunces), serif;
-  font-style: italic;
+  font-weight: 700;
   font-size: 14px;
   opacity: 0.75;
-  font-variation-settings: 'opsz' 24, 'SOFT' 100;
   margin-bottom: 28px;
 }
 .loginInput {

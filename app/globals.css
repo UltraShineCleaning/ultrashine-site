@@ -80,19 +80,22 @@ img, video, svg, iframe { max-width: 100%; height: auto; }
 
 /* ===== TYPE HELPERS =====
    .fraunces was the editorial-italic-serif treatment. Now it's a clean
-   bold-Poppins headline treatment, since the brand has no serif. */
-.fraunces {
+   bold-Poppins headline treatment, since the brand has no serif.
+
+   We use heading-element selectors (h1.fraunces etc) for higher specificity
+   so module-level font-weight: 400 doesn't override the brand-book heaviness. */
+.fraunces,
+h1.fraunces, h2.fraunces, h3.fraunces, h4.fraunces {
   font-family: var(--font-poppins), sans-serif;
   font-weight: 800;                  /* ExtraBold — matches brand book "Shine" weight */
-  font-variation-settings: normal;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.025em;
 }
 /* Emphasis used to be italic + blush. Now it's same weight + primary blue. */
-.fraunces em {
+.fraunces em,
+h1.fraunces em, h2.fraunces em, h3.fraunces em, h4.fraunces em {
   font-style: normal;
-  font-weight: 800;
+  font-weight: 900;                  /* Black — even punchier, matches brand book emphasis */
   color: var(--blue);
-  font-variation-settings: normal;
 }
 
 .outfit { font-family: var(--font-poppins), sans-serif; }

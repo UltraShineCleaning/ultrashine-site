@@ -29,8 +29,7 @@
 
 .sectionHeadline {
   font-family: var(--font-fraunces), serif;
-  font-weight: 300;
-  font-variation-settings: 'opsz' 144, 'SOFT' 50;
+  font-weight: 400;
   font-size: 56px;
   line-height: 1;
   letter-spacing: -0.022em;
@@ -40,8 +39,7 @@
   color: var(--navy-deep);
 }
 .sectionHeadline em {
-  font-style: italic;
-  font-variation-settings: 'opsz' 144, 'SOFT' 100;
+  font-weight: 700;
   color: var(--blush);
 }
 

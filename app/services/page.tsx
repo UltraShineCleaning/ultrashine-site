@@ -109,10 +109,52 @@ export default function ServicesIndexPage() {
     ],
   };
 
+  // Pre-quote FAQ — answers hesitation questions right before the CTA
+  const preQuoteFaq = [
+    {
+      q: 'How do I know which service I need?',
+      a: 'Most people start with a one-time Deep Cleaning to reset their home to baseline, then set up Regular Cleaning at the cadence that fits — weekly for active households with kids/pets, bi-weekly for most, monthly for tidier homes. When we walk through your space for the quote, we recommend the right rhythm. No pressure to commit to anything.',
+    },
+    {
+      q: 'Can I combine multiple services?',
+      a: 'Yes. Most clients combine Regular + a quarterly Deep Cleaning. Some pair Commercial (their office) with Regular (their home). We bundle when it makes sense and apply a small loyalty discount to recurring clients.',
+    },
+    {
+      q: 'Is there a minimum visit, or can I book a one-time clean?',
+      a: 'No minimum. You can book a single one-time clean (most popular for Deep Cleaning, Move-In/Out, and Post-Construction) or set up a recurring schedule. We are equally happy with both — we just want your home to feel taken care of.',
+    },
+    {
+      q: 'Do you bring all the supplies + equipment?',
+      a: 'Yes. We bring everything: EPA-safe products (Method, Mrs Meyer’s, ECOS, vinegar, baking soda), HEPA-filtered vacuums, color-coded microfiber cloths, mops, and a full tool kit. You do not need to provide anything — though if you prefer we use your specific products, just let us know in advance.',
+    },
+    {
+      q: 'What if my home is bigger or messier than the quote assumed?',
+      a: 'The walk-through quote is based on what we see. If something changes (you added a room, the home is messier than described), we tell you upfront before starting and either adjust the scope or the time. No surprise charges — ever. That is the rule.',
+    },
+    {
+      q: 'Are you available for weekends or after-hours?',
+      a: 'Residential: weekday mornings/afternoons are standard, but Saturday slots are available on request and fill fast. Commercial: we routinely clean offices after-hours (evenings + weekends) so your team never sees us. Just tell us your needed window.',
+    },
+  ];
+
+  const faqSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: preQuoteFaq.map((item) => ({
+      '@type': 'Question',
+      name: item.q,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: item.a,
+      },
+    })),
+  };
+
   return (
     <main>
       <JsonLd data={servicesSchema} />
       <JsonLd data={breadcrumbSchema} />
+      <JsonLd data={faqSchema} />
 
       <SiteHeader inPage={false} />
 
@@ -293,6 +335,34 @@ export default function ServicesIndexPage() {
               Why we don&apos;t list prices →
             </Link>
           </div>
+        </div>
+      </section>
+
+      {/* ============ PRE-QUOTE FAQ ============ */}
+      <section className={styles.faqSection}>
+        <div className={styles.faqInner}>
+          <p className="eyebrow">BEFORE YOU REQUEST A QUOTE</p>
+          <h2 className={`fraunces ${styles.faqHead}`}>
+            Common questions, <em>answered</em>.
+          </h2>
+
+          <div className={styles.faqList}>
+            {preQuoteFaq.map((item, i) => (
+              <details key={i} className={styles.faqItem}>
+                <summary className={styles.faqQ}>
+                  <span>{item.q}</span>
+                  <span className={styles.faqToggle} aria-hidden>+</span>
+                </summary>
+                <p className={styles.faqA}>{item.a}</p>
+              </details>
+            ))}
+          </div>
+
+          <p className={styles.faqFooter}>
+            Still have questions?{' '}
+            <a href="tel:5615836694">Call (561) 583-6694</a> or{' '}
+            <Link href="/faq">see the full FAQ →</Link>
+          </p>
         </div>
       </section>
 

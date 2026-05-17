@@ -428,6 +428,95 @@
   text-decoration: none;
 }
 
+/* ===== PRE-QUOTE FAQ =====
+   Uses native <details>/<summary> for accessibility + zero JS.
+   Each item collapsed by default; click to expand. Smooth max-height
+   transition would need JS so we use the native expand which is fine. */
+.faqSection {
+  padding: 80px 60px 88px;
+  background: var(--cream-2);
+}
+.faqInner {
+  max-width: 900px;
+  margin: 0 auto;
+  text-align: center;
+}
+.faqHead {
+  font-weight: 800;
+  font-size: 44px;
+  line-height: 1.05;
+  letter-spacing: -0.022em;
+  color: var(--navy-deep);
+  margin-top: 14px;
+  margin-bottom: 36px;
+}
+.faqHead em {
+  color: var(--blue);
+}
+.faqList {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  text-align: left;
+}
+.faqItem {
+  background: var(--white);
+  border-radius: var(--r-md);
+  box-shadow: var(--shadow-soft);
+  padding: 0;
+  border: 1px solid var(--line);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.faqItem[open] {
+  border-color: rgba(28, 97, 240, 0.25);
+  box-shadow: 0 8px 28px rgba(28, 97, 240, 0.08);
+}
+.faqQ {
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+  padding: 22px 28px;
+  font-family: var(--font-poppins), sans-serif;
+  font-weight: 600;
+  font-size: 17px;
+  color: var(--navy-deep);
+  cursor: pointer;
+  user-select: none;
+}
+.faqQ::-webkit-details-marker { display: none; }
+.faqQ::marker { display: none; }
+.faqToggle {
+  font-size: 24px;
+  font-weight: 300;
+  color: var(--blue);
+  transition: transform 0.25s;
+  line-height: 1;
+  flex-shrink: 0;
+}
+.faqItem[open] .faqToggle {
+  transform: rotate(45deg);
+}
+.faqA {
+  padding: 0 28px 24px;
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--navy-deep);
+  opacity: 0.88;
+}
+.faqFooter {
+  margin-top: 36px;
+  font-size: 14px;
+  color: var(--navy-deep);
+  opacity: 0.78;
+}
+.faqFooter a {
+  color: var(--blue);
+  font-weight: 600;
+}
+.faqFooter a:hover { opacity: 0.7; text-decoration: none; }
+
 /* ===== FINAL CTA ===== */
 .finalCta {
   background:
@@ -494,6 +583,10 @@
   .compareSection { padding: 56px 32px 64px; }
   .compareHead { font-size: 34px; }
   .compareSub { font-size: 16px; margin-bottom: 32px; }
+  .faqSection { padding: 56px 32px 64px; }
+  .faqHead { font-size: 34px; margin-bottom: 28px; }
+  .faqQ { font-size: 16px; padding: 20px 24px; }
+  .faqA { padding: 0 24px 22px; font-size: 14px; }
   .card { min-height: 360px; }
   .cardWide { min-height: 420px; }
   .cardName { font-size: 32px; }

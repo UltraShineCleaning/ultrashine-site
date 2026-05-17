@@ -130,7 +130,7 @@ export const metadata: Metadata = {
     template: '%s · Ultra Shine Cleaning',
   },
   description:
-    'Professional house & commercial cleaning across Palm Beach and Broward County. Background-checked, fully insured team. Get your free quote in 1 hour.',
+    'Professional house cleaning in Boca Raton, FL and across Palm Beach + Broward County. Background-checked W2 team, fully insured + bonded. ★ 5.0 verified reviews. Free quote in 1 hour.',
   openGraph: {
     title: 'Ultra Shine Cleaning · South Florida',
     description:

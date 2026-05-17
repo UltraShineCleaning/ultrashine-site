@@ -46,9 +46,17 @@ const SCENES: Scene[] = [
   {
     id: 'single',
     image: '/images/flow_hero_kitchen.jpg',
-    eyebrow: 'READY WHEN YOU ARE',
+    // Eyebrow holds the primary SEO signal — service + primary city + region.
+    // Google reads this; visitors barely register it consciously but it sets
+    // expectations. Win-win.
+    eyebrow: 'HOUSE CLEANING · BOCA RATON + SOUTH FLORIDA',
+    // H1 stays brand-first (emotional hook). The keyword-density work happens
+    // in the eyebrow + body, leaving the headline pure brand voice.
     headlineHtml: 'A home that <em>shines</em>. Without lifting a finger.',
-    body: 'Boutique cleaning across Palm Beach + Broward. Background-checked W2 team, fully insured, no detail missed.',
+    // Body now weaves "house cleaning in Boca Raton" naturally into the
+    // descriptor — without keyword stuffing — plus surfaces the 13-city
+    // coverage as a real differentiator (most competitors only serve 1–3).
+    body: 'Boutique house cleaning in Boca Raton and 12 other South Florida cities across Palm Beach + Broward. Background-checked W2 team, fully insured, no detail missed.',
     showCta: true,
   },
 ];

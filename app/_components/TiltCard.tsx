@@ -95,7 +95,7 @@ export default function TiltCard({ href, image, label, description, wide }: Prop
             background: useTransform(
               [smoothX, smoothY] as any,
               ([x, y]: any) =>
-                `radial-gradient(circle at ${x * 100}% ${y * 100}%, rgba(217,181,168,0.18) 0%, transparent 50%)`,
+                `radial-gradient(circle at ${x * 100}% ${y * 100}%, rgba(28, 97, 240,0.18) 0%, transparent 50%)`,
             ),
             borderRadius: 'var(--r-lg)',
           }}

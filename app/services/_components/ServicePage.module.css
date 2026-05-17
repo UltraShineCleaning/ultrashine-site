@@ -171,7 +171,7 @@
 }
 .differsColAccent .differsColTitle {
   color: var(--blush);
-  border-bottom-color: rgba(244, 236, 219, 0.15);
+  border-bottom-color: rgba(255, 255, 255, 0.15);
 }
 .differsList {
   list-style: none;
@@ -209,7 +209,7 @@
 }
 .faqItem:hover {
   border-color: var(--navy);
-  box-shadow: 0 6px 18px rgba(31, 63, 119, 0.05);
+  box-shadow: 0 6px 18px rgba(28, 97, 240, 0.05);
 }
 .faqItemOpen {
   background: white;

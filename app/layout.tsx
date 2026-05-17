@@ -1,41 +1,28 @@
 import type { Metadata, Viewport } from 'next';
-import { Fraunces, Outfit, JetBrains_Mono } from 'next/font/google';
+import { Poppins } from 'next/font/google';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import './globals.css';
 import SmoothScrollProvider from './_components/SmoothScrollProvider';
 
-// Mobile viewport — without this, mobile browsers render at desktop width
-// and zoom out, leaving an empty band on the right side of the screen.
+// Brand-book font: Poppins (single family, all weights).
+// We expose THREE CSS variables so existing CSS that uses --font-fraunces
+// (headlines), --font-outfit (UI), or --font-mono (numerics) keeps working
+// without touching every file — they all now resolve to Poppins.
+const poppins = Poppins({
+  subsets: ['latin'],
+  variable: '--font-poppins',
+  display: 'swap',
+  weight: ['300', '400', '500', '600', '700', '800', '900'],
+});
+
+// Mobile viewport — without this, mobile browsers render at desktop width.
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
   maximumScale: 5,
-  themeColor: '#15294C',
+  themeColor: '#1C61F0',
 };
-
-// Brand fonts loaded via next/font (auto-optimized, self-hosted, no external Google CDN call)
-const fraunces = Fraunces({
-  subsets: ['latin'],
-  variable: '--font-fraunces',
-  display: 'swap',
-  weight: ['300', '400', '500', '600', '700'],
-  style: ['normal', 'italic'],
-});
-
-const outfit = Outfit({
-  subsets: ['latin'],
-  variable: '--font-outfit',
-  display: 'swap',
-  weight: ['200', '300', '400', '500', '600', '700'],
-});
-
-const jetbrainsMono = JetBrains_Mono({
-  subsets: ['latin'],
-  variable: '--font-mono',
-  display: 'swap',
-  weight: ['400', '500', '600'],
-});
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://ultrashinecleaningfl.com'),
@@ -65,10 +52,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html
-      lang="en"
-      className={`${fraunces.variable} ${outfit.variable} ${jetbrainsMono.variable}`}
-    >
+    <html lang="en" className={poppins.variable}>
       <body>
         <SmoothScrollProvider>{children}</SmoothScrollProvider>
         <Analytics />

@@ -89,36 +89,36 @@ function renderHtml(p: QuotePayload): string {
         ${lines
           .map(
             (l) => `<tr>
-              <td style="padding:6px 0;font-size:14px;color:#15294C;">${l.name}</td>
-              <td style="padding:6px 0;font-size:14px;color:#1F3F77;text-align:right;font-family:'Courier New',monospace;">${l.price}</td>
+              <td style="padding:6px 0;font-size:14px;color:#002C98;">${l.name}</td>
+              <td style="padding:6px 0;font-size:14px;color:#1C61F0;text-align:right;font-family:'Courier New',monospace;">${l.price}</td>
             </tr>`
           )
           .join('')}
-        <tr><td colspan="2" style="border-top:1px solid rgba(31,63,119,0.15);padding-top:10px;margin-top:6px;"></td></tr>
+        <tr><td colspan="2" style="border-top:1px solid rgba(28, 97, 240,0.15);padding-top:10px;margin-top:6px;"></td></tr>
         <tr>
-          <td style="padding:8px 0;font-size:13px;color:#1F3F77;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;">Add-On Subtotal</td>
-          <td style="padding:8px 0;font-size:14px;color:#15294C;text-align:right;font-family:'Courier New',monospace;font-weight:700;">
+          <td style="padding:8px 0;font-size:13px;color:#1C61F0;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;">Add-On Subtotal</td>
+          <td style="padding:8px 0;font-size:14px;color:#002C98;text-align:right;font-family:'Courier New',monospace;font-weight:700;">
             ${min === 0 && max === 0 ? 'Depends on count' : `$${min}–$${max}${hasVariable ? '+' : ''}`}
           </td>
         </tr>
-        ${hasVariable ? `<tr><td colspan="2" style="padding:4px 0;font-size:11px;color:#1F3F77;opacity:0.7;font-style:italic;">+ per-window / per-cabinet items quoted after walkthrough</td></tr>` : ''}
+        ${hasVariable ? `<tr><td colspan="2" style="padding:4px 0;font-size:11px;color:#1C61F0;opacity:0.7;">+ per-window / per-cabinet items quoted after walkthrough</td></tr>` : ''}
       </table>`
-    : `<div style="padding:8px 0;font-size:14px;color:#1F3F77;opacity:0.7;">None selected</div>`;
+    : `<div style="padding:8px 0;font-size:14px;color:#1C61F0;opacity:0.7;">None selected</div>`;
 
   return `<!doctype html>
 <html>
-<body style="margin:0;padding:0;background:#F4ECDB;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;color:#15294C;">
+<body style="margin:0;padding:0;background:#FFFFFF;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;color:#002C98;">
   <div style="max-width:640px;margin:0 auto;padding:36px 24px 60px;">
 
     <!-- HEADER -->
     <table cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-bottom:24px;">
       <tr>
         <td>
-          <div style="font-size:11px;letter-spacing:0.32em;text-transform:uppercase;color:#1F3F77;opacity:0.7;margin-bottom:6px;">New Quote Lead</div>
-          <h1 style="font-family:Georgia,serif;font-weight:300;font-size:32px;letter-spacing:-0.5px;margin:0 0 4px;color:#15294C;line-height:1.1;">
+          <div style="font-size:11px;letter-spacing:0.32em;text-transform:uppercase;color:#1C61F0;opacity:0.7;margin-bottom:6px;">New Quote Lead</div>
+          <h1 style="font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif;font-weight:300;font-size:32px;letter-spacing:-0.5px;margin:0 0 4px;color:#002C98;line-height:1.1;">
             ${fullName}
           </h1>
-          <div style="font-size:14px;color:#1F3F77;opacity:0.85;">
+          <div style="font-size:14px;color:#1C61F0;opacity:0.85;">
             ${p.service || '—'} · ${p.city || '—'}${p.zip ? `, ${p.zip}` : ''}
           </div>
         </td>
@@ -130,18 +130,18 @@ function renderHtml(p: QuotePayload): string {
       <tr>
         ${phoneDigits ? `
           <td width="33%" style="padding-right:6px;">
-            <a href="tel:${phoneDigits}" style="display:block;background:#15294C;color:#F4ECDB;padding:14px 6px;border-radius:10px;text-align:center;text-decoration:none;font-size:12px;letter-spacing:0.12em;text-transform:uppercase;font-weight:600;">
+            <a href="tel:${phoneDigits}" style="display:block;background:#002C98;color:#FFFFFF;padding:14px 6px;border-radius:10px;text-align:center;text-decoration:none;font-size:12px;letter-spacing:0.12em;text-transform:uppercase;font-weight:600;">
               📞 Call
             </a>
           </td>
           <td width="33%" style="padding:0 3px;">
-            <a href="sms:${phoneDigits}" style="display:block;background:#1F3F77;color:#F4ECDB;padding:14px 6px;border-radius:10px;text-align:center;text-decoration:none;font-size:12px;letter-spacing:0.12em;text-transform:uppercase;font-weight:600;">
+            <a href="sms:${phoneDigits}" style="display:block;background:#1C61F0;color:#FFFFFF;padding:14px 6px;border-radius:10px;text-align:center;text-decoration:none;font-size:12px;letter-spacing:0.12em;text-transform:uppercase;font-weight:600;">
               💬 Text
             </a>
           </td>` : ''}
         ${c.email ? `
           <td width="33%" style="padding-left:6px;">
-            <a href="mailto:${c.email}" style="display:block;background:#D9B5A8;color:#15294C;padding:14px 6px;border-radius:10px;text-align:center;text-decoration:none;font-size:12px;letter-spacing:0.12em;text-transform:uppercase;font-weight:600;">
+            <a href="mailto:${c.email}" style="display:block;background:#1C61F0;color:#002C98;padding:14px 6px;border-radius:10px;text-align:center;text-decoration:none;font-size:12px;letter-spacing:0.12em;text-transform:uppercase;font-weight:600;">
               ✉ Email
             </a>
           </td>` : ''}
@@ -149,34 +149,34 @@ function renderHtml(p: QuotePayload): string {
     </table>
 
     <!-- MAIN CARD -->
-    <table cellpadding="0" cellspacing="0" border="0" width="100%" style="border-collapse:collapse;background:#fff;border-radius:12px;overflow:hidden;border:1px solid rgba(31,63,119,0.12);box-shadow:0 4px 16px rgba(31,63,119,0.06);">
+    <table cellpadding="0" cellspacing="0" border="0" width="100%" style="border-collapse:collapse;background:#fff;border-radius:12px;overflow:hidden;border:1px solid rgba(28, 97, 240,0.12);box-shadow:0 4px 16px rgba(28, 97, 240,0.06);">
 
       <!-- CONTACT -->
-      <tr><td style="padding:14px 22px;background:#15294C;color:#F4ECDB;font-size:11px;letter-spacing:0.28em;text-transform:uppercase;font-weight:600;">Contact</td></tr>
-      <tr><td style="padding:18px 22px;font-size:14px;line-height:1.8;border-bottom:1px solid rgba(31,63,119,0.08);">
-        <strong style="color:#15294C;">${fullName}</strong><br/>
-        ${phoneDigits ? `<a href="tel:${phoneDigits}" style="color:#1F3F77;text-decoration:none;font-family:'Courier New',monospace;">${phoneDisplay}</a><br/>` : ''}
-        ${c.email ? `<a href="mailto:${c.email}" style="color:#1F3F77;text-decoration:none;">${c.email}</a>` : ''}
+      <tr><td style="padding:14px 22px;background:#002C98;color:#FFFFFF;font-size:11px;letter-spacing:0.28em;text-transform:uppercase;font-weight:600;">Contact</td></tr>
+      <tr><td style="padding:18px 22px;font-size:14px;line-height:1.8;border-bottom:1px solid rgba(28, 97, 240,0.08);">
+        <strong style="color:#002C98;">${fullName}</strong><br/>
+        ${phoneDigits ? `<a href="tel:${phoneDigits}" style="color:#1C61F0;text-decoration:none;font-family:'Courier New',monospace;">${phoneDisplay}</a><br/>` : ''}
+        ${c.email ? `<a href="mailto:${c.email}" style="color:#1C61F0;text-decoration:none;">${c.email}</a>` : ''}
       </td></tr>
 
       <!-- SERVICE -->
-      <tr><td style="padding:14px 22px;background:#15294C;color:#F4ECDB;font-size:11px;letter-spacing:0.28em;text-transform:uppercase;font-weight:600;">Service</td></tr>
-      <tr><td style="padding:18px 22px;font-size:14px;line-height:1.8;border-bottom:1px solid rgba(31,63,119,0.08);">
+      <tr><td style="padding:14px 22px;background:#002C98;color:#FFFFFF;font-size:11px;letter-spacing:0.28em;text-transform:uppercase;font-weight:600;">Service</td></tr>
+      <tr><td style="padding:18px 22px;font-size:14px;line-height:1.8;border-bottom:1px solid rgba(28, 97, 240,0.08);">
         <strong>Type:</strong> ${p.service || '—'}<br/>
         <strong>Frequency:</strong> ${p.frequency || '—'}
       </td></tr>
 
       <!-- ADD-ONS WITH PRICES -->
-      <tr><td style="padding:14px 22px;background:#15294C;color:#F4ECDB;font-size:11px;letter-spacing:0.28em;text-transform:uppercase;font-weight:600;">
+      <tr><td style="padding:14px 22px;background:#002C98;color:#FFFFFF;font-size:11px;letter-spacing:0.28em;text-transform:uppercase;font-weight:600;">
         Add-Ons${addOnsList.length ? ` (${addOnsList.length})` : ''}
       </td></tr>
-      <tr><td style="padding:18px 22px;border-bottom:1px solid rgba(31,63,119,0.08);">
+      <tr><td style="padding:18px 22px;border-bottom:1px solid rgba(28, 97, 240,0.08);">
         ${addOnsBlock}
       </td></tr>
 
       <!-- HOME -->
-      <tr><td style="padding:14px 22px;background:#15294C;color:#F4ECDB;font-size:11px;letter-spacing:0.28em;text-transform:uppercase;font-weight:600;">Home</td></tr>
-      <tr><td style="padding:18px 22px;font-size:14px;line-height:1.8;border-bottom:1px solid rgba(31,63,119,0.08);">
+      <tr><td style="padding:14px 22px;background:#002C98;color:#FFFFFF;font-size:11px;letter-spacing:0.28em;text-transform:uppercase;font-weight:600;">Home</td></tr>
+      <tr><td style="padding:18px 22px;font-size:14px;line-height:1.8;border-bottom:1px solid rgba(28, 97, 240,0.08);">
         <strong>${p.bedrooms ?? '—'}</strong> bed &nbsp;·&nbsp;
         <strong>${p.bathrooms ?? '—'}</strong> bath &nbsp;·&nbsp;
         <strong>${p.sqft?.toLocaleString() ?? '—'}</strong> sq ft<br/>
@@ -184,13 +184,13 @@ function renderHtml(p: QuotePayload): string {
       </td></tr>
 
       <!-- NOTES -->
-      <tr><td style="padding:14px 22px;background:#15294C;color:#F4ECDB;font-size:11px;letter-spacing:0.28em;text-transform:uppercase;font-weight:600;">Notes</td></tr>
-      <tr><td style="padding:18px 22px;font-size:14px;line-height:1.65;white-space:pre-wrap;color:${notes === '—' ? '#1F3F77' : '#15294C'};opacity:${notes === '—' ? '0.55' : '1'};">${notes}</td></tr>
+      <tr><td style="padding:14px 22px;background:#002C98;color:#FFFFFF;font-size:11px;letter-spacing:0.28em;text-transform:uppercase;font-weight:600;">Notes</td></tr>
+      <tr><td style="padding:18px 22px;font-size:14px;line-height:1.65;white-space:pre-wrap;color:${notes === '—' ? '#1C61F0' : '#002C98'};opacity:${notes === '—' ? '0.55' : '1'};">${notes}</td></tr>
 
     </table>
 
     <!-- FOOTER -->
-    <div style="margin-top:22px;font-size:11px;color:#1F3F77;opacity:0.55;text-align:center;line-height:1.6;">
+    <div style="margin-top:22px;font-size:11px;color:#1C61F0;opacity:0.55;text-align:center;line-height:1.6;">
       Submitted ${submitted}<br/>
       Sent via ultrashinecleaningfl.com/quote · Reply to this email goes directly to ${c.email || 'the customer'}
     </div>

@@ -201,7 +201,7 @@
 .serviceLink:hover {
   border-color: var(--navy);
   transform: translateY(-3px);
-  box-shadow: 0 12px 32px rgba(31, 63, 119, 0.10);
+  box-shadow: 0 12px 32px rgba(28, 97, 240, 0.10);
 }
 .serviceNum {
   font-family: var(--font-fraunces), serif;
@@ -261,7 +261,7 @@
 }
 .areaTag:hover {
   border-color: var(--navy);
-  box-shadow: 0 4px 12px rgba(31, 63, 119, 0.08);
+  box-shadow: 0 4px 12px rgba(28, 97, 240, 0.08);
 }
 
 /* TRUST ROW (compact, single line) */
@@ -339,7 +339,7 @@
   margin-top: 16px;
 }
 .siblingLink {
-  background: rgba(244, 236, 219, 0.04);
+  background: rgba(255, 255, 255, 0.04);
   border: 1px solid var(--line);
   border-radius: 999px;
   padding: 8px 18px;

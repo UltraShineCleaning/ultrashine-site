@@ -59,19 +59,19 @@ function buildHtml(yesterdayLeads: Lead[], weekToDateCount: number, dayLabel: st
   const total = yesterdayLeads.length;
 
   const leadsBlock = total === 0
-    ? `<div style="background:#fff;border:1px dashed rgba(31,63,119,0.20);border-radius:10px;padding:24px;text-align:center;font-family:Georgia,serif;font-style:italic;color:#1F3F77;opacity:0.8;font-size:15px;">No new leads yesterday. The site is up + working — just a quiet day. Use this time to nudge IG / Google reviews.</div>`
-    : `<table cellpadding="0" cellspacing="0" border="0" width="100%" style="border-collapse:collapse;background:#fff;border-radius:12px;overflow:hidden;border:1px solid rgba(31,63,119,0.12);">
+    ? `<div style="background:#fff;border:1px dashed rgba(28, 97, 240,0.20);border-radius:10px;padding:24px;text-align:center;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif;color:#1C61F0;opacity:0.8;font-size:15px;">No new leads yesterday. The site is up + working — just a quiet day. Use this time to nudge IG / Google reviews.</div>`
+    : `<table cellpadding="0" cellspacing="0" border="0" width="100%" style="border-collapse:collapse;background:#fff;border-radius:12px;overflow:hidden;border:1px solid rgba(28, 97, 240,0.12);">
         ${yesterdayLeads
           .map(
             (l) => `<tr>
-              <td style="padding:14px 18px;border-bottom:1px solid rgba(31,63,119,0.08);">
-                <div style="font-size:10px;letter-spacing:0.28em;text-transform:uppercase;color:#D9B5A8;margin-bottom:4px;font-weight:600;">
+              <td style="padding:14px 18px;border-bottom:1px solid rgba(28, 97, 240,0.08);">
+                <div style="font-size:10px;letter-spacing:0.28em;text-transform:uppercase;color:#1C61F0;margin-bottom:4px;font-weight:600;">
                   ${l.kind === 'quote' ? '✦ Quote Request' : '✦ Cleaner Application'}
                 </div>
-                <div style="font-family:Georgia,serif;font-weight:400;font-size:17px;color:#15294C;">
-                  ${l.name}${l.city ? `<span style="color:#1F3F77;opacity:0.6;font-style:italic;font-size:14px;"> · ${l.city}</span>` : ''}
+                <div style="font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif;font-weight:400;font-size:17px;color:#002C98;">
+                  ${l.name}${l.city ? `<span style="color:#1C61F0;opacity:0.6;font-size:14px;"> · ${l.city}</span>` : ''}
                 </div>
-                <div style="font-size:11px;color:#1F3F77;opacity:0.6;margin-top:4px;">
+                <div style="font-size:11px;color:#1C61F0;opacity:0.6;margin-top:4px;">
                   ${l.createdAt.toLocaleString('en-US', { timeZone: 'America/New_York', hour: 'numeric', minute: '2-digit', hour12: true })} ET
                 </div>
               </td>
@@ -82,18 +82,18 @@ function buildHtml(yesterdayLeads: Lead[], weekToDateCount: number, dayLabel: st
 
   return `<!doctype html>
 <html>
-<body style="margin:0;padding:0;background:#F4ECDB;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;color:#15294C;">
+<body style="margin:0;padding:0;background:#FFFFFF;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;color:#002C98;">
   <div style="max-width:640px;margin:0 auto;padding:36px 24px 60px;">
 
     <!-- HEADER -->
     <div style="margin-bottom:24px;">
-      <div style="font-size:11px;letter-spacing:0.32em;text-transform:uppercase;color:#1F3F77;opacity:0.7;margin-bottom:6px;">Daily Summary · ${dayLabel}</div>
-      <h1 style="font-family:Georgia,serif;font-weight:300;font-size:36px;letter-spacing:-0.5px;margin:0;color:#15294C;line-height:1.05;">
-        ${total === 0 ? '<em style="color:#D9B5A8;">No new leads</em> yesterday.' :
-          total === 1 ? '<em style="color:#D9B5A8;">1</em> new lead yesterday.' :
-          `<em style="color:#D9B5A8;">${total}</em> new leads yesterday.`}
+      <div style="font-size:11px;letter-spacing:0.32em;text-transform:uppercase;color:#1C61F0;opacity:0.7;margin-bottom:6px;">Daily Summary · ${dayLabel}</div>
+      <h1 style="font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif;font-weight:300;font-size:36px;letter-spacing:-0.5px;margin:0;color:#002C98;line-height:1.05;">
+        ${total === 0 ? '<em style="color:#1C61F0;">No new leads</em> yesterday.' :
+          total === 1 ? '<em style="color:#1C61F0;">1</em> new lead yesterday.' :
+          `<em style="color:#1C61F0;">${total}</em> new leads yesterday.`}
       </h1>
-      ${total > 0 ? `<div style="font-size:14px;color:#1F3F77;opacity:0.8;margin-top:8px;">
+      ${total > 0 ? `<div style="font-size:14px;color:#1C61F0;opacity:0.8;margin-top:8px;">
         ${quoteCount > 0 ? `${quoteCount} quote${quoteCount > 1 ? 's' : ''}` : ''}${quoteCount > 0 && appCount > 0 ? ' · ' : ''}${appCount > 0 ? `${appCount} cleaner application${appCount > 1 ? 's' : ''}` : ''}
       </div>` : ''}
     </div>
@@ -102,24 +102,24 @@ function buildHtml(yesterdayLeads: Lead[], weekToDateCount: number, dayLabel: st
     ${leadsBlock}
 
     <!-- WEEK-TO-DATE -->
-    <div style="margin-top:24px;padding:18px 20px;background:#15294C;color:#F4ECDB;border-radius:10px;text-align:center;">
+    <div style="margin-top:24px;padding:18px 20px;background:#002C98;color:#FFFFFF;border-radius:10px;text-align:center;">
       <div style="font-size:10px;letter-spacing:0.3em;text-transform:uppercase;opacity:0.7;margin-bottom:6px;">Week to date</div>
-      <div style="font-family:Georgia,serif;font-weight:300;font-size:32px;letter-spacing:-0.5px;">
-        <em style="color:#D9B5A8;">${weekToDateCount}</em> lead${weekToDateCount === 1 ? '' : 's'} this week
+      <div style="font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif;font-weight:300;font-size:32px;letter-spacing:-0.5px;">
+        <em style="color:#1C61F0;">${weekToDateCount}</em> lead${weekToDateCount === 1 ? '' : 's'} this week
       </div>
     </div>
 
     <!-- CTA -->
     <div style="text-align:center;margin-top:28px;">
-      <a href="${SITE_URL}/admin" style="display:inline-block;background:#D9B5A8;color:#15294C;padding:14px 32px;border-radius:999px;font-family:-apple-system,sans-serif;font-weight:500;font-size:13px;letter-spacing:0.2em;text-transform:uppercase;text-decoration:none;">
+      <a href="${SITE_URL}/admin" style="display:inline-block;background:#1C61F0;color:#002C98;padding:14px 32px;border-radius:999px;font-family:-apple-system,sans-serif;font-weight:500;font-size:13px;letter-spacing:0.2em;text-transform:uppercase;text-decoration:none;">
         Open Dashboard →
       </a>
     </div>
 
     <!-- FOOTER -->
-    <div style="margin-top:32px;text-align:center;font-size:11px;color:#1F3F77;opacity:0.5;line-height:1.5;">
+    <div style="margin-top:32px;text-align:center;font-size:11px;color:#1C61F0;opacity:0.5;line-height:1.5;">
       Ultra Shine Cleaning · Daily Summary<br/>
-      Sent every morning at 7am ET · Manage at <a href="${SITE_URL}/admin" style="color:#1F3F77;">${SITE_URL}/admin</a>
+      Sent every morning at 7am ET · Manage at <a href="${SITE_URL}/admin" style="color:#1C61F0;">${SITE_URL}/admin</a>
     </div>
   </div>
 </body>

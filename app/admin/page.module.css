@@ -5,9 +5,9 @@
 .page {
   min-height: 100vh;
   background:
-    radial-gradient(ellipse 1000px 700px at 0% 0%, rgba(217, 181, 168, 0.10) 0%, transparent 60%),
-    radial-gradient(ellipse 800px 700px at 100% 100%, rgba(74, 120, 214, 0.14) 0%, transparent 60%),
-    linear-gradient(165deg, #15294C 0%, #0E1F3D 60%, #0A1730 100%);
+    radial-gradient(ellipse 1000px 700px at 0% 0%, rgba(28, 97, 240, 0.10) 0%, transparent 60%),
+    radial-gradient(ellipse 800px 700px at 100% 100%, rgba(94, 143, 255, 0.14) 0%, transparent 60%),
+    linear-gradient(165deg, #002C98 0%, #001E6B 60%, #001045 100%);
   color: var(--cream);
   padding: 40px 32px 80px;
 }
@@ -135,8 +135,8 @@
   margin-bottom: 48px;
 }
 .tile {
-  background: rgba(244, 236, 219, 0.05);
-  border: 1px solid rgba(244, 236, 219, 0.12);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 14px;
   padding: 32px 30px 30px;
   text-decoration: none;
@@ -152,7 +152,7 @@
   border-color: var(--blush);
   transform: translateY(-3px);
   box-shadow: 0 16px 40px rgba(0, 0, 0, 0.3);
-  background: rgba(244, 236, 219, 0.08);
+  background: rgba(255, 255, 255, 0.08);
 }
 .tileIcon {
   font-family: var(--font-fraunces), serif;
@@ -240,8 +240,8 @@
   margin-bottom: 48px;
 }
 .quickAction {
-  background: rgba(244, 236, 219, 0.04);
-  border: 1px solid rgba(244, 236, 219, 0.10);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.10);
   border-radius: 999px;
   padding: 14px 22px;
   font-family: var(--font-outfit), sans-serif;
@@ -271,16 +271,16 @@
   margin-bottom: 36px;
 }
 .statCard {
-  background: rgba(244, 236, 219, 0.05);
-  border: 1px solid rgba(244, 236, 219, 0.12);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 12px;
   padding: 22px 22px 18px;
   position: relative;
   overflow: hidden;
 }
 .statCardHi {
-  background: rgba(217, 181, 168, 0.10);
-  border-color: rgba(217, 181, 168, 0.30);
+  background: rgba(28, 97, 240, 0.10);
+  border-color: rgba(28, 97, 240, 0.30);
 }
 .statLabel {
   font-family: var(--font-outfit), sans-serif;
@@ -325,8 +325,8 @@
   gap: 10px;
 }
 .leadCard {
-  background: rgba(244, 236, 219, 0.05);
-  border: 1px solid rgba(244, 236, 219, 0.12);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 12px;
   padding: 18px 22px;
   display: grid;
@@ -336,8 +336,8 @@
   transition: border-color 0.2s, background 0.2s;
 }
 .leadCard:hover {
-  border-color: rgba(217, 181, 168, 0.3);
-  background: rgba(244, 236, 219, 0.07);
+  border-color: rgba(28, 97, 240, 0.3);
+  background: rgba(255, 255, 255, 0.07);
 }
 .leadInfo {
   display: flex;
@@ -390,8 +390,8 @@
   width: 38px;
   height: 38px;
   border-radius: 50%;
-  background: rgba(244, 236, 219, 0.08);
-  border: 1px solid rgba(244, 236, 219, 0.18);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.18);
   display: grid;
   place-items: center;
   color: var(--cream);
@@ -411,8 +411,8 @@
 }
 
 .emptyState {
-  background: rgba(244, 236, 219, 0.04);
-  border: 1px dashed rgba(244, 236, 219, 0.20);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px dashed rgba(255, 255, 255, 0.20);
   border-radius: 12px;
   padding: 28px 24px;
   text-align: center;
@@ -436,7 +436,7 @@
 
 /* ===== HELP CARD ===== */
 .helpCard {
-  background: rgba(244, 236, 219, 0.04);
+  background: rgba(255, 255, 255, 0.04);
   border-left: 2px solid var(--blush);
   border-radius: 4px;
   padding: 24px 28px;
@@ -479,16 +479,16 @@
   justify-content: center;
   padding: 40px 24px;
   background:
-    radial-gradient(ellipse 1000px 700px at 0% 0%, rgba(217, 181, 168, 0.10) 0%, transparent 60%),
-    radial-gradient(ellipse 800px 700px at 100% 100%, rgba(74, 120, 214, 0.14) 0%, transparent 60%),
-    linear-gradient(165deg, #15294C 0%, #0E1F3D 60%, #0A1730 100%);
+    radial-gradient(ellipse 1000px 700px at 0% 0%, rgba(28, 97, 240, 0.10) 0%, transparent 60%),
+    radial-gradient(ellipse 800px 700px at 100% 100%, rgba(94, 143, 255, 0.14) 0%, transparent 60%),
+    linear-gradient(165deg, #002C98 0%, #001E6B 60%, #001045 100%);
   color: var(--cream);
 }
 .loginCard {
   max-width: 420px;
   width: 100%;
-  background: rgba(244, 236, 219, 0.06);
-  border: 1px solid rgba(244, 236, 219, 0.14);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.14);
   border-radius: 14px;
   padding: 44px 38px 40px;
   text-align: center;
@@ -524,8 +524,8 @@
 .loginInput {
   width: 100%;
   padding: 14px 18px;
-  background: rgba(244, 236, 219, 0.10);
-  border: 1px solid rgba(244, 236, 219, 0.20);
+  background: rgba(255, 255, 255, 0.10);
+  border: 1px solid rgba(255, 255, 255, 0.20);
   border-radius: 10px;
   font-family: var(--font-outfit), sans-serif;
   font-weight: 400;

@@ -59,8 +59,8 @@
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(180deg, rgba(21,41,76,0.5) 0%, rgba(21,41,76,0.35) 40%, rgba(21,41,76,0.85) 100%),
-    radial-gradient(ellipse at 80% 30%, rgba(217,181,168,0.18) 0%, transparent 60%);
+    linear-gradient(180deg, rgba(0, 44, 152,0.5) 0%, rgba(0, 44, 152,0.35) 40%, rgba(0, 44, 152,0.85) 100%),
+    radial-gradient(ellipse at 80% 30%, rgba(28, 97, 240,0.18) 0%, transparent 60%);
 }
 .heroContent {
   position: relative;
@@ -120,7 +120,7 @@
 }
 .trustBadge {
   text-align: center;
-  border-left: 1px solid rgba(244, 236, 219, 0.15);
+  border-left: 1px solid rgba(255, 255, 255, 0.15);
   padding: 8px 16px;
 }
 .trustBadge:first-child { border-left: none; }
@@ -241,7 +241,7 @@
   cursor: pointer;
 }
 .step:hover {
-  background: rgba(31, 63, 119, 0.04);
+  background: rgba(28, 97, 240, 0.04);
   transform: translateY(-4px);
   text-decoration: none;
 }
@@ -368,8 +368,8 @@
 .reviewCard {
   width: 420px;
   flex-shrink: 0;
-  background: rgba(244, 236, 219, 0.04);
-  border: 1px solid rgba(244, 236, 219, 0.10);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.10);
   border-left: 2px solid var(--blush);
   border-radius: var(--r-sm);
   padding: 28px 30px;
@@ -422,7 +422,7 @@
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(ellipse 1000px 700px at 50% 100%, rgba(31, 63, 119, 0.85) 0%, transparent 70%),
+    radial-gradient(ellipse 1000px 700px at 50% 100%, rgba(28, 97, 240, 0.85) 0%, transparent 70%),
     linear-gradient(180deg, rgba(15, 30, 60, 0.4) 0%, rgba(15, 30, 60, 0.65) 50%, rgba(10, 20, 45, 0.85) 100%);
 }
 .areasContent {
@@ -493,8 +493,8 @@
   margin-top: 12px;
 }
 .countyBlock {
-  background: rgba(244, 236, 219, 0.04);
-  border: 1px solid rgba(244, 236, 219, 0.10);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.10);
   border-radius: 14px;
   padding: 28px 28px 24px;
   backdrop-filter: blur(8px);
@@ -515,8 +515,8 @@
   gap: 8px;
 }
 .cityTag {
-  background: rgba(244, 236, 219, 0.08);
-  border: 1px solid rgba(244, 236, 219, 0.18);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.18);
   border-radius: 999px;
   padding: 9px 18px 9px 32px;
   font-family: var(--font-outfit), sans-serif;
@@ -562,7 +562,7 @@
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, transparent 50%, rgba(21, 41, 76, 0.6) 100%);
+  background: linear-gradient(180deg, transparent 50%, rgba(0, 44, 152, 0.6) 100%);
 }
 .areasPhotoTag {
   position: absolute;
@@ -592,7 +592,7 @@
 .promise {
   padding: 72px 80px;
   background:
-    linear-gradient(rgba(21, 41, 76, 0.88), rgba(21, 41, 76, 0.92)),
+    linear-gradient(rgba(0, 44, 152, 0.88), rgba(0, 44, 152, 0.92)),
     url('/images/flow_sparkles.jpg') center/cover no-repeat;
   color: var(--cream);
   position: relative;
@@ -654,13 +654,13 @@
   grid-template-columns: repeat(3, 1fr);
   gap: 0;
   margin-top: 40px;
-  border-top: 1px solid rgba(244, 236, 219, 0.15);
-  border-bottom: 1px solid rgba(244, 236, 219, 0.15);
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
 }
 .pillar {
   padding: 24px 18px;
   text-align: center;
-  border-right: 1px solid rgba(244, 236, 219, 0.10);
+  border-right: 1px solid rgba(255, 255, 255, 0.10);
 }
 .pillar:last-child {
   border-right: none;
@@ -714,13 +714,13 @@
   border-radius: var(--r-lg);
   position: relative;
   overflow: hidden;
-  box-shadow: 0 20px 50px rgba(31, 63, 119, 0.12);
+  box-shadow: 0 20px 50px rgba(28, 97, 240, 0.12);
 }
 .faqImage::after {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, transparent 60%, rgba(21, 41, 76, 0.4) 100%);
+  background: linear-gradient(180deg, transparent 60%, rgba(0, 44, 152, 0.4) 100%);
 }
 .faqImageTag {
   position: absolute;
@@ -745,7 +745,7 @@
 }
 .faqItem:hover {
   border-color: var(--navy);
-  box-shadow: 0 8px 24px rgba(31, 63, 119, 0.06);
+  box-shadow: 0 8px 24px rgba(28, 97, 240, 0.06);
 }
 .faqQ {
   display: flex;
@@ -780,7 +780,7 @@
 .finalCta {
   background:
     linear-gradient(135deg, var(--navy-deep) 0%, var(--navy) 100%),
-    radial-gradient(ellipse at 80% 30%, rgba(217,181,168,0.18) 0%, transparent 60%);
+    radial-gradient(ellipse at 80% 30%, rgba(28, 97, 240,0.18) 0%, transparent 60%);
   padding: 80px 60px;
   text-align: center;
   color: var(--cream);
@@ -809,7 +809,7 @@
   display: grid;
   grid-template-columns: 1.5fr 1fr 1fr 1fr;
   gap: 48px;
-  border-top: 1px solid rgba(244, 236, 219, 0.1);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 .footerCol h4 {
   font-family: var(--font-outfit), sans-serif;
@@ -849,7 +849,7 @@
   letter-spacing: 0.2em;
   text-transform: uppercase;
   opacity: 0.4;
-  border-top: 1px solid rgba(244, 236, 219, 0.08);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 /* ============ MOBILE BREAKPOINTS ============ */
@@ -894,7 +894,7 @@
   .heroSub { font-size: 16px; margin-bottom: 32px; }
   .heroCtaRow { gap: 12px; }
   .trustStrip { grid-template-columns: 1fr; padding: 20px; }
-  .trustBadge { border-left: none; border-top: 1px solid rgba(244,236,219,0.15); padding: 16px; }
+  .trustBadge { border-left: none; border-top: 1px solid rgba(255, 255, 255,0.15); padding: 16px; }
   .trustBadge:first-child { border-top: none; }
   .trustValue { font-size: 16px; }
   .services, .how, .why, .finalCta, .promise, .faq { padding: 56px 20px; }
@@ -913,7 +913,7 @@
   .promiseHeadline { font-size: 38px; }
   .promiseGrid, .faqGrid { gap: 32px; }
   .promisePillars { grid-template-columns: 1fr; }
-  .pillar { border-right: none; border-bottom: 1px solid rgba(244,236,219,0.10); }
+  .pillar { border-right: none; border-bottom: 1px solid rgba(255, 255, 255,0.10); }
   .pillar:last-child { border-bottom: none; }
   .reviewCard { width: 300px; padding: 22px 24px; }
   .reviewsHeadlineStars { font-size: 40px; }

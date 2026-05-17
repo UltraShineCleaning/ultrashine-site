@@ -1,5 +1,6 @@
 import type { MetadataRoute } from 'next';
 import { CITIES } from './areas/_data/cities';
+import { POSTS } from './blog/_data/posts';
 
 /**
  * Auto-generates /sitemap.xml from all routes the site exposes.
@@ -79,6 +80,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'monthly',
       priority: 0.75,
     },
+    {
+      url: `${BASE}/blog`,
+      lastModified: now,
+      changeFrequency: 'weekly',
+      priority: 0.7,
+    },
   ];
 
   // Service pages
@@ -97,5 +104,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.8,
   }));
 
-  return [...core, ...services, ...cities];
+  // Blog posts
+  const blogPosts: MetadataRoute.Sitemap = POSTS.map((post) => ({
+    url: `${BASE}/blog/${post.slug}`,
+    lastModified: new Date(`${post.publishedAt}T00:00:00`),
+    changeFrequency: 'monthly',
+    priority: 0.7,
+  }));
+
+  return [...core, ...services, ...cities, ...blogPosts];
 }

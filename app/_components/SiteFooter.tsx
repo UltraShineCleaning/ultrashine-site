@@ -29,6 +29,7 @@ export default function SiteFooter() {
           <h4>Company</h4>
           <Link href="/about">About</Link>
           <Link href="/reviews">Reviews</Link>
+          <Link href="/blog">Blog</Link>
           <Link href="/work-for-us">Work For Us</Link>
         </div>
         <div className={styles.footerCol}>

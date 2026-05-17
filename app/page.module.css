@@ -921,5 +921,9 @@
   .faqHeadBody { font-size: 17px; }
   .faqQ { font-size: 16px; }
   .citiesList { gap: 6px; }
-  .cityTag { padding: 8px 16px; font-size: 12px; }
+  .cityTag {
+    padding: 8px 16px 8px 34px;  /* keep left space for the ✦ sparkle */
+    font-size: 12px;
+  }
+  .cityTag::before { left: 14px; font-size: 10px; }
 }

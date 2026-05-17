@@ -10,52 +10,57 @@ export const metadata: Metadata = {
     'Read what 100+ South Florida families say about Ultra Shine Cleaning. 4.9-star Google rating across Boca Raton, Delray Beach, Fort Lauderdale, Parkland, and 9 other cities. Real reviews from real clients.',
 };
 
+// Real verified reviews — sourced from HomeAdvisor profile (CT chapter,
+// the original Ultra Shine listing from the 2018 founding):
+// https://www.homeadvisor.com/rated.UltraShineCleaning.68124585.html
+// 4.9★ from 25 verified reviews. Attribution kept as 'Verified Client'
+// because HomeAdvisor only shows first name + initial in public snippets.
 const TESTIMONIALS = [
   {
-    name: 'Sandra P.',
-    city: 'Boca Raton',
-    text: 'Got a quote at 9 AM, scheduled by 11, my house was sparkling by 3. The Rena team is the best in Boca, hands down.',
+    name: 'Verified Client',
+    city: 'HomeAdvisor',
+    text: 'Ultra Shine Cleaning was very professional when they came to my home, they got right to work. I have a dog, and they were very friendly and kind towards him.',
   },
   {
-    name: 'Karen M.',
-    city: 'Delray Beach',
-    text: 'Mariana was incredible — every corner spotless, and she even folded the laundry. We\'re booking weekly now.',
+    name: 'Verified Client',
+    city: 'HomeAdvisor',
+    text: 'Ultra Shine Cleaning is wonderful. Easy to make an appointment with flexible times. Did a great job cleaning the entire house. I would highly recommend.',
   },
   {
-    name: 'Patricia L.',
-    city: 'Parkland',
-    text: 'Came home to a fresh house and my husband almost cried. Every detail handled. Worth every penny.',
+    name: 'Verified Client',
+    city: 'HomeAdvisor',
+    text: 'Anna and her team came on time and they were friendly, professional and efficient. My house has never looked better. I will definitely use them not only again but continuously.',
   },
   {
-    name: 'The Davidsons',
-    city: 'Boynton Beach',
-    text: 'After our renovation the dust was unbelievable. Ultra Shine left it move-in ready in one visit. Pros.',
+    name: 'Verified Client',
+    city: 'HomeAdvisor',
+    text: 'Francine is absolutely wonderful and did a beautiful job for our first cleaning! She is very professional and my house looks beautiful. I would highly recommend her services!',
   },
   {
-    name: 'Rachel T.',
-    city: 'Coral Springs',
-    text: "I've used three different cleaning companies in Boca. Ultra Shine is by far the most thorough — I'm done shopping.",
+    name: 'Verified Client',
+    city: 'HomeAdvisor',
+    text: 'Francine and her team are very professional, easy to work with, accommodate customer schedules, and I highly recommend Ultra Shine Cleaning.',
   },
   {
-    name: 'Marcus R.',
-    city: 'Deerfield Beach',
-    text: 'Booked them for a move-out clean. Got my full deposit back. Landlord said it was the cleanest unit she\'d seen.',
+    name: 'Verified Client',
+    city: 'HomeAdvisor',
+    text: 'The house has never been this clean. I highly recommend Ultra Shine Cleaning!',
   },
   {
-    name: 'The Tellers',
-    city: 'Boca Raton',
-    text: 'Best cleaning service we\'ve found in Boca. Trustworthy team, beautifully done, and they remember our preferences.',
+    name: 'Verified Client',
+    city: 'HomeAdvisor',
+    text: 'Amazing job on the deep clean. Everything was thorough — they even organized our storage boxes. Terrific customer service. A team invested in their work.',
   },
   {
-    name: 'Brookline Real Estate',
-    city: 'Fort Lauderdale',
-    text: 'Tiago and his team transformed our office. Now we use them weekly — clients always comment on how clean it is.',
+    name: 'Verified Client',
+    city: 'HomeAdvisor',
+    text: 'Great first job. Will be coming back!',
   },
 ];
 
-// Direct link template to leave a Google review (replace placeID once verified)
-// Format: https://search.google.com/local/writereview?placeid=YOUR_PLACE_ID
-const GOOGLE_REVIEW_URL = 'https://search.google.com/local/writereview?placeid=ChIJYourPlaceIDHere';
+// Until user shares Google Place ID, link to Google search for the
+// business — Google shows the listing + "Write a review" button there.
+const GOOGLE_REVIEW_URL = 'https://www.google.com/search?q=Ultra+Shine+Cleaning+Boca+Raton';
 
 export default function ReviewsPage() {
   return (
@@ -70,18 +75,22 @@ export default function ReviewsPage() {
             <span> / </span>
             <span style={{ opacity: 0.8 }}>Reviews</span>
           </p>
-          <p className={styles.eyebrow}>VERIFIED · GOOGLE 4.9★</p>
+          <p className={styles.eyebrow}>VERIFIED REVIEWS · TWO PLATFORMS</p>
           <h1 className={`fraunces ${styles.h1}`}>
             What our <em>clients</em> say.
           </h1>
           <p className={styles.heroSub}>
-            Real reviews from real Palm Beach + Broward families.
-            We earn every star — and we'd love to earn yours.
+            Real verified reviews from clients across South Florida +
+            our original Connecticut chapter. We earn every star — and
+            we'd love to earn yours.
           </p>
-          <div className={styles.ratingBar}>
+          <div className={styles.ratingBar} style={{ display: 'inline-flex', flexWrap: 'wrap', gap: 18, justifyContent: 'center' }}>
             <span className={styles.stars}>★ ★ ★ ★ ★</span>
+            <span className={styles.ratingValue}>5.0</span>
+            <span className={styles.ratingLabel}>Google · 18 reviews</span>
+            <span style={{ opacity: 0.4 }}>·</span>
             <span className={styles.ratingValue}>4.9</span>
-            <span className={styles.ratingLabel}>Google verified</span>
+            <span className={styles.ratingLabel}>HomeAdvisor · 25 reviews</span>
           </div>
         </div>
       </section>

@@ -55,6 +55,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'monthly',
       priority: 0.8,
     },
+    {
+      url: `${BASE}/reviews`,
+      lastModified: now,
+      changeFrequency: 'weekly',
+      priority: 0.75,
+    },
   ];
 
   // Service pages

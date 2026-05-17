@@ -6,7 +6,9 @@
 
 .container {
   position: relative;
-  height: 400vh; /* 4 scenes × 100vh = scrollable space */
+  /* SIMPLIFIED: single scene = 100vh (was 400vh for 4-scene scroll-through).
+     When the 4 connected Flow images arrive Monday, restore to 400vh. */
+  height: 100vh;
   background: var(--navy-deep);
 }
 

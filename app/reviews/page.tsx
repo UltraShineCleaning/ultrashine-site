@@ -58,9 +58,10 @@ const TESTIMONIALS = [
   },
 ];
 
-// Until user shares Google Place ID, link to Google search for the
-// business — Google shows the listing + "Write a review" button there.
-const GOOGLE_REVIEW_URL = 'https://www.google.com/search?q=Ultra+Shine+Cleaning+Boca+Raton';
+// Google Maps share link to the Ultra Shine Cleaning business profile.
+// Opens the live Google profile where users can read all 18 reviews
+// + tap "Write a review" directly. Provided by Tiago, May 2026.
+const GOOGLE_REVIEW_URL = 'https://maps.app.goo.gl/EGeuJViEFazQQe579';
 
 export default function ReviewsPage() {
   return (

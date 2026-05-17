@@ -192,24 +192,6 @@ export default function QuotePage() {
             <div className={styles.trustRow}><span className={styles.check}>✦</span> Same cleaner every visit</div>
           </div>
 
-          <div className={styles.testimonials}>
-            <div className={styles.testimonial}>
-              <div className={styles.tStars}>★ ★ ★ ★ ★</div>
-              <div className={styles.tText}>
-                "Got a quote at 9 AM, scheduled by 11, my house was sparkling by 3.
-                The Rena team is the best in Boca, hands down."
-              </div>
-              <div className={styles.tAuthor}>Sandra P. · Boca Raton</div>
-            </div>
-            <div className={styles.testimonial}>
-              <div className={styles.tStars}>★ ★ ★ ★ ★</div>
-              <div className={styles.tText}>
-                "Mariana was incredible — every corner spotless, and she even folded
-                the laundry. Booking weekly now."
-              </div>
-              <div className={styles.tAuthor}>Karen M. · Delray Beach</div>
-            </div>
-          </div>
         </div>
       </aside>
 

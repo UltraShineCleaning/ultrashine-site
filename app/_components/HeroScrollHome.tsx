@@ -35,34 +35,20 @@ type Scene = {
   showCta?: boolean;
 };
 
+// SIMPLIFIED MODE — until the 4 connected Flow images arrive (Monday),
+// the hero shows a single static scene instead of the 4-scene scroll-through.
+// To re-enable the cinematic 4-scene version once images are ready:
+//   1. Restore the 4 SCENES entries (see git history pre-rebrand)
+//   2. Set the 4 image paths to: hero_scene_01_kitchen.jpg, _02_living.jpg,
+//      _03_bathroom.jpg, _04_bedroom.jpg
+//   3. The 400vh container + crossfade logic below still works as-is
 const SCENES: Scene[] = [
   {
-    id: 'kitchen',
+    id: 'single',
     image: '/images/flow_hero_kitchen.jpg',
-    eyebrow: 'SCENE 01 · THE KITCHEN',
-    headlineHtml: 'Every surface, every <em>corner</em>.',
-    body: 'Counters polished, stovetop degreased, appliance fronts wiped, sink restored. The room where your home actually begins.',
-  },
-  {
-    id: 'living',
-    image: '/images/flow_living_room_navy.jpg',
-    eyebrow: 'SCENE 02 · THE LIVING ROOM',
-    headlineHtml: 'Where you actually <em>relax</em>.',
-    body: "Surfaces dusted to the touch, throw pillows fluffed, glass tables polished streak-free, vacuum lines crisp on the rug.",
-  },
-  {
-    id: 'bathroom',
-    image: '/images/flow_bathroom_sunset.jpg',
-    eyebrow: 'SCENE 03 · THE BATHROOM',
-    headlineHtml: 'Where you actually <em>unwind</em>.',
-    body: 'Hard water removed from glass, grout scrubbed, mirrors polished streak-free, fresh towels folded.',
-  },
-  {
-    id: 'bedroom',
-    image: '/images/bedroom.jpg',
     eyebrow: 'READY WHEN YOU ARE',
-    headlineHtml: 'Your whole home. <em>Ours to handle</em>.',
-    body: 'Custom quote in one hour. Background-checked team. Fully insured. Same crew every visit.',
+    headlineHtml: 'A home that <em>shines</em>. Without lifting a finger.',
+    body: 'Boutique cleaning across Palm Beach + Broward. Background-checked W2 team, fully insured, no detail missed.',
     showCta: true,
   },
 ];
@@ -225,19 +211,20 @@ export default function HeroScrollHome() {
           />
         ))}
 
-        {/* Skip intro button — for desktop users who don't want the 4-scene scroll */}
-        <a href="#services" className={styles.skipBtn}>
-          Skip intro <span style={{ fontFamily: 'var(--font-fraunces)' }}>↓</span>
-        </a>
-
-        {/* Scroll cue (always visible to hint that scrolling reveals more) */}
-        <div className={styles.scrollCue}>
-          <span>Scroll</span>
-          <span className={styles.scrollCueArrow}>↓</span>
-        </div>
-
-        {/* Progress dots */}
-        <ProgressDots progress={scrollYProgress} total={SCENES.length} />
+        {/* Scroll-through-only UI (skip, scroll cue, progress dots) hidden in
+            single-scene mode. Re-enable when SCENES has 2+ entries. */}
+        {SCENES.length > 1 && (
+          <>
+            <a href="#services" className={styles.skipBtn}>
+              Skip intro <span style={{ fontFamily: 'var(--font-fraunces)' }}>↓</span>
+            </a>
+            <div className={styles.scrollCue}>
+              <span>Scroll</span>
+              <span className={styles.scrollCueArrow}>↓</span>
+            </div>
+            <ProgressDots progress={scrollYProgress} total={SCENES.length} />
+          </>
+        )}
       </div>
     </section>
   );

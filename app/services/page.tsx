@@ -209,6 +209,68 @@ export default function ServicesIndexPage() {
         </div>
       </section>
 
+      {/* ============ COMPARISON MATRIX ============ */}
+      <section className={styles.compareSection}>
+        <div className={styles.compareInner}>
+          <p className="eyebrow">SIDE BY SIDE</p>
+          <h2 className={`fraunces ${styles.compareHead}`}>
+            What&apos;s included in <em>each</em> service.
+          </h2>
+          <p className={styles.compareSub}>
+            A quick glance so you can pick what fits — not every clean needs everything.
+          </p>
+
+          {/* Desktop / tablet: real table */}
+          <div className={styles.compareTableWrap}>
+            <table className={styles.compareTable}>
+              <thead>
+                <tr>
+                  <th className={styles.compareLabelCol}>What you get</th>
+                  <th>Regular</th>
+                  <th>Deep</th>
+                  <th>Move-In / Out</th>
+                  <th>Commercial</th>
+                  <th>Post-Construction</th>
+                </tr>
+              </thead>
+              <tbody>
+                {[
+                  ['Dust + wipe all surfaces',           true,  true,  true,  true,  true],
+                  ['Floors vacuumed + mopped',           true,  true,  true,  true,  true],
+                  ['Bathrooms fully sanitized',          true,  true,  true,  true,  true],
+                  ['Kitchen counters + appliances ext.', true,  true,  true,  true,  true],
+                  ['Trash emptied + replaced',           true,  true,  true,  true,  true],
+                  ['Baseboards hand-wiped',              false, true,  true,  false, true],
+                  ['Inside oven + fridge',               false, true,  true,  false, false],
+                  ['Inside cabinets + drawers',          false, false, true,  false, false],
+                  ['Grout scrubbed + tile reset',        false, true,  true,  false, true],
+                  ['Light fixtures + ceiling fans',      false, true,  true,  false, true],
+                  ['Vents + air returns',                false, true,  true,  false, true],
+                  ['HEPA vacuum for fine dust',          false, false, false, false, true],
+                  ['Drywall + construction dust',        false, false, false, false, true],
+                  ['After-hours scheduling',             false, false, false, true,  true],
+                  ['Recurring schedule available',       true,  false, false, true,  false],
+                ].map((row, idx) => (
+                  <tr key={idx}>
+                    <td className={styles.compareLabelCol}>{row[0] as string}</td>
+                    {(row.slice(1) as boolean[]).map((cell, i) => (
+                      <td key={i} className={cell ? styles.cellYes : styles.cellNo}>
+                        {cell ? '✓' : '·'}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <p className={styles.compareNote}>
+            All services include background-checked W2 cleaners, color-coded cloths
+            (no cross-contamination), EPA-safe products, and our 100% satisfaction guarantee.
+          </p>
+        </div>
+      </section>
+
       {/* ============ NOT SURE WHICH ============ */}
       <section className={styles.helpSection}>
         <div className={styles.helpInner}>

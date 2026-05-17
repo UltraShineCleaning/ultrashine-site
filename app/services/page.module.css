@@ -264,6 +264,118 @@
   transform: translateX(4px);
 }
 
+/* ===== COMPARISON MATRIX =====
+   Side-by-side service comparison so visitors can self-select.
+   Clean two-tone rows, brand-blue checkmarks, neutral dots for "not included".
+   Horizontal scroll on narrow screens — narrow phones get a swipe affordance. */
+.compareSection {
+  padding: 80px 60px 88px;
+  background: var(--cream);
+  border-top: 1px solid var(--line);
+}
+.compareInner {
+  max-width: 1280px;
+  margin: 0 auto;
+  text-align: center;
+}
+.compareHead {
+  font-weight: 800;
+  font-size: 44px;
+  line-height: 1.05;
+  letter-spacing: -0.022em;
+  color: var(--navy-deep);
+  margin-top: 14px;
+  margin-bottom: 14px;
+}
+.compareHead em {
+  color: var(--blue);
+}
+.compareSub {
+  font-size: 17px;
+  line-height: 1.55;
+  color: var(--navy-deep);
+  opacity: 0.78;
+  max-width: 640px;
+  margin: 0 auto 40px;
+}
+.compareTableWrap {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border-radius: var(--r-md);
+  box-shadow: var(--shadow-soft);
+  background: var(--white);
+}
+.compareTable {
+  width: 100%;
+  min-width: 760px;
+  border-collapse: collapse;
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 14px;
+  color: var(--navy-deep);
+}
+.compareTable thead {
+  background: var(--navy-deep);
+  color: var(--white);
+}
+.compareTable thead th {
+  padding: 18px 16px;
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-align: center;
+  border-left: 1px solid rgba(255, 255, 255, 0.10);
+}
+.compareTable thead th:first-child {
+  border-left: none;
+  text-align: left;
+  padding-left: 24px;
+}
+.compareTable tbody tr {
+  border-top: 1px solid var(--line);
+  transition: background 0.15s;
+}
+.compareTable tbody tr:nth-child(even) {
+  background: var(--cream-2);
+}
+.compareTable tbody tr:hover {
+  background: var(--cream-3);
+}
+.compareTable td {
+  padding: 14px 16px;
+  text-align: center;
+  vertical-align: middle;
+  font-size: 14px;
+}
+.compareLabelCol {
+  text-align: left !important;
+  font-weight: 600;
+  color: var(--navy-deep);
+  padding-left: 24px !important;
+  min-width: 220px;
+}
+.cellYes {
+  color: var(--blue);
+  font-weight: 800;
+  font-size: 18px;
+}
+.cellNo {
+  color: var(--gray-light);
+  font-size: 18px;
+  opacity: 0.6;
+}
+.compareNote {
+  margin-top: 28px;
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--navy-deep);
+  opacity: 0.7;
+  max-width: 720px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 /* ===== "NOT SURE WHICH" HELP SECTION ===== */
 .helpSection {
   padding: 80px 60px;
@@ -379,6 +491,9 @@
   .trustValue { font-size: 20px; }
   .gridSection { padding: 56px 32px 64px; }
   .gridInner { gap: 18px; }
+  .compareSection { padding: 56px 32px 64px; }
+  .compareHead { font-size: 34px; }
+  .compareSub { font-size: 16px; margin-bottom: 32px; }
   .card { min-height: 360px; }
   .cardWide { min-height: 420px; }
   .cardName { font-size: 32px; }
@@ -408,6 +523,14 @@
   .trustLabel { font-size: 9px; letter-spacing: 0.18em; }
   .gridSection { padding: 44px 20px 56px; }
   .gridInner { grid-template-columns: 1fr; gap: 16px; }
+  .compareSection { padding: 44px 20px 56px; }
+  .compareHead { font-size: 26px; }
+  .compareSub { font-size: 14px; margin-bottom: 24px; }
+  .compareTable { font-size: 13px; min-width: 680px; }
+  .compareTable thead th { padding: 14px 12px; font-size: 10px; letter-spacing: 0.12em; }
+  .compareTable td { padding: 10px 12px; font-size: 13px; }
+  .compareLabelCol { min-width: 180px; padding-left: 16px !important; }
+  .compareNote { font-size: 12px; margin-top: 20px; }
   .card, .cardWide { min-height: 320px; grid-column: span 1; }
   .cardContent { padding: 22px 24px 24px; }
   .cardTop { flex-direction: row; }

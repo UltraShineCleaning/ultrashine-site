@@ -138,6 +138,14 @@ export const metadata: Metadata = {
     siteName: 'Ultra Shine Cleaning',
     locale: 'en_US',
     type: 'website',
+    // OG image is auto-attached by Next.js from app/opengraph-image.tsx
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Ultra Shine Cleaning · A home that shines',
+    description:
+      'Boutique house cleaning across Palm Beach + Broward. ★ 5.0 Google.',
+    // Twitter image is auto-attached by Next.js from app/twitter-image.tsx
   },
   icons: {
     icon: '/images/logo_navy_tight.png',

@@ -29,6 +29,7 @@ export default function SiteHeader({ inPage = true }: Props) {
         <Link href="/services">Services</Link>
         <Link href="/areas">Areas</Link>
         <Link href="/about">About</Link>
+        <Link href="/blog">Blog</Link>
         <Link href="/reviews">Reviews</Link>
         <Link href="/faq">FAQ</Link>
       </div>

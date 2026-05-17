@@ -65,7 +65,10 @@ export default async function OpengraphImage() {
                 height: 1.5,
                 background: '#FFFFFF',
                 opacity: 0.6,
-                display: 'inline-block',
+                // Satori (used by @vercel/og) only supports flex/block/none/-webkit-box.
+                // 'inline-block' would break the build. Inside a flex parent, 'flex'
+                // is the safest choice and renders identically.
+                display: 'flex',
               }}
             />
             Ultra Shine Cleaning · Est. 2018

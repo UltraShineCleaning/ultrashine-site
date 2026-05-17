@@ -86,6 +86,7 @@ export default function MobileNav() {
               { href: '/about', label: 'About' },
               { href: '/blog', label: 'Blog' },
               { href: '/reviews', label: 'Reviews' },
+              { href: '/leave-a-review', label: '★ Leave Review' },
               { href: '/faq', label: 'FAQ' },
             ].map((item, i) => (
               <motion.a

@@ -79,8 +79,17 @@ export default function HomePage() {
         </div>
       </MotionSection>
 
-      {/* ============ BEFORE / AFTER INTERACTIVE SLIDER ============ */}
-      <BeforeAfterSlider />
+      {/* ============ BEFORE / AFTER INTERACTIVE SLIDER ============
+          Disabled until real same-room before/after photos are shot.
+          The placeholders (bedroom → kitchen) didn't make sense as a B/A —
+          they were just two different rooms. Tiago is shooting real pairs
+          this week. To re-enable, pass real image URLs as props:
+            <BeforeAfterSlider
+              beforeImage="/images/ba_kitchen_before.jpg"
+              afterImage="/images/ba_kitchen_after.jpg"
+            />
+      */}
+      {/* <BeforeAfterSlider /> */}
 
       {/* ============ SERVICES ============ */}
       <MotionSection id="services" className={`${styles.services} dot-grid`}>

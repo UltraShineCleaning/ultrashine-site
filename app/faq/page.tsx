@@ -34,8 +34,8 @@ const CATEGORIES: FaqCategory[] = [
         a: "Yes — always free, always no-obligation. We come walk through your home, ask questions, then send you a custom quote within an hour. You can take it or leave it.",
       },
       {
-        q: 'Do you offer discounts for recurring cleanings?',
-        a: "Yes. Bi-weekly is our most popular cadence and gets a discount over one-time pricing. Weekly is even more discounted. Talk to us when we quote — we'll show you the math.",
+        q: 'How does pricing work for recurring vs one-time cleanings?',
+        a: "Every quote is custom — pricing reflects what your specific home actually needs, not a flat published rate. We don't publish standing discount tiers. From time to time we run promotional offers; if one is active when you reach out, we'll tell you.",
       },
       {
         q: 'What payment methods do you accept?',

@@ -31,6 +31,9 @@ export default function SiteHeader({ inPage = true }: Props) {
         <Link href="/about">About</Link>
         <Link href="/blog">Blog</Link>
         <Link href="/reviews">Reviews</Link>
+        <Link href="/leave-a-review" className={styles.navReview}>
+          ★ Leave Review
+        </Link>
         <Link href="/faq">FAQ</Link>
       </div>
       <div className={styles.navRight}>

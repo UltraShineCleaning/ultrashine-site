@@ -22,8 +22,6 @@ import styles from './page.module.css';
  */
 
 const GOOGLE_REVIEW_URL = 'https://maps.app.goo.gl/EGeuJViEFazQQe579';
-const HOMEADVISOR_URL =
-  'https://www.angi.com/companylist/us/fl/boca-raton/ultra-shine-cleaning-services-llc-reviews-11142117.htm';
 
 // QR code rendered via qrserver.com — free public API, no signup, super stable.
 // We pass the Google review URL directly so scanning the QR opens Google's
@@ -103,32 +101,6 @@ export default function LeaveAReviewPage() {
               <p className={styles.qrLabel}>SCAN WITH PHONE CAMERA</p>
               <p className={styles.qrSubLabel}>Opens Google review form</p>
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ============ ALTERNATE PLATFORMS ============ */}
-      <section className={styles.altSection}>
-        <div className={styles.altInner}>
-          <p className="eyebrow">PREFER A DIFFERENT PLATFORM?</p>
-          <h2 className={`fraunces ${styles.altHead}`}>
-            We&apos;re also on Angi &amp; HomeAdvisor.
-          </h2>
-          <p className={styles.altBody}>
-            Google helps us rank in local search — but Angi/HomeAdvisor reviews
-            help homeowners researching us there too. Whichever feels easiest to you.
-          </p>
-
-          <div className={styles.altRow}>
-            <a
-              href={HOMEADVISOR_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={styles.altButton}
-            >
-              <span className={styles.altButtonLabel}>Angi / HomeAdvisor</span>
-              <span className={styles.altButtonArrow}>→</span>
-            </a>
           </div>
         </div>
       </section>

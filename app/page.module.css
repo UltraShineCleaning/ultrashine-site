@@ -29,6 +29,16 @@
   transition: opacity 0.15s;
 }
 .navMenu a:hover { opacity: 1; text-decoration: none; }
+/* Leave-Review nav link — subtle gold star, slightly muted treatment so
+   it reads as a "for customers" link, not a sales button. */
+.navReview {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--gold) !important;
+  text-shadow: 0 0 12px rgba(255, 200, 87, 0.35);
+}
+.navReview:hover { opacity: 1; }
 .navRight {
   display: flex;
   align-items: center;

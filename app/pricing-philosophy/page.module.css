@@ -2,10 +2,14 @@
    /pricing-philosophy · Why we don't list flat prices
    ========================================================== */
 
-/* HERO */
+/* HERO
+   Top padding bumped from 72px → 150px so the breadcrumb sits well below
+   the floating absolute-positioned nav (nav = 28px padding + ~71px logo
+   = ~127px total). Previously "Home / Why no flat prices" was visibly
+   bleeding behind the nav logo + Get Quote button. */
 .hero {
   position: relative;
-  padding: 72px 60px 64px;
+  padding: 150px 60px 72px;
   background:
     radial-gradient(ellipse 800px 600px at 70% 0%, rgba(28, 97, 240, 0.12) 0%, transparent 60%),
     linear-gradient(165deg, #002C98 0%, #001E6B 60%, #001045 100%);
@@ -340,7 +344,7 @@
 
 /* ===== MOBILE ===== */
 @media (max-width: 1024px) {
-  .hero { padding: 52px 32px 48px; }
+  .hero { padding: 130px 32px 56px; }
   .section, .pullQuoteWrap, .cta { padding: 56px 32px; }
   .h1 { font-size: 44px; }
   .heroSub { font-size: 17px; }
@@ -353,7 +357,7 @@
   .ctaHead { font-size: 30px; }
 }
 @media (max-width: 640px) {
-  .hero { padding: 36px 22px 36px; }
+  .hero { padding: 110px 22px 44px; }
   .section, .pullQuoteWrap, .cta { padding: 44px 20px; }
   .h1 { font-size: 32px; line-height: 1.02; }
   .heroSub { font-size: 15px; }

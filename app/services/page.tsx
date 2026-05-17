@@ -69,9 +69,9 @@ const SERVICES: ServiceItem[] = [
     slug: 'post-construction',
     number: '05',
     name: 'Post-Construction',
-    tagline: 'HEPA-Filtered, Wall-to-Wall',
+    tagline: 'Wall-to-Wall · Full Detail',
     description:
-      'Drywall dust gets everywhere. We bring HEPA vacuums + the right cloths to leave a remodel actually move-in ready, not just construction-clean.',
+      'Drywall dust gets everywhere. We bring professional-grade vacuums + the right cloths to leave a remodel actually move-in ready, not just construction-clean.',
     image: '/images/service_postconstruction.jpg',
     bestFor: 'Renovations, remodels, new builds',
   },
@@ -117,7 +117,7 @@ export default function ServicesIndexPage() {
     },
     {
       q: 'Can I combine multiple services?',
-      a: 'Yes. Most clients combine Regular + a quarterly Deep Cleaning. Some pair Commercial (their office) with Regular (their home). We bundle when it makes sense and apply a small loyalty discount to recurring clients.',
+      a: 'Yes. Most clients combine Regular + a quarterly Deep Cleaning. Some pair Commercial (their office) with Regular (their home). We bundle when it makes sense — just tell us when we walk through your home and we will figure out the right rhythm together.',
     },
     {
       q: 'Is there a minimum visit, or can I book a one-time clean?',
@@ -125,7 +125,7 @@ export default function ServicesIndexPage() {
     },
     {
       q: 'Do you bring all the supplies + equipment?',
-      a: 'Yes. We bring everything: EPA-safe products (Method, Mrs Meyer’s, ECOS, vinegar, baking soda), HEPA-filtered vacuums, color-coded microfiber cloths, mops, and a full tool kit. You do not need to provide anything — though if you prefer we use your specific products, just let us know in advance.',
+      a: 'Yes. We bring everything: EPA-safe products (Method, Mrs Meyer’s, ECOS, vinegar, baking soda), professional-grade vacuums, color-coded microfiber cloths, mops, and a full tool kit. You do not need to provide anything — though if you prefer we use your specific products, just let us know in advance.',
     },
     {
       q: 'What if my home is bigger or messier than the quote assumed?',
@@ -283,15 +283,11 @@ export default function ServicesIndexPage() {
                   ['Kitchen counters + appliances ext.', true,  true,  true,  true,  true],
                   ['Trash emptied + replaced',           true,  true,  true,  true,  true],
                   ['Baseboards hand-wiped',              false, true,  true,  false, true],
-                  ['Inside oven + fridge',               false, true,  true,  false, false],
-                  ['Inside cabinets + drawers',          false, false, true,  false, false],
                   ['Grout scrubbed + tile reset',        false, true,  true,  false, true],
                   ['Light fixtures + ceiling fans',      false, true,  true,  false, true],
                   ['Vents + air returns',                false, true,  true,  false, true],
-                  ['HEPA vacuum for fine dust',          false, false, false, false, true],
                   ['Drywall + construction dust',        false, false, false, false, true],
                   ['After-hours scheduling',             false, false, false, true,  true],
-                  ['Recurring schedule available',       true,  false, false, true,  false],
                 ].map((row, idx) => (
                   <tr key={idx}>
                     <td className={styles.compareLabelCol}>{row[0] as string}</td>
@@ -309,6 +305,10 @@ export default function ServicesIndexPage() {
           <p className={styles.compareNote}>
             All services include background-checked W2 cleaners, color-coded cloths
             (no cross-contamination), EPA-safe products, and our 100% satisfaction guarantee.
+            <br />
+            <br />
+            <strong>Add-ons available on any service:</strong> inside oven, inside fridge,
+            inside cabinets + drawers, inside windows, laundry fold. Pricing on request.
           </p>
         </div>
       </section>

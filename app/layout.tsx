@@ -5,6 +5,7 @@ import { SpeedInsights } from '@vercel/speed-insights/next';
 import './globals.css';
 import SmoothScrollProvider from './_components/SmoothScrollProvider';
 import JsonLd from './_components/JsonLd';
+import StickyQuoteCta from './_components/StickyQuoteCta';
 
 // Sitewide LocalBusiness + Organization schema.
 // Tells Google: this is a real local business in Boca Raton with a
@@ -164,6 +165,7 @@ export default function RootLayout({
       </head>
       <body>
         <SmoothScrollProvider>{children}</SmoothScrollProvider>
+        <StickyQuoteCta />
         <Analytics />
         <SpeedInsights />
       </body>

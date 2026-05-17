@@ -79,6 +79,51 @@
   font-weight: 400;
 }
 
+/* ===== HERO TRUST BAND =====
+   Sits at the bottom of the hero, anchoring the funnel page with
+   real proof: years in business, cities, rating, guarantee, turnaround.
+   No fake "live" data — every number here is true and stable. */
+.trustBand {
+  position: relative;
+  z-index: 10;
+  background: linear-gradient(95deg, #001045 0%, #002C98 60%, #001E6B 100%);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+}
+.trustBandInner {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 22px 60px;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+}
+.trustItem {
+  text-align: center;
+  border-left: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 6px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  color: var(--white);
+}
+.trustItem:first-child { border-left: none; }
+.trustValue {
+  font-family: var(--font-poppins), sans-serif;
+  font-weight: 700;
+  font-size: 22px;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  color: var(--white);
+}
+.trustLabel {
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+
 /* ===== GRID SECTION ===== */
 .gridSection {
   padding: 80px 60px 96px;
@@ -329,6 +374,9 @@
   .heroContent { padding: 120px 32px 56px; }
   .heroHeadline { font-size: 52px; }
   .heroSub { font-size: 17px; }
+  .trustBandInner { padding: 20px 32px; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .trustItem:nth-child(4) { border-left: none; }
+  .trustValue { font-size: 20px; }
   .gridSection { padding: 56px 32px 64px; }
   .gridInner { gap: 18px; }
   .card { min-height: 360px; }
@@ -346,6 +394,18 @@
   .heroEyebrow { font-size: 10px; letter-spacing: 0.26em; }
   .heroHeadline { font-size: 36px; margin-bottom: 18px; }
   .heroSub { font-size: 15px; }
+  .trustBandInner {
+    padding: 18px 20px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+  .trustItem { padding: 10px 12px; border-left: none; border-top: 1px solid rgba(255, 255, 255, 0.10); }
+  .trustItem:nth-child(1), .trustItem:nth-child(2) { border-top: none; }
+  /* 5 items in 2 columns leaves item 5 orphaned — span it across both */
+  .trustItem:nth-child(5) { grid-column: span 2; flex-direction: row; justify-content: center; align-items: baseline; gap: 10px; }
+  .trustItem:nth-child(5) .trustLabel { margin: 0; }
+  .trustValue { font-size: 18px; }
+  .trustLabel { font-size: 9px; letter-spacing: 0.18em; }
   .gridSection { padding: 44px 20px 56px; }
   .gridInner { grid-template-columns: 1fr; gap: 16px; }
   .card, .cardWide { min-height: 320px; grid-column: span 1; }

@@ -4,6 +4,7 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 import { Resend } from 'resend';
 import styles from './page.module.css';
+import SendReviewRequestCard from './_components/SendReviewRequestCard';
 
 export const metadata: Metadata = {
   title: 'Dashboard · Ultra Shine Cleaning',
@@ -265,6 +266,13 @@ export default async function AdminDashboard() {
             </div>
           )}
         </div>
+
+        {/* ===== REVIEW REQUEST SENDER =====
+            One-click email to ask a customer for a Google review after
+            their cleaning. The compounding lever on Tiago's "I can get
+            reviews" intent — convert it into actual Google reviews. */}
+        <p className={styles.sectionLabel}>Reviews · ask a customer</p>
+        <SendReviewRequestCard />
 
         {/* TILES — external tools */}
         <p className={styles.sectionLabel}>Analytics + performance</p>

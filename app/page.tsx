@@ -3,6 +3,7 @@ import Link from 'next/link';
 import styles from './page.module.css';
 import FaqSection from './_components/FaqSection';
 import HeroScrollHome from './_components/HeroScrollHome';
+import BeforeAfterSlider from './_components/BeforeAfterSlider';
 import MotionSection, { MotionItem } from './_components/MotionSection';
 import TiltCard from './_components/TiltCard';
 import CountUp from './_components/CountUp';
@@ -77,6 +78,9 @@ export default function HomePage() {
           <div className={styles.trustLabel}>Palm Beach + Broward</div>
         </div>
       </MotionSection>
+
+      {/* ============ BEFORE / AFTER INTERACTIVE SLIDER ============ */}
+      <BeforeAfterSlider />
 
       {/* ============ SERVICES ============ */}
       <MotionSection id="services" className={`${styles.services} dot-grid`}>

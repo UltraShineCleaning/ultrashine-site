@@ -28,7 +28,7 @@
 }
 
 .sectionHeadline {
-  font-family: var(--font-fraunces), serif;
+  font-family: var(--font-poppins), sans-serif;
   font-weight: 400;
   font-size: 56px;
   line-height: 1;
@@ -45,7 +45,7 @@
 
 .bullet {
   color: var(--blush);
-  font-family: var(--font-fraunces), serif;
+  font-family: var(--font-poppins), sans-serif;
   margin-right: 8px;
   font-size: 14px;
 }
@@ -114,7 +114,7 @@
   box-shadow: var(--shadow-strong);
 }
 .scenarioBullet {
-  font-family: var(--font-fraunces), serif;
+  font-family: var(--font-poppins), sans-serif;
   font-size: 32px;
   color: var(--blush);
   line-height: 1;

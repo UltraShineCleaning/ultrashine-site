@@ -38,7 +38,7 @@
   color: var(--blush);
   opacity: 0.18;
   pointer-events: none;
-  font-family: var(--font-fraunces), serif;
+  font-family: var(--font-poppins), sans-serif;
   font-weight: 400;
 }
 .s1 { top: 11%; right: 9%; font-size: 64px; transform: rotate(-12deg); }
@@ -95,7 +95,7 @@
 }
 
 .leftHeadline {
-  font-family: var(--font-fraunces), serif;
+  font-family: var(--font-poppins), sans-serif;
   font-weight: 400;
   font-size: 76px;
   line-height: 0.95;
@@ -108,7 +108,7 @@
 }
 
 .leftBody {
-  font-family: var(--font-fraunces), serif;
+  font-family: var(--font-poppins), sans-serif;
   font-weight: 400;
   font-weight: 700;
   font-size: 19px;
@@ -139,7 +139,7 @@
 }
 .statCell:last-child { border-right: none; }
 .statNumSmall {
-  font-family: var(--font-fraunces), serif;
+  font-family: var(--font-poppins), sans-serif;
   font-weight: 400;
   font-size: 38px;
   line-height: 1;
@@ -179,7 +179,7 @@
 }
 .trustRow .check {
   color: var(--blush);
-  font-family: var(--font-fraunces), serif;
+  font-family: var(--font-poppins), sans-serif;
   font-size: 14px;
   flex-shrink: 0;
   line-height: 1.3;
@@ -206,7 +206,7 @@
   margin-bottom: 8px;
 }
 .tText {
-  font-family: var(--font-fraunces), serif;
+  font-family: var(--font-poppins), sans-serif;
   font-weight: 700;
   font-weight: 400;
   font-size: 14px;
@@ -281,7 +281,7 @@
 }
 .formEyebrow::before { content: '— '; }
 .formTitle {
-  font-family: var(--font-fraunces), serif;
+  font-family: var(--font-poppins), sans-serif;
   font-weight: 400;
   font-size: 56px;
   line-height: 0.98;
@@ -294,7 +294,7 @@
   color: var(--blush);
 }
 .formSub {
-  font-family: var(--font-fraunces), serif;
+  font-family: var(--font-poppins), sans-serif;
   font-weight: 700;
   font-weight: 400;
   font-size: 18px;
@@ -313,7 +313,7 @@
   margin-bottom: 18px;
 }
 .sectionLabel .num {
-  font-family: var(--font-fraunces), serif;
+  font-family: var(--font-poppins), sans-serif;
   font-weight: 700;
   font-weight: 400;
   color: var(--blush);
@@ -329,7 +329,7 @@
   color: var(--navy);
 }
 .sectionLabel .hint {
-  font-family: var(--font-fraunces), serif;
+  font-family: var(--font-poppins), sans-serif;
   font-weight: 700;
   font-size: 13px;
   opacity: 0.55;
@@ -366,11 +366,11 @@
   position: absolute;
   top: 14px; right: 16px;
   color: var(--blush);
-  font-family: var(--font-fraunces), serif;
+  font-family: var(--font-poppins), sans-serif;
   font-size: 16px;
 }
 .serviceName {
-  font-family: var(--font-fraunces), serif;
+  font-family: var(--font-poppins), sans-serif;
   font-weight: 400;
   font-size: 19px;
   letter-spacing: -0.005em;
@@ -424,7 +424,7 @@
   letter-spacing: 0.14em;
   text-transform: none;
   font-weight: 700;
-  font-family: var(--font-fraunces), serif;
+  font-family: var(--font-poppins), sans-serif;
 }
 .freqPickSelected small { opacity: 0.78; color: var(--blush); }
 
@@ -443,7 +443,7 @@
   background: rgba(255, 255, 255, 0.5);
   border: 1px solid var(--line-2, rgba(28, 97, 240, 0.18));
   border-radius: 10px;
-  font-family: var(--font-fraunces), serif;
+  font-family: var(--font-poppins), sans-serif;
   font-weight: 400;
   font-size: 17px;
   color: var(--navy-deep);
@@ -484,7 +484,7 @@
   padding: 12px 14px;
 }
 .stepperNum {
-  font-family: var(--font-fraunces), serif;
+  font-family: var(--font-poppins), sans-serif;
   font-weight: 400;
   font-size: 28px;
   letter-spacing: -0.012em;
@@ -506,7 +506,7 @@
   border: 1px solid var(--line-2, rgba(28, 97, 240, 0.18));
   background: var(--cream);
   display: grid; place-items: center;
-  font-family: var(--font-fraunces), serif;
+  font-family: var(--font-poppins), sans-serif;
   font-size: 18px;
   font-weight: 400;
   color: var(--navy);
@@ -565,7 +565,7 @@
   color: var(--cream);
 }
 .addonName {
-  font-family: var(--font-fraunces), serif;
+  font-family: var(--font-poppins), sans-serif;
   font-weight: 400;
   font-size: 15px;
   letter-spacing: -0.005em;
@@ -586,7 +586,7 @@
   background: rgba(255, 255, 255, 0.5);
   border: 1px solid var(--line-2, rgba(28, 97, 240, 0.18));
   border-radius: 10px;
-  font-family: var(--font-fraunces), serif;
+  font-family: var(--font-poppins), sans-serif;
   font-weight: 400;
   font-size: 16px;
   color: var(--navy-deep);
@@ -619,7 +619,7 @@
   position: absolute;
   top: 24px; right: 30px;
   color: var(--blush);
-  font-family: var(--font-fraunces), serif;
+  font-family: var(--font-poppins), sans-serif;
   font-size: 22px;
   opacity: 0.5;
 }
@@ -633,7 +633,7 @@
   margin-bottom: 12px;
 }
 .promiseHead {
-  font-family: var(--font-fraunces), serif;
+  font-family: var(--font-poppins), sans-serif;
   font-weight: 400;
   font-size: 38px;
   line-height: 1.05;
@@ -667,7 +667,7 @@
   opacity: 0.92;
 }
 .estNote {
-  font-family: var(--font-fraunces), serif;
+  font-family: var(--font-poppins), sans-serif;
   font-weight: 700;
   font-weight: 400;
   font-size: 14px;
@@ -708,7 +708,7 @@
 }
 .btnSubmit::after {
   content: '→';
-  font-family: var(--font-fraunces), serif;
+  font-family: var(--font-poppins), sans-serif;
   font-size: 18px;
   font-weight: 400;
 }
@@ -716,7 +716,7 @@
 .btnCall {
   margin-top: 14px;
   text-align: center;
-  font-family: var(--font-fraunces), serif;
+  font-family: var(--font-poppins), sans-serif;
   font-weight: 700;
   font-weight: 400;
   font-size: 13px;
@@ -745,13 +745,13 @@
   overflow: hidden;
 }
 .successSpark {
-  font-family: var(--font-fraunces), serif;
+  font-family: var(--font-poppins), sans-serif;
   color: var(--blush);
   font-size: 64px;
   margin-bottom: 18px;
 }
 .successTitle {
-  font-family: var(--font-fraunces), serif;
+  font-family: var(--font-poppins), sans-serif;
   font-weight: 400;
   font-size: 48px;
   line-height: 1;
@@ -763,7 +763,7 @@
   color: var(--blush);
 }
 .successBody {
-  font-family: var(--font-fraunces), serif;
+  font-family: var(--font-poppins), sans-serif;
   font-weight: 700;
   font-weight: 400;
   font-size: 17px;

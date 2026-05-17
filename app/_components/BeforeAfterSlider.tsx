@@ -39,6 +39,11 @@ export default function BeforeAfterSlider({
   const [showHint, setShowHint] = useState(true);
   const sliderRef = useRef<HTMLDivElement>(null);
   const isDragging = useRef(false);
+  // Mobile intent detection: track touch start position. Only "lock in"
+  // dragging once horizontal movement clearly exceeds vertical (i.e. the
+  // user wants to drag the handle, not scroll the page).
+  const touchStart = useRef<{ x: number; y: number } | null>(null);
+  const intentLocked = useRef<'drag' | 'scroll' | null>(null);
 
   // Render headline with optional <em>word</em> support: use underscores → italic-equivalent
   // Default headline above has no underscores; the `head em` styling triggers via real <em> tags.
@@ -64,24 +69,50 @@ export default function BeforeAfterSlider({
   }
 
   useEffect(() => {
-    function onMove(e: MouseEvent | TouchEvent) {
+    function onMouseMove(e: MouseEvent) {
       if (!isDragging.current) return;
-      const clientX =
-        'touches' in e ? e.touches[0]?.clientX ?? 0 : (e as MouseEvent).clientX;
-      updateFromX(clientX);
+      updateFromX(e.clientX);
+    }
+    function onTouchMove(e: TouchEvent) {
+      if (!isDragging.current) return;
+      const t = e.touches[0];
+      if (!t) return;
+
+      // First touchmove after touchstart: decide intent based on initial vector.
+      if (intentLocked.current === null && touchStart.current) {
+        const dx = Math.abs(t.clientX - touchStart.current.x);
+        const dy = Math.abs(t.clientY - touchStart.current.y);
+        // Need a minimum total movement before deciding (avoid jitter)
+        if (dx + dy < 8) return;
+        intentLocked.current = dx > dy ? 'drag' : 'scroll';
+      }
+
+      if (intentLocked.current === 'scroll') {
+        // User is scrolling the page — release the slider, let scroll happen
+        isDragging.current = false;
+        return;
+      }
+
+      // Locked into 'drag' — prevent the page from scrolling while dragging
+      if (e.cancelable) e.preventDefault();
+      updateFromX(t.clientX);
     }
     function onUp() {
       isDragging.current = false;
+      touchStart.current = null;
+      intentLocked.current = null;
     }
-    window.addEventListener('mousemove', onMove);
+    window.addEventListener('mousemove', onMouseMove);
     window.addEventListener('mouseup', onUp);
-    window.addEventListener('touchmove', onMove, { passive: false });
+    window.addEventListener('touchmove', onTouchMove, { passive: false });
     window.addEventListener('touchend', onUp);
+    window.addEventListener('touchcancel', onUp);
     return () => {
-      window.removeEventListener('mousemove', onMove);
+      window.removeEventListener('mousemove', onMouseMove);
       window.removeEventListener('mouseup', onUp);
-      window.removeEventListener('touchmove', onMove);
+      window.removeEventListener('touchmove', onTouchMove);
       window.removeEventListener('touchend', onUp);
+      window.removeEventListener('touchcancel', onUp);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [showHint]);
@@ -107,8 +138,14 @@ export default function BeforeAfterSlider({
             updateFromX(e.clientX);
           }}
           onTouchStart={(e) => {
+            const t = e.touches[0];
+            if (!t) return;
             isDragging.current = true;
-            updateFromX(e.touches[0].clientX);
+            touchStart.current = { x: t.clientX, y: t.clientY };
+            intentLocked.current = null;
+            // Don't call updateFromX yet — wait for intent (drag vs scroll)
+            // to be determined in onTouchMove. This lets users scroll past
+            // the slider without it snapping to their initial touch position.
           }}
           onKeyDown={(e) => {
             if (e.key === 'ArrowLeft') setPos((p) => Math.max(0, p - 4));

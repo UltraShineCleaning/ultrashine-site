@@ -69,7 +69,7 @@
   background: var(--blush);
 }
 .heroHeadline {
-  font-family: var(--font-fraunces), serif;
+  font-family: var(--font-poppins), sans-serif;
   font-weight: 400;
   font-size: 76px;
   line-height: 0.98;
@@ -82,7 +82,7 @@
   color: var(--blush);
 }
 .heroSub {
-  font-family: var(--font-fraunces), serif;
+  font-family: var(--font-poppins), sans-serif;
   font-weight: 700;
   font-weight: 400;
   font-size: 20px;
@@ -118,7 +118,7 @@
   background: var(--blush);
 }
 .h2 {
-  font-family: var(--font-fraunces), serif;
+  font-family: var(--font-poppins), sans-serif;
   font-weight: 400;
   font-size: 48px;
   line-height: 1.05;
@@ -138,7 +138,7 @@
   margin: 0 auto;
 }
 .introProse {
-  font-family: var(--font-fraunces), serif;
+  font-family: var(--font-poppins), sans-serif;
   font-weight: 400;
   font-size: 19px;
   line-height: 1.65;
@@ -166,7 +166,7 @@
 }
 .whyList li::before {
   content: '✦';
-  font-family: var(--font-fraunces), serif;
+  font-family: var(--font-poppins), sans-serif;
   color: var(--blush);
   font-size: 16px;
   flex-shrink: 0;
@@ -198,14 +198,14 @@
   box-shadow: 0 12px 32px rgba(28, 97, 240, 0.10);
 }
 .serviceNum {
-  font-family: var(--font-fraunces), serif;
+  font-family: var(--font-poppins), sans-serif;
   font-weight: 700;
   font-weight: 400;
   color: var(--blush);
   font-size: 14px;
 }
 .serviceName {
-  font-family: var(--font-fraunces), serif;
+  font-family: var(--font-poppins), sans-serif;
   font-weight: 400;
   font-size: 19px;
   color: var(--navy-deep);
@@ -214,7 +214,7 @@
 .serviceArrow {
   margin-top: auto;
   color: var(--blush);
-  font-family: var(--font-fraunces), serif;
+  font-family: var(--font-poppins), sans-serif;
   font-size: 18px;
   font-weight: 700;
 }
@@ -244,7 +244,7 @@
 }
 .areaTag::before {
   content: '✦';
-  font-family: var(--font-fraunces), serif;
+  font-family: var(--font-poppins), sans-serif;
   position: absolute;
   left: 13px;
   top: 50%;
@@ -279,7 +279,7 @@
 }
 .trustItem::before {
   content: '✦';
-  font-family: var(--font-fraunces), serif;
+  font-family: var(--font-poppins), sans-serif;
   color: var(--blush);
   font-size: 14px;
   font-weight: 700;
@@ -292,7 +292,7 @@
   background: var(--cream);
 }
 .ctaHead {
-  font-family: var(--font-fraunces), serif;
+  font-family: var(--font-poppins), sans-serif;
   font-weight: 400;
   font-size: 56px;
   line-height: 1.05;
@@ -305,7 +305,7 @@
   color: var(--blush);
 }
 .ctaSub {
-  font-family: var(--font-fraunces), serif;
+  font-family: var(--font-poppins), sans-serif;
   font-weight: 700;
   font-weight: 400;
   font-size: 18px;

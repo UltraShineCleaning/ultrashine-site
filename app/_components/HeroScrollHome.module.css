@@ -79,7 +79,7 @@
 }
 
 .headline {
-  font-family: var(--font-fraunces), serif;
+  font-family: var(--font-poppins), sans-serif;
   font-weight: 400;
   font-size: 92px;
   line-height: 0.96;
@@ -94,7 +94,7 @@
 }
 
 .body {
-  font-family: var(--font-fraunces), serif;
+  font-family: var(--font-poppins), sans-serif;
   font-weight: 700;
   font-weight: 400;
   font-size: 22px;
@@ -197,7 +197,7 @@
   pointer-events: none;
 }
 .scrollCueArrow {
-  font-family: var(--font-fraunces), serif;
+  font-family: var(--font-poppins), sans-serif;
   font-size: 18px;
   color: var(--blush);
   animation: bounce 1.8s ease-in-out infinite;

@@ -38,12 +38,12 @@
   background: var(--blush);
   display: grid;
   place-items: center;
-  font-family: var(--font-fraunces), serif;
+  font-family: var(--font-poppins), sans-serif;
   color: var(--navy-deep);
   font-size: 22px;
 }
 .brandText {
-  font-family: var(--font-fraunces), serif;
+  font-family: var(--font-poppins), sans-serif;
   font-weight: 400;
   font-weight: 700;
   font-size: 22px;
@@ -102,7 +102,7 @@
   background: var(--blush);
 }
 .heroTitle {
-  font-family: var(--font-fraunces), serif;
+  font-family: var(--font-poppins), sans-serif;
   font-weight: 400;
   font-size: 64px;
   line-height: 1.02;
@@ -115,7 +115,7 @@
   color: var(--blush);
 }
 .heroSub {
-  font-family: var(--font-fraunces), serif;
+  font-family: var(--font-poppins), sans-serif;
   font-weight: 700;
   font-weight: 400;
   font-size: 18px;
@@ -151,7 +151,7 @@
   background: rgba(255, 255, 255, 0.08);
 }
 .tileIcon {
-  font-family: var(--font-fraunces), serif;
+  font-family: var(--font-poppins), sans-serif;
   font-size: 28px;
   color: var(--blush);
   line-height: 1;
@@ -167,7 +167,7 @@
   opacity: 0.7;
 }
 .tileTitle {
-  font-family: var(--font-fraunces), serif;
+  font-family: var(--font-poppins), sans-serif;
   font-weight: 400;
   font-size: 22px;
   letter-spacing: -0.005em;
@@ -197,7 +197,7 @@
 }
 .tileLink::after {
   content: '→';
-  font-family: var(--font-fraunces), serif;
+  font-family: var(--font-poppins), sans-serif;
   font-size: 16px;
   transition: transform 0.2s;
 }
@@ -289,7 +289,7 @@
   margin-bottom: 10px;
 }
 .statValue {
-  font-family: var(--font-fraunces), serif;
+  font-family: var(--font-poppins), sans-serif;
   font-weight: 400;
   font-size: 48px;
   line-height: 1;
@@ -349,7 +349,7 @@
   opacity: 0.9;
 }
 .leadName {
-  font-family: var(--font-fraunces), serif;
+  font-family: var(--font-poppins), sans-serif;
   font-weight: 400;
   font-size: 17px;
   letter-spacing: -0.005em;
@@ -410,7 +410,7 @@
   border-radius: 12px;
   padding: 28px 24px;
   text-align: center;
-  font-family: var(--font-fraunces), serif;
+  font-family: var(--font-poppins), sans-serif;
   font-weight: 700;
   color: var(--cream);
   opacity: 0.75;
@@ -436,7 +436,7 @@
   margin-bottom: 32px;
 }
 .helpTitle {
-  font-family: var(--font-fraunces), serif;
+  font-family: var(--font-poppins), sans-serif;
   font-weight: 700;
   font-size: 17px;
   color: var(--blush);
@@ -486,14 +486,14 @@
   text-align: center;
 }
 .loginSpark {
-  font-family: var(--font-fraunces), serif;
+  font-family: var(--font-poppins), sans-serif;
   color: var(--blush);
   font-size: 38px;
   line-height: 1;
   margin-bottom: 18px;
 }
 .loginTitle {
-  font-family: var(--font-fraunces), serif;
+  font-family: var(--font-poppins), sans-serif;
   font-weight: 400;
   font-size: 36px;
   line-height: 1;
@@ -504,7 +504,7 @@
   color: var(--blush);
 }
 .loginSub {
-  font-family: var(--font-fraunces), serif;
+  font-family: var(--font-poppins), sans-serif;
   font-weight: 700;
   font-size: 14px;
   opacity: 0.75;

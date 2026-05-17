@@ -99,8 +99,8 @@ export default function MobileNav() {
                   fontSize: 36,
                   color: 'var(--cream)',
                   textDecoration: 'none',
-                  fontWeight: 300,
-                  fontStyle: 'italic',
+                  fontWeight: 800,
+                  letterSpacing: '-0.02em',
                 }}
               >
                 {item.label}
@@ -112,7 +112,7 @@ export default function MobileNav() {
               transition={{ duration: 0.4, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
               style={{ marginTop: 24, display: 'flex', flexDirection: 'column', gap: 14, alignItems: 'center' }}
             >
-              <a href="tel:5615836694" style={{ color: 'var(--blush)', fontSize: 18, fontFamily: 'var(--font-fraunces)' }}>(561) 583-6694</a>
+              <a href="tel:5615836694" style={{ color: 'var(--blue-soft)', fontSize: 18, fontFamily: 'var(--font-poppins)', fontWeight: 600, letterSpacing: '0.02em' }}>(561) 583-6694</a>
               <Link href="/quote" onClick={handleLinkClick} className="btn btn-coral">Request Your Free Quote</Link>
             </motion.div>
           </motion.div>

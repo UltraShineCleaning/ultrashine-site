@@ -72,7 +72,7 @@
 }
 
 .heroHeadline {
-  font-family: var(--font-fraunces), serif;
+  font-family: var(--font-poppins), sans-serif;
   font-weight: 400;
   font-size: 88px;
   line-height: 0.96;
@@ -85,7 +85,7 @@
   color: var(--blush);
 }
 .heroSub {
-  font-family: var(--font-fraunces), serif;
+  font-family: var(--font-poppins), sans-serif;
   font-weight: 700;
   font-weight: 400;
   font-size: 22px;
@@ -131,7 +131,7 @@
 }
 
 .h2 {
-  font-family: var(--font-fraunces), serif;
+  font-family: var(--font-poppins), sans-serif;
   font-weight: 400;
   font-size: 56px;
   line-height: 1;
@@ -165,7 +165,7 @@
   box-shadow: 0 24px 60px rgba(28, 97, 240, 0.12);
 }
 .storyProse {
-  font-family: var(--font-fraunces), serif;
+  font-family: var(--font-poppins), sans-serif;
   font-weight: 400;
   font-size: 19px;
   line-height: 1.68;
@@ -191,7 +191,7 @@
   max-width: 900px;
   margin: 0 auto;
   text-align: center;
-  font-family: var(--font-fraunces), serif;
+  font-family: var(--font-poppins), sans-serif;
   font-weight: 400;
   font-weight: 700;
   font-size: 42px;
@@ -234,7 +234,7 @@
   position: relative;
 }
 .timelineYear {
-  font-family: var(--font-fraunces), serif;
+  font-family: var(--font-poppins), sans-serif;
   font-weight: 700;
   font-weight: 400;
   font-size: 64px;
@@ -254,7 +254,7 @@
   margin-bottom: 14px;
 }
 .timelineTitle {
-  font-family: var(--font-fraunces), serif;
+  font-family: var(--font-poppins), sans-serif;
   font-weight: 400;
   font-size: 22px;
   letter-spacing: -0.005em;
@@ -286,14 +286,14 @@
   border: 1px solid var(--line);
 }
 .valueSpark {
-  font-family: var(--font-fraunces), serif;
+  font-family: var(--font-poppins), sans-serif;
   color: var(--blush);
   font-size: 32px;
   line-height: 1;
   margin-bottom: 18px;
 }
 .valueTitle {
-  font-family: var(--font-fraunces), serif;
+  font-family: var(--font-poppins), sans-serif;
   font-weight: 400;
   font-size: 22px;
   letter-spacing: -0.005em;
@@ -342,7 +342,7 @@
 .teamTileLabel em {
   display: block;
   font-weight: 700;
-  font-family: var(--font-fraunces), serif;
+  font-family: var(--font-poppins), sans-serif;
   font-size: 17px;
   letter-spacing: -0.005em;
   text-transform: none;
@@ -370,7 +370,7 @@
 }
 .statCell:last-child { border-right: none; }
 .statNum {
-  font-family: var(--font-fraunces), serif;
+  font-family: var(--font-poppins), sans-serif;
   font-weight: 400;
   font-size: 64px;
   line-height: 1;
@@ -398,7 +398,7 @@
   background: var(--cream);
 }
 .ctaHead {
-  font-family: var(--font-fraunces), serif;
+  font-family: var(--font-poppins), sans-serif;
   font-weight: 400;
   font-size: 64px;
   line-height: 1;
@@ -411,7 +411,7 @@
   color: var(--blush);
 }
 .ctaSub {
-  font-family: var(--font-fraunces), serif;
+  font-family: var(--font-poppins), sans-serif;
   font-weight: 700;
   font-weight: 400;
   font-size: 19px;

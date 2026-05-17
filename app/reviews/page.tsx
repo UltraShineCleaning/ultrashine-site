@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import SiteHeader from '../_components/SiteHeader';
 import SiteFooter from '../_components/SiteFooter';
+import JsonLd from '../_components/JsonLd';
 import styles from './page.module.css';
 
 export const metadata: Metadata = {
@@ -64,8 +65,33 @@ const TESTIMONIALS = [
 const GOOGLE_REVIEW_URL = 'https://maps.app.goo.gl/EGeuJViEFazQQe579';
 
 export default function ReviewsPage() {
+  // Schema for the reviews page — aggregate rating + individual reviews.
+  // This is the BIG SEO win: makes star ratings appear next to the
+  // ultrashinecleaningfl.com result in Google search.
+  const reviewsSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'LocalBusiness',
+    '@id': 'https://ultrashinecleaningfl.com/#business',
+    name: 'Ultra Shine Cleaning',
+    aggregateRating: {
+      '@type': 'AggregateRating',
+      ratingValue: '5.0',
+      reviewCount: '18',
+      bestRating: '5',
+      worstRating: '1',
+    },
+    review: TESTIMONIALS.map((t) => ({
+      '@type': 'Review',
+      reviewRating: { '@type': 'Rating', ratingValue: '5', bestRating: '5' },
+      author: { '@type': 'Person', name: t.name },
+      publisher: { '@type': 'Organization', name: t.city },
+      reviewBody: t.text,
+    })),
+  };
+
   return (
     <main>
+      <JsonLd data={reviewsSchema} />
       <SiteHeader inPage={false} />
 
       {/* HERO */}

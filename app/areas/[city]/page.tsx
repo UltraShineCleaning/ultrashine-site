@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import SiteHeader from '../../_components/SiteHeader';
 import SiteFooter from '../../_components/SiteFooter';
+import JsonLd from '../../_components/JsonLd';
 import { CITIES, getCity } from '../_data/cities';
 import styles from './page.module.css';
 
@@ -46,8 +47,38 @@ export default function CityPage({ params }: { params: Params }) {
 
   const siblings = CITIES.filter((c) => c.slug !== city.slug && c.county === city.county);
 
+  // Per-city schema — tells Google this is a service page for THIS city.
+  // Combined with the breadcrumbs, this is what makes "boca raton cleaning"
+  // searches surface /areas/boca-raton with a service card.
+  const citySchema = [
+    {
+      '@context': 'https://schema.org',
+      '@type': 'Service',
+      name: `House Cleaning in ${city.name}, FL`,
+      description: city.intro,
+      serviceType: 'House Cleaning Service',
+      provider: { '@id': 'https://ultrashinecleaningfl.com/#business' },
+      areaServed: {
+        '@type': 'City',
+        name: city.name,
+        containedInPlace: { '@type': 'AdministrativeArea', name: `${city.county} County, Florida` },
+      },
+      url: `https://ultrashinecleaningfl.com/areas/${city.slug}`,
+    },
+    {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://ultrashinecleaningfl.com' },
+        { '@type': 'ListItem', position: 2, name: 'Service Areas', item: 'https://ultrashinecleaningfl.com/areas' },
+        { '@type': 'ListItem', position: 3, name: city.name },
+      ],
+    },
+  ];
+
   return (
     <main>
+      <JsonLd data={citySchema} />
       <SiteHeader inPage={false} />
 
       {/* ============== HERO ============== */}

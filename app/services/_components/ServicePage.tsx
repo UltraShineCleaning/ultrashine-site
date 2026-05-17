@@ -6,6 +6,7 @@ import { AnimatePresence } from 'framer-motion';
 import SiteHeader from '../../_components/SiteHeader';
 import SiteFooter from '../../_components/SiteFooter';
 import MotionSection from '../../_components/MotionSection';
+import JsonLd from '../../_components/JsonLd';
 import styles from '../../page.module.css';
 import service from './ServicePage.module.css';
 
@@ -62,8 +63,33 @@ export default function ServicePage({ data }: { data: ServiceData }) {
 
   const [openFaq, setOpenFaq] = useState<number | null>(0);
 
+  // Schema.org markup — Service + FAQPage. Google uses these to show
+  // service cards + expandable FAQ snippets in search results.
+  const pageSchema = [
+    {
+      '@context': 'https://schema.org',
+      '@type': 'Service',
+      name: `${data.name} · Ultra Shine Cleaning`,
+      description: data.subheadline,
+      serviceType: data.name,
+      provider: { '@id': 'https://ultrashinecleaningfl.com/#business' },
+      areaServed: { '@type': 'State', name: 'Florida' },
+      url: `https://ultrashinecleaningfl.com/services/${data.slug}`,
+    },
+    {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: data.faq.map((item) => ({
+        '@type': 'Question',
+        name: item.q,
+        acceptedAnswer: { '@type': 'Answer', text: item.a },
+      })),
+    },
+  ];
+
   return (
     <main>
+      <JsonLd data={pageSchema} />
       <SiteHeader inPage={false} />
 
       {/* HERO */}

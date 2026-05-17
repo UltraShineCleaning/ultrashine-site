@@ -97,7 +97,7 @@ const data: ServiceData = {
     },
     {
       q: "How long does it take?",
-      a: "8-12 hours for a 3-bedroom home with team of 3. Move-in/out is more thorough than a normal deep clean (cabinet interiors, wall scuffs, etc.) so it takes longer.",
+      a: "Every home is different — square footage, condition, number of cabinets to empty + wipe, wall scuff severity all change the timing. Move-in/out is more thorough than a normal deep clean, so it takes longer. We give you a precise estimate when we walk through your space.",
     },
     {
       q: "Do you provide a checklist for the landlord?",

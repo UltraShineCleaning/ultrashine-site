@@ -93,7 +93,7 @@ const data: ServiceData = {
     },
     {
       q: 'How long does it take?',
-      a: "10-16 hours for a 3-bedroom home, with a team of 3-4. Larger homes or major remodels can take 2 days. We give you a precise estimate after walking the site.",
+      a: "Every site is different — square footage, dust severity, sticker quantity, finish materials, debris volume all change the timing. Post-construction is the most variable of all our services. We give you a precise estimate when we walk through your space.",
     },
     {
       q: 'When should I book — before or after my final inspection?',

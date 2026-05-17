@@ -76,7 +76,7 @@ const data: ServiceData = {
       'Bathrooms wiped down',
       'Kitchen counters + appliances exterior',
       'Beds made if linens out',
-      '~3-4 hours per visit',
+      'Ideal for ongoing maintenance',
     ],
     thisItems: [
       'Everything in Regular, PLUS:',
@@ -84,13 +84,13 @@ const data: ServiceData = {
       'Inside oven, fridge, dishwasher',
       'Grout scrubbed + tile reset',
       'Light fixtures, ceiling fans, vents',
-      '~6-8 hours per visit',
+      'Ideal every 90 days as a full reset',
     ],
   },
   faq: [
     {
       q: 'How long does a regular clean take?',
-      a: "Typically 3-4 hours for a 3-bedroom home with our team of 2. Larger homes take longer. We give you the exact time when we quote your space.",
+      a: "Every home is different — square footage, layout, number of bathrooms, pets, kids, and lived-in level all change the timing. We give you a precise estimate when we walk through your space for the quote. No two homes get the same number.",
     },
     {
       q: 'Do I need to be home?',

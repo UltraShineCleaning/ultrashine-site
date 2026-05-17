@@ -522,10 +522,10 @@
   background: rgba(255, 255, 255, 0.08);
   border: 1px solid rgba(255, 255, 255, 0.18);
   border-radius: 999px;
-  padding: 9px 18px 9px 32px;
-  font-family: var(--font-outfit), sans-serif;
-  font-weight: 400;
-  font-size: 12.5px;
+  padding: 9px 18px 9px 38px;     /* +6px left padding so ✦ doesn't clip text */
+  font-family: var(--font-poppins), sans-serif;
+  font-weight: 500;                /* Medium — clearer name reading */
+  font-size: 13px;
   letter-spacing: 0.02em;
   color: var(--cream);
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
@@ -534,9 +534,9 @@
 }
 .cityTag::before {
   content: '✦';
-  font-family: var(--font-fraunces), serif;
+  font-family: var(--font-poppins), sans-serif;
   position: absolute;
-  left: 13px;
+  left: 16px;                       /* pushed in slightly */
   top: 50%;
   transform: translateY(-50%);
   color: var(--blush);

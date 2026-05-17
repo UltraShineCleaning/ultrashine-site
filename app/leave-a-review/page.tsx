@@ -90,6 +90,9 @@ export default function LeaveAReviewPage() {
 
           <div className={styles.askRight}>
             <div className={styles.qrCard}>
+              {/* Plain <img> on purpose — qrserver.com returns a tiny PNG
+                  that we don't need Next.js Image optimization on. */}
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={QR_URL}
                 alt="Scan to leave a Google review for Ultra Shine Cleaning"

@@ -156,6 +156,50 @@
   text-decoration-color: var(--blue);
 }
 
+/* ===== INLINE FIGURES (images + captions) =====
+   Used via the img() helper in posts.ts. Renders an image with a styled
+   caption below. Image is full-width of the prose column with subtle
+   rounding + shadow; caption is small italicised text. */
+.body :global(.bodyFigure) {
+  margin: 36px 0 32px;
+  width: 100%;
+  display: block;
+}
+.body :global(.bodyFigure img) {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: var(--r-md);
+  box-shadow: 0 8px 28px rgba(0, 44, 152, 0.10);
+}
+.body :global(.bodyFigure figcaption) {
+  margin-top: 12px;
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 13px;
+  font-style: italic;
+  line-height: 1.5;
+  color: var(--gray);
+  text-align: center;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  opacity: 0.85;
+}
+
+/* ===== BLOCKQUOTE inside body ===== */
+.body blockquote {
+  margin: 28px 0;
+  padding: 16px 22px;
+  border-left: 3px solid var(--blue);
+  background: var(--cream-2);
+  border-radius: 6px;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--navy-deep);
+  font-style: italic;
+}
+.body blockquote em { font-style: italic; }
+
 /* ===== AUTHOR CARD ===== */
 .authorCard {
   max-width: 720px;
@@ -321,6 +365,9 @@
   .body h2 { font-size: 22px; margin-top: 30px; margin-bottom: 12px; }
   .body h3 { font-size: 18px; margin-top: 26px; }
   .body ul, .body ol { margin-left: 18px; }
+  .body :global(.bodyFigure) { margin: 26px 0 22px; }
+  .body :global(.bodyFigure figcaption) { font-size: 12px; }
+  .body blockquote { padding: 14px 18px; font-size: 15px; }
   .authorCard { padding: 18px 20px; gap: 14px; }
   .authorAvatar { width: 48px; height: 48px; font-size: 16px; }
   .inlineCta { padding: 28px 22px 32px; margin-top: 32px; }

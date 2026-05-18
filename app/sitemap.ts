@@ -86,6 +86,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'weekly',
       priority: 0.7,
     },
+    {
+      url: `${BASE}/cleaning-time-estimator`,
+      lastModified: now,
+      changeFrequency: 'monthly',
+      priority: 0.75,
+    },
   ];
 
   // Service pages

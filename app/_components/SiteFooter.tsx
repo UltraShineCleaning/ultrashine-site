@@ -24,6 +24,7 @@ export default function SiteFooter() {
           <Link href="/services/move-in-out">Move-In / Out</Link>
           <Link href="/services/commercial">Commercial</Link>
           <Link href="/services/post-construction">Post-Construction</Link>
+          <Link href="/cleaning-time-estimator">Time Estimator</Link>
         </div>
         <div className={styles.footerCol}>
           <h4>Company</h4>

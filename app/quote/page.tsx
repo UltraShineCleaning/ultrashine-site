@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -53,6 +53,29 @@ export default function QuotePage() {
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  /* ----- Prefill from URL params (e.g. /quote?service=Deep%20Cleaning&notes=...)
+       Used by /cleaning-time-estimator → Get My Exact Quote handoff so the
+       estimator session lands fully attached to the lead. ----- */
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const params = new URLSearchParams(window.location.search);
+    const serviceParam = params.get('service');
+    const notesParam = params.get('notes');
+
+    if (serviceParam) {
+      const map: Record<string, ServiceKey> = {
+        'Regular Cleaning': 'regular',
+        'Deep Cleaning': 'deep',
+        'Move-In / Move-Out': 'move',
+        'Post-Construction': 'post',
+      };
+      const mapped = map[serviceParam];
+      if (mapped) setService(mapped);
+    }
+
+    if (notesParam) setNotes(notesParam);
+  }, []);
 
   /* ----- Helpers ----- */
   const toggleAddOn = (k: AddOnKey) => {

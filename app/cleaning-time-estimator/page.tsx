@@ -62,6 +62,15 @@ const SERVICE_LABEL: Record<Service, string> = {
   postconstruction: 'Post-Construction',
 };
 
+/* Hourly rate per cleaner. Premium South FL positioning (Boca/Palm Beach).
+   Range varies by service complexity. */
+const HOURLY_RATE_RANGE: Record<Service, [number, number]> = {
+  regular: [45, 55],
+  deep: [50, 60],
+  moveout: [50, 60],
+  postconstruction: [55, 65],
+};
+
 export default function CleaningTimeEstimatorPage() {
   const [homeSize, setHomeSize] = useState<HomeSize>('3br');
   const [bathrooms, setBathrooms] = useState(2);
@@ -84,8 +93,49 @@ export default function CleaningTimeEstimatorPage() {
     const wallLow = Math.round((low / cleaners) * 10) / 10;
     const wallHigh = Math.round((high / cleaners) * 10) / 10;
 
-    return { low, high, cleaners, wallLow, wallHigh };
+    // Price: total person-hours × per-cleaner hourly rate range.
+    // Round to nearest $10 so the output reads clean.
+    const [rateLow, rateHigh] = HOURLY_RATE_RANGE[service];
+    const priceLow = Math.round((low * rateLow) / 10) * 10;
+    const priceHigh = Math.round((high * rateHigh) / 10) * 10;
+
+    return { low, high, cleaners, wallLow, wallHigh, priceLow, priceHigh };
   }, [homeSize, bathrooms, service, lastCleaned, pets]);
+
+  // Build a /quote URL that pre-fills the captured estimate as the
+  // "notes" field so when Tiago opens the lead, the customer's whole
+  // estimator session is right there. Keeps the form short while
+  // preserving all the context.
+  const quoteHref = useMemo(() => {
+    const homeLabel: Record<HomeSize, string> = {
+      studio: 'Studio / 1BR',
+      '2br': '2BR',
+      '3br': '3BR',
+      '4br': '4BR',
+      '5br_plus': '5+ BR',
+    };
+    const lastLabel: Record<LastCleaned, string> = {
+      recent: 'within last month',
+      months: 'months ago',
+      years: 'years ago / never',
+      construction: 'new build / just renovated',
+    };
+    const petsLabel: Record<Pets, string> = {
+      none: 'no pets',
+      few: '1-2 pets',
+      many: '3+ pets',
+    };
+    const summary = [
+      `Estimator: ${homeLabel[homeSize]}, ${bathrooms} bath${bathrooms > 1 ? 's' : ''}, ${SERVICE_LABEL[service]}, last cleaned ${lastLabel[lastCleaned]}, ${petsLabel[pets]}.`,
+      `Ballpark: ${estimate.wallLow}-${estimate.wallHigh} hrs with ${estimate.cleaners} cleaner${estimate.cleaners > 1 ? 's' : ''}, $${estimate.priceLow}-$${estimate.priceHigh}.`,
+      `Send precise quote within the hour.`,
+    ].join(' ');
+    const params = new URLSearchParams({
+      service: SERVICE_LABEL[service],
+      notes: summary,
+    });
+    return `/quote?${params.toString()}`;
+  }, [homeSize, bathrooms, service, lastCleaned, pets, estimate]);
 
   return (
     <main>
@@ -245,35 +295,49 @@ export default function CleaningTimeEstimatorPage() {
           <aside className={styles.result}>
             <div className={styles.resultInner}>
               <p className={styles.resultLabel}>YOUR ESTIMATE</p>
-              <div className={styles.resultRange}>
-                <span className={styles.resultLow}>{estimate.wallLow}</span>
-                <span className={styles.resultSep}>–</span>
-                <span className={styles.resultHigh}>{estimate.wallHigh}</span>
-                <span className={styles.resultUnit}>hrs</span>
+
+              {/* PRICE — the headline number. What every visitor came
+                  here to know. Bigger + more prominent than the hours. */}
+              <div className={styles.resultPriceRow}>
+                <span className={styles.resultPriceCurrency}>$</span>
+                <span className={styles.resultPriceLow}>{estimate.priceLow}</span>
+                <span className={styles.resultPriceSep}>–</span>
+                <span className={styles.resultPriceCurrency}>$</span>
+                <span className={styles.resultPriceHigh}>{estimate.priceHigh}</span>
               </div>
-              <p className={styles.resultSub}>
-                with{' '}
-                <strong>
-                  {estimate.cleaners} cleaner{estimate.cleaners > 1 ? 's' : ''}
-                </strong>{' '}
-                on site
+              <p className={styles.resultPriceSub}>
+                ballpark for a {SERVICE_LABEL[service].toLowerCase()}
               </p>
 
-              <div className={styles.resultDivider} />
+              <div className={styles.resultDividerSlim} />
 
-              <p className={styles.resultMath}>
-                Approx. {estimate.low}–{estimate.high} total person-hours
-                <br />
-                for a {SERVICE_LABEL[service].toLowerCase()}
-              </p>
+              {/* TIME — secondary detail */}
+              <div className={styles.resultMetaRow}>
+                <div className={styles.resultMetaItem}>
+                  <span className={styles.resultMetaValue}>
+                    {estimate.wallLow}–{estimate.wallHigh}
+                    <span className={styles.resultMetaUnit}> hrs</span>
+                  </span>
+                  <span className={styles.resultMetaLabel}>on site</span>
+                </div>
+                <div className={styles.resultMetaItem}>
+                  <span className={styles.resultMetaValue}>
+                    {estimate.cleaners}
+                  </span>
+                  <span className={styles.resultMetaLabel}>
+                    cleaner{estimate.cleaners > 1 ? 's' : ''}
+                  </span>
+                </div>
+              </div>
 
-              <Link href="/quote" className={styles.resultCta}>
-                Get a Precise Quote →
+              {/* CTA — "Get My" possessive beats "Get a" per 2026 CRO data */}
+              <Link href={quoteHref} className={styles.resultCta}>
+                Get My Exact Quote →
               </Link>
 
               <p className={styles.resultDisclaimer}>
-                Rough estimate. Your real quote comes after we walk through
-                your home + see the actual scope.
+                Ballpark only. Final price depends on actual home condition —
+                we send your exact quote within 1 hour after a quick walkthrough.
               </p>
             </div>
           </aside>

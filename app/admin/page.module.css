@@ -262,7 +262,7 @@
 /* ===== STATS ROW ===== */
 .statsRow {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   gap: 14px;
   margin-bottom: 36px;
 }
@@ -402,6 +402,34 @@
   background: var(--blush);
   color: var(--navy-deep);
   border-color: var(--blush);
+}
+
+/* "★ Review →" per-lead button — gold-tinted to read as a customer action.
+   Wider pill (not a circle) so the text fits. */
+.actBtnReview {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 14px;
+  height: 38px;
+  border-radius: 999px;
+  background: rgba(255, 200, 87, 0.14);
+  border: 1px solid rgba(255, 200, 87, 0.45);
+  color: var(--gold);
+  text-decoration: none;
+  font-family: var(--font-poppins), sans-serif;
+  font-weight: 600;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transition: all 0.2s;
+}
+.actBtnReview:hover {
+  background: var(--gold);
+  color: var(--navy-deep);
+  border-color: var(--gold);
+  text-decoration: none;
 }
 
 .emptyState {
@@ -557,6 +585,9 @@
   .quickActions { grid-template-columns: 1fr 1fr; }
   .heroTitle { font-size: 42px; }
   .statsRow { grid-template-columns: 1fr 1fr; }
+  /* With 5 stats, item 5 ("Total · all time") would orphan in a 2-col grid.
+     Span it across both columns for a balanced layout. */
+  .statsRow > :nth-child(5) { grid-column: span 2; }
   .statValue { font-size: 38px; }
   .leadCard { grid-template-columns: 1fr; gap: 12px; }
   .leadActions { justify-content: flex-start; }

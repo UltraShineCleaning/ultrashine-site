@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 import styles from './SendReviewRequestCard.module.css';
 
 /**
@@ -29,6 +30,24 @@ export default function SendReviewRequestCard() {
   const [email, setEmail] = useState('');
   const [service, setService] = useState('');
   const [status, setStatus] = useState<Status>({ state: 'idle' });
+
+  // Pre-fill from URL params (?prefill_name=Sandra+P.) — fired when Tiago
+  // clicks "Send Review →" next to a lead row. We pre-fill the name so he
+  // only has to type the email.
+  const searchParams = useSearchParams();
+  useEffect(() => {
+    const prefillName = searchParams.get('prefill_name');
+    if (prefillName) {
+      setName(prefillName);
+      // Auto-focus the email field next, since name's already filled
+      requestAnimationFrame(() => {
+        const emailInput = document.querySelector<HTMLInputElement>(
+          'input[type="email"]',
+        );
+        emailInput?.focus();
+      });
+    }
+  }, [searchParams]);
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();

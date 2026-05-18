@@ -119,6 +119,7 @@ export default async function AdminDashboard() {
   const applicationLeads = leads.filter((l) => l.kind === 'application');
 
   const stats = {
+    quotesToday: countInLastDays(quoteLeads, 1),
     quotesThisWeek: countInLastDays(quoteLeads, 7),
     quotesThisMonth: countInLastDays(quoteLeads, 30),
     applicationsThisWeek: countInLastDays(applicationLeads, 7),
@@ -172,9 +173,18 @@ export default async function AdminDashboard() {
         )}
 
         {/* STATS ROW */}
-        <p className={styles.sectionLabel}>This week + this month</p>
+        <p className={styles.sectionLabel}>Today · this week · this month</p>
         <div className={styles.statsRow}>
           <div className={`${styles.statCard} ${styles.statCardHi}`}>
+            <div className={styles.statLabel}>Quotes · today</div>
+            <div className={styles.statValue}>
+              {stats.quotesToday > 0 ? stats.quotesToday : <em>—</em>}
+            </div>
+            <div className={styles.statSub}>
+              {stats.quotesToday === 0 ? 'No new quotes yet today' : `${stats.quotesToday === 1 ? '1 lead' : `${stats.quotesToday} leads`} today`}
+            </div>
+          </div>
+          <div className={styles.statCard}>
             <div className={styles.statLabel}>Quotes · 7 days</div>
             <div className={styles.statValue}>
               {stats.quotesThisWeek > 0 ? stats.quotesThisWeek : <em>—</em>}
@@ -251,6 +261,15 @@ export default async function AdminDashboard() {
                     </div>
                   </div>
                   <div className={styles.leadActions}>
+                    {lead.kind === 'quote' && (
+                      <Link
+                        href={`/admin?prefill_name=${encodeURIComponent(lead.name)}#review-request`}
+                        className={styles.actBtnReview}
+                        title="Send this customer a review request"
+                      >
+                        ★ Review →
+                      </Link>
+                    )}
                     <a
                       href={`https://resend.com/emails/${lead.id}`}
                       target="_blank"
@@ -270,12 +289,18 @@ export default async function AdminDashboard() {
         {/* ===== REVIEW REQUEST SENDER =====
             One-click email to ask a customer for a Google review after
             their cleaning. The compounding lever on Tiago's "I can get
-            reviews" intent — convert it into actual Google reviews. */}
-        <p className={styles.sectionLabel}>Reviews · ask a customer</p>
+            reviews" intent — convert it into actual Google reviews.
+            id="review-request" so per-lead "Send Review →" buttons scroll here. */}
+        <p className={styles.sectionLabel} id="review-request">Reviews · ask a customer</p>
         <SendReviewRequestCard />
 
         {/* TILES — external tools */}
-        <p className={styles.sectionLabel}>Analytics + performance</p>
+        <p className={styles.sectionLabel}>
+          Analytics + performance ·{' '}
+          <span style={{ opacity: 0.6, fontWeight: 400, textTransform: 'none', letterSpacing: 'normal' }}>
+            these open in their own dashboards (their data lives behind Google + Vercel auth, can't be pulled inline yet)
+          </span>
+        </p>
         <div className={styles.tilesGrid}>
           <a href={`${VERCEL_PROJECT}/analytics`} target="_blank" rel="noopener noreferrer" className={styles.tile}>
             <div className={styles.tileIcon}>✦</div>

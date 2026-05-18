@@ -210,8 +210,10 @@
     page-break-inside: avoid;
     border-color: #002C98 !important;
   }
-  /* Force colors to print (Chrome respects this) */
-  * {
+  /* Force colors to print (Chrome respects this). Scoped under .sheet so
+     CSS Modules accepts it (pure selectors must contain a local class). */
+  .sheet,
+  .sheet * {
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
   }

@@ -5,6 +5,7 @@ import type { Metadata } from 'next';
 import { Resend } from 'resend';
 import styles from './page.module.css';
 import SendReviewRequestCard from './_components/SendReviewRequestCard';
+import JobberStatusCard from './_components/JobberStatusCard';
 
 export const metadata: Metadata = {
   title: 'Dashboard · Ultra Shine Cleaning',
@@ -171,6 +172,13 @@ export default async function AdminDashboard() {
             ⚠️ Couldn't load live data: {error}. Tile links below still work.
           </div>
         )}
+
+        {/* ===== JOBBER CONNECTION STATUS =====
+            Shows connect button on first visit (after env vars are set),
+            then "connected" status after Tiago saves the refresh token.
+            Phase 2 will replace this with the live data widget. */}
+        <p className={styles.sectionLabel}>Jobber · integration status</p>
+        <JobberStatusCard />
 
         {/* STATS ROW */}
         <p className={styles.sectionLabel}>Today · this week · this month</p>

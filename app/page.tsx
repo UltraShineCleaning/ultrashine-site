@@ -4,6 +4,7 @@ import styles from './page.module.css';
 import FaqSection from './_components/FaqSection';
 import HeroScrollHome from './_components/HeroScrollHome';
 import BeforeAfterSlider from './_components/BeforeAfterSlider';
+import ServiceAreaMap from './_components/ServiceAreaMap';
 import MotionSection, { MotionItem } from './_components/MotionSection';
 import TiltCard from './_components/TiltCard';
 import CountUp from './_components/CountUp';
@@ -90,6 +91,12 @@ export default function HomePage() {
             />
       */}
       {/* <BeforeAfterSlider /> */}
+
+      {/* ============ SERVICE AREA MAP ============
+          Visual answer to "do they cover my city?" — Google Maps embed
+          centered on Boca Raton + chip row of all 13 cities below.
+          Pairs naturally with B/A slider when real photos return. */}
+      <ServiceAreaMap />
 
       {/* ============ SERVICES ============ */}
       <MotionSection id="services" className={`${styles.services} dot-grid`}>

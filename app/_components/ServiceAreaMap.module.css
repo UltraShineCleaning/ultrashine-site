@@ -1,0 +1,171 @@
+/* ==========================================================
+   Service Area Map — homepage + /about section
+   ========================================================== */
+
+.section {
+  padding: 72px 60px 88px;
+  background: var(--cream);
+  text-align: center;
+}
+.inner {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.eyebrow {
+  font-family: var(--font-poppins), sans-serif;
+  font-weight: 500;
+  font-size: 12px;
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+  color: var(--blue);
+  opacity: 0.9;
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+.eyebrow::before, .eyebrow::after {
+  content: '';
+  display: inline-block;
+  width: 32px;
+  height: 1px;
+  background: var(--blue);
+  opacity: 0.5;
+}
+
+.head {
+  font-weight: 800;
+  font-size: 48px;
+  line-height: 1.04;
+  letter-spacing: -0.025em;
+  color: var(--navy-deep);
+  margin-bottom: 16px;
+  max-width: 880px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.head em {
+  font-style: normal;
+  font-weight: 900;
+  color: var(--blue);
+}
+
+.sub {
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 17px;
+  line-height: 1.55;
+  color: var(--navy-deep);
+  opacity: 0.85;
+  max-width: 640px;
+  margin: 0 auto 40px;
+}
+
+/* ===== MAP ===== */
+.mapWrap {
+  position: relative;
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto 40px;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 20px 50px rgba(0, 44, 152, 0.15);
+  border: 1px solid var(--line);
+  aspect-ratio: 16 / 9;
+  background: var(--cream-2);
+}
+.mapIframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+}
+
+/* ===== CITIES GROUPS ===== */
+.citiesGroups {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;
+  max-width: 900px;
+  margin: 0 auto 28px;
+  text-align: left;
+}
+.citiesGroup {
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  padding: 22px 24px;
+  box-shadow: var(--shadow-soft);
+}
+.groupLabel {
+  font-family: var(--font-poppins), sans-serif;
+  font-weight: 700;
+  font-size: 10px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--blue);
+  opacity: 0.85;
+  margin-bottom: 14px;
+}
+.cityChips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: var(--blue-tint);
+  color: var(--blue-deep);
+  font-family: var(--font-poppins), sans-serif;
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: 0.01em;
+  text-decoration: none;
+  border: 1px solid transparent;
+  transition: background 0.15s, border-color 0.15s, color 0.15s, transform 0.15s;
+}
+.chip:hover {
+  background: var(--blue);
+  color: var(--white);
+  text-decoration: none;
+  transform: translateY(-1px);
+  border-color: var(--blue-deep);
+}
+
+.note {
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 14px;
+  color: var(--navy-deep);
+  opacity: 0.78;
+}
+.note a {
+  color: var(--blue);
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-color: rgba(28, 97, 240, 0.4);
+  text-underline-offset: 3px;
+}
+.note a:hover {
+  text-decoration-color: var(--blue);
+}
+
+/* ===== MOBILE ===== */
+@media (max-width: 1024px) {
+  .section { padding: 56px 32px 72px; }
+  .head { font-size: 36px; }
+  .sub { font-size: 16px; margin-bottom: 32px; }
+  .mapWrap { border-radius: 14px; aspect-ratio: 4 / 3; }
+  .citiesGroups { gap: 18px; }
+}
+@media (max-width: 640px) {
+  .section { padding: 44px 20px 56px; }
+  .head { font-size: 26px; margin-bottom: 12px; }
+  .sub { font-size: 14px; margin-bottom: 24px; }
+  .mapWrap { aspect-ratio: 1 / 1; border-radius: 12px; }
+  .citiesGroups { grid-template-columns: 1fr; gap: 14px; }
+  .citiesGroup { padding: 18px 20px; }
+  .chip { padding: 6px 12px; font-size: 12px; }
+}

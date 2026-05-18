@@ -944,7 +944,16 @@
   .areasEyebrow::before, .areasEyebrow::after { width: 20px; }
   .reviewsHead { padding: 0 20px; }
   .servicesGrid, .whyGrid { grid-template-columns: 1fr; gap: 16px; }
+  /* Normalize all 5 service cards to the same shape on mobile —
+     wide card had min-height: 360 + flex: 1.4 image area, making it
+     visibly taller than the other 4 and breaking the rhythm. */
   .serviceCardWideWrapper { grid-column: span 1; }
+  .serviceCard,
+  .serviceCardWide { min-height: 320px; height: auto; }
+  .serviceCardWide .serviceImg,
+  .serviceCard .serviceImg { flex: 0 0 200px; min-height: 200px; }
+  .serviceCardWide .serviceContent,
+  .serviceCard .serviceContent { flex: 1; padding: 22px 24px 26px; }
   .serviceContent h3 { font-size: 24px; }
   .footer { grid-template-columns: 1fr; gap: 28px; padding: 40px 20px; }
   .sectionHeadline { font-size: 28px; }

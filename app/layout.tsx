@@ -6,6 +6,7 @@ import './globals.css';
 import SmoothScrollProvider from './_components/SmoothScrollProvider';
 import JsonLd from './_components/JsonLd';
 import StickyQuoteCta from './_components/StickyQuoteCta';
+import TopTrustBar from './_components/TopTrustBar';
 
 // Sitewide LocalBusiness + Organization schema.
 // Tells Google: this is a real local business in Boca Raton with a
@@ -164,6 +165,11 @@ export default function RootLayout({
         <JsonLd data={SITE_SCHEMA} />
       </head>
       <body>
+        {/* Thin trust strip at the very top of every page — proof signals
+            visible immediately even before the user scrolls. Sits in
+            normal flow so the absolute-positioned nav below it stacks
+            naturally below the bar (no manual top: 36px adjustments). */}
+        <TopTrustBar />
         <SmoothScrollProvider>{children}</SmoothScrollProvider>
         <StickyQuoteCta />
         <Analytics />

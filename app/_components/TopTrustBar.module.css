@@ -1,0 +1,78 @@
+/* ==========================================================
+   TopTrustBar — fixed at the very top of the viewport.
+   Sits ABOVE everything else (z-index 100).
+   ~36px tall on desktop / ~32px on mobile.
+   ========================================================== */
+
+.bar {
+  position: relative;
+  width: 100%;
+  background:
+    linear-gradient(95deg, #001045 0%, #002C98 60%, #001E6B 100%);
+  color: var(--white);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  /* z-index so on inner pages nothing can overlap it */
+  z-index: 60;
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  line-height: 1;
+}
+
+.scroller {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 11px 24px;
+  /* Horizontal scroll on narrow viewports — keeps all signals visible */
+  overflow-x: auto;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
+  white-space: nowrap;
+}
+.scroller::-webkit-scrollbar { display: none; } /* Chrome/Safari */
+
+.item {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.icon {
+  color: var(--gold);
+  font-weight: 700;
+  font-size: 12px;
+  text-shadow: 0 0 8px rgba(255, 200, 87, 0.4);
+}
+
+.text {
+  font-weight: 500;
+  opacity: 0.95;
+}
+
+.divider {
+  margin-left: 14px;
+  opacity: 0.35;
+  font-size: 14px;
+}
+
+/* ===== MOBILE =====
+   Narrower padding + smaller font; the scroller keeps the row swipeable. */
+@media (max-width: 640px) {
+  .bar { font-size: 11px; }
+  .scroller {
+    padding: 9px 16px;
+    gap: 12px;
+    justify-content: flex-start;
+  }
+  .icon { font-size: 11px; }
+  .divider { margin-left: 12px; }
+}
+
+/* ===== PRINT =====
+   Hide the trust bar when printing (e.g. /review-card sheet). */
+@media print {
+  .bar { display: none !important; }
+}

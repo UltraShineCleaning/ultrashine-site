@@ -26,16 +26,24 @@ export default function TopTrustBar() {
     { icon: '✦', text: 'Family-Owned · Since 2018' },
   ];
 
+  // Render TWO copies of the items in the marquee track so the animation
+  // can translate by -50% and loop seamlessly with no visible reset.
   return (
     <div className={styles.bar} aria-label="Ultra Shine Cleaning trust signals">
-      <div className={styles.scroller}>
-        {items.map((item, i) => (
-          <span key={i} className={styles.item}>
-            <span className={styles.icon}>{item.icon}</span>
-            <span className={styles.text}>{item.text}</span>
-            {i < items.length - 1 && <span className={styles.divider} aria-hidden>·</span>}
-          </span>
-        ))}
+      <div className={styles.viewport}>
+        <div className={styles.track}>
+          {[0, 1].map((copy) => (
+            <div key={copy} className={styles.group} aria-hidden={copy === 1}>
+              {items.map((item, i) => (
+                <span key={`${copy}-${i}`} className={styles.item}>
+                  <span className={styles.icon}>{item.icon}</span>
+                  <span className={styles.text}>{item.text}</span>
+                  <span className={styles.divider} aria-hidden>·</span>
+                </span>
+              ))}
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

@@ -1,7 +1,12 @@
 /* ==========================================================
-   TopTrustBar — fixed at the very top of the viewport.
-   Sits ABOVE everything else (z-index 100).
-   ~36px tall on desktop / ~32px on mobile.
+   TopTrustBar — thin proof strip at the very top of every page.
+   Continuous, gently-scrolling marquee so users see all signals
+   without having to swipe. Desktop & mobile both auto-scroll —
+   the speed scales with viewport width so it always feels right.
+
+   Exposes a CSS variable `--top-bar-h` (on :root via globals) so
+   absolute-positioned nav can offset itself below the bar instead
+   of overlapping it.
    ========================================================== */
 
 .bar {
@@ -10,33 +15,77 @@
   background:
     linear-gradient(95deg, #001045 0%, #002C98 60%, #001E6B 100%);
   color: var(--white);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  /* z-index so on inner pages nothing can overlap it */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.10);
+  box-shadow: 0 1px 0 rgba(0, 16, 69, 0.6);
   z-index: 60;
   font-family: var(--font-poppins), sans-serif;
   font-size: 12px;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.06em;
   line-height: 1;
+  /* Match nav top offset; see .nav { top: var(--top-bar-h) } in page CSS */
+  height: 38px;
+  overflow: hidden;
 }
 
-.scroller {
+/* Subtle radial highlight on the right end so the navy gradient
+   doesn't feel flat. Doesn't move with the marquee. */
+.bar::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 240px 60px at 90% 50%, rgba(255, 200, 87, 0.10) 0%, transparent 70%);
+}
+
+/* The viewport is the visible window the track scrolls through. */
+.viewport {
+  position: absolute;
+  inset: 0;
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 14px;
-  padding: 11px 24px;
-  /* Horizontal scroll on narrow viewports — keeps all signals visible */
-  overflow-x: auto;
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE/Edge */
-  white-space: nowrap;
+  overflow: hidden;
+  /* Soft edge fade so items don't pop in/out at the borders. */
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 40px, #000 calc(100% - 40px), transparent 100%);
+          mask-image: linear-gradient(90deg, transparent 0, #000 40px, #000 calc(100% - 40px), transparent 100%);
 }
-.scroller::-webkit-scrollbar { display: none; } /* Chrome/Safari */
+
+/* The track holds TWO identical copies of the items and translates
+   by -50% to loop seamlessly. */
+.track {
+  display: flex;
+  white-space: nowrap;
+  will-change: transform;
+  animation: trustMarquee 38s linear infinite;
+}
+
+/* Pause on hover so users can read a signal that caught their eye. */
+.bar:hover .track {
+  animation-play-state: paused;
+}
+
+/* Respect reduced-motion users — show static centered content instead. */
+@media (prefers-reduced-motion: reduce) {
+  .track {
+    animation: none;
+    justify-content: center;
+    width: 100%;
+  }
+}
+
+.group {
+  display: inline-flex;
+  align-items: center;
+  /* Each "group" is one full pass of all items. */
+  padding-right: 0;
+  flex-shrink: 0;
+}
 
 .item {
   display: inline-flex;
   align-items: center;
   gap: 8px;
+  padding: 0 22px;
   flex-shrink: 0;
 }
 
@@ -44,35 +93,57 @@
   color: var(--gold);
   font-weight: 700;
   font-size: 12px;
-  text-shadow: 0 0 8px rgba(255, 200, 87, 0.4);
+  text-shadow: 0 0 10px rgba(255, 200, 87, 0.45);
+  /* Slight upward optical alignment for ★ ✓ ✦ */
+  transform: translateY(-0.5px);
 }
 
 .text {
   font-weight: 500;
   opacity: 0.95;
+  /* Tiny letterform polish */
+  font-variation-settings: "wght" 500;
 }
 
 .divider {
-  margin-left: 14px;
-  opacity: 0.35;
+  margin-left: 22px;
+  opacity: 0.25;
   font-size: 14px;
+  /* Pulls the · toward the next item's spacing pocket */
+  transform: translateY(-1px);
 }
 
-/* ===== MOBILE =====
-   Narrower padding + smaller font; the scroller keeps the row swipeable. */
+/* The marquee animation — translates the doubled track by half its
+   width over 38s so each loop is invisible (the second copy starts
+   exactly where the first one began). */
+@keyframes trustMarquee {
+  0%   { transform: translate3d(0, 0, 0); }
+  100% { transform: translate3d(-50%, 0, 0); }
+}
+
+/* ===== MEDIUM (tablet) — speed up slightly so content cycles faster ===== */
+@media (max-width: 1024px) {
+  .track { animation-duration: 32s; }
+}
+
+/* ===== MOBILE — same marquee, smaller type, tighter spacing ===== */
 @media (max-width: 640px) {
-  .bar { font-size: 11px; }
-  .scroller {
-    padding: 9px 16px;
-    gap: 12px;
-    justify-content: flex-start;
+  .bar {
+    font-size: 11px;
+    height: 34px;
+    letter-spacing: 0.05em;
   }
+  .item { padding: 0 16px; gap: 7px; }
   .icon { font-size: 11px; }
-  .divider { margin-left: 12px; }
+  .divider { margin-left: 16px; }
+  .track { animation-duration: 26s; }
+  .viewport {
+    -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 20px, #000 calc(100% - 20px), transparent 100%);
+            mask-image: linear-gradient(90deg, transparent 0, #000 20px, #000 calc(100% - 20px), transparent 100%);
+  }
 }
 
-/* ===== PRINT =====
-   Hide the trust bar when printing (e.g. /review-card sheet). */
+/* ===== PRINT — hide for review-card sheet etc. ===== */
 @media print {
   .bar { display: none !important; }
 }

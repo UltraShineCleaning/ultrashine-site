@@ -1,4 +1,9 @@
 /* ============ NAV ============ */
+/* top: 0 positions relative to nearest positioned ancestor.
+   For the homepage, that's <main> (made position:relative in globals.css)
+   so the nav sits at top of main = right below the TopTrustBar.
+   On inner pages, nav is inside their hero (position:relative) so it
+   sits at the top of the hero, which also sits below the TopTrustBar. */
 .nav {
   position: absolute;
   top: 0;

@@ -63,8 +63,11 @@ export default function ServicePage({ data }: { data: ServiceData }) {
 
   const [openFaq, setOpenFaq] = useState<number | null>(0);
 
-  // Schema.org markup — Service + FAQPage. Google uses these to show
-  // service cards + expandable FAQ snippets in search results.
+  // Schema.org markup — Service + FAQPage + BreadcrumbList. Google uses
+  // these to show:
+  //  - Service cards with ★ rating, location, offer details
+  //  - Expandable FAQ snippets ("People Also Ask" boxes)
+  //  - Breadcrumb trail in search ("Home › Services › Deep Cleaning")
   const pageSchema = [
     {
       '@context': 'https://schema.org',
@@ -73,8 +76,46 @@ export default function ServicePage({ data }: { data: ServiceData }) {
       description: data.subheadline,
       serviceType: data.name,
       provider: { '@id': 'https://ultrashinecleaningfl.com/#business' },
-      areaServed: { '@type': 'State', name: 'Florida' },
+      // List ALL 13 cities as serviced — much stronger local signal than
+      // just "Florida". Google understands service-area businesses better
+      // with explicit city enumeration.
+      areaServed: [
+        { '@type': 'City', name: 'Boca Raton' },
+        { '@type': 'City', name: 'Delray Beach' },
+        { '@type': 'City', name: 'Boynton Beach' },
+        { '@type': 'City', name: 'Lake Worth' },
+        { '@type': 'City', name: 'West Palm Beach' },
+        { '@type': 'City', name: 'Wellington' },
+        { '@type': 'City', name: 'Parkland' },
+        { '@type': 'City', name: 'Coral Springs' },
+        { '@type': 'City', name: 'Fort Lauderdale' },
+        { '@type': 'City', name: 'Coconut Creek' },
+        { '@type': 'City', name: 'Deerfield Beach' },
+        { '@type': 'City', name: 'Pompano Beach' },
+        { '@type': 'City', name: 'Margate' },
+      ],
       url: `https://ultrashinecleaningfl.com/services/${data.slug}`,
+      image: `https://ultrashinecleaningfl.com${data.heroImage}`,
+      // Star rating eligibility — Google may show ★ 5.0 next to results
+      aggregateRating: {
+        '@type': 'AggregateRating',
+        ratingValue: '5.0',
+        reviewCount: '25',
+        bestRating: '5',
+        worstRating: '1',
+      },
+      // Signals this is a bookable offering (no flat price published —
+      // we deliberately omit `price` since Tiago quotes every job custom)
+      offers: {
+        '@type': 'Offer',
+        availability: 'https://schema.org/InStock',
+        priceSpecification: {
+          '@type': 'PriceSpecification',
+          priceCurrency: 'USD',
+          description: 'Custom quote per home — every job priced individually after walkthrough',
+        },
+        url: 'https://ultrashinecleaningfl.com/quote',
+      },
     },
     {
       '@context': 'https://schema.org',
@@ -84,6 +125,30 @@ export default function ServicePage({ data }: { data: ServiceData }) {
         name: item.q,
         acceptedAnswer: { '@type': 'Answer', text: item.a },
       })),
+    },
+    {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        {
+          '@type': 'ListItem',
+          position: 1,
+          name: 'Home',
+          item: 'https://ultrashinecleaningfl.com/',
+        },
+        {
+          '@type': 'ListItem',
+          position: 2,
+          name: 'Services',
+          item: 'https://ultrashinecleaningfl.com/services',
+        },
+        {
+          '@type': 'ListItem',
+          position: 3,
+          name: data.name,
+          item: `https://ultrashinecleaningfl.com/services/${data.slug}`,
+        },
+      ],
     },
   ];
 

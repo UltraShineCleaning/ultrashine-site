@@ -6,6 +6,8 @@ import { motion, useScroll, useTransform, useReducedMotion } from 'framer-motion
 import SiteHeader from '../_components/SiteHeader';
 import SiteFooter from '../_components/SiteFooter';
 import MotionSection from '../_components/MotionSection';
+import ServiceAreaMap from '../_components/ServiceAreaMap';
+import CountUp from '../_components/CountUp';
 import styles from './page.module.css';
 
 export default function AboutPage() {
@@ -264,30 +266,35 @@ export default function AboutPage() {
         <div className={styles.statsRow}>
           <div className={styles.statCell}>
             <div className={styles.statNum}>
-              <em>8</em>
+              <em><CountUp to={8} duration={1.6} /></em>
             </div>
             <div className={styles.statCap}>Years In Business</div>
           </div>
           <div className={styles.statCell}>
             <div className={styles.statNum}>
-              13<em>+</em>
+              <CountUp to={13} duration={1.8} /><em>+</em>
             </div>
             <div className={styles.statCap}>Cities Served</div>
           </div>
           <div className={styles.statCell}>
             <div className={styles.statNum}>
-              4.9<em>★</em>
+              <CountUp to={4.9} decimals={1} duration={1.6} /><em>★</em>
             </div>
             <div className={styles.statCap}>Google Rating</div>
           </div>
           <div className={styles.statCell}>
             <div className={styles.statNum}>
-              <em>2</em>
+              <em><CountUp to={2} duration={1.2} /></em>
             </div>
             <div className={styles.statCap}>Husband + Wife Owners</div>
           </div>
         </div>
       </MotionSection>
+
+      {/* ============== SERVICE AREA MAP ==============
+          Same component used on the homepage — shows the Palm Beach + Broward
+          coverage area visually with clickable city chips below. */}
+      <ServiceAreaMap />
 
       {/* ============== CTA ============== */}
       <MotionSection className={styles.cta}>

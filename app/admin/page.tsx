@@ -362,6 +362,9 @@ export default async function AdminDashboard() {
           <Link href="/quote" className={styles.quickAction}>
             ✦ Test quote form
           </Link>
+          <Link href="/review-card" target="_blank" className={styles.quickAction}>
+            🖨 Print review cards
+          </Link>
         </div>
 
         <p className={styles.footNote}>

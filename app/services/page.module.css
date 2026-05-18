@@ -428,6 +428,144 @@
   text-decoration: none;
 }
 
+/* ===== ESTIMATOR CALLOUT =====
+   Two-column card that surfaces the new /cleaning-time-estimator tool.
+   Left: copy + CTA. Right: a fake "preview" card showing what the
+   estimator's result looks like, so visitors know what they'll get. */
+.estimatorCallout {
+  padding: 60px 60px 72px;
+  background: var(--cream-2);
+  border-top: 1px solid var(--line);
+}
+.estimatorCalloutInner {
+  max-width: 1100px;
+  margin: 0 auto;
+  background: linear-gradient(135deg, #EAF1FF 0%, #FFFFFF 100%);
+  border: 1px solid var(--line-2);
+  border-radius: var(--r-lg);
+  padding: 44px 48px;
+  box-shadow: 0 12px 36px rgba(28, 97, 240, 0.10);
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 40px;
+  align-items: center;
+}
+.estimatorCalloutLeft {
+  text-align: left;
+}
+.estimatorCalloutEyebrow {
+  font-family: var(--font-poppins), sans-serif;
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--blue);
+  margin-bottom: 14px;
+}
+.estimatorCalloutHead {
+  font-weight: 800;
+  font-size: 36px;
+  line-height: 1.1;
+  letter-spacing: -0.022em;
+  color: var(--navy-deep);
+  margin-bottom: 16px;
+}
+.estimatorCalloutHead em {
+  color: var(--blue);
+}
+.estimatorCalloutBody {
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--navy-deep);
+  opacity: 0.85;
+  margin-bottom: 22px;
+}
+.estimatorCalloutBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 26px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--blue) 0%, var(--blue-deep) 100%);
+  color: var(--white);
+  text-decoration: none;
+  font-family: var(--font-poppins), sans-serif;
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  box-shadow: 0 4px 14px rgba(28, 97, 240, 0.30);
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.estimatorCalloutBtn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 28px rgba(28, 97, 240, 0.40);
+  text-decoration: none;
+}
+
+/* Right column — preview card */
+.estimatorCalloutRight {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.estimatorPreviewCard {
+  background: linear-gradient(160deg, #002C98 0%, #001E6B 100%);
+  color: var(--white);
+  border-radius: var(--r-md);
+  padding: 22px 24px;
+  width: 100%;
+  max-width: 280px;
+  box-shadow: 0 12px 32px rgba(0, 44, 152, 0.30);
+  text-align: center;
+}
+.previewLabel {
+  font-family: var(--font-poppins), sans-serif;
+  font-weight: 700;
+  font-size: 10px;
+  letter-spacing: 0.28em;
+  color: var(--blue-soft);
+  margin-bottom: 12px;
+}
+.previewLine {
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 13px;
+  line-height: 1.5;
+  opacity: 0.85;
+  margin-bottom: 4px;
+}
+.previewLine:last-of-type {
+  margin-bottom: 14px;
+}
+.previewResult {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 4px;
+  margin-top: 6px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.14);
+}
+.previewResultNum {
+  font-family: var(--font-poppins), sans-serif;
+  font-weight: 800;
+  font-size: 34px;
+  letter-spacing: -0.02em;
+  color: var(--white);
+}
+.previewResultUnit {
+  font-family: var(--font-poppins), sans-serif;
+  font-weight: 600;
+  font-size: 16px;
+  color: var(--blue-soft);
+}
+.previewSub {
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 11px;
+  opacity: 0.7;
+  margin-top: 4px;
+}
+
 /* ===== PRE-QUOTE FAQ =====
    Uses native <details>/<summary> for accessibility + zero JS.
    Each item collapsed by default; click to expand. Smooth max-height
@@ -587,6 +725,12 @@
   .faqHead { font-size: 34px; margin-bottom: 28px; }
   .faqQ { font-size: 16px; padding: 20px 24px; }
   .faqA { padding: 0 24px 22px; font-size: 14px; }
+  .estimatorCallout { padding: 48px 32px 56px; }
+  .estimatorCalloutInner { padding: 32px 32px; grid-template-columns: 1fr; gap: 28px; text-align: center; }
+  .estimatorCalloutLeft { text-align: center; }
+  .estimatorCalloutHead { font-size: 28px; }
+  .estimatorCalloutBody { font-size: 15px; }
+  .estimatorPreviewCard { max-width: 320px; }
   .card { min-height: 360px; }
   .cardWide { min-height: 420px; }
   .cardName { font-size: 32px; }

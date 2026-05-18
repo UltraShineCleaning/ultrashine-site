@@ -338,6 +338,39 @@ export default function ServicesIndexPage() {
         </div>
       </section>
 
+      {/* ============ ESTIMATOR CALLOUT ============ */}
+      <section className={styles.estimatorCallout}>
+        <div className={styles.estimatorCalloutInner}>
+          <div className={styles.estimatorCalloutLeft}>
+            <p className={styles.estimatorCalloutEyebrow}>NEW TOOL · NO SIGN-UP</p>
+            <h2 className={`fraunces ${styles.estimatorCalloutHead}`}>
+              How long will <em>your</em> cleaning take?
+            </h2>
+            <p className={styles.estimatorCalloutBody}>
+              5 quick questions &mdash; we&apos;ll give you a rough time
+              estimate before you request a full quote. No pricing, no
+              sign-up, no email required.
+            </p>
+            <Link href="/cleaning-time-estimator" className={styles.estimatorCalloutBtn}>
+              Try the Estimator →
+            </Link>
+          </div>
+          <div className={styles.estimatorCalloutRight}>
+            <div className={styles.estimatorPreviewCard}>
+              <div className={styles.previewLabel}>EXAMPLE</div>
+              <div className={styles.previewLine}>3 Bedrooms · 2 Bathrooms</div>
+              <div className={styles.previewLine}>Deep Cleaning · Few months ago</div>
+              <div className={styles.previewLine}>1–2 pets</div>
+              <div className={styles.previewResult}>
+                <span className={styles.previewResultNum}>3.5–5</span>
+                <span className={styles.previewResultUnit}>hrs</span>
+              </div>
+              <div className={styles.previewSub}>with 2 cleaners on site</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* ============ PRE-QUOTE FAQ ============ */}
       <section className={styles.faqSection}>
         <div className={styles.faqInner}>

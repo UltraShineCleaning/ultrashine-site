@@ -157,8 +157,12 @@ export default function QuotePage() {
               <em>minutes</em> away.
             </h1>
             <p className={styles.leftBody}>
-              Answer a few quick questions and we'll send you a personalized estimate
+              Answer a few quick questions and we&apos;ll send you a personalized estimate
               within <em>one hour</em> — no calls, no spam, no pressure.
+            </p>
+            <p className={styles.leftEstimatorHint}>
+              Just looking for a rough time idea first?{' '}
+              <Link href="/cleaning-time-estimator">Try the 60-second estimator →</Link>
             </p>
           </motion.div>
 

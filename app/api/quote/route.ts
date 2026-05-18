@@ -40,6 +40,8 @@ type QuotePayload = {
     email?: string;
   };
   notes?: string;
+  /** Marketing attribution — "Google Search" / "Instagram" / "Referral" etc. */
+  heardFrom?: string;
   submittedAt?: string;
 };
 
@@ -187,6 +189,10 @@ function renderHtml(p: QuotePayload): string {
       <tr><td style="padding:14px 22px;background:#002C98;color:#FFFFFF;font-size:11px;letter-spacing:0.28em;text-transform:uppercase;font-weight:600;">Notes</td></tr>
       <tr><td style="padding:18px 22px;font-size:14px;line-height:1.65;white-space:pre-wrap;color:${notes === '—' ? '#1C61F0' : '#002C98'};opacity:${notes === '—' ? '0.55' : '1'};">${notes}</td></tr>
 
+      <!-- ATTRIBUTION (free marketing tracking) -->
+      <tr><td style="padding:14px 22px;background:#EAF1FF;color:#002C98;font-size:11px;letter-spacing:0.28em;text-transform:uppercase;font-weight:600;border-top:1px solid #FFFFFF;">📊 Heard about us via</td></tr>
+      <tr><td style="padding:14px 22px;font-size:14px;color:${p.heardFrom ? '#002C98' : '#5A5F6B'};font-weight:${p.heardFrom ? '600' : '400'};opacity:${p.heardFrom ? '1' : '0.7'};">${p.heardFrom?.trim() || 'Not provided'}</td></tr>
+
     </table>
 
     <!-- FOOTER -->
@@ -230,6 +236,7 @@ function renderText(p: QuotePayload): string {
     `Location:  ${p.city || '—'}${p.zip ? `, FL ${p.zip}` : ''}`,
     '',
     `Notes:     ${p.notes?.trim() || '—'}`,
+    `Heard via: ${p.heardFrom?.trim() || '— not provided —'}`,
     '',
     `Submitted: ${p.submittedAt || new Date().toISOString()}`,
   ].join('\n');

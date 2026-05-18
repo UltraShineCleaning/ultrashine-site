@@ -96,26 +96,10 @@ export default function ServicePage({ data }: { data: ServiceData }) {
       ],
       url: `https://ultrashinecleaningfl.com/services/${data.slug}`,
       image: `https://ultrashinecleaningfl.com${data.heroImage}`,
-      // Star rating eligibility — Google may show ★ 5.0 next to results
-      aggregateRating: {
-        '@type': 'AggregateRating',
-        ratingValue: '5.0',
-        reviewCount: '25',
-        bestRating: '5',
-        worstRating: '1',
-      },
-      // Signals this is a bookable offering (no flat price published —
-      // we deliberately omit `price` since Tiago quotes every job custom)
-      offers: {
-        '@type': 'Offer',
-        availability: 'https://schema.org/InStock',
-        priceSpecification: {
-          '@type': 'PriceSpecification',
-          priceCurrency: 'USD',
-          description: 'Custom quote per home — every job priced individually after walkthrough',
-        },
-        url: 'https://ultrashinecleaningfl.com/quote',
-      },
+      // (aggregateRating + offers removed — Review Snippets require explicit
+      //  itemReviewed + actual review entries to validate. Business-level
+      //  rating is already correctly attached to the HouseCleaningService
+      //  schema in app/layout.tsx; duplicating it here flagged as invalid.)
     },
     {
       '@context': 'https://schema.org',

@@ -49,6 +49,7 @@ export default function QuotePage() {
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
   const [notes, setNotes] = useState('');
+  const [heardFrom, setHeardFrom] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -92,6 +93,7 @@ export default function QuotePage() {
         addOns: Array.from(addOns).map((k) => ADD_ONS.find((a) => a.key === k)?.name),
         contact: { first, last, phone, email },
         notes,
+        heardFrom: heardFrom || undefined,
         submittedAt: new Date().toISOString(),
       };
 
@@ -580,6 +582,27 @@ export default function QuotePage() {
                     placeholder="Pets, allergies, gate codes, specific areas to focus on…"
                     rows={3}
                   />
+                </div>
+                <div style={{ marginTop: 10 }}>
+                  <span className={styles.inputLabel}>
+                    How did you hear about us? <span style={{ opacity: 0.55, fontWeight: 400 }}>(optional)</span>
+                  </span>
+                  <select
+                    className={`${styles.input} ${heardFrom ? styles.inputHasValue : ''}`}
+                    value={heardFrom}
+                    onChange={(e) => setHeardFrom(e.target.value)}
+                  >
+                    <option value="">— Choose one —</option>
+                    <option value="Google Search">Google Search</option>
+                    <option value="Google Maps">Google Maps</option>
+                    <option value="Instagram">Instagram</option>
+                    <option value="Facebook">Facebook</option>
+                    <option value="Nextdoor">Nextdoor</option>
+                    <option value="Referral / Friend">Referral from a friend</option>
+                    <option value="HomeAdvisor / Angi">HomeAdvisor / Angi</option>
+                    <option value="Drove past truck / sign">Drove past truck / sign</option>
+                    <option value="Other">Other</option>
+                  </select>
                 </div>
               </div>
 

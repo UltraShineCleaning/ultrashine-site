@@ -221,19 +221,97 @@ export default function QuotePage() {
             >
               <div className={styles.successSpark}>✦</div>
               <h2 className={styles.successTitle}>
-                Got it, {first}. <em>You're set.</em>
+                Got it, {first}. <em>You&apos;re set.</em>
               </h2>
               <p className={styles.successBody}>
                 Our team will reach out at <strong>{phone}</strong> within the hour
                 to confirm details and set up a quick walkthrough of your home.
-                Once we see the space, we'll send you a precise quote — every home
-                is different, so there's no one-size-fits-all number.
               </p>
-              <a href="tel:5615836694" className={styles.successCallCta}>
-                ✦ Call (561) 583-6694
-              </a>
-              <p className={styles.btnCall} style={{ marginTop: 14 }}>
-                Or wait for us to reach out
+
+              {/* What happens next — 3-step timeline */}
+              <div className={styles.successSteps}>
+                <div className={styles.successStep}>
+                  <div className={styles.successStepNum}>1</div>
+                  <div className={styles.successStepText}>
+                    <strong>Within the hour</strong>
+                    <span>We text + call to confirm your details</span>
+                  </div>
+                </div>
+                <div className={styles.successStepLine} aria-hidden />
+                <div className={styles.successStep}>
+                  <div className={styles.successStepNum}>2</div>
+                  <div className={styles.successStepText}>
+                    <strong>15-minute walkthrough</strong>
+                    <span>We see your home, ask a few questions</span>
+                  </div>
+                </div>
+                <div className={styles.successStepLine} aria-hidden />
+                <div className={styles.successStep}>
+                  <div className={styles.successStepNum}>3</div>
+                  <div className={styles.successStepText}>
+                    <strong>Custom quote in your inbox</strong>
+                    <span>Precise number, no surprises, take or leave</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Save contact action row */}
+              <p className={styles.successActionLabel}>
+                Save us in your phone so you spot the call:
+              </p>
+              <div className={styles.successActions}>
+                <a href="tel:5615836694" className={styles.successAction}>
+                  <span className={styles.successActionIcon}>📞</span>
+                  <span className={styles.successActionText}>Call</span>
+                </a>
+                <a href="sms:5615836694" className={styles.successAction}>
+                  <span className={styles.successActionIcon}>💬</span>
+                  <span className={styles.successActionText}>Text</span>
+                </a>
+                <a
+                  href="mailto:contact@ultrashinecleaningfl.com"
+                  className={styles.successAction}
+                >
+                  <span className={styles.successActionIcon}>✉</span>
+                  <span className={styles.successActionText}>Email</span>
+                </a>
+              </div>
+
+              {/* Testimonial card */}
+              <div className={styles.successTestimonial}>
+                <div className={styles.successStars}>★ ★ ★ ★ ★</div>
+                <p className={styles.successQuote}>
+                  &ldquo;Francine and her team are very professional, easy to work
+                  with, accommodate customer schedules, and I highly recommend
+                  Ultra Shine Cleaning.&rdquo;
+                </p>
+                <p className={styles.successAttr}>
+                  Verified client · HomeAdvisor
+                </p>
+              </div>
+
+              {/* While you wait */}
+              <p className={styles.successActionLabel}>
+                While you wait, dive in:
+              </p>
+              <div className={styles.successWhileWaiting}>
+                <a href="/blog" className={styles.successWaitLink}>
+                  → Read our cleaning notes &amp; tips
+                </a>
+                <a href="/reviews" className={styles.successWaitLink}>
+                  → See what 25+ Boca homeowners say
+                </a>
+                <a href="/pricing-philosophy" className={styles.successWaitLink}>
+                  → Why we don&apos;t publish flat rates
+                </a>
+              </div>
+
+              {/* Returning-customer review nudge */}
+              <p className={styles.successReturning}>
+                Already a customer from before?{' '}
+                <a href="/leave-a-review" target="_blank" rel="noopener noreferrer">
+                  Leave us a Google review →
+                </a>
               </p>
             </motion.div>
           ) : (

@@ -303,6 +303,12 @@ export default function ServicePage({ data }: { data: ServiceData }) {
         <p className={styles.finalNote}>
           Or comment <strong>{data.ctaKeyword}</strong> on our IG · Custom quote in 1 hour · No pricing surprises
         </p>
+        {/* Subtle estimator entry point — for visitors not ready to fill the
+            quote form but curious about how long their cleaning would take. */}
+        <p className={styles.finalEstimatorHint}>
+          Not ready to commit yet?{' '}
+          <Link href="/cleaning-time-estimator">Try the 60-second time estimator →</Link>
+        </p>
       </MotionSection>
 
       <SiteFooter />

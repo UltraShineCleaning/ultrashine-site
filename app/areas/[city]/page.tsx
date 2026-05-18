@@ -4,6 +4,7 @@ import Link from 'next/link';
 import SiteHeader from '../../_components/SiteHeader';
 import SiteFooter from '../../_components/SiteFooter';
 import JsonLd from '../../_components/JsonLd';
+import ServiceAreaMap from '../../_components/ServiceAreaMap';
 import { CITIES, getCity } from '../_data/cities';
 import styles from './page.module.css';
 
@@ -45,7 +46,9 @@ export default function CityPage({ params }: { params: Params }) {
   const city = getCity(params.city);
   if (!city) notFound();
 
-  const siblings = CITIES.filter((c) => c.slug !== city.slug && c.county === city.county);
+  // (Sibling cities list previously rendered as a small same-county footer
+  //  section; replaced by <ServiceAreaMap /> below which shows all 13 cities
+  //  visually + clickable.)
 
   // Per-city schema — tells Google this is a service page for THIS city.
   // Combined with the breadcrumbs, this is what makes "boca raton cleaning"
@@ -180,23 +183,12 @@ export default function CityPage({ params }: { params: Params }) {
         <Link href="/quote" className="btn btn-coral">Request Your Free Quote</Link>
       </section>
 
-      {/* ============== OTHER CITIES IN COUNTY ============== */}
-      {siblings.length > 0 && (
-        <section className={`${styles.section} ${styles.sectionAlt}`}>
-          <div className={styles.siblingsWrap}>
-            <p className={styles.eyebrow} style={{ justifyContent: 'center' }}>
-              Also serving in {city.county} County
-            </p>
-            <div className={styles.siblingsGrid}>
-              {siblings.map((s) => (
-                <Link key={s.slug} href={`/areas/${s.slug}`} className={styles.siblingLink}>
-                  {s.name}
-                </Link>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
+      {/* ============== SERVICE AREA MAP ==============
+          Replaces the old text-only siblings list with the richer
+          ServiceAreaMap (map + chip groups for both counties).
+          Visitors on /areas/boca-raton can now see all 13 cities
+          we serve visually + jump to any of them in one click. */}
+      <ServiceAreaMap />
 
       <SiteFooter />
     </main>

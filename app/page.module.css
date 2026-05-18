@@ -808,6 +808,32 @@
   letter-spacing: 0.05em;
 }
 
+/* Subtle estimator entry-point — appears below the primary CTA on
+   shared FinalCTA sections (currently the service page final CTA).
+   Catches visitors who aren't ready to commit but want a feel. */
+.finalEstimatorHint {
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.10);
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 13px;
+  color: var(--white);
+  opacity: 0.72;
+  max-width: 480px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.finalEstimatorHint a {
+  color: var(--blue-soft);
+  font-weight: 600;
+  text-decoration: none;
+}
+.finalEstimatorHint a:hover {
+  color: var(--white);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
 /* ============ FOOTER ============ */
 .footer {
   background: var(--navy-deep);

@@ -114,11 +114,36 @@ function SceneLayer({
   const ranges = getSceneOpacityRanges(index, total);
   const opacity = useTransform(progress, ranges.input, ranges.output);
 
-  // Subtle zoom: scale 1.05 → 1.12 over the scene's slice
+  // DRAMATIC zoom: scale 1.0 → 1.28 over the scene's slice. Larger range
+  // = more "camera moving into the room" feel.
   const slice = 1 / total;
   const start = index * slice;
   const end = (index + 1) * slice;
-  const scale = useTransform(progress, [start, end], [1.04, 1.14]);
+  const scale = useTransform(progress, [start, end], [1.0, 1.28]);
+
+  // Y PARALLAX on the background — moves UP by 8% of viewport height over
+  // the scene's slice. Creates the "camera rising/floating" cinematic feel
+  // that pure opacity crossfade alone doesn't deliver.
+  const bgY = useTransform(progress, [start, end], ['0%', '-8%']);
+
+  // TEXT FADE-UP: as a scene becomes active, its text rises into place
+  // from below; as the scene leaves, the text floats upward and fades.
+  // This is the Apple-tier touch — content doesn't just appear, it MOVES.
+  const textY = useTransform(
+    progress,
+    ranges.input,
+    ['40px', '0px', '0px', '-40px'],
+  );
+  const textOpacity = useTransform(
+    progress,
+    [start, start + slice * 0.18, end - slice * 0.18, end],
+    [
+      index === 0 ? 1 : 0, // first scene starts fully visible
+      1,
+      1,
+      index === total - 1 ? 1 : 0, // last scene stays fully visible
+    ],
+  );
 
   return (
     <motion.div className={styles.scene} style={{ opacity }}>
@@ -127,10 +152,11 @@ function SceneLayer({
         style={{
           backgroundImage: `url(${scene.image})`,
           scale,
+          y: bgY,
         }}
       />
       <div className={styles.overlay} />
-      <div className={styles.content}>
+      <motion.div className={styles.content} style={{ y: textY, opacity: textOpacity }}>
         <p className={styles.eyebrow}>{scene.eyebrow}</p>
         <h1
           className={styles.headline}
@@ -144,7 +170,7 @@ function SceneLayer({
             <a href="#services" className="btn btn-secondary">See What's Included</a>
           </div>
         )}
-      </div>
+      </motion.div>
     </motion.div>
   );
 }

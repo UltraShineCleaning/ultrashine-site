@@ -29,6 +29,7 @@ type HomeSize = 'studio' | '2br' | '3br' | '4br' | '5br_plus';
 type Service = 'regular' | 'deep' | 'moveout' | 'postconstruction';
 type LastCleaned = 'recent' | 'months' | 'years' | 'construction';
 type Pets = 'none' | 'few' | 'many';
+type Frequency = 'one' | 'monthly' | 'biweekly' | 'weekly';
 
 const HOME_BASE_HOURS: Record<HomeSize, number> = {
   studio: 2,
@@ -71,12 +72,33 @@ const HOURLY_RATE_RANGE: Record<Service, [number, number]> = {
   postconstruction: [55, 65],
 };
 
+/* Frequency adjustment: recurring cleanings of the SAME home take less time
+   per visit because the home stays maintained between visits. Only applies
+   to regular cleaning (deep/moveout/postconstruction are one-time by nature). */
+const FREQUENCY_MULTIPLIER: Record<Frequency, number> = {
+  one: 1.0,        // one-time / no recurrence
+  monthly: 0.92,   // 30 days between visits → light maintenance discount
+  biweekly: 0.85,  // 14 days → noticeably easier
+  weekly: 0.80,    // 7 days → cleanest baseline, biggest discount
+};
+
+const FREQUENCY_LABEL: Record<Frequency, string> = {
+  one: 'One-Time',
+  monthly: 'Monthly',
+  biweekly: 'Bi-Weekly',
+  weekly: 'Weekly',
+};
+
+/* Ultra Shine ALWAYS sends a pair — 2 cleaners on every job, always. */
+const ALWAYS_CLEANERS = 2;
+
 export default function CleaningTimeEstimatorPage() {
   const [homeSize, setHomeSize] = useState<HomeSize>('3br');
   const [bathrooms, setBathrooms] = useState(2);
   const [service, setService] = useState<Service>('regular');
   const [lastCleaned, setLastCleaned] = useState<LastCleaned>('recent');
   const [pets, setPets] = useState<Pets>('none');
+  const [frequency, setFrequency] = useState<Frequency>('one');
 
   const estimate = useMemo(() => {
     const base = HOME_BASE_HOURS[homeSize];
@@ -85,11 +107,18 @@ export default function CleaningTimeEstimatorPage() {
     const petAdj = PET_HOURS[pets];
     const serviceMult = SERVICE_MULTIPLIER[service];
 
-    const totalHours = (base + bathroomAdj + lastCleanedAdj + petAdj) * serviceMult;
+    // Frequency only discounts the per-visit time for REGULAR cleaning.
+    // Deep/moveout/post-construction are inherently one-time scopes.
+    const frequencyMult =
+      service === 'regular' ? FREQUENCY_MULTIPLIER[frequency] : 1.0;
+
+    const totalHours =
+      (base + bathroomAdj + lastCleanedAdj + petAdj) * serviceMult * frequencyMult;
     const low = Math.max(1.5, Math.round(totalHours * 0.85 * 10) / 10);
     const high = Math.round(totalHours * 1.15 * 10) / 10;
-    const cleaners = totalHours > 5 ? 2 : 1;
-    // Wall-clock time = total person-hours / cleaners
+
+    // Ultra Shine sends a pair to every job — always.
+    const cleaners = ALWAYS_CLEANERS;
     const wallLow = Math.round((low / cleaners) * 10) / 10;
     const wallHigh = Math.round((high / cleaners) * 10) / 10;
 
@@ -100,7 +129,7 @@ export default function CleaningTimeEstimatorPage() {
     const priceHigh = Math.round((high * rateHigh) / 10) * 10;
 
     return { low, high, cleaners, wallLow, wallHigh, priceLow, priceHigh };
-  }, [homeSize, bathrooms, service, lastCleaned, pets]);
+  }, [homeSize, bathrooms, service, lastCleaned, pets, frequency]);
 
   // Build a /quote URL that pre-fills the captured estimate as the
   // "notes" field so when Tiago opens the lead, the customer's whole
@@ -126,16 +155,17 @@ export default function CleaningTimeEstimatorPage() {
       many: '3+ pets',
     };
     const summary = [
-      `Estimator: ${homeLabel[homeSize]}, ${bathrooms} bath${bathrooms > 1 ? 's' : ''}, ${SERVICE_LABEL[service]}, last cleaned ${lastLabel[lastCleaned]}, ${petsLabel[pets]}.`,
-      `Ballpark: ${estimate.wallLow}-${estimate.wallHigh} hrs with ${estimate.cleaners} cleaner${estimate.cleaners > 1 ? 's' : ''}, $${estimate.priceLow}-$${estimate.priceHigh}.`,
+      `Estimator: ${homeLabel[homeSize]}, ${bathrooms} bath${bathrooms > 1 ? 's' : ''}, ${SERVICE_LABEL[service]} (${FREQUENCY_LABEL[frequency]}), last cleaned ${lastLabel[lastCleaned]}, ${petsLabel[pets]}.`,
+      `Ballpark: ${estimate.wallLow}-${estimate.wallHigh} hrs with ${estimate.cleaners} cleaners on site, $${estimate.priceLow}-$${estimate.priceHigh}.`,
       `Send precise quote within the hour.`,
     ].join(' ');
     const params = new URLSearchParams({
       service: SERVICE_LABEL[service],
+      frequency: FREQUENCY_LABEL[frequency],
       notes: summary,
     });
     return `/quote?${params.toString()}`;
-  }, [homeSize, bathrooms, service, lastCleaned, pets, estimate]);
+  }, [homeSize, bathrooms, service, lastCleaned, pets, frequency, estimate]);
 
   return (
     <main>
@@ -289,6 +319,38 @@ export default function CleaningTimeEstimatorPage() {
                 ))}
               </div>
             </div>
+
+            {/* Q6 — Frequency */}
+            <div className={styles.field}>
+              <div className={styles.fieldLabel}>
+                <span className={styles.fieldNum}>06</span>
+                <span>How often do you want us?</span>
+              </div>
+              <div className={styles.options}>
+                {(Object.keys(FREQUENCY_LABEL) as Frequency[]).map((f) => (
+                  <button
+                    key={f}
+                    type="button"
+                    className={`${styles.optBtn} ${frequency === f ? styles.optBtnActive : ''}`}
+                    onClick={() => setFrequency(f)}
+                  >
+                    {FREQUENCY_LABEL[f]}
+                  </button>
+                ))}
+              </div>
+              {service === 'regular' && frequency !== 'one' && (
+                <p className={styles.fieldNote}>
+                  ✓ Recurring homes stay maintained between visits — your
+                  per-visit time {frequency === 'weekly' ? 'drops 20%' : frequency === 'biweekly' ? 'drops 15%' : 'drops 8%'} vs a one-time clean.
+                </p>
+              )}
+              {service !== 'regular' && (
+                <p className={styles.fieldNote}>
+                  {SERVICE_LABEL[service]} is typically a one-time scope.
+                  Pair it with regular cleaning to keep that result.
+                </p>
+              )}
+            </div>
           </div>
 
           {/* RIGHT: Result card (sticky) */}
@@ -306,12 +368,15 @@ export default function CleaningTimeEstimatorPage() {
                 <span className={styles.resultPriceHigh}>{estimate.priceHigh}</span>
               </div>
               <p className={styles.resultPriceSub}>
-                ballpark for a {SERVICE_LABEL[service].toLowerCase()}
+                ballpark · {SERVICE_LABEL[service].toLowerCase()}
+                {service === 'regular' && frequency !== 'one'
+                  ? ` · ${FREQUENCY_LABEL[frequency].toLowerCase()}`
+                  : ''}
               </p>
 
               <div className={styles.resultDividerSlim} />
 
-              {/* TIME — secondary detail */}
+              {/* TIME — secondary detail. Ultra Shine ALWAYS sends a pair. */}
               <div className={styles.resultMetaRow}>
                 <div className={styles.resultMetaItem}>
                   <span className={styles.resultMetaValue}>
@@ -321,12 +386,8 @@ export default function CleaningTimeEstimatorPage() {
                   <span className={styles.resultMetaLabel}>on site</span>
                 </div>
                 <div className={styles.resultMetaItem}>
-                  <span className={styles.resultMetaValue}>
-                    {estimate.cleaners}
-                  </span>
-                  <span className={styles.resultMetaLabel}>
-                    cleaner{estimate.cleaners > 1 ? 's' : ''}
-                  </span>
+                  <span className={styles.resultMetaValue}>2</span>
+                  <span className={styles.resultMetaLabel}>cleaners (always)</span>
                 </div>
               </div>
 

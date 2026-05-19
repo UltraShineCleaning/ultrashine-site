@@ -61,6 +61,7 @@ export default function QuotePage() {
     if (typeof window === 'undefined') return;
     const params = new URLSearchParams(window.location.search);
     const serviceParam = params.get('service');
+    const frequencyParam = params.get('frequency');
     const notesParam = params.get('notes');
 
     if (serviceParam) {
@@ -72,6 +73,17 @@ export default function QuotePage() {
       };
       const mapped = map[serviceParam];
       if (mapped) setService(mapped);
+    }
+
+    if (frequencyParam) {
+      const fmap: Record<string, FreqKey> = {
+        'One-Time': 'one',
+        'Monthly': 'monthly',
+        'Bi-Weekly': 'biweekly',
+        'Weekly': 'weekly',
+      };
+      const mapped = fmap[frequencyParam];
+      if (mapped) setFreq(mapped);
     }
 
     if (notesParam) setNotes(notesParam);

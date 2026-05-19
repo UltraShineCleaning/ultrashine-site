@@ -144,6 +144,18 @@
   color: var(--white);
   box-shadow: 0 4px 12px rgba(28, 97, 240, 0.25);
 }
+/* Tiny note below a field — used for frequency hint about recurring discount */
+.fieldNote {
+  margin-top: 12px;
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--blue-deep);
+  background: var(--blue-tint);
+  padding: 10px 14px;
+  border-radius: 8px;
+  border-left: 3px solid var(--blue);
+}
 .optBtnActive:hover {
   background: var(--blue-deep);
   border-color: var(--blue-deep);

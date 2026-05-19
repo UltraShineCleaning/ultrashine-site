@@ -26,6 +26,12 @@
   overflow: hidden;
 }
 
+/* Defensive initial state — scenes 1+ start invisible BEFORE GSAP runs
+   so visitors don't see a flash of all 4 stacked on page-load.
+   GSAP then takes over visibility via autoAlpha during the timeline. */
+:global(.us-scene) { opacity: 0; }
+:global(.us-scene-0) { opacity: 1; }
+
 .bg {
   position: absolute;
   inset: 0;

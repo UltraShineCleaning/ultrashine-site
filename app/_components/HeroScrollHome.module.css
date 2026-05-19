@@ -28,9 +28,10 @@
 
 /* Defensive initial state — scenes 1+ start invisible BEFORE GSAP runs
    so visitors don't see a flash of all 4 stacked on page-load.
-   GSAP then takes over visibility via autoAlpha during the timeline. */
-:global(.us-scene) { opacity: 0; }
-:global(.us-scene-0) { opacity: 1; }
+   GSAP then takes over visibility via autoAlpha during the timeline.
+   Scoped under .container so CSS Modules accepts the :global() selectors. */
+.container :global(.us-scene) { opacity: 0; }
+.container :global(.us-scene-0) { opacity: 1; }
 
 .bg {
   position: absolute;
@@ -221,9 +222,10 @@
     height: 100vh;
     min-height: 600px;
   }
-  /* Only the first scene shows on mobile; the others are hidden */
+  /* Only the first scene shows on mobile; the others are hidden.
+     Scoped under .container so CSS Modules accepts the :global() selector. */
   .scene { opacity: 0 !important; visibility: hidden; }
-  :global(.us-scene-0) { opacity: 1 !important; visibility: visible !important; }
+  .container :global(.us-scene-0) { opacity: 1 !important; visibility: visible !important; }
   .content { padding: 0 32px 56px; }
   .headline { font-size: 56px; }
   .body { font-size: 18px; }

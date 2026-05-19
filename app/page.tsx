@@ -92,11 +92,10 @@ export default function HomePage() {
       */}
       {/* <BeforeAfterSlider /> */}
 
-      {/* ============ SERVICE AREA MAP ============
-          Visual answer to "do they cover my city?" — Google Maps embed
-          centered on Boca Raton + chip row of all 13 cities below.
-          Pairs naturally with B/A slider when real photos return. */}
-      <ServiceAreaMap />
+      {/* SERVICE AREA MAP was previously here. Moved to the bottom third
+          (replaces the redundant text-list /areas section below) per 2026
+          competitor audit — 5 of 7 top cleaning sites with embedded maps
+          place them near the footer, not after the hero. */}
 
       {/* ============ SERVICES ============ */}
       <MotionSection id="services" className={`${styles.services} dot-grid`}>
@@ -199,42 +198,13 @@ export default function HomePage() {
         </div>
       </MotionSection>
 
-      {/* ============ AREAS — full-bleed background photo ============ */}
-      <section id="areas" className={styles.areas}>
-        <div
-          className={styles.areasBg}
-          style={{ backgroundImage: 'url(/images/flow_living_areas.jpg)' }}
-        />
-        <div className={styles.areasOverlay} />
-        <MotionSection className={styles.areasContent}>
-          <p className={styles.areasEyebrow}>WHERE WE SERVE · 13 CITIES</p>
-          <h2 className={`fraunces ${styles.areasHeadline}`}>
-            Across South Florida's <em>finest</em> neighborhoods.
-          </h2>
-          <p className={`fraunces ${styles.areasBody}`}>
-            Professional house, deep, move-in/out, commercial, and post-construction cleaning across Palm Beach and Broward County. <em>If you're nearby and we're not on the list — call us anyway.</em>
-          </p>
-
-          <div className={styles.countyRow}>
-            <div className={styles.countyBlock}>
-              <div className={`fraunces ${styles.countyName}`}>Palm Beach County</div>
-              <div className={styles.citiesList}>
-                {['Boca Raton', 'Delray Beach', 'Boynton Beach', 'Lake Worth', 'West Palm Beach', 'Wellington', 'Parkland'].map(c => (
-                  <span key={c} className={styles.cityTag}>{c}</span>
-                ))}
-              </div>
-            </div>
-            <div className={styles.countyBlock}>
-              <div className={`fraunces ${styles.countyName}`}>Broward County</div>
-              <div className={styles.citiesList}>
-                {['Coral Springs', 'Fort Lauderdale', 'Coconut Creek', 'Deerfield Beach', 'Pompano Beach', 'Margate'].map(c => (
-                  <span key={c} className={styles.cityTag}>{c}</span>
-                ))}
-              </div>
-            </div>
-          </div>
-        </MotionSection>
-      </section>
+      {/* ============ SERVICE AREA MAP (moved here from above hero per
+          2026 competitor audit — cleaning sites overwhelmingly place
+          the map in the bottom third of the homepage, near the FAQ +
+          final CTA, as a "you're qualified, now book" closer signal). */}
+      <div id="areas">
+        <ServiceAreaMap />
+      </div>
 
       {/* ============ PROMISE ============ */}
       <MotionSection className={styles.promise}>

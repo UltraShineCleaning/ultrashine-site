@@ -1,34 +1,29 @@
 /* ==========================================================
-   HeroScrollHome · Pinned 4-scene cinematic scroll-through
-   Desktop: 400vh tall container, viewport pinned, crossfade scenes
-   Mobile: collapses to a single static hero (uses scene 1)
+   HeroScrollHome · GSAP-pinned 4-scene cinematic scroll-through
+   Desktop: 100vh container, GSAP ScrollTrigger pins it for 400% of
+   additional scroll (4 viewport-heights of scroll-jacked playback).
+   Mobile: pin is skipped, container is just a 100vh static hero of scene 1.
    ========================================================== */
 
 .container {
   position: relative;
-  /* 4-scene cinematic scroll-through: 4 viewport heights of scroll.
-     Each scene "owns" 100vh of scroll. As the user scrolls, scenes
-     crossfade and zoom — the illusion of walking through a home.
-     Note: scroll-snap was tried but conflicts with Lenis smooth scroll.
-     Instead, Lenis's 1.2s easing already gives a "deliberate" scroll
-     feel that lets each scene fully register. */
-  height: 400vh;
+  /* JUST 100VH — GSAP ScrollTrigger handles the 400% pin scroll
+     length via its own mechanism (not CSS height). This is critical:
+     making this 400vh would create extra empty navy space below the
+     hero (the "big blue section" bug). With pin, GSAP inserts a
+     spacer of the right height automatically. */
+  height: 100vh;
+  overflow: hidden;
   background: var(--navy-deep);
 }
 
-.sticky {
-  position: sticky;
-  top: 0;
-  height: 100vh;
-  overflow: hidden;
-}
-
-/* Each scene fills the viewport, stacked on top of each other */
+/* Each scene fills the container, stacked on top of each other.
+   GSAP controls opacity via autoAlpha (so visibility is also toggled,
+   not just opacity — prevents invisible scenes from blocking clicks). */
 .scene {
   position: absolute;
   inset: 0;
   overflow: hidden;
-  pointer-events: none;
 }
 
 .bg {
@@ -135,15 +130,15 @@
   position: relative;
   overflow: hidden;
 }
-.progressDot::after {
-  content: '';
+/* GSAP animates the width of .progressFill from 0 → 100% as the user
+   advances through each scene's slice of the timeline. */
+.progressFill {
   position: absolute;
   inset: 0;
   background: var(--blush);
   transform-origin: left;
+  transform: scaleX(0);
 }
-.progressDotActive::after { transform: scaleX(1); transition: transform 0.4s ease-out; }
-.progressDotInactive::after { transform: scaleX(0); }
 
 .progressLabel {
   font-family: var(--font-outfit), sans-serif;
@@ -211,34 +206,24 @@
   50% { transform: translateY(8px); opacity: 1; }
 }
 
-/* ===== MOBILE FALLBACK ===== */
-/* Below 1024px, the pinned scroll-through is too janky on touch.
-   Collapse to a normal stacked hero showing scene 1 only +
-   below the fold, stack scenes 2-4 as normal sections. */
+/* ===== MOBILE FALLBACK =====
+   On mobile (≤1024px), the GSAP useEffect bails out (no pin). The
+   component renders all 4 scenes absolutely positioned but we only
+   want scene 1 to show. Force opacity 1 on .us-scene-0 + hide the rest. */
 @media (max-width: 1024px) {
   .container {
-    height: auto;
-  }
-  .sticky {
-    position: relative;
     height: 100vh;
     min-height: 600px;
   }
-  /* On mobile, only show scene 1 in the pinned area */
-  .scene { position: absolute; opacity: 1 !important; }
-  .scene:not(:first-child) {
-    position: relative;
-    height: 80vh;
-    min-height: 540px;
-    opacity: 1 !important;
-  }
+  /* Only the first scene shows on mobile; the others are hidden */
+  .scene { opacity: 0 !important; visibility: hidden; }
+  :global(.us-scene-0) { opacity: 1 !important; visibility: visible !important; }
   .content { padding: 0 32px 56px; }
   .headline { font-size: 56px; }
   .body { font-size: 18px; }
   .skipBtn { display: none; }
-  .progress { right: 32px; bottom: 28px; }
-  .scrollCue { left: 32px; }
-  .progressLabel { display: none; }
+  .progress { display: none; }
+  .scrollCue { display: none; }
 }
 @media (max-width: 640px) {
   .content { padding: 0 22px 44px; }

@@ -4,7 +4,12 @@
 
 .section {
   padding: 72px 60px 88px;
-  background: var(--cream);
+  /* Layered: nearly-opaque cream wash so the aerial coastal cityscape just
+     barely whispers through at the top + corners — subtle premium texture
+     without competing with the map embed and city pills for attention. */
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.88) 0%, rgba(255, 255, 255, 0.96) 55%, rgba(255, 255, 255, 0.99) 100%),
+    url('/images/hero_3d_map_area.jpg') center top / cover no-repeat;
   text-align: center;
 }
 .inner {

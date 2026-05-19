@@ -43,7 +43,9 @@ export default function HomePage() {
           <a href="#services">Services</a>
           <a href="#areas">Areas</a>
           <a href="#about">About</a>
+          <Link href="/blog">Blog</Link>
           <a href="#reviews">Reviews</a>
+          <Link href="/leave-a-review" className={styles.navReview}>★ Leave Review</Link>
           <a href="#faq">FAQ</a>
         </div>
         <div className={styles.navRight}>

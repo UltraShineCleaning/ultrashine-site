@@ -8,7 +8,10 @@
   position: relative;
   /* 4-scene cinematic scroll-through: 4 viewport heights of scroll.
      Each scene "owns" 100vh of scroll. As the user scrolls, scenes
-     crossfade and zoom subtly — the illusion of walking through a home. */
+     crossfade and zoom — the illusion of walking through a home.
+     Note: scroll-snap was tried but conflicts with Lenis smooth scroll.
+     Instead, Lenis's 1.2s easing already gives a "deliberate" scroll
+     feel that lets each scene fully register. */
   height: 400vh;
   background: var(--navy-deep);
 }

@@ -25,12 +25,25 @@ import styles from './HeroScrollHome.module.css';
  * Mobile (≤1024px): collapses to a single static hero showing scene 1.
  */
 
+/**
+ * Per-scene text motion style. Each scene gets a DIFFERENT entrance so
+ * scrolling feels like a story unfolding (not 4 identical fades). Each
+ * variant has its own direction + easing tied to the scroll position.
+ *   - 'rise'        : text rises from below + fades, exits upward (default)
+ *   - 'slide-right' : text slides in from the LEFT, exits right
+ *   - 'slide-left'  : text slides in from the RIGHT, exits left
+ *   - 'scale-up'    : text starts at 70% scale + fades, grows to 100%
+ */
+type MotionStyle = 'rise' | 'slide-right' | 'slide-left' | 'scale-up';
+
 type Scene = {
   id: string;
   image: string;
   eyebrow: string;
   headlineHtml: string; // supports <em>…</em> for italic+blush
   body: string;
+  /** Per-scene text entrance/exit motion style */
+  motion: MotionStyle;
   /** Last scene gets the CTAs */
   showCta?: boolean;
 };
@@ -47,13 +60,10 @@ const SCENES: Scene[] = [
   {
     id: 'kitchen',
     image: '/images/hero_scene_01_kitchen.jpg',
-    // SEO signal — keyword + city + region, picked up by Google as the H1's
-    // top-of-page context. Visitor barely registers it; algorithm reads it loud.
     eyebrow: 'HOUSE CLEANING · BOCA RATON + SOUTH FLORIDA',
-    // Brand voice — emotional hook. H1 stays this across all scenes? No —
-    // each scene has its OWN headline so the scroll feels like a story unfolding.
     headlineHtml: 'A home that <em>shines</em>. Without lifting a finger.',
     body: 'Boutique house cleaning in Boca Raton and 12 other South Florida cities across Palm Beach + Broward. The full standard — every visit.',
+    motion: 'rise', // Opening shot — text RISES into place from below
   },
   {
     id: 'living',
@@ -61,6 +71,7 @@ const SCENES: Scene[] = [
     eyebrow: 'EVERY ROOM · EVERY DETAIL',
     headlineHtml: 'Wall-to-wall <em>care</em>. Nothing missed.',
     body: 'From marble countertops to baseboards. Same boutique team every visit. No rotating contractors, no surprises.',
+    motion: 'slide-right', // Text SLIDES IN from the left edge
   },
   {
     id: 'bathroom',
@@ -68,6 +79,7 @@ const SCENES: Scene[] = [
     eyebrow: 'BACKGROUND-CHECKED · BONDED · INSURED',
     headlineHtml: 'A team you can <em>actually</em> trust at home.',
     body: 'W2 employees, never contractors. Every cleaner background-checked. Every job staffed by a pair — two professionals, every visit.',
+    motion: 'scale-up', // Text EXPANDS from 70% scale → 100% (intimacy = grow)
   },
   {
     id: 'bedroom',
@@ -75,6 +87,7 @@ const SCENES: Scene[] = [
     eyebrow: 'CUSTOM QUOTE · WITHIN THE HOUR',
     headlineHtml: 'Ready for a home that <em>shines</em>?',
     body: 'Tell us about your space. We text you back within the hour with a precise quote — no hidden fees, no upsells.',
+    motion: 'slide-left', // Final scene — text slides in from RIGHT (resolution)
     showCta: true,
   },
 ];
@@ -126,23 +139,53 @@ function SceneLayer({
   // that pure opacity crossfade alone doesn't deliver.
   const bgY = useTransform(progress, [start, end], ['0%', '-8%']);
 
-  // TEXT FADE-UP: as a scene becomes active, its text rises into place
-  // from below; as the scene leaves, the text floats upward and fades.
-  // This is the Apple-tier touch — content doesn't just appear, it MOVES.
-  const textY = useTransform(
-    progress,
-    ranges.input,
-    ['40px', '0px', '0px', '-40px'],
-  );
+  // PER-SCENE TEXT MOTION: each scene has its OWN entrance + exit
+  // direction so the 4-scene scroll feels like a story, not 4 identical
+  // fades. Choreography is tied to the scene's scroll slice.
   const textOpacity = useTransform(
     progress,
     [start, start + slice * 0.18, end - slice * 0.18, end],
     [
-      index === 0 ? 1 : 0, // first scene starts fully visible
+      index === 0 ? 1 : 0,
       1,
       1,
-      index === total - 1 ? 1 : 0, // last scene stays fully visible
+      index === total - 1 ? 1 : 0,
     ],
+  );
+
+  // Each motion variant defines entrance + exit Y, X, and Scale transforms.
+  // Variants are scoped to the scene's slice of the overall scroll progress.
+  // (Renamed local var to `style` to avoid shadowing framer-motion's `motion`.)
+  const style = scene.motion;
+
+  // Y movement — only 'rise' uses vertical. Others stay vertically static.
+  const textY = useTransform(
+    progress,
+    ranges.input,
+    style === 'rise'
+      ? ['60px', '0px', '0px', '-60px']
+      : ['0px', '0px', '0px', '0px'],
+  );
+
+  // X movement — slide-right enters from LEFT (negative X), exits to right.
+  // slide-left enters from RIGHT (positive X), exits to left.
+  const textX = useTransform(
+    progress,
+    ranges.input,
+    style === 'slide-right'
+      ? ['-120px', '0px', '0px', '120px']
+      : style === 'slide-left'
+        ? ['120px', '0px', '0px', '-120px']
+        : ['0px', '0px', '0px', '0px'],
+  );
+
+  // Scale — scale-up grows from 0.78 → 1, then shrinks back as it leaves.
+  const textScale = useTransform(
+    progress,
+    ranges.input,
+    style === 'scale-up'
+      ? [0.78, 1, 1, 1.08]
+      : [1, 1, 1, 1],
   );
 
   return (
@@ -156,7 +199,16 @@ function SceneLayer({
         }}
       />
       <div className={styles.overlay} />
-      <motion.div className={styles.content} style={{ y: textY, opacity: textOpacity }}>
+      <motion.div
+        className={styles.content}
+        style={{
+          y: textY,
+          x: textX,
+          scale: textScale,
+          opacity: textOpacity,
+          transformOrigin: 'left bottom',
+        }}
+      >
         <p className={styles.eyebrow}>{scene.eyebrow}</p>
         <h1
           className={styles.headline}

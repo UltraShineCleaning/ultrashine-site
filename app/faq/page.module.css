@@ -4,10 +4,12 @@
 
 .hero {
   position: relative;
-  padding: 64px 60px 56px;
+  padding: 100px 60px 80px;
+  /* Layered: dark overlay + cleaning-bubbles 3D image */
   background:
+    linear-gradient(180deg, rgba(0, 30, 107, 0.72) 0%, rgba(0, 44, 152, 0.74) 50%, rgba(0, 30, 107, 0.92) 100%),
     radial-gradient(ellipse 800px 600px at 70% 0%, rgba(28, 97, 240, 0.10) 0%, transparent 60%),
-    linear-gradient(165deg, #002C98 0%, #001E6B 60%, #001045 100%);
+    url('/images/hero_3d_faq.jpg') center/cover no-repeat;
   color: var(--cream);
   text-align: center;
   overflow: hidden;

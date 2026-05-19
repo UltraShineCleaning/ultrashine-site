@@ -24,12 +24,12 @@
 .leftBg {
   position: absolute;
   inset: 0;
-  background-image: url('/images/bedroom.jpg');
+  background-image: url('/images/hero_3d_quote.jpg');
   background-size: cover;
   background-position: center;
-  opacity: 0.10;
-  filter: grayscale(0.4);
-  mix-blend-mode: lighten;
+  opacity: 0.32;
+  filter: saturate(1.05);
+  mix-blend-mode: normal;
 }
 
 /* Decorative sparkles */

@@ -13,7 +13,7 @@
 .heroBg {
   position: absolute;
   inset: 0;
-  background-image: url('/images/flow_living_room_navy.jpg');
+  background-image: url('/images/hero_3d_blog.jpg');
   background-size: cover;
   background-position: center;
   transform: scale(1.05);

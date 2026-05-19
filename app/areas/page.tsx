@@ -23,7 +23,7 @@ export default function AreasIndexPage() {
       <section className={styles.hero}>
         <div
           className={styles.heroBg}
-          style={{ backgroundImage: 'url(/images/flow_living_areas.jpg)' }}
+          style={{ backgroundImage: 'url(/images/hero_3d_areas.jpg)' }}
         />
         <div className={styles.heroOverlay} />
         <div className={styles.heroContent}>

@@ -13,11 +13,11 @@
 .heroBg {
   position: absolute;
   inset: 0;
-  background-image: url('/images/flow_hero_kitchen.jpg');
+  background-image: url('/images/hero_3d_leavereview.jpg');
   background-size: cover;
   background-position: center;
   transform: scale(1.05);
-  opacity: 0.4;
+  opacity: 0.55;
 }
 .heroOverlay {
   position: absolute;

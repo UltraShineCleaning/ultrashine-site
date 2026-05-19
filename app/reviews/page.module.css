@@ -4,8 +4,11 @@
 
 .hero {
   position: relative;
-  padding: 64px 60px 56px;
-  background: var(--navy-deep);
+  padding: 100px 60px 80px;
+  /* Dark overlay layered over the hero image so headline text reads cleanly */
+  background:
+    linear-gradient(180deg, rgba(0, 30, 107, 0.70) 0%, rgba(0, 44, 152, 0.75) 50%, rgba(0, 30, 107, 0.92) 100%),
+    url('/images/hero_3d_reviews.jpg') center/cover no-repeat;
   color: var(--cream);
   text-align: center;
   overflow: hidden;

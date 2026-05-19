@@ -28,7 +28,7 @@ export default function AboutPage() {
         <motion.div
           className={styles.heroBg}
           style={{
-            backgroundImage: `url(/images/team_action.jpg)`,
+            backgroundImage: `url(/images/hero_3d_about.jpg)`,
             y: reducedMotion ? '0%' : photoY,
             scale: reducedMotion ? 1.05 : photoScale,
           }}

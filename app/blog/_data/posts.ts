@@ -185,7 +185,7 @@ export const POSTS: BlogPost[] = [
         <li>All light switches + outlet plates wiped</li>
       </ul>
 
-      ${img('/images/flow_bathroom_sunset.jpg', 'Shower-door tracks + behind-the-toilet are the two specific spots landlords always check.')}
+      ${img('/images/bathroom.jpg', 'Shower-door tracks + behind-the-toilet are the two specific spots landlords always check.')}
 
       <h3>Whole-home detail</h3>
 
@@ -250,7 +250,7 @@ export const POSTS: BlogPost[] = [
 
       <p>This is the part most cleaning services skip. Every surface gets wiped with a dampened microfiber &mdash; not dry, because dry just relocates the dust. Inside every cabinet. Inside every drawer. Top of every door frame. Behind every appliance the contractor pulled out. Light fixtures dismantled and washed if needed. Window tracks. Air vent grilles.</p>
 
-      ${img('/images/flow_hand_marble.jpg', 'Detail wipe on countertop edges + ledges — where construction dust hides longest.')}
+      ${img('/images/hero_kitchen.jpg', 'After construction cleanup — what your finished kitchen should look like the day you move back in.')}
 
       <h3>Phase 3: Final polish</h3>
 
@@ -297,7 +297,7 @@ export const POSTS: BlogPost[] = [
     author: 'Tiago Rena',
     publishedAt: '2026-05-17',
     readingMinutes: 4,
-    coverImage: '/images/bathroom.jpg',
+    coverImage: '/images/flow_before_after.jpg',
     tags: ['Cleaning Tips', 'How-To', 'Standards'],
     bodyHtml: `
       <p>Even cleaning services we respect tend to miss the same spots. It’s not because the team is sloppy &mdash; it’s because these spots are out of the standard scan-pattern of a 45-minute room clean. They take an extra 30 seconds each, but if no one trained the cleaner to look there, they get skipped every visit until someone says something.</p>
@@ -308,7 +308,7 @@ export const POSTS: BlogPost[] = [
 
       <p>The visible part of the toilet usually gets cleaned. The 4-inch ring of floor behind the toilet base &mdash; where the porcelain meets the tile &mdash; almost never does. That gap traps dust, hair, and (in humid Florida) early-stage mildew. It looks fine in the mirror but a quick crouch will show it.</p>
 
-      ${img('/images/flow_bathroom_sunset.jpg', 'Behind toilet bases is the #1 missed bathroom spot — humidity makes it worse in Florida homes.')}
+      ${img('/images/bedroom.jpg', 'Bedrooms hide dust on baseboards + window tracks — quiet spots get overlooked first.')}
 
       <h2>2. Top edges of door frames</h2>
 
@@ -322,7 +322,7 @@ export const POSTS: BlogPost[] = [
 
       <p>Look up at your ceiling vents. If the slats have a black film, that’s dust trapped by the airflow. Same with bathroom exhaust fans &mdash; the grille catches lint + dust over months. Wiping these is a 60-second job per vent and improves indoor air noticeably, especially in coastal South Florida homes where salt air binds dust.</p>
 
-      ${img('/images/flow_hand_marble.jpg', 'Detail-level cleaning means the wipe touches every surface — not just the visible ones.')}
+      ${img('/images/flow_sparkles.jpg', 'When every spot gets touched — the result is a home that catches light, not dust.')}
 
       <h2>5. Light switch plates + door handles</h2>
 
@@ -356,7 +356,7 @@ export const POSTS: BlogPost[] = [
     author: 'Tiago Rena',
     publishedAt: '2026-05-17',
     readingMinutes: 5,
-    coverImage: '/images/living_room.jpg',
+    coverImage: '/images/team_van.jpg',
     tags: ['Hiring Guide', 'Trust', 'Florida'],
     bodyHtml: `
       <p>Open any cleaning company’s website in Florida and you’ll see the same three words near the top: "<strong>Licensed, Bonded, and Insured.</strong>" It’s become so standard that it’s lost meaning &mdash; and many companies that advertise it actually aren’t.</p>
@@ -399,7 +399,7 @@ export const POSTS: BlogPost[] = [
 
       <p>This is the one most people skip. If a cleaning company classifies its cleaners as 1099 contractors instead of W2 employees, the workers’ comp + general liability often <em>doesn’t cover</em> the cleaner working in your home &mdash; because they’re technically a separate business. Ask directly: "Are your cleaners W2 employees or 1099 contractors?" The answer matters legally.</p>
 
-      ${img('/images/flow_sparkles.jpg', 'When everything checks out — the only thing you should be thinking about is what you’ll do with your free afternoon.')}
+      ${img('/images/team_action.jpg', 'A real insured + bonded crew on site. Ask for the names of the people who will be in your home.')}
 
       <h2>Red flags to watch for</h2>
 

@@ -1,5 +1,72 @@
 # 3D Hero Image Prompts — Ultra Shine Cleaning
-**For use with: Midjourney v7, DALL-E 3, Imagen 3, Sora (image mode), Flux 1.1 Pro**
+**For use with: Midjourney v7, DALL-E 3, Imagen 3, Sora (image mode), Flux 1.1 Pro, Google Flow / Nano Banana**
+
+---
+
+# ⭐ TOP PRIORITY — 4-SCENE CONNECTED HOMEPAGE TOUR
+
+These are the 4 images for the homepage's `HeroScrollHome` cinematic scroll-through. They must look like the SAME house, same time of day, same architectural style — so as you scroll you feel like you're walking from room to room.
+
+## How to generate with Google Flow / Nano Banana for perfect continuity
+
+1. **Generate Scene 01 FIRST** using the full descriptive prompt below.
+2. **For Scenes 02, 03, and 04**: in Nano Banana, attach Scene 01 as a reference image and say something like *"Now show the [room name] in this same Boca Raton coastal home — same golden-hour lighting, same architectural style, same color palette. [paste Scene 02 prompt]"*
+3. Nano Banana is purpose-built for scene continuity — using a reference is the only reliable way to keep the home consistent across all 4 images.
+4. If any scene drifts off-style, re-roll with the same reference attached.
+
+## Universal style anchor (mention in EVERY prompt for continuity)
+*"Luxury coastal Florida home (Boca Raton aesthetic), golden hour late afternoon, warm directional light streaming through floor-to-ceiling windows, premium real-estate photography meets cinematic 3D render, color palette: warm whites, soft navy accents, marble and brushed gold details, palm silhouettes visible through windows, no people, no text, no logos, photorealistic, 16:9 cinematic"*
+
+---
+
+### 🟦 SCENE 01 — KITCHEN (the establishing shot, generate FIRST)
+**Save as:** `hero_scene_01_kitchen.jpg`
+
+```
+Wide-angle establishing shot of a luxury coastal Florida kitchen (Boca Raton aesthetic) at golden hour late afternoon, looking from the entry into a chef's kitchen with massive marble island, brushed gold pendant lights, warm white cabinetry, navy lower cabinets, floor-to-ceiling windows on the right showing palm silhouettes and soft sunset glow, polished marble floors reflecting the warm directional light, fresh white orchid in ceramic vase on island, completely spotless and freshly cleaned, no people, no clutter, premium real-estate photography meets cinematic 3D render, color palette warm whites with soft navy accents and brushed gold details, photorealistic, 16:9 cinematic --ar 16:9 --style raw --v 7
+```
+
+---
+
+### 🟦 SCENE 02 — LIVING ROOM (continuity from kitchen, generate with Scene 01 attached)
+**Save as:** `hero_scene_02_living.jpg`
+
+```
+Now show the open-plan living room in this same Boca Raton coastal home, viewed from where the kitchen ends — same golden hour late afternoon, same warm directional light, same architectural style: floor-to-ceiling windows on the right showing palms, marble floors continuing through, navy accent wall behind a low-profile cream linen sofa, brushed gold floor lamp, neutral wool rug, fresh white flowers on a marble coffee table, completely spotless and freshly cleaned, no people, no clutter, premium real-estate photography meets cinematic 3D render, same color palette as the kitchen reference: warm whites, soft navy, brushed gold, photorealistic, 16:9 cinematic --ar 16:9 --style raw --v 7
+```
+
+---
+
+### 🟦 SCENE 03 — BATHROOM (intimate detail, generate with Scene 01 or 02 attached)
+**Save as:** `hero_scene_03_bathroom.jpg`
+
+```
+Now show the primary bathroom in this same Boca Raton coastal home — same golden hour late afternoon light streaming through frosted floor-to-ceiling windows on the right, same architectural style and finishes: white marble walls and floor, brushed gold fixtures, a freestanding deep soaking tub in foreground, navy vanity with marble countertop in background, rolled white towels, single small white orchid on a marble shelf, water droplets catching light on the polished surfaces (freshly cleaned), no people, completely spotless, premium real-estate photography meets cinematic 3D render, same warm white + soft navy + brushed gold palette as the kitchen reference, photorealistic, 16:9 cinematic --ar 16:9 --style raw --v 7
+```
+
+---
+
+### 🟦 SCENE 04 — BEDROOM (the final restful destination, generate with Scene 01 attached)
+**Save as:** `hero_scene_04_bedroom.jpg`
+
+```
+Now show the primary bedroom in this same Boca Raton coastal home — same golden hour late afternoon light streaming through floor-to-ceiling windows on the right showing palm silhouettes, same architectural style and finishes, view from the doorway: a low-profile king bed with crisp white linens and a soft navy throw blanket, marble floors continuing through, brushed gold bedside sconces, single white orchid on the nightstand, navy upholstered headboard, completely spotless and freshly made, no people, premium real-estate photography meets cinematic 3D render, same warm white + soft navy + brushed gold palette as the kitchen reference, photorealistic, 16:9 cinematic --ar 16:9 --style raw --v 7
+```
+
+---
+
+### Tips for Google Flow / Nano Banana specifically
+- **Reference image is everything.** Without it, the 4 scenes WILL drift in style — different lighting, different palette, different home. Always attach Scene 01.
+- **Specify "same" repeatedly** in the prompt. "Same golden hour", "same warm whites", "same architectural style". Redundancy helps the model lock continuity.
+- **Re-roll aggressively.** Generate 4 variations of each scene, pick the one that matches Scene 01 most faithfully. The first attempt often drifts.
+- **If a scene shows people, faces, or text:** instant re-roll. Add "no people, no faces, no readable text" to the prompt and try again.
+- **Aspect ratio:** all 4 must be 16:9 (1920×1080). If Flow won't lock 16:9, generate larger then crop.
+
+When you have all 4 images saved in `/public/images/`, tell me — I'll re-enable the 4-scene scroll-through mode (currently it's in single-scene fallback) and wire them in.
+
+---
+
+# OTHER HERO IMAGE PROMPTS (for non-homepage pages — lower priority)
 
 ## Brand DNA (use for ALL prompts)
 - Primary palette: bright royal blue (#1C61F0), deep navy (#002C98), soft blue accent (#5E8FFF), warm white

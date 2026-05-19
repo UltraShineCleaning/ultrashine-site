@@ -150,6 +150,11 @@
   border-radius: 14px;
   padding: 32px 28px 28px;
   border: 1px solid var(--line);
+  transition: transform 0.22s ease, box-shadow 0.22s ease;
+}
+.compCard:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 34px rgba(28, 97, 240, 0.10);
 }
 .compCardBad {
   border-color: rgba(184, 58, 58, 0.18);

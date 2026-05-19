@@ -383,6 +383,12 @@
   border-radius: var(--r-md);
   padding: 24px 22px;
   box-shadow: var(--shadow-soft);
+  transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+}
+.factorCard:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-strong);
+  border-color: var(--line-2);
 }
 .factorNum {
   font-family: var(--font-poppins), monospace;

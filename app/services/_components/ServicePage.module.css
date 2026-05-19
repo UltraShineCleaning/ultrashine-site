@@ -108,9 +108,10 @@
   padding: 32px 30px;
   box-shadow: var(--shadow-soft);
   cursor: default;
-  transition: box-shadow 0.25s;
+  transition: transform 0.22s ease, box-shadow 0.22s ease;
 }
 .scenarioCard:hover {
+  transform: translateY(-4px);
   box-shadow: var(--shadow-strong);
 }
 .scenarioBullet {
@@ -153,6 +154,11 @@
   border-radius: var(--r-md);
   padding: 36px 32px;
   border: 1px solid var(--line);
+  transition: transform 0.22s ease, box-shadow 0.22s ease;
+}
+.differsCol:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 32px rgba(28, 97, 240, 0.08);
 }
 .differsColAccent {
   background: var(--navy-deep);

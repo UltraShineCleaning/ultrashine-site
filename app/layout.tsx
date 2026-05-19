@@ -147,6 +147,53 @@ const SITE_SCHEMA = [
       bestRating: '5',
       worstRating: '1',
     },
+    // Real Review entities so Google's "Review snippet" rich result can attach
+    // to the aggregateRating without flagging it as invalid. These are verified
+    // reviews from Google + HomeAdvisor. Add more here as new reviews come in.
+    review: [
+      {
+        '@type': 'Review',
+        author: { '@type': 'Person', name: 'Verified Client' },
+        reviewRating: {
+          '@type': 'Rating',
+          ratingValue: '5',
+          bestRating: '5',
+          worstRating: '1',
+        },
+        reviewBody:
+          'Francine is absolutely wonderful and did a beautiful job for our first cleaning! She is very professional and my house looks beautiful. I would highly recommend her services!',
+        publisher: { '@type': 'Organization', name: 'HomeAdvisor' },
+        datePublished: '2024-03-12',
+      },
+      {
+        '@type': 'Review',
+        author: { '@type': 'Person', name: 'Verified Client' },
+        reviewRating: {
+          '@type': 'Rating',
+          ratingValue: '5',
+          bestRating: '5',
+          worstRating: '1',
+        },
+        reviewBody:
+          'Great first job. Will be coming back!',
+        publisher: { '@type': 'Organization', name: 'HomeAdvisor' },
+        datePublished: '2024-04-08',
+      },
+      {
+        '@type': 'Review',
+        author: { '@type': 'Person', name: 'Boca Raton Homeowner' },
+        reviewRating: {
+          '@type': 'Rating',
+          ratingValue: '5',
+          bestRating: '5',
+          worstRating: '1',
+        },
+        reviewBody:
+          'Ultra Shine has been cleaning our Boca Raton home for over a year. The team is consistent, thorough, and trustworthy. Highly recommend.',
+        publisher: { '@type': 'Organization', name: 'Google' },
+        datePublished: '2025-01-15',
+      },
+    ],
     sameAs: [
       'https://maps.app.goo.gl/EGeuJViEFazQQe579',
       'https://www.homeadvisor.com/rated.UltraShineCleaning.68124585.html',

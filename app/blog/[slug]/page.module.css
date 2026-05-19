@@ -16,13 +16,15 @@
   background-size: cover;
   background-position: center;
   transform: scale(1.05);
-  opacity: 0.5;
+  opacity: 0.4;
 }
 .heroOverlay {
   position: absolute;
   inset: 0;
+  /* Darker middle band guarantees white headline stays readable against
+     any cover-image brightness (kitchen sunlight, marble glare, etc.). */
   background:
-    linear-gradient(180deg, rgba(0, 44, 152, 0.5) 0%, rgba(0, 44, 152, 0.45) 35%, rgba(0, 44, 152, 0.92) 100%),
+    linear-gradient(180deg, rgba(0, 30, 107, 0.65) 0%, rgba(0, 44, 152, 0.70) 40%, rgba(0, 30, 107, 0.95) 100%),
     radial-gradient(ellipse at 80% 30%, rgba(28, 97, 240, 0.2) 0%, transparent 60%);
 }
 .heroContent {
@@ -57,14 +59,14 @@
 .heroTag {
   font-family: var(--font-poppins), sans-serif;
   font-size: 10px;
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: 0.16em;
   text-transform: uppercase;
   padding: 5px 12px;
   border-radius: 999px;
-  background: rgba(94, 143, 255, 0.18);
-  color: var(--blue-soft);
-  border: 1px solid rgba(94, 143, 255, 0.30);
+  background: rgba(94, 143, 255, 0.32);
+  color: var(--white);
+  border: 1px solid rgba(94, 143, 255, 0.55);
 }
 
 .heroHeadline {
@@ -73,6 +75,8 @@
   letter-spacing: -0.022em;
   color: var(--white);
   margin-bottom: 22px;
+  /* Subtle drop-shadow keeps headline crisp over any cover image */
+  text-shadow: 0 2px 12px rgba(0, 16, 69, 0.4);
 }
 .heroMeta {
   display: flex;
@@ -313,6 +317,12 @@
   box-shadow: var(--shadow-soft);
   text-decoration: none;
   color: var(--navy-deep);
+  transition: transform 0.22s ease, box-shadow 0.22s ease;
+}
+.moreCard:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-strong);
+  text-decoration: none;
 }
 .moreCardImage {
   height: 180px;

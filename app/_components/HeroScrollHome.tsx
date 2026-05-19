@@ -139,13 +139,23 @@ export default function HeroScrollHome() {
         gsap.set(`.us-progress-fill-${i}`, { scaleX: 0 });
       }
 
-      // For each scene, choreograph the transition INTO it
+      // For each scene, choreograph the transition INTO it.
+      //
+      // "WALK INTO THE NEXT ROOM" TECHNIQUE:
+      //   - During the scene's slice, the bg dollies 1.0 → 1.25 (normal zoom-in)
+      //   - DURING the exit transition, the OUTGOING scene continues to zoom
+      //     aggressively from 1.25 → 1.55 (push-through-the-doorway feel) —
+      //     this is what makes the transition feel like motion not blur
+      //   - The INCOMING scene starts at 1.0 (fresh perspective of the next room)
+      //   - Crossfade is faster + uses snappy power3.inOut (not lingering blur)
+      //   - The outgoing scene's zoom acceleration timing matches the crossfade
+      //     so visually the camera "pushes through" right as the next room appears
       SCENES.forEach((scene, i) => {
         const sceneSel = `.us-scene-${i}`;
         const bgSel = `${sceneSel} .us-bg`;
         const contentSel = `${sceneSel} .us-content`;
 
-        // Background dolly-in (scale + parallax) during this scene's slice
+        // Background dolly-in during this scene's slice (1.0 → 1.25)
         tl.fromTo(
           bgSel,
           { scale: 1.0, y: '0%' },
@@ -153,12 +163,21 @@ export default function HeroScrollHome() {
           i,
         );
 
-        // For scenes 1+, fade in the scene + animate text entrance
+        // For scenes 1+, choreograph the transition IN
         if (i > 0) {
-          // Crossfade: scene becomes visible
-          tl.to(sceneSel, { autoAlpha: 1, duration: 0.5, ease: 'power2.inOut' }, i - 0.5);
-          // Previous scene fades out simultaneously
-          tl.to(`.us-scene-${i - 1}`, { autoAlpha: 0, duration: 0.5, ease: 'power2.inOut' }, i - 0.5);
+          // ZOOM-THROUGH on the previous scene during the crossfade —
+          // simulates the camera pushing forward THROUGH the doorway
+          // of the previous room into this one. This is the key change
+          // from blurry crossfade → "walking forward" motion.
+          tl.to(
+            `.us-scene-${i - 1} .us-bg`,
+            { scale: 1.55, ease: 'power2.in', duration: 0.4 },
+            i - 0.4,
+          );
+
+          // Sharp crossfade (faster + snappier easing — less linger = less blur feel)
+          tl.to(sceneSel, { autoAlpha: 1, duration: 0.35, ease: 'power3.inOut' }, i - 0.35);
+          tl.to(`.us-scene-${i - 1}`, { autoAlpha: 0, duration: 0.35, ease: 'power3.inOut' }, i - 0.35);
 
           // Text entrance — variant-specific motion
           const fromVars: gsap.TweenVars = { opacity: 0 };

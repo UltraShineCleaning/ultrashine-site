@@ -6,9 +6,10 @@
 
 .container {
   position: relative;
-  /* SIMPLIFIED: single scene = 100vh (was 400vh for 4-scene scroll-through).
-     When the 4 connected Flow images arrive Monday, restore to 400vh. */
-  height: 100vh;
+  /* 4-scene cinematic scroll-through: 4 viewport heights of scroll.
+     Each scene "owns" 100vh of scroll. As the user scrolls, scenes
+     crossfade and zoom subtly — the illusion of walking through a home. */
+  height: 400vh;
   background: var(--navy-deep);
 }
 

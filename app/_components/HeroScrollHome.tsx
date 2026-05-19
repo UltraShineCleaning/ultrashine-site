@@ -35,28 +35,46 @@ type Scene = {
   showCta?: boolean;
 };
 
-// SIMPLIFIED MODE — until the 4 connected Flow images arrive (Monday),
-// the hero shows a single static scene instead of the 4-scene scroll-through.
-// To re-enable the cinematic 4-scene version once images are ready:
-//   1. Restore the 4 SCENES entries (see git history pre-rebrand)
-//   2. Set the 4 image paths to: hero_scene_01_kitchen.jpg, _02_living.jpg,
-//      _03_bathroom.jpg, _04_bedroom.jpg
-//   3. The 400vh container + crossfade logic below still works as-is
+// 4-SCENE CINEMATIC TOUR — each scene is a different room of the SAME Boca
+// Raton coastal home, generated as a connected sequence via Google Flow /
+// Nano Banana. As the user scrolls, scenes crossfade + zoom, creating the
+// illusion of walking through the home from kitchen → living → bath → bed.
+//
+// Headline strategy: each scene tells a different part of the brand story
+// (the emotional hook → the wall-to-wall promise → the trust signals → the
+// CTA). The final scene gets the buttons.
 const SCENES: Scene[] = [
   {
-    id: 'single',
-    image: '/images/flow_hero_kitchen.jpg',
-    // Eyebrow holds the primary SEO signal — service + primary city + region.
-    // Google reads this; visitors barely register it consciously but it sets
-    // expectations. Win-win.
+    id: 'kitchen',
+    image: '/images/hero_scene_01_kitchen.jpg',
+    // SEO signal — keyword + city + region, picked up by Google as the H1's
+    // top-of-page context. Visitor barely registers it; algorithm reads it loud.
     eyebrow: 'HOUSE CLEANING · BOCA RATON + SOUTH FLORIDA',
-    // H1 stays brand-first (emotional hook). The keyword-density work happens
-    // in the eyebrow + body, leaving the headline pure brand voice.
+    // Brand voice — emotional hook. H1 stays this across all scenes? No —
+    // each scene has its OWN headline so the scroll feels like a story unfolding.
     headlineHtml: 'A home that <em>shines</em>. Without lifting a finger.',
-    // Body now weaves "house cleaning in Boca Raton" naturally into the
-    // descriptor — without keyword stuffing — plus surfaces the 13-city
-    // coverage as a real differentiator (most competitors only serve 1–3).
-    body: 'Boutique house cleaning in Boca Raton and 12 other South Florida cities across Palm Beach + Broward. Background-checked W2 team, fully insured, no detail missed.',
+    body: 'Boutique house cleaning in Boca Raton and 12 other South Florida cities across Palm Beach + Broward. The full standard — every visit.',
+  },
+  {
+    id: 'living',
+    image: '/images/hero_scene_02_living.jpg',
+    eyebrow: 'EVERY ROOM · EVERY DETAIL',
+    headlineHtml: 'Wall-to-wall <em>care</em>. Nothing missed.',
+    body: 'From marble countertops to baseboards. Same boutique team every visit. No rotating contractors, no surprises.',
+  },
+  {
+    id: 'bathroom',
+    image: '/images/hero_scene_03_bathroom.jpg',
+    eyebrow: 'BACKGROUND-CHECKED · BONDED · INSURED',
+    headlineHtml: 'A team you can <em>actually</em> trust at home.',
+    body: 'W2 employees, never contractors. Every cleaner background-checked. Every job staffed by a pair — two professionals, every visit.',
+  },
+  {
+    id: 'bedroom',
+    image: '/images/hero_scene_04_bedroom.jpg',
+    eyebrow: 'CUSTOM QUOTE · WITHIN THE HOUR',
+    headlineHtml: 'Ready for a home that <em>shines</em>?',
+    body: 'Tell us about your space. We text you back within the hour with a precise quote — no hidden fees, no upsells.',
     showCta: true,
   },
 ];

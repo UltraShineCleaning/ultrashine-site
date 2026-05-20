@@ -59,6 +59,24 @@ type SceneCopy = {
   start: number;
   end: number;
   showCta?: boolean;
+  /**
+   * On-screen positioning so each scene's text anchors to a real wall
+   * in its room instead of all 5 stacking in the bottom-left. Values
+   * are CSS strings used directly. `rotateY` gives the wall-projected
+   * perspective look (left walls rotateY negative, right walls positive).
+   */
+  position: {
+    /** CSS left % of the text block's LEFT edge */
+    left: string;
+    /** CSS top % of the text block's vertical center */
+    top: string;
+    /** max-width of the text block (so it doesn't stretch full-bleed) */
+    width: string;
+    /** Y-axis rotation in degrees; negative = left-wall feel, positive = right-wall */
+    rotateY: number;
+    /** Horizontal alignment of the text itself within the block */
+    textAlign: 'left' | 'center' | 'right';
+  };
 };
 
 // SCENES — one per ROOM the camera physically walks into. Each
@@ -79,43 +97,57 @@ type SceneCopy = {
 // that's the job of the Trust Strip immediately below the hero.
 const SCENES: SceneCopy[] = [
   {
-    // SCENE 1 — Kitchen, but BRAND-LEVEL headline. This is the visitor's
-    // first read so it has to land the value-prop. The kitchen surfaces
-    // get mentioned in the body so the copy still ties to what's on
-    // screen, but the headline is the conversion hook from the prior
-    // version. ("A home that shines. Without lifting a finger.")
+    // SCENE 1 — Kitchen, brand-level headline. Text anchored to the
+    // LEFT navy cabinet wall area (which recedes back-right in the
+    // shot), so rotateY -8° makes it read like signage on that wall.
     id: 'kitchen',
     eyebrow: 'HOUSE CLEANING · BOCA RATON + SOUTH FLORIDA',
     headlineHtml: 'A home that <em>shines</em>. Without lifting a finger.',
     body: 'It starts in the kitchen — marble degreased, stainless polished, cabinets wiped inside and out. Boutique house cleaning across 13 South Florida cities, the full standard every visit.',
     start: 0.0,
     end: 0.13,
+    position: { left: '6%', top: '60%', width: '38%', rotateY: -8, textAlign: 'left' },
   },
   {
+    // SCENE 2 — Living room. Symmetric composition, back wall holds
+    // the abstract artwork above the wooden console. Text sits in the
+    // UPPER-CENTER, no rotation (back wall is perpendicular to camera).
     id: 'living',
     eyebrow: 'FABRICS · SURFACES · LIGHT',
     headlineHtml: 'Into the <em>living room</em>. Not a speck of dust.',
     body: 'Sectionals vacuumed. Coffee tables hand-polished. Glass crystal-clear. The room your guests linger in — kept guest-ready.',
     start: 0.17,
     end: 0.28,
+    position: { left: '50%', top: '32%', width: '52%', rotateY: 0, textAlign: 'center' },
   },
   {
+    // SCENE 3 — Office. Walnut bookshelves dominate the RIGHT side, so
+    // text goes LEFT where the abstract art column lives. Left wall
+    // recedes back-LEFT, so rotateY +8° projects text onto it.
     id: 'office',
     eyebrow: 'SHELVES · SCREENS · SURFACES',
     headlineHtml: 'Through to the <em>office</em>. A space that lets you focus.',
     body: 'Bookshelves dusted top to bottom. Glass streak-free. Surfaces spotless. The room that finally lets your mind clear.',
     start: 0.33,
     end: 0.45,
+    position: { left: '5%', top: '55%', width: '38%', rotateY: 8, textAlign: 'left' },
   },
   {
+    // SCENE 4 — Bathroom. Tub centered, navy vanity on LEFT against
+    // marble wall. Text on the marble wall above the vanity, rotateY
+    // -8° to match the left wall's recession back-right.
     id: 'bathroom',
     eyebrow: 'MARBLE · GROUT · FIXTURES',
     headlineHtml: 'Down the hall to the <em>bathroom</em>. Spa-grade clean.',
     body: 'Marble protected. Glass spotless. Grout treated. Fixtures polished to a mirror finish — like the day it was built.',
     start: 0.58,
     end: 0.76,
+    position: { left: '6%', top: '48%', width: '40%', rotateY: -8, textAlign: 'left' },
   },
   {
+    // SCENE 5 — Bedroom + CTA. Bed against LEFT wall. The closer
+    // scene needs CTA-friendly centered layout, so this one stays
+    // bottom-center with no rotation — readability + button room win.
     id: 'bedroom',
     eyebrow: 'CUSTOM QUOTE · WITHIN THE HOUR',
     headlineHtml: 'And into the <em>bedroom</em>. Wall to wall, every visit.',
@@ -123,6 +155,7 @@ const SCENES: SceneCopy[] = [
     start: 0.84,
     end: 1.0,
     showCta: true,
+    position: { left: '50%', top: '70%', width: '62%', rotateY: 0, textAlign: 'center' },
   },
 ];
 
@@ -261,10 +294,26 @@ export default function HeroScrollHome() {
       </div>
 
       {/* DESKTOP per-scene text overlays — one stays visible at a time
-          as the user scrolls the camera through the home. Hidden on
-          mobile via .content CSS (.us-copy → opacity 0). */}
+          as the user scrolls the camera through the home. Each scene
+          gets its own position + perspective rotation via CSS vars so
+          the text anchors to a wall in the room currently on screen
+          instead of all 5 stacking in the bottom-left. */}
       {SCENES.map((scene, i) => (
-        <div key={scene.id} className={`${styles.content} ${styles.desktopCopy} us-copy us-copy-${i}`}>
+        <div
+          key={scene.id}
+          className={`${styles.content} ${styles.desktopCopy} us-copy us-copy-${i}`}
+          style={{
+            // Per-scene wall-anchored positioning passed through CSS
+            // variables so the stylesheet can compose them with the
+            // transform: translate(-50%, -50%) trick for clean centering.
+            // (TS doesn't know about CSS custom props, so cast through unknown.)
+            ['--scene-left' as string]: scene.position.left,
+            ['--scene-top' as string]: scene.position.top,
+            ['--scene-width' as string]: scene.position.width,
+            ['--scene-rotate-y' as string]: `${scene.position.rotateY}deg`,
+            ['--scene-text-align' as string]: scene.position.textAlign,
+          } as React.CSSProperties}
+        >
           <p className={styles.eyebrow}>{scene.eyebrow}</p>
           <h1
             className={styles.headline}

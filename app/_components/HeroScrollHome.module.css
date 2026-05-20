@@ -58,10 +58,46 @@
   flex-direction: column;
 }
 
-/* Desktop-only copy blocks (the 5 per-scene overlays that crossfade as
-   the user scrolls). Hidden on mobile via the @media block below. */
+/* Desktop-only copy blocks. Each scene applies its own --scene-left /
+   --scene-top / --scene-width / --scene-rotate-y / --scene-text-align
+   via inline style (set in the JSX), so the text anchors to a wall in
+   the room currently on screen rather than all 5 stacking in the same
+   bottom-left corner. Translated by (-50%, -50%) so left/top values
+   describe the BLOCK CENTER (much easier to reason about visually).
+   perspective(1200px) gives the rotateY angle a believable depth so
+   the text reads like it's painted on the wall, not warped.
+   Hidden on mobile via the @media block below. */
 .desktopCopy {
   display: flex;
+  /* Override the base .content full-bleed bottom positioning */
+  bottom: auto;
+  left: var(--scene-left, 50%);
+  top: var(--scene-top, 50%);
+  right: auto;
+  padding: 0;
+  width: var(--scene-width, 50%);
+  max-width: 720px;
+  text-align: var(--scene-text-align, left);
+  transform-origin: center center;
+  transform: translate(-50%, -50%) perspective(1200px) rotateY(var(--scene-rotate-y, 0deg));
+  /* Subtle drop shadow keeps text readable over busy room backgrounds
+     without needing an opaque pill behind every block. */
+  text-shadow: 0 4px 24px rgba(0, 0, 0, 0.55), 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+
+/* When the scene's text-align is left/right, the eyebrow + body should
+   inherit it. The default .eyebrow uses inline-flex with width:fit-content
+   which doesn't respond to text-align, so we re-anchor it here. */
+.desktopCopy .eyebrow {
+  align-self: flex-start;
+}
+.desktopCopy[style*="--scene-text-align: center"] .eyebrow,
+.desktopCopy[style*="--scene-text-align:center"] .eyebrow {
+  align-self: center;
+}
+.desktopCopy[style*="--scene-text-align: right"] .eyebrow,
+.desktopCopy[style*="--scene-text-align:right"] .eyebrow {
+  align-self: flex-end;
 }
 
 /* Mobile-only copy block (one brand-level message + CTA, shown only

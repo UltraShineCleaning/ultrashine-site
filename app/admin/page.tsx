@@ -313,6 +313,54 @@ export default async function AdminDashboard() {
         </a>
       </div>
 
+      <p className={styles.sectionLabel}>Daily automation</p>
+      <div style={{
+        background: '#ffffff',
+        border: '1px solid #e5e7eb',
+        borderRadius: 12,
+        padding: '16px 20px',
+        display: 'flex',
+        alignItems: 'center',
+        gap: 14,
+        marginBottom: 8,
+      }}>
+        <span style={{
+          width: 10,
+          height: 10,
+          borderRadius: '50%',
+          background: '#1B7F3A',
+          boxShadow: '0 0 0 4px rgba(27, 127, 58, 0.15)',
+          flexShrink: 0,
+        }} />
+        <div style={{ flex: 1 }}>
+          <div style={{ fontFamily: 'var(--font-poppins), sans-serif', fontWeight: 700, fontSize: 14, color: '#111827' }}>
+            Morning digest: ON
+          </div>
+          <div style={{ fontFamily: 'var(--font-poppins), sans-serif', fontSize: 12, color: '#6b7280', marginTop: 2 }}>
+            Emailed every morning at 7am ET to contact@ultrashinecleaningfl.com — yesterday&apos;s leads, today&apos;s Jobber jobs, this week&apos;s revenue, unpaid invoices.
+          </div>
+        </div>
+        <a
+          href="/api/cron/daily-summary"
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{
+            padding: '8px 14px',
+            borderRadius: 999,
+            background: '#111827',
+            color: '#ffffff',
+            textDecoration: 'none',
+            fontFamily: 'var(--font-poppins), sans-serif',
+            fontSize: 11,
+            fontWeight: 600,
+            letterSpacing: '0.04em',
+            whiteSpace: 'nowrap',
+          }}
+        >
+          Send test now →
+        </a>
+      </div>
+
       <p className={styles.sectionLabel}>Quick links</p>
       <div className={styles.quickActions}>
         <a href={VERCEL_PROJECT} target="_blank" rel="noopener noreferrer" className={styles.quickAction}>

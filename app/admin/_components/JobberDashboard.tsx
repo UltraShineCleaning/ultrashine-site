@@ -110,6 +110,11 @@ export default async function JobberDashboard({ force = false }: { force?: boole
               KV PERSISTED
             </span>
           )}
+          {/* Diagnostic: how many visits did Jobber return? Lets us see
+              if "empty calendar" = "Jobber returned 0" vs other bug */}
+          <span style={{ marginLeft: 8, padding: '2px 8px', background: '#f3f4f6', color: '#6b7280', borderRadius: 999, fontSize: 10, fontWeight: 600, letterSpacing: '0.02em' }}>
+            {m.allVisits.length} visits fetched
+          </span>
         </span>
         <a
           href={`/admin?t=${Date.now()}#jobber`}

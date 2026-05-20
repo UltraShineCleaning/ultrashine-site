@@ -55,6 +55,9 @@ export default function JobberCalendar({ allVisits }: Props) {
   // has visits, otherwise the first day with visits in view, otherwise null.
   const today = useMemo(() => new Date(), []);
   const [selectedDay, setSelectedDay] = useState<Date>(today);
+  // Visit popover state — when a chip is clicked, we open a floating
+  // detail popup like Jobber does. null = no popover open.
+  const [popoverVisit, setPopoverVisit] = useState<JobberVisit | null>(null);
 
   // ---- Bucket visits by YYYY-MM-DD for O(1) lookup per cell ----
   const visitsByDay = useMemo(() => {
@@ -221,6 +224,23 @@ export default function JobberCalendar({ allVisits }: Props) {
                   return (
                     <div
                       key={v.id}
+                      role="button"
+                      tabIndex={0}
+                      onClick={(e) => {
+                        // Stop the click from also triggering the day-cell button
+                        // (which would otherwise change selectedDay).
+                        e.stopPropagation();
+                        setSelectedDay(date);
+                        setPopoverVisit(v);
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          setSelectedDay(date);
+                          setPopoverVisit(v);
+                        }
+                      }}
                       className={`${styles.visitBar} ${visitIsPast ? styles.visitBarPast : ''}`}
                       title={`${time} ${label}${v.team.length ? ' · ' + v.team.join(' + ') : ''}${v.address ? ' · ' + v.address : ''}`}
                     >
@@ -298,6 +318,110 @@ export default function JobberCalendar({ allVisits }: Props) {
           </div>
         )}
       </div>
+
+      {/* ===== VISIT POPOVER =====
+          Floats over the calendar when a chip is clicked. Matches Jobber's
+          visit popup pattern. Click backdrop or × button to dismiss. */}
+      {popoverVisit && (
+        <div
+          className={styles.popoverBackdrop}
+          onClick={() => setPopoverVisit(null)}
+          role="dialog"
+          aria-modal="true"
+        >
+          <div
+            className={styles.popoverCard}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              type="button"
+              onClick={() => setPopoverVisit(null)}
+              className={styles.popoverClose}
+              aria-label="Close visit details"
+            >
+              ×
+            </button>
+
+            <div className={styles.popoverHeader}>
+              <div className={styles.popoverEyebrow}>
+                {popoverVisit.startAt
+                  ? new Date(popoverVisit.startAt).toLocaleDateString('en-US', {
+                      weekday: 'long',
+                      month: 'long',
+                      day: 'numeric',
+                    })
+                  : 'Scheduled visit'}
+              </div>
+              <h3 className={styles.popoverTitle}>{popoverVisit.clientName}</h3>
+              <div className={styles.popoverSubtitle}>{popoverVisit.title}</div>
+            </div>
+
+            <div className={styles.popoverGrid}>
+              <div>
+                <div className={styles.popoverLabel}>TIME</div>
+                <div className={styles.popoverValue}>
+                  {popoverVisit.startAt
+                    ? new Date(popoverVisit.startAt).toLocaleTimeString('en-US', {
+                        hour: 'numeric',
+                        minute: '2-digit',
+                      })
+                    : 'TBD'}
+                  {popoverVisit.endAt && (
+                    <>
+                      {' – '}
+                      {new Date(popoverVisit.endAt).toLocaleTimeString('en-US', {
+                        hour: 'numeric',
+                        minute: '2-digit',
+                      })}
+                    </>
+                  )}
+                </div>
+              </div>
+              <div>
+                <div className={styles.popoverLabel}>STATUS</div>
+                <div className={styles.popoverValue}>
+                  {popoverVisit.completed ? (
+                    <span style={{ color: '#166534' }}>✓ Completed</span>
+                  ) : (
+                    <span style={{ color: '#374151' }}>● Scheduled</span>
+                  )}
+                </div>
+              </div>
+              <div style={{ gridColumn: '1 / -1' }}>
+                <div className={styles.popoverLabel}>LOCATION</div>
+                <div className={styles.popoverValue}>
+                  {popoverVisit.address ?? <em style={{ color: '#9ca3af' }}>No address on file</em>}
+                </div>
+              </div>
+              <div style={{ gridColumn: '1 / -1' }}>
+                <div className={styles.popoverLabel}>TEAM</div>
+                <div className={styles.popoverValue}>
+                  {popoverVisit.team.length === 0 ? (
+                    <span className={styles.teamUnassigned}>● Unassigned</span>
+                  ) : (
+                    <div className={styles.teamMembers} style={{ justifyContent: 'flex-start' }}>
+                      {popoverVisit.team.map((name) => (
+                        <span key={name} className={styles.teamChip}>{name}</span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            <div className={styles.popoverActions}>
+              <a
+                href={`https://secure.getjobber.com/work_orders`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.popoverPrimary}
+              >
+                Open in Jobber →
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

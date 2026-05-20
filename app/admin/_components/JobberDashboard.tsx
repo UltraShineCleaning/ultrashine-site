@@ -174,9 +174,13 @@ export default async function JobberDashboard() {
         </div>
       )}
 
-      {/* TOP STAT ROW */}
+      {/* TOP STAT ROW — every card is now a deep link.
+          Jobs Today / Next 14 days → hash-scrolls the calendar into view
+          (the calendar is on the same /admin#schedule tab as these stats).
+          Active clients → hops to the Clients tab.
+          Money cards → open Jobber's invoices view directly. */}
       <div className={styles.statRow}>
-        <div className={styles.stat}>
+        <a href="#schedule" className={styles.stat}>
           <div className={styles.statLabel}>Jobs · today</div>
           <div className={styles.statValue}>
             {m.jobsToday > 0 ? m.jobsToday : <em className={styles.dim}>—</em>}
@@ -188,35 +192,45 @@ export default async function JobberDashboard() {
               ? '1 visit on the calendar'
               : `${m.jobsToday} visits on the calendar`}
           </div>
-        </div>
+        </a>
 
-        <div className={styles.stat}>
+        <a href="#schedule" className={styles.stat}>
           <div className={styles.statLabel}>Jobs · next 14 days</div>
           <div className={styles.statValue}>{m.jobsThisWeek}</div>
-          <div className={styles.statSub}>Scheduled visits ahead</div>
-        </div>
+          <div className={styles.statSub}>Scheduled visits ahead →</div>
+        </a>
 
-        <div className={styles.stat}>
+        <a
+          href="https://secure.getjobber.com/invoices"
+          target="_blank"
+          rel="noopener noreferrer"
+          className={styles.stat}
+        >
           <div className={styles.statLabel}>Revenue · this week</div>
           <div className={styles.statValue}>{fmtMoney(m.thisWeekRevenue)}</div>
-          <div className={styles.statSub}>Invoices paid in current week</div>
-        </div>
+          <div className={styles.statSub}>Open invoices in Jobber →</div>
+        </a>
 
-        <div className={styles.stat}>
+        <a href="#clients" className={styles.stat}>
           <div className={styles.statLabel}>Active clients</div>
           <div className={styles.statValue}>{m.activeClientCount}</div>
-          <div className={styles.statSub}>Not archived in Jobber</div>
-        </div>
+          <div className={styles.statSub}>Open Clients tab →</div>
+        </a>
 
-        <div className={`${styles.stat} ${m.pendingInvoiceCount > 0 ? styles.statAlert : ''}`}>
+        <a
+          href="https://secure.getjobber.com/invoices?status=outstanding"
+          target="_blank"
+          rel="noopener noreferrer"
+          className={`${styles.stat} ${m.pendingInvoiceCount > 0 ? styles.statAlert : ''}`}
+        >
           <div className={styles.statLabel}>Awaiting payment</div>
           <div className={styles.statValue}>{fmtMoney(m.pendingInvoiceTotal)}</div>
           <div className={styles.statSub}>
             {m.pendingInvoiceCount === 0
               ? 'No open invoices'
-              : `${m.pendingInvoiceCount} invoice${m.pendingInvoiceCount === 1 ? '' : 's'} unpaid`}
+              : `${m.pendingInvoiceCount} invoice${m.pendingInvoiceCount === 1 ? '' : 's'} unpaid → Jobber`}
           </div>
-        </div>
+        </a>
       </div>
 
       {/* CALENDAR VIEW — month grid with clickable day cells.

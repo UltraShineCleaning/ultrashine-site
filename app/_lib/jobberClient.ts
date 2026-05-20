@@ -388,21 +388,40 @@ export async function getJobberClients(): Promise<{ clients: JobberClient[]; err
     return { clients: [], error: res.errors.map((e) => e.message).join(' · ') };
   }
 
+  // Normalize a city name to canonical Title Case so "Boca raton" + "boca
+  // RATON" + "Boca Raton" all bucket together instead of creating 3
+  // separate filter chips. Returns null for empty/whitespace.
+  const titleCaseCity = (raw: string | null | undefined): string | null => {
+    if (!raw) return null;
+    const trimmed = raw.trim();
+    if (!trimmed) return null;
+    return trimmed
+      .toLowerCase()
+      .split(/\s+/)
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ');
+  };
+
   const nodes = res.data?.clients?.nodes ?? [];
   const clients: JobberClient[] = nodes.map((n) => {
     // Pick the primary email/phone, fall back to first available
     const primaryEmail = n.emails?.find((e) => e.primary) ?? n.emails?.[0];
     const primaryPhone = n.phoneNumbers?.find((p) => p.primary) ?? n.phoneNumbers?.[0];
     const addr = n.billingAddress;
+    // A client is a company if EITHER Jobber's isCompany flag is true,
+    // OR a companyName is set — the flag is unreliable in practice
+    // (Jobber returns false even for accounts that are clearly businesses
+    // like "Boca family & general medicine"). Fallback catches those.
+    const hasCompanyName = !!(n.companyName && n.companyName.trim());
     return {
       id: n.id,
       name: n.name ?? n.companyName ?? 'Unnamed client',
       companyName: n.companyName ?? null,
-      isCompany: !!n.isCompany,
+      isCompany: !!n.isCompany || hasCompanyName,
       email: primaryEmail?.address ?? null,
       phone: primaryPhone?.number ?? null,
       address: addr ? [addr.street1, addr.street2].filter(Boolean).join(', ') || null : null,
-      city: addr?.city ?? null,
+      city: titleCaseCity(addr?.city),
     };
   });
 

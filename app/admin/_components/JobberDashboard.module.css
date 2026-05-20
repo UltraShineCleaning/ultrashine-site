@@ -54,11 +54,18 @@
   flex-direction: column;
   justify-content: space-between;
   transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
+  /* Stat cards are now anchor links — keep text colors as-is */
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
 }
 .stat:hover {
-  border-color: #d1d5db;
-  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04);
-  transform: translateY(-1px);
+  border-color: #111827;
+  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.08);
+  transform: translateY(-2px);
+}
+.stat:hover .statSub {
+  color: #111827;
 }
 .statAlert {
   border-color: #fde68a;

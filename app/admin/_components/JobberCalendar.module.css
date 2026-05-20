@@ -416,6 +416,125 @@
 }
 
 /* ===== MOBILE ===== */
+/* ===== VISIT POPOVER =====
+   Fixed full-screen backdrop with a centered card. Click backdrop to
+   dismiss. Card uses simple grid layout for time/status/location/team. */
+.popoverBackdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.55);
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  z-index: 1000;
+  animation: popoverFadeIn 0.12s ease-out;
+}
+@keyframes popoverFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+.popoverCard {
+  position: relative;
+  background: #ffffff;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 460px;
+  padding: 28px 28px 22px;
+  box-shadow: 0 24px 64px rgba(15, 23, 42, 0.25), 0 8px 16px rgba(15, 23, 42, 0.12);
+  font-family: var(--font-poppins), sans-serif;
+  animation: popoverSlideIn 0.18s ease-out;
+}
+@keyframes popoverSlideIn {
+  from { transform: translateY(8px) scale(0.98); opacity: 0; }
+  to   { transform: translateY(0)    scale(1);    opacity: 1; }
+}
+.popoverClose {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: #f3f4f6;
+  border: 0;
+  color: #6b7280;
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  transition: background 0.12s, color 0.12s;
+}
+.popoverClose:hover {
+  background: #111827;
+  color: #ffffff;
+}
+.popoverHeader {
+  margin-bottom: 22px;
+}
+.popoverEyebrow {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.24em;
+  color: #6b7280;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.popoverTitle {
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  color: #111827;
+  margin: 0;
+  line-height: 1.15;
+}
+.popoverSubtitle {
+  font-size: 13px;
+  color: #6b7280;
+  margin-top: 4px;
+}
+.popoverGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px 20px;
+  margin-bottom: 22px;
+}
+.popoverLabel {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  color: #6b7280;
+  margin-bottom: 4px;
+}
+.popoverValue {
+  font-size: 13px;
+  color: #111827;
+  line-height: 1.5;
+}
+.popoverActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding-top: 14px;
+  border-top: 1px solid #e5e7eb;
+}
+.popoverPrimary {
+  display: inline-flex;
+  align-items: center;
+  padding: 10px 18px;
+  border-radius: 999px;
+  background: #111827;
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  transition: background 0.12s;
+}
+.popoverPrimary:hover {
+  background: #374151;
+}
+
 @media (max-width: 720px) {
   .wrap {
     padding: 18px 16px;

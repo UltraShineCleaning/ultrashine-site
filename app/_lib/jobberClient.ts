@@ -244,10 +244,15 @@ export async function getJobberMetrics(): Promise<JobberMetrics> {
     `query Clients { clients(first: 1) { totalCount } }`,
   );
 
-  // ---- Scheduled items (visits) — fetch a bigger batch (100) so the
-  // calendar view has enough data to populate a full month. We don't
-  // filter server-side by date because the filter input shape varies by
-  // schema version — instead we pull and partition client-side.
+  // ---- Scheduled items (visits) — Jobber requires a `filter` arg even
+  // though we want the broadest range. Pass a very wide startAt window
+  // (from ~30 days ago through ~90 days in the future) so the calendar
+  // sees both recently-past + upcoming visits.
+  const farPast = new Date(startOfDay);
+  farPast.setDate(farPast.getDate() - 30);
+  const farFuture = new Date(startOfDay);
+  farFuture.setDate(farFuture.getDate() + 90);
+
   const visitsPromise = jobberQuery<{
     scheduledItems: {
       nodes: Array<{
@@ -265,8 +270,8 @@ export async function getJobberMetrics(): Promise<JobberMetrics> {
       }>;
     };
   }>(
-    `query UpcomingVisits {
-      scheduledItems(first: 100) {
+    `query UpcomingVisits($startMin: ISO8601DateTime!, $startMax: ISO8601DateTime!) {
+      scheduledItems(filter: { startAt: { after: $startMin, before: $startMax } }, first: 100) {
         nodes {
           id
           startAt
@@ -282,19 +287,21 @@ export async function getJobberMetrics(): Promise<JobberMetrics> {
         }
       }
     }`,
+    { startMin: farPast.toISOString(), startMax: farFuture.toISOString() },
   );
 
   // ---- Invoices — pull recent 100, partition client-side ----
-  // Don't trust enum names like `AWAITING_PAYMENT` or `PAID` — those
-  // names vary by schema version. We fetch the `invoiceStatus` field
-  // as a string + the amount, then categorize in JS below.
+  // Field name is `issuedDate` (NOT `issuedAt` — Jobber rejected the
+  // latter with a "did you mean issuedDate" hint when surfaced via the
+  // dashboard error panel). invoiceStatus comes back as a string; we
+  // forgive variations like `paid` vs `PAID` via regex below.
   const invoicesPromise = jobberQuery<{
     invoices: {
       totalCount: number;
       nodes: Array<{
         id: string;
         invoiceStatus?: string | null;
-        issuedAt?: string | null;
+        issuedDate?: string | null;
         amounts?: { total?: number | null } | null;
       }>;
     };
@@ -305,7 +312,7 @@ export async function getJobberMetrics(): Promise<JobberMetrics> {
         nodes {
           id
           invoiceStatus
-          issuedAt
+          issuedDate
           amounts { total }
         }
       }
@@ -396,8 +403,8 @@ export async function getJobberMetrics(): Promise<JobberMetrics> {
 
   for (const inv of invoices) {
     const total = typeof inv.amounts?.total === 'number' ? inv.amounts.total : 0;
-    if (isPaid(inv.invoiceStatus) && inv.issuedAt) {
-      const issued = new Date(inv.issuedAt);
+    if (isPaid(inv.invoiceStatus) && inv.issuedDate) {
+      const issued = new Date(inv.issuedDate);
       if (issued >= startOfWeek && issued < endOfWeek) {
         thisWeekRevenue += total;
       }

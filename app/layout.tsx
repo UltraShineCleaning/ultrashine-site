@@ -6,7 +6,6 @@ import './globals.css';
 import SmoothScrollProvider from './_components/SmoothScrollProvider';
 import JsonLd from './_components/JsonLd';
 import StickyQuoteCta from './_components/StickyQuoteCta';
-import TopTrustBar from './_components/TopTrustBar';
 
 // =====================================================================
 // SITE SCHEMA — Upgraded 2026-05 from HouseCleaningService to CleaningService
@@ -319,11 +318,11 @@ export default function RootLayout({
         <JsonLd data={SITE_SCHEMA} />
       </head>
       <body>
-        {/* Thin trust strip at the very top of every page — proof signals
-            visible immediately even before the user scrolls. Sits in
-            normal flow so the absolute-positioned nav below it stacks
-            naturally below the bar (no manual top: 36px adjustments). */}
-        <TopTrustBar />
+        {/* TopTrustBar removed — the moving marquee dated the site visually,
+            and every signal it carried (insured/bonded, background-checked,
+            EPA-safe, 5.0 Google, family-owned since 2018) is already
+            covered by the homepage Trust Strip, per-page trust rows,
+            and the city-level trust signals on /areas/[city] pages. */}
         <SmoothScrollProvider>{children}</SmoothScrollProvider>
         <StickyQuoteCta />
         <Analytics />

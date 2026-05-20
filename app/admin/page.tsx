@@ -110,16 +110,25 @@ async function fetchLeads(): Promise<{ leads: Lead[]; error?: string }> {
   }
 }
 
-export default async function AdminDashboard() {
+export default async function AdminDashboard({
+  searchParams,
+}: {
+  searchParams?: { t?: string; refresh?: string };
+}) {
   // Cookie gate
   const cookie = cookies().get(COOKIE_NAME)?.value;
   const password = process.env.ADMIN_PASSWORD;
   if (!password || cookie !== password) redirect('/admin/login');
 
+  // The "↻ Refresh now" button on the Jobber tab links to /admin?t=<timestamp>
+  // — when that param is present we bypass the 60s/5min server cache and
+  // pull truly-live data from Jobber. Same effect if ?refresh=1 is passed.
+  const force = !!(searchParams?.t || searchParams?.refresh);
+
   // Live data from Resend + Jobber clients in parallel
   const [{ leads, error }, jobberClientsRes] = await Promise.all([
     fetchLeads(),
-    getJobberClients(),
+    getJobberClients({ force }),
   ]);
 
   const quoteLeads = leads.filter((l) => l.kind === 'quote');
@@ -392,7 +401,7 @@ export default async function AdminDashboard() {
   // setup/reconnect flow when not — so we use it in BOTH the Schedule and
   // Home tabs in different contexts. Schedule wants the full thing
   // (calendar + upcoming list). Home wants compact stats only.
-  const schedulePanel = <JobberStatusCard />;
+  const schedulePanel = <JobberStatusCard force={force} />;
 
   const clientsPanel = (
     <ClientsTab clients={jobberClientsRes.clients} error={jobberClientsRes.error} />

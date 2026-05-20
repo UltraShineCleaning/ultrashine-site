@@ -22,9 +22,9 @@ function formatRelative(ts: number): string {
  * fetcher returns zero values + an `error` field; the UI shows a banner
  * inviting Tiago to re-connect.
  */
-export default async function JobberDashboard() {
+export default async function JobberDashboard({ force = false }: { force?: boolean } = {}) {
   const [m, lastRefresh] = await Promise.all([
-    getJobberMetrics(),
+    getJobberMetrics({ force }),
     getLastRefreshAt(),
   ]);
   const kvEnabled = isJobberKvEnabled();

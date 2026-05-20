@@ -10,7 +10,7 @@ import JobberDashboard from './JobberDashboard';
  *   jobs, revenue, active clients, pending invoices, and the next 14
  *   days of upcoming visits — pulled fresh from Jobber on every page load
  */
-export default function JobberStatusCard() {
+export default function JobberStatusCard({ force = false }: { force?: boolean } = {}) {
   const hasCredentials = !!process.env.JOBBER_CLIENT_ID;
   const hasRefreshToken = !!process.env.JOBBER_REFRESH_TOKEN;
 
@@ -60,5 +60,5 @@ export default function JobberStatusCard() {
 
   // Step 3 — fully connected. Hand off to the live data dashboard
   // (server-renders Jobber GraphQL data on every page load).
-  return <JobberDashboard />;
+  return <JobberDashboard force={force} />;
 }

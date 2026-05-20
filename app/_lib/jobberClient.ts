@@ -381,17 +381,16 @@ export async function getJobberMetrics(): Promise<JobberMetrics> {
 
   // ---- Scheduled items (visits) ----
   // Jobber's ScheduledItemsFilterAttributes requires `occursWithin` as a
-  // `DateRange!` (NOT the `startAt: { after, before }` shape I guessed).
-  // The schema told us this directly via the error-surfacing panel:
-  //   "Argument 'occursWithin' on InputObject 'ScheduledItemsFilterAttributes'
-  //    is required. Expected type DateRange!"
-  // DateRange takes { startDate, endDate } (date-only, not full datetime).
+  // `DateRange!`. DateRange's fields are { startAt, endAt } as
+  // ISO8601DateTime (full datetime), NOT { startDate, endDate } as Date.
+  // The schema told us this exactly:
+  //   "Argument 'startAt' on InputObject 'DateRange' is required.
+  //    Expected type ISO8601DateTime!"
+  // So we send full ISO datetimes.
   const farPast = new Date(startOfDay);
   farPast.setDate(farPast.getDate() - 30);
   const farFuture = new Date(startOfDay);
   farFuture.setDate(farFuture.getDate() + 90);
-  // Format as YYYY-MM-DD per Jobber's DateRange expectation
-  const ymd = (d: Date) => d.toISOString().slice(0, 10);
 
   const visitsPromise = jobberQuery<{
     scheduledItems: {
@@ -410,8 +409,8 @@ export async function getJobberMetrics(): Promise<JobberMetrics> {
       }>;
     };
   }>(
-    `query UpcomingVisits($start: ISO8601Date!, $end: ISO8601Date!) {
-      scheduledItems(filter: { occursWithin: { startDate: $start, endDate: $end } }, first: 100) {
+    `query UpcomingVisits($start: ISO8601DateTime!, $end: ISO8601DateTime!) {
+      scheduledItems(filter: { occursWithin: { startAt: $start, endAt: $end } }, first: 100) {
         nodes {
           id
           startAt
@@ -427,7 +426,7 @@ export async function getJobberMetrics(): Promise<JobberMetrics> {
         }
       }
     }`,
-    { start: ymd(farPast), end: ymd(farFuture) },
+    { start: farPast.toISOString(), end: farFuture.toISOString() },
   );
 
   // ---- Invoices — pull recent 100, partition client-side ----

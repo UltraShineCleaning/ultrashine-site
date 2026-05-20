@@ -18,10 +18,14 @@ import styles from './ServiceAreaMap.module.css';
  * Server-component compatible. No interactive state.
  */
 
-// Centered on Boca Raton at a zoom level that captures Palm Beach + Broward.
-// The "z=10" parameter shows ~25mi radius, which covers all 13 cities.
+// Anchored to Boca Raton's actual coordinates (26.3683°N, 80.1289°W) so
+// the map ALWAYS opens centered on our headquarters city — not whatever
+// Google's search-result picker decides. `z=11` shows Boca prominently
+// while still keeping Delray, Highland Beach, Deerfield, and Coral Springs
+// visible in frame (the surrounding cities we cover). The trailing `q=`
+// parameter drops a pin labeled "Ultra Shine Cleaning · Boca Raton, FL".
 const MAP_EMBED_URL =
-  'https://maps.google.com/maps?q=Ultra+Shine+Cleaning+Boca+Raton+FL&z=10&output=embed';
+  'https://maps.google.com/maps?q=Ultra+Shine+Cleaning+Boca+Raton+FL&ll=26.3683,-80.1289&z=11&output=embed';
 
 export default function ServiceAreaMap() {
   // Show Palm Beach county cities first, then Broward

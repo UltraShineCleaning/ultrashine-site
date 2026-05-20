@@ -6,6 +6,7 @@ import { Resend } from 'resend';
 import styles from './page.module.css';
 import SendReviewRequestCard from './_components/SendReviewRequestCard';
 import JobberStatusCard from './_components/JobberStatusCard';
+import AdminShell from './_components/AdminShell';
 
 export const metadata: Metadata = {
   title: 'Dashboard · Ultra Shine Cleaning',
@@ -127,258 +128,313 @@ export default async function AdminDashboard() {
     applicationsThisMonth: countInLastDays(applicationLeads, 30),
   };
 
-  // Most recent 8 leads across both types (newest first)
+  // Recent 8 leads for Overview tab
   const recent = [...leads]
     .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
     .filter((l) => l.kind !== 'other')
     .slice(0, 8);
 
-  return (
-    <main className={styles.page}>
-      <div className={styles.shell}>
-        {/* HEADER */}
-        <header className={styles.header}>
-          <div className={styles.brand}>
-            <div className={styles.brandMark}>✦</div>
-            <div className={styles.brandText}>
-              <strong>Ultra Shine</strong> Dashboard
-            </div>
-          </div>
-          <div className={styles.headerRight}>
-            <Link href="/" className={styles.headerLink}>View site →</Link>
-            <form action="/api/admin/logout" method="post" style={{ display: 'inline' }}>
-              <button type="submit" className={styles.headerLink} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0, font: 'inherit' }}>
-                Sign out
-              </button>
-            </form>
-          </div>
-        </header>
+  // Full leads list for the Leads tab
+  const allLeads = [...leads]
+    .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
+    .filter((l) => l.kind !== 'other');
 
-        {/* HERO */}
-        <div className={styles.hero}>
-          <p className={styles.heroEyebrow}>YOUR BUSINESS · LIVE DATA</p>
-          <h1 className={styles.heroTitle}>
-            Welcome back, <em>Tiago</em>.
-          </h1>
-          <p className={styles.heroSub}>
-            Real-time view of inbound leads + applications. Refresh
-            this page anytime to see the latest.
-          </p>
+  // Reusable lead-card renderer (used by Overview + Leads tabs)
+  const LeadCard = ({ lead }: { lead: Lead }) => (
+    <div className={styles.leadCard}>
+      <div className={styles.leadInfo}>
+        <div className={styles.leadType}>
+          {lead.kind === 'quote' ? '✦ QUOTE REQUEST' : '✦ CLEANER APPLICATION'}
         </div>
-
-        {/* ERROR if Resend fails */}
-        {error && (
-          <div className={styles.errorState}>
-            ⚠️ Couldn't load live data: {error}. Tile links below still work.
-          </div>
-        )}
-
-        {/* ===== JOBBER CONNECTION STATUS =====
-            Shows connect button on first visit (after env vars are set),
-            then "connected" status after Tiago saves the refresh token.
-            Phase 2 will replace this with the live data widget. */}
-        <p className={styles.sectionLabel}>Jobber · integration status</p>
-        <JobberStatusCard />
-
-        {/* STATS ROW */}
-        <p className={styles.sectionLabel}>Today · this week · this month</p>
-        <div className={styles.statsRow}>
-          <div className={`${styles.statCard} ${styles.statCardHi}`}>
-            <div className={styles.statLabel}>Quotes · today</div>
-            <div className={styles.statValue}>
-              {stats.quotesToday > 0 ? stats.quotesToday : <em>—</em>}
-            </div>
-            <div className={styles.statSub}>
-              {stats.quotesToday === 0 ? 'No new quotes yet today' : `${stats.quotesToday === 1 ? '1 lead' : `${stats.quotesToday} leads`} today`}
-            </div>
-          </div>
-          <div className={styles.statCard}>
-            <div className={styles.statLabel}>Quotes · 7 days</div>
-            <div className={styles.statValue}>
-              {stats.quotesThisWeek > 0 ? stats.quotesThisWeek : <em>—</em>}
-            </div>
-            <div className={styles.statSub}>
-              {stats.quotesThisWeek === 0 ? 'No new quotes yet' : `${stats.quotesThisWeek === 1 ? '1 lead' : `${stats.quotesThisWeek} leads`} this week`}
-            </div>
-          </div>
-          <div className={styles.statCard}>
-            <div className={styles.statLabel}>Quotes · 30 days</div>
-            <div className={styles.statValue}>
-              {stats.quotesThisMonth > 0 ? stats.quotesThisMonth : <em>—</em>}
-            </div>
-            <div className={styles.statSub}>Quote requests this month</div>
-          </div>
-          <div className={styles.statCard}>
-            <div className={styles.statLabel}>Applicants · 7 days</div>
-            <div className={styles.statValue}>
-              {stats.applicationsThisWeek > 0 ? stats.applicationsThisWeek : <em>—</em>}
-            </div>
-            <div className={styles.statSub}>
-              {stats.applicationsThisWeek === 0 ? 'No new applicants' : `${stats.applicationsThisWeek} this week`}
-            </div>
-          </div>
-          <div className={styles.statCard}>
-            <div className={styles.statLabel}>Total · all time</div>
-            <div className={styles.statValue}>
-              <em>{quoteLeads.length + applicationLeads.length}</em>
-            </div>
-            <div className={styles.statSub}>
-              {quoteLeads.length} quotes · {applicationLeads.length} applicants
-            </div>
-          </div>
-        </div>
-
-        {/* RECENT LEADS */}
-        <div className={styles.leadsWrap}>
-          <p className={styles.sectionLabel}>Recent leads</p>
-          {recent.length === 0 ? (
-            <div className={styles.emptyState}>
-              No leads yet. As soon as someone submits the quote form or
-              cleaner application, they'll appear here.
-            </div>
-          ) : (
-            <div className={styles.leadsList}>
-              {recent.map((lead) => (
-                <div key={lead.id} className={styles.leadCard}>
-                  <div className={styles.leadInfo}>
-                    <div className={styles.leadType}>
-                      {lead.kind === 'quote' ? '✦ QUOTE REQUEST' : '✦ CLEANER APPLICATION'}
-                    </div>
-                    <div className={styles.leadName}>
-                      {lead.name}
-                      {lead.city && (
-                        <span style={{ color: 'var(--blush)', fontWeight: 300, fontStyle: 'italic', marginLeft: 8, fontSize: 14 }}>
-                          · {lead.city}
-                        </span>
-                      )}
-                    </div>
-                    <div className={styles.leadMeta}>
-                      {formatRelative(lead.createdAt)}
-                      {' · '}
-                      <span
-                        className={`${styles.leadStatus} ${
-                          lead.lastEvent === 'delivered'
-                            ? styles.statusDelivered
-                            : lead.lastEvent === 'bounced'
-                            ? styles.statusBounced
-                            : styles.statusOther
-                        }`}
-                      >
-                        {lead.lastEvent ?? 'sent'}
-                      </span>
-                    </div>
-                  </div>
-                  <div className={styles.leadActions}>
-                    {lead.kind === 'quote' && (
-                      <Link
-                        href={`/admin?prefill_name=${encodeURIComponent(lead.name)}#review-request`}
-                        className={styles.actBtnReview}
-                        title="Send this customer a review request"
-                      >
-                        ★ Review →
-                      </Link>
-                    )}
-                    <a
-                      href={`https://resend.com/emails/${lead.id}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className={styles.actBtn}
-                      title="Open in Resend"
-                    >
-                      ✉
-                    </a>
-                  </div>
-                </div>
-              ))}
-            </div>
+        <div className={styles.leadName}>
+          {lead.name}
+          {lead.city && (
+            <span style={{ color: 'var(--blush)', fontWeight: 300, fontStyle: 'italic', marginLeft: 8, fontSize: 14 }}>
+              · {lead.city}
+            </span>
           )}
         </div>
-
-        {/* ===== REVIEW REQUEST SENDER =====
-            One-click email to ask a customer for a Google review after
-            their cleaning. The compounding lever on Tiago's "I can get
-            reviews" intent — convert it into actual Google reviews.
-            id="review-request" so per-lead "Send Review →" buttons scroll here. */}
-        <p className={styles.sectionLabel} id="review-request">Reviews · ask a customer</p>
-        <SendReviewRequestCard />
-
-        {/* TILES — external tools */}
-        <p className={styles.sectionLabel}>
-          Analytics + performance ·{' '}
-          <span style={{ opacity: 0.6, fontWeight: 400, textTransform: 'none', letterSpacing: 'normal' }}>
-            these open in their own dashboards (their data lives behind Google + Vercel auth, can't be pulled inline yet)
+        <div className={styles.leadMeta}>
+          {formatRelative(lead.createdAt)}
+          {' · '}
+          <span
+            className={`${styles.leadStatus} ${
+              lead.lastEvent === 'delivered'
+                ? styles.statusDelivered
+                : lead.lastEvent === 'bounced'
+                ? styles.statusBounced
+                : styles.statusOther
+            }`}
+          >
+            {lead.lastEvent ?? 'sent'}
           </span>
-        </p>
-        <div className={styles.tilesGrid}>
-          <a href={`${VERCEL_PROJECT}/analytics`} target="_blank" rel="noopener noreferrer" className={styles.tile}>
-            <div className={styles.tileIcon}>✦</div>
-            <div className={styles.tileLabel}>VERCEL · LIVE</div>
-            <div className={styles.tileTitle}>Site Analytics</div>
-            <div className={styles.tileBody}>
-              Page views, top pages, traffic sources (Google search,
-              Instagram, direct), country + device breakdown.
-            </div>
-            <div className={styles.tileLink}>Open Vercel Analytics</div>
-          </a>
-
-          <a href={`${VERCEL_PROJECT}/speed-insights`} target="_blank" rel="noopener noreferrer" className={styles.tile}>
-            <div className={styles.tileIcon}>✦</div>
-            <div className={styles.tileLabel}>VERCEL · LIVE</div>
-            <div className={styles.tileTitle}>Page Speed</div>
-            <div className={styles.tileBody}>
-              How fast every page loads on real phones + computers.
-              Core Web Vitals scored by Google.
-            </div>
-            <div className={styles.tileLink}>Open Speed Insights</div>
-          </a>
-
-          <a href="https://search.google.com/search-console" target="_blank" rel="noopener noreferrer" className={styles.tile}>
-            <div className={styles.tileIcon}>✦</div>
-            <div className={styles.tileLabel}>GOOGLE · ~24-HR DELAY</div>
-            <div className={styles.tileTitle}>Search Performance</div>
-            <div className={styles.tileBody}>
-              What people search to find you on Google. Impressions,
-              clicks, average position per query + page.
-            </div>
-            <div className={styles.tileLink}>Open Search Console</div>
-          </a>
-
-          <a href="https://resend.com/emails" target="_blank" rel="noopener noreferrer" className={styles.tile}>
-            <div className={styles.tileIcon}>✦</div>
-            <div className={styles.tileLabel}>RESEND · LIVE</div>
-            <div className={styles.tileTitle}>All Email Activity</div>
-            <div className={styles.tileBody}>
-              Full email history beyond what's shown above. Search,
-              filter, and view full email contents.
-            </div>
-            <div className={styles.tileLink}>Open Resend</div>
-          </a>
         </div>
-
-        {/* QUICK ACTIONS */}
-        <p className={styles.sectionLabel}>Quick links</p>
-        <div className={styles.quickActions}>
-          <a href={VERCEL_PROJECT} target="_blank" rel="noopener noreferrer" className={styles.quickAction}>
-            ⚡ Vercel project
-          </a>
-          <a href="https://github.com/UltraShineCleaning/ultrashine-site" target="_blank" rel="noopener noreferrer" className={styles.quickAction}>
-            ⚙ GitHub repo
-          </a>
-          <a href="https://resend.com/api-keys" target="_blank" rel="noopener noreferrer" className={styles.quickAction}>
-            ✉ Resend keys
-          </a>
-          <Link href="/quote" className={styles.quickAction}>
-            ✦ Test quote form
-          </Link>
-          <Link href="/review-card" target="_blank" className={styles.quickAction}>
-            🖨 Print review cards
-          </Link>
-        </div>
-
-        <p className={styles.footNote}>
-          ULTRA SHINE CLEANING · INTERNAL DASHBOARD · DATA REFRESHED ON EVERY VISIT
-        </p>
       </div>
-    </main>
+      <div className={styles.leadActions}>
+        {lead.kind === 'quote' && (
+          <Link
+            href={`/admin#reviews`}
+            className={styles.actBtnReview}
+            title="Send this customer a review request"
+          >
+            ★ Review →
+          </Link>
+        )}
+        <a
+          href={`https://resend.com/emails/${lead.id}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={styles.actBtn}
+          title="Open in Resend"
+        >
+          ✉
+        </a>
+      </div>
+    </div>
+  );
+
+  // ============================================================
+  // TAB PANELS — each is server-rendered JSX passed to AdminShell
+  // ============================================================
+
+  const overviewPanel = (
+    <>
+      {error && (
+        <div className={styles.errorState}>
+          ⚠️ Couldn&apos;t load live data: {error}. Tile links below still work.
+        </div>
+      )}
+
+      <p className={styles.sectionLabel}>Today · this week · this month</p>
+      <div className={styles.statsRow}>
+        <div className={`${styles.statCard} ${styles.statCardHi}`}>
+          <div className={styles.statLabel}>Quotes · today</div>
+          <div className={styles.statValue}>
+            {stats.quotesToday > 0 ? stats.quotesToday : <em>—</em>}
+          </div>
+          <div className={styles.statSub}>
+            {stats.quotesToday === 0 ? 'No new quotes yet today' : `${stats.quotesToday === 1 ? '1 lead' : `${stats.quotesToday} leads`} today`}
+          </div>
+        </div>
+        <div className={styles.statCard}>
+          <div className={styles.statLabel}>Quotes · 7 days</div>
+          <div className={styles.statValue}>
+            {stats.quotesThisWeek > 0 ? stats.quotesThisWeek : <em>—</em>}
+          </div>
+          <div className={styles.statSub}>
+            {stats.quotesThisWeek === 0 ? 'No new quotes yet' : `${stats.quotesThisWeek === 1 ? '1 lead' : `${stats.quotesThisWeek} leads`} this week`}
+          </div>
+        </div>
+        <div className={styles.statCard}>
+          <div className={styles.statLabel}>Quotes · 30 days</div>
+          <div className={styles.statValue}>
+            {stats.quotesThisMonth > 0 ? stats.quotesThisMonth : <em>—</em>}
+          </div>
+          <div className={styles.statSub}>Quote requests this month</div>
+        </div>
+        <div className={styles.statCard}>
+          <div className={styles.statLabel}>Applicants · 7 days</div>
+          <div className={styles.statValue}>
+            {stats.applicationsThisWeek > 0 ? stats.applicationsThisWeek : <em>—</em>}
+          </div>
+          <div className={styles.statSub}>
+            {stats.applicationsThisWeek === 0 ? 'No new applicants' : `${stats.applicationsThisWeek} this week`}
+          </div>
+        </div>
+        <div className={styles.statCard}>
+          <div className={styles.statLabel}>Total · all time</div>
+          <div className={styles.statValue}>
+            <em>{quoteLeads.length + applicationLeads.length}</em>
+          </div>
+          <div className={styles.statSub}>
+            {quoteLeads.length} quotes · {applicationLeads.length} applicants
+          </div>
+        </div>
+      </div>
+
+      <div className={styles.leadsWrap}>
+        <p className={styles.sectionLabel}>Recent leads</p>
+        {recent.length === 0 ? (
+          <div className={styles.emptyState}>
+            No leads yet. As soon as someone submits the quote form or cleaner application, they&apos;ll appear here.
+          </div>
+        ) : (
+          <div className={styles.leadsList}>
+            {recent.map((lead) => <LeadCard key={lead.id} lead={lead} />)}
+          </div>
+        )}
+      </div>
+
+      <p className={styles.sectionLabel}>
+        Analytics + performance ·{' '}
+        <span style={{ opacity: 0.6, fontWeight: 400, textTransform: 'none', letterSpacing: 'normal' }}>
+          these open in their own dashboards
+        </span>
+      </p>
+      <div className={styles.tilesGrid}>
+        <a href={`${VERCEL_PROJECT}/analytics`} target="_blank" rel="noopener noreferrer" className={styles.tile}>
+          <div className={styles.tileIcon}>✦</div>
+          <div className={styles.tileLabel}>VERCEL · LIVE</div>
+          <div className={styles.tileTitle}>Site Analytics</div>
+          <div className={styles.tileBody}>
+            Page views, top pages, traffic sources, country + device breakdown.
+          </div>
+          <div className={styles.tileLink}>Open Vercel Analytics</div>
+        </a>
+
+        <a href={`${VERCEL_PROJECT}/speed-insights`} target="_blank" rel="noopener noreferrer" className={styles.tile}>
+          <div className={styles.tileIcon}>✦</div>
+          <div className={styles.tileLabel}>VERCEL · LIVE</div>
+          <div className={styles.tileTitle}>Page Speed</div>
+          <div className={styles.tileBody}>
+            How fast every page loads. Core Web Vitals scored by Google.
+          </div>
+          <div className={styles.tileLink}>Open Speed Insights</div>
+        </a>
+
+        <a href="https://search.google.com/search-console" target="_blank" rel="noopener noreferrer" className={styles.tile}>
+          <div className={styles.tileIcon}>✦</div>
+          <div className={styles.tileLabel}>GOOGLE · ~24-HR DELAY</div>
+          <div className={styles.tileTitle}>Search Performance</div>
+          <div className={styles.tileBody}>
+            What people search to find you on Google. Impressions, clicks, average position.
+          </div>
+          <div className={styles.tileLink}>Open Search Console</div>
+        </a>
+
+        <a href="https://resend.com/emails" target="_blank" rel="noopener noreferrer" className={styles.tile}>
+          <div className={styles.tileIcon}>✦</div>
+          <div className={styles.tileLabel}>RESEND · LIVE</div>
+          <div className={styles.tileTitle}>All Email Activity</div>
+          <div className={styles.tileBody}>
+            Full email history beyond what&apos;s shown here.
+          </div>
+          <div className={styles.tileLink}>Open Resend</div>
+        </a>
+      </div>
+
+      <p className={styles.sectionLabel}>Quick links</p>
+      <div className={styles.quickActions}>
+        <a href={VERCEL_PROJECT} target="_blank" rel="noopener noreferrer" className={styles.quickAction}>
+          ⚡ Vercel project
+        </a>
+        <a href="https://github.com/UltraShineCleaning/ultrashine-site" target="_blank" rel="noopener noreferrer" className={styles.quickAction}>
+          ⚙ GitHub repo
+        </a>
+        <a href="https://resend.com/api-keys" target="_blank" rel="noopener noreferrer" className={styles.quickAction}>
+          ✉ Resend keys
+        </a>
+        <Link href="/quote" className={styles.quickAction}>
+          ✦ Test quote form
+        </Link>
+        <Link href="/review-card" target="_blank" className={styles.quickAction}>
+          🖨 Print review cards
+        </Link>
+      </div>
+    </>
+  );
+
+  const jobberPanel = <JobberStatusCard />;
+
+  const leadsPanel = (
+    <div className={styles.leadsWrap} style={{ marginTop: 0 }}>
+      {allLeads.length === 0 ? (
+        <div className={styles.emptyState}>
+          No leads yet. As soon as someone submits the quote form or cleaner application, they&apos;ll appear here.
+        </div>
+      ) : (
+        <>
+          <p className={styles.sectionLabel}>
+            {allLeads.length} {allLeads.length === 1 ? 'lead' : 'leads'} total ·{' '}
+            <span style={{ opacity: 0.6, fontWeight: 400, textTransform: 'none', letterSpacing: 'normal' }}>
+              click ✉ to open in Resend
+            </span>
+          </p>
+          <div className={styles.leadsList}>
+            {allLeads.map((lead) => <LeadCard key={lead.id} lead={lead} />)}
+          </div>
+        </>
+      )}
+    </div>
+  );
+
+  const reviewsPanel = (
+    <>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14, marginBottom: 24 }}>
+        <div className={styles.statCard}>
+          <div className={styles.statLabel}>Google · 18 reviews</div>
+          <div className={styles.statValue}>5.0 ★</div>
+          <div className={styles.statSub}>
+            <a href="https://search.google.com/local/reviews" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--blue)' }}>
+              Manage on Google →
+            </a>
+          </div>
+        </div>
+        <div className={styles.statCard}>
+          <div className={styles.statLabel}>HomeAdvisor · 25 reviews</div>
+          <div className={styles.statValue}>4.9 ★</div>
+          <div className={styles.statSub}>
+            <a href="https://www.homeadvisor.com/rated.UltraShineCleaning.68124585.html" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--blue)' }}>
+              Open profile →
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <SendReviewRequestCard />
+
+      <p className={styles.sectionLabel} style={{ marginTop: 28 }}>Print materials</p>
+      <div className={styles.quickActions}>
+        <Link href="/review-card" target="_blank" className={styles.quickAction}>
+          🖨 Print review cards
+        </Link>
+        <Link href="/leave-a-review" target="_blank" className={styles.quickAction}>
+          ★ View leave-a-review page
+        </Link>
+      </div>
+    </>
+  );
+
+  const socialPanel = (
+    <div className={styles.emptyState} style={{ padding: 36, textAlign: 'left' }}>
+      <h2 style={{ fontFamily: 'var(--font-poppins), sans-serif', fontWeight: 700, fontSize: 22, color: 'var(--navy-deep)', marginBottom: 12 }}>
+        Social analytics — coming next
+      </h2>
+      <p style={{ fontSize: 14, color: 'var(--navy-deep)', opacity: 0.8, lineHeight: 1.6, marginBottom: 18, maxWidth: 640 }}>
+        We&apos;ll wire this tab up to your Instagram + Facebook accounts so you can see per-post performance, follower growth, engagement rate, and what content is driving DMs / quote requests — all without leaving your dashboard.
+      </p>
+      <p style={{ fontSize: 13, color: 'var(--gray)', lineHeight: 1.6, marginBottom: 14 }}>
+        <strong>What we&apos;ll show here:</strong>
+      </p>
+      <ul style={{ fontSize: 13, color: 'var(--gray)', lineHeight: 1.8, paddingLeft: 20, marginBottom: 22, maxWidth: 640 }}>
+        <li>Follower growth graph (7/30/90-day)</li>
+        <li>Per-post reach, likes, comments, saves, shares</li>
+        <li>Top-performing posts ranked by engagement</li>
+        <li>Stories views + completion rate</li>
+        <li>Profile visits → website clicks → quote-form submits funnel</li>
+        <li>Best time of day / day of week to post (from your actual data)</li>
+      </ul>
+      <p style={{ fontSize: 13, color: 'var(--gray)', lineHeight: 1.6, marginBottom: 14 }}>
+        <strong>What I need from you to build it:</strong>
+      </p>
+      <ul style={{ fontSize: 13, color: 'var(--gray)', lineHeight: 1.8, paddingLeft: 20, maxWidth: 640 }}>
+        <li>Confirm which platforms — Instagram, Facebook, both, plus TikTok / LinkedIn?</li>
+        <li>I&apos;ll set up Meta Graph API access (similar OAuth flow to Jobber)</li>
+        <li>For each platform, I&apos;ll need you to do a one-time connect (click a button, approve scopes)</li>
+      </ul>
+      <a href="https://business.facebook.com/insights" target="_blank" rel="noopener noreferrer" className={styles.quickAction} style={{ marginTop: 18, display: 'inline-flex' }}>
+        ◐ Open Meta Business Suite →
+      </a>
+    </div>
+  );
+
+  return (
+    <AdminShell
+      overview={overviewPanel}
+      jobber={jobberPanel}
+      leads={leadsPanel}
+      reviews={reviewsPanel}
+      social={socialPanel}
+    />
   );
 }

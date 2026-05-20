@@ -315,10 +315,16 @@ export function isJobberConfigured(): boolean {
 
 export type JobberVisit = {
   id: string;
+  /** Visit title — typically the service name (e.g. "Cleaning Services") */
   title: string;
   clientName: string;
   startAt: string | null;
+  endAt: string | null;
   address: string | null;
+  /** Names of the assigned crew members. Empty if unassigned. */
+  team: string[];
+  /** Whether Jobber marks the visit completed. Drives strikethrough. */
+  completed: boolean;
 };
 
 export type JobberClient = {
@@ -481,8 +487,11 @@ export async function getJobberMetrics(): Promise<JobberMetrics> {
       nodes: Array<{
         id: string;
         startAt: string | null;
+        endAt?: string | null;
         title: string | null;
+        completed?: boolean | null;
         __typename?: string;
+        assignedUsers?: { nodes?: Array<{ id?: string; name?: { full?: string | null } | null }> | null } | null;
         job?: {
           jobNumber?: number | string;
           client?: { name?: string | null };
@@ -501,6 +510,14 @@ export async function getJobberMetrics(): Promise<JobberMetrics> {
           title
           __typename
           ... on Visit {
+            endAt
+            completed
+            assignedUsers {
+              nodes {
+                id
+                name { full }
+              }
+            }
             job {
               jobNumber
               client { name }
@@ -595,14 +612,20 @@ export async function getJobberMetrics(): Promise<JobberMetrics> {
     const addrStr = address
       ? [address.street1, address.city].filter(Boolean).join(', ')
       : null;
+    const team = (n.assignedUsers?.nodes ?? [])
+      .map((u) => u?.name?.full ?? '')
+      .filter(Boolean);
     return {
       id: n.id,
       title:
         n.title ??
-        (n.job?.jobNumber ? `Job #${n.job.jobNumber}` : 'Scheduled visit'),
+        (n.job?.jobNumber ? `Job #${n.job.jobNumber}` : 'Cleaning Service'),
       clientName: n.job?.client?.name ?? 'Client',
       startAt: n.startAt,
+      endAt: n.endAt ?? null,
       address: addrStr,
+      team,
+      completed: !!n.completed,
     };
   };
 

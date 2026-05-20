@@ -312,9 +312,9 @@
 
 .visit {
   display: grid;
-  grid-template-columns: 80px 1fr;
-  gap: 16px;
-  padding: 12px 14px;
+  grid-template-columns: 70px 1fr auto;
+  gap: 14px;
+  padding: 14px 16px;
   background: #f9fafb;
   border: 1px solid transparent;
   border-radius: 10px;
@@ -325,12 +325,20 @@
   background: #ffffff;
   border-color: #e5e7eb;
 }
-.visitTime {
+.visitCompleted .visitClient,
+.visitCompleted .visitDetailTitle,
+.visitCompleted .visitAddr {
+  text-decoration: line-through;
+  text-decoration-color: #9ca3af;
+  opacity: 0.7;
+}
+.detailTime {
   font-family: var(--font-poppins), sans-serif;
   font-weight: 700;
   font-size: 13px;
   color: #111827;
   letter-spacing: 0.01em;
+  white-space: nowrap;
 }
 .visitMain {
   display: flex;
@@ -344,7 +352,7 @@
   font-size: 14px;
   color: #111827;
 }
-.visitTitle {
+.visitDetailTitle {
   font-family: var(--font-poppins), sans-serif;
   font-size: 12px;
   color: #6b7280;
@@ -354,6 +362,57 @@
   font-size: 11px;
   color: #9ca3af;
   margin-top: 2px;
+}
+
+/* ===== TEAM ASSIGNMENT (right column of detail panel) =====
+   Shows which cleaners are assigned. Mirrors Jobber's "Team" section in
+   the visit popup. Unassigned visits get a red dot warning. */
+.visitTeam {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: flex-end;
+  text-align: right;
+  min-width: 100px;
+}
+.teamLabel {
+  font-family: var(--font-poppins), sans-serif;
+  font-weight: 700;
+  font-size: 9px;
+  letter-spacing: 0.22em;
+  color: #6b7280;
+}
+.teamMembers {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  justify-content: flex-end;
+}
+.teamChip {
+  display: inline-flex;
+  align-items: center;
+  background: #ffffff;
+  border: 1px solid #d1d5db;
+  border-radius: 999px;
+  padding: 3px 10px;
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  color: #374151;
+  white-space: nowrap;
+}
+.teamUnassigned {
+  display: inline-flex;
+  align-items: center;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #b91c1c;
+  border-radius: 999px;
+  padding: 3px 10px;
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
 }
 
 /* ===== MOBILE ===== */

@@ -200,7 +200,11 @@ export default function JobberCalendar({ allVisits }: Props) {
               <div className={styles.cellVisits}>
                 {visibleVisits.map((v) => {
                   const visitDate = v.startAt ? new Date(v.startAt) : null;
-                  const visitIsPast = visitDate ? visitDate < new Date() : false;
+                  // Treat completed-flag OR past start time as "past" for
+                  // strikethrough purposes (matches Jobber's behavior of
+                  // striking through finished visits regardless of date).
+                  const visitIsPast =
+                    v.completed || (visitDate ? visitDate < new Date() : false);
                   const time = visitDate
                     ? visitDate.toLocaleTimeString('en-US', {
                         hour: 'numeric',
@@ -208,14 +212,20 @@ export default function JobberCalendar({ allVisits }: Props) {
                         hour12: false,
                       })
                     : '—';
+                  // Jobber-style label: "Client - Service Title" — falls back
+                  // to just the client name when service title is generic.
+                  const label =
+                    v.title && v.title !== 'Cleaning Service'
+                      ? `${v.clientName} - ${v.title}`
+                      : v.clientName;
                   return (
                     <div
                       key={v.id}
                       className={`${styles.visitBar} ${visitIsPast ? styles.visitBarPast : ''}`}
-                      title={`${time} ${v.clientName}${v.address ? ' · ' + v.address : ''}`}
+                      title={`${time} ${label}${v.team.length ? ' · ' + v.team.join(' + ') : ''}${v.address ? ' · ' + v.address : ''}`}
                     >
                       <span className={styles.visitTime}>{time}</span>
-                      <span className={styles.visitName}>{v.clientName}</span>
+                      <span className={styles.visitName}>{label}</span>
                     </div>
                   );
                 })}
@@ -262,12 +272,26 @@ export default function JobberCalendar({ allVisits }: Props) {
             {selectedVisits
               .sort((a, b) => (a.startAt ?? '').localeCompare(b.startAt ?? ''))
               .map((v) => (
-                <div key={v.id} className={styles.visit}>
-                  <div className={styles.visitTime}>{fmtTime(v.startAt)}</div>
+                <div key={v.id} className={`${styles.visit} ${v.completed ? styles.visitCompleted : ''}`}>
+                  <div className={styles.detailTime}>{fmtTime(v.startAt)}</div>
                   <div className={styles.visitMain}>
                     <div className={styles.visitClient}>{v.clientName}</div>
-                    <div className={styles.visitTitle}>{v.title}</div>
+                    <div className={styles.visitDetailTitle}>{v.title}</div>
                     {v.address && <div className={styles.visitAddr}>{v.address}</div>}
+                  </div>
+                  <div className={styles.visitTeam}>
+                    {v.team.length === 0 ? (
+                      <span className={styles.teamUnassigned}>● Unassigned</span>
+                    ) : (
+                      <>
+                        <div className={styles.teamLabel}>TEAM</div>
+                        <div className={styles.teamMembers}>
+                          {v.team.map((name) => (
+                            <span key={name} className={styles.teamChip}>{name}</span>
+                          ))}
+                        </div>
+                      </>
+                    )}
                   </div>
                 </div>
               ))}

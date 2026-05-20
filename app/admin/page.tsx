@@ -7,6 +7,8 @@ import styles from './page.module.css';
 import SendReviewRequestCard from './_components/SendReviewRequestCard';
 import JobberStatusCard from './_components/JobberStatusCard';
 import AdminShell from './_components/AdminShell';
+import ClientsTab from './_components/ClientsTab';
+import { getJobberClients } from '../_lib/jobberClient';
 
 export const metadata: Metadata = {
   title: 'Dashboard · Ultra Shine Cleaning',
@@ -114,8 +116,11 @@ export default async function AdminDashboard() {
   const password = process.env.ADMIN_PASSWORD;
   if (!password || cookie !== password) redirect('/admin/login');
 
-  // Live data from Resend
-  const { leads, error } = await fetchLeads();
+  // Live data from Resend + Jobber clients in parallel
+  const [{ leads, error }, jobberClientsRes] = await Promise.all([
+    fetchLeads(),
+    getJobberClients(),
+  ]);
 
   const quoteLeads = leads.filter((l) => l.kind === 'quote');
   const applicationLeads = leads.filter((l) => l.kind === 'application');
@@ -382,7 +387,55 @@ export default async function AdminDashboard() {
     </>
   );
 
-  const jobberPanel = <JobberStatusCard />;
+  // The Jobber tab merged into Schedule (calendar focus) + Money (invoices).
+  // JobberStatusCard renders the full live dashboard when connected, OR the
+  // setup/reconnect flow when not — so we use it in BOTH the Schedule and
+  // Home tabs in different contexts. Schedule wants the full thing
+  // (calendar + upcoming list). Home wants compact stats only.
+  const schedulePanel = <JobberStatusCard />;
+
+  const clientsPanel = (
+    <ClientsTab clients={jobberClientsRes.clients} error={jobberClientsRes.error} />
+  );
+
+  const moneyPanel = (
+    <div className={styles.emptyState} style={{ padding: 36, textAlign: 'left' }}>
+      <h2 style={{ fontFamily: 'var(--font-poppins), sans-serif', fontWeight: 700, fontSize: 22, color: '#111827', marginBottom: 12 }}>
+        Money — coming next
+      </h2>
+      <p style={{ fontSize: 14, color: '#374151', lineHeight: 1.6, marginBottom: 18, maxWidth: 640 }}>
+        Full invoice + payment view pulled straight from Jobber. You&apos;ll see what&apos;s paid, what&apos;s outstanding, who&apos;s late, and your week-over-week revenue trend.
+      </p>
+      <p style={{ fontSize: 13, color: '#6b7280', lineHeight: 1.6, marginBottom: 14 }}>
+        <strong>What&apos;ll be in here:</strong>
+      </p>
+      <ul style={{ fontSize: 13, color: '#6b7280', lineHeight: 1.8, paddingLeft: 20, marginBottom: 22, maxWidth: 640 }}>
+        <li>Outstanding invoices ranked by days overdue</li>
+        <li>Paid this week / month / quarter — with comparison to last period</li>
+        <li>Average invoice size + collection time</li>
+        <li>Per-client lifetime revenue (joins clients with invoices)</li>
+        <li>Pending payment links to send to slow-paying clients in one click</li>
+      </ul>
+    </div>
+  );
+
+  const insightsPanel = (
+    <div className={styles.emptyState} style={{ padding: 36, textAlign: 'left' }}>
+      <h2 style={{ fontFamily: 'var(--font-poppins), sans-serif', fontWeight: 700, fontSize: 22, color: '#111827', marginBottom: 12 }}>
+        Insights — coming next
+      </h2>
+      <p style={{ fontSize: 14, color: '#374151', lineHeight: 1.6, marginBottom: 18, maxWidth: 640 }}>
+        Growth metrics, revenue trends, top clients, and (once we wire up Meta) social media performance per post.
+      </p>
+      <ul style={{ fontSize: 13, color: '#6b7280', lineHeight: 1.8, paddingLeft: 20, marginBottom: 22, maxWidth: 640 }}>
+        <li>8-week + 12-month revenue line chart</li>
+        <li>Lead-to-quote-to-booked-job funnel rates</li>
+        <li>Top 10 clients by lifetime spend</li>
+        <li>Average ticket size by service type</li>
+        <li>Instagram + Facebook per-post reach + engagement (after OAuth wire-up)</li>
+      </ul>
+    </div>
+  );
 
   const leadsPanel = (
     <div className={styles.leadsWrap} style={{ marginTop: 0 }}>
@@ -443,46 +496,15 @@ export default async function AdminDashboard() {
     </>
   );
 
-  const socialPanel = (
-    <div className={styles.emptyState} style={{ padding: 36, textAlign: 'left' }}>
-      <h2 style={{ fontFamily: 'var(--font-poppins), sans-serif', fontWeight: 700, fontSize: 22, color: '#111827', marginBottom: 12 }}>
-        Social analytics — coming next
-      </h2>
-      <p style={{ fontSize: 14, color: '#374151', lineHeight: 1.6, marginBottom: 18, maxWidth: 640 }}>
-        We&apos;ll wire this tab up to your Instagram + Facebook accounts so you can see per-post performance, follower growth, engagement rate, and what content is driving DMs / quote requests — all without leaving your dashboard.
-      </p>
-      <p style={{ fontSize: 13, color: '#6b7280', lineHeight: 1.6, marginBottom: 14 }}>
-        <strong>What we&apos;ll show here:</strong>
-      </p>
-      <ul style={{ fontSize: 13, color: '#6b7280', lineHeight: 1.8, paddingLeft: 20, marginBottom: 22, maxWidth: 640 }}>
-        <li>Follower growth graph (7/30/90-day)</li>
-        <li>Per-post reach, likes, comments, saves, shares</li>
-        <li>Top-performing posts ranked by engagement</li>
-        <li>Stories views + completion rate</li>
-        <li>Profile visits → website clicks → quote-form submits funnel</li>
-        <li>Best time of day / day of week to post (from your actual data)</li>
-      </ul>
-      <p style={{ fontSize: 13, color: '#6b7280', lineHeight: 1.6, marginBottom: 14 }}>
-        <strong>What I need from you to build it:</strong>
-      </p>
-      <ul style={{ fontSize: 13, color: '#6b7280', lineHeight: 1.8, paddingLeft: 20, maxWidth: 640 }}>
-        <li>Confirm which platforms — Instagram, Facebook, both, plus TikTok / LinkedIn?</li>
-        <li>I&apos;ll set up Meta Graph API access (similar OAuth flow to Jobber)</li>
-        <li>For each platform, I&apos;ll need you to do a one-time connect (click a button, approve scopes)</li>
-      </ul>
-      <a href="https://business.facebook.com/insights" target="_blank" rel="noopener noreferrer" className={styles.quickAction} style={{ marginTop: 18, display: 'inline-flex' }}>
-        ◐ Open Meta Business Suite →
-      </a>
-    </div>
-  );
-
   return (
     <AdminShell
       overview={overviewPanel}
-      jobber={jobberPanel}
+      schedule={schedulePanel}
+      clients={clientsPanel}
+      money={moneyPanel}
       leads={leadsPanel}
       reviews={reviewsPanel}
-      social={socialPanel}
+      insights={insightsPanel}
     />
   );
 }

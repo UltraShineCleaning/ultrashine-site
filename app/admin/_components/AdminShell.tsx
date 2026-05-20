@@ -20,7 +20,14 @@ import styles from './AdminShell.module.css';
  * Sidebar collapses to a horizontal scrollable top-bar under 900px.
  */
 
-type TabId = 'overview' | 'jobber' | 'leads' | 'reviews' | 'social';
+type TabId =
+  | 'overview' // a.k.a. "Home" in the UI — kept as 'overview' for URL-hash backward compat
+  | 'schedule'
+  | 'clients'
+  | 'money'
+  | 'leads'
+  | 'reviews'
+  | 'insights';
 
 type Tab = {
   id: TabId;
@@ -34,21 +41,33 @@ type Tab = {
 const TABS: Tab[] = [
   {
     id: 'overview',
-    label: 'Overview',
+    label: 'Home',
     glyph: '✦',
-    description: 'Live snapshot of leads, applications, and quick actions',
+    description: 'Live snapshot — today\'s jobs, recent leads, key numbers, quick actions',
   },
   {
-    id: 'jobber',
-    label: 'Jobber',
-    glyph: '⚙',
-    description: 'Today\'s jobs, weekly revenue, upcoming visits — pulled live from Jobber',
+    id: 'schedule',
+    label: 'Schedule',
+    glyph: '◷',
+    description: 'Month-view calendar of every scheduled visit — pulled live from Jobber',
+  },
+  {
+    id: 'clients',
+    label: 'Clients',
+    glyph: '◉',
+    description: 'Searchable directory of every active Jobber client + their details',
+  },
+  {
+    id: 'money',
+    label: 'Money',
+    glyph: '$',
+    description: 'Invoices, payments, weekly revenue, outstanding balances',
   },
   {
     id: 'leads',
     label: 'Leads',
     glyph: '✉',
-    description: 'Every inbound quote request + cleaner application',
+    description: 'Every inbound quote request + cleaner application from the website',
   },
   {
     id: 'reviews',
@@ -57,10 +76,10 @@ const TABS: Tab[] = [
     description: 'Send review-request emails + see Google + HomeAdvisor ratings',
   },
   {
-    id: 'social',
-    label: 'Social Analytics',
+    id: 'insights',
+    label: 'Insights',
     glyph: '◐',
-    description: 'Instagram + Facebook performance per post (coming soon)',
+    description: 'Revenue trends, top clients, growth metrics, social analytics',
   },
 ];
 
@@ -70,16 +89,20 @@ function isTabId(v: string): v is TabId {
 
 export default function AdminShell({
   overview,
-  jobber,
+  schedule,
+  clients,
+  money,
   leads,
   reviews,
-  social,
+  insights,
 }: {
   overview: ReactNode;
-  jobber: ReactNode;
+  schedule: ReactNode;
+  clients: ReactNode;
+  money: ReactNode;
   leads: ReactNode;
   reviews: ReactNode;
-  social: ReactNode;
+  insights: ReactNode;
 }) {
   const [active, setActive] = useState<TabId>('overview');
 
@@ -106,10 +129,12 @@ export default function AdminShell({
 
   const panels: Record<TabId, ReactNode> = {
     overview,
-    jobber,
+    schedule,
+    clients,
+    money,
     leads,
     reviews,
-    social,
+    insights,
   };
 
   return (

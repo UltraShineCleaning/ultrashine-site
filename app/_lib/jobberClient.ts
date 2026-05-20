@@ -321,6 +321,90 @@ export type JobberVisit = {
   address: string | null;
 };
 
+export type JobberClient = {
+  id: string;
+  name: string;
+  companyName: string | null;
+  isCompany: boolean;
+  email: string | null;
+  phone: string | null;
+  address: string | null;
+  city: string | null;
+};
+
+/**
+ * Fetch the full client directory from Jobber for the Clients tab.
+ * Used independently from the dashboard metrics so a tab-specific call
+ * keeps the home page light. Returns a flat sorted list.
+ */
+export async function getJobberClients(): Promise<{ clients: JobberClient[]; error?: string }> {
+  if (!isJobberConfigured()) {
+    return { clients: [], error: 'JOBBER env vars missing' };
+  }
+
+  const res = await jobberQuery<{
+    clients: {
+      totalCount: number;
+      nodes: Array<{
+        id: string;
+        name?: string | null;
+        companyName?: string | null;
+        isCompany?: boolean | null;
+        emails?: Array<{ primary?: boolean | null; address?: string | null }> | null;
+        phoneNumbers?: Array<{ primary?: boolean | null; number?: string | null }> | null;
+        billingAddress?: {
+          street1?: string | null;
+          street2?: string | null;
+          city?: string | null;
+          province?: string | null;
+        } | null;
+      }>;
+    };
+  }>(
+    `query AllClients {
+      clients(first: 200, filter: { isArchived: false }) {
+        totalCount
+        nodes {
+          id
+          name
+          companyName
+          isCompany
+          emails { primary address }
+          phoneNumbers: phones { primary number }
+          billingAddress { street1 street2 city province }
+        }
+      }
+    }`,
+  );
+
+  if (!res) return { clients: [], error: 'No Jobber access (token issue)' };
+  if (res.errors?.length) {
+    return { clients: [], error: res.errors.map((e) => e.message).join(' · ') };
+  }
+
+  const nodes = res.data?.clients?.nodes ?? [];
+  const clients: JobberClient[] = nodes.map((n) => {
+    // Pick the primary email/phone, fall back to first available
+    const primaryEmail = n.emails?.find((e) => e.primary) ?? n.emails?.[0];
+    const primaryPhone = n.phoneNumbers?.find((p) => p.primary) ?? n.phoneNumbers?.[0];
+    const addr = n.billingAddress;
+    return {
+      id: n.id,
+      name: n.name ?? n.companyName ?? 'Unnamed client',
+      companyName: n.companyName ?? null,
+      isCompany: !!n.isCompany,
+      email: primaryEmail?.address ?? null,
+      phone: primaryPhone?.number ?? null,
+      address: addr ? [addr.street1, addr.street2].filter(Boolean).join(', ') || null : null,
+      city: addr?.city ?? null,
+    };
+  });
+
+  // Sort alphabetically for predictable list ordering
+  clients.sort((a, b) => a.name.localeCompare(b.name));
+  return { clients };
+}
+
 export type JobberMetrics = {
   jobsToday: number;
   jobsThisWeek: number;

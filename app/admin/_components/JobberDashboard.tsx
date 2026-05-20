@@ -1,5 +1,6 @@
 import { getJobberMetrics } from '../../_lib/jobberClient';
 import styles from './JobberDashboard.module.css';
+import JobberCalendar from './JobberCalendar';
 
 /**
  * Live Jobber dashboard widget — renders when JOBBER_REFRESH_TOKEN is set.
@@ -135,7 +136,12 @@ export default async function JobberDashboard() {
         </div>
       </div>
 
-      {/* UPCOMING VISITS LIST */}
+      {/* CALENDAR VIEW — month grid with clickable day cells.
+          Client component (interactive); data passed in from server. */}
+      <JobberCalendar allVisits={m.allVisits} />
+
+      {/* COMPACT UPCOMING LIST (next 14 days, flat list — complements the
+          calendar view above which is a calendar visualization). */}
       <div className={styles.upcomingBlock}>
         <div className={styles.upcomingHeader}>
           <div>

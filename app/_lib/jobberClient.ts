@@ -136,16 +136,21 @@ export function isJobberConfigured(): boolean {
 // add it once we've confirmed the schema shapes against a real account.
 // ============================================================
 
+export type JobberVisit = {
+  id: string;
+  title: string;
+  clientName: string;
+  startAt: string | null;
+  address: string | null;
+};
+
 export type JobberMetrics = {
   jobsToday: number;
   jobsThisWeek: number;
-  upcomingJobs: Array<{
-    id: string;
-    title: string;
-    clientName: string;
-    startAt: string | null;
-    address: string | null;
-  }>;
+  /** Top 12 visits in the next 14 days — for the compact dashboard list. */
+  upcomingJobs: JobberVisit[];
+  /** EVERY visit we fetched in chronological order (used by the calendar view). */
+  allVisits: JobberVisit[];
   activeClientCount: number;
   pendingInvoiceCount: number;
   pendingInvoiceTotal: number;
@@ -158,6 +163,7 @@ const empty: JobberMetrics = {
   jobsToday: 0,
   jobsThisWeek: 0,
   upcomingJobs: [],
+  allVisits: [],
   activeClientCount: 0,
   pendingInvoiceCount: 0,
   pendingInvoiceTotal: 0,
@@ -196,11 +202,10 @@ export async function getJobberMetrics(): Promise<JobberMetrics> {
     `query Clients { clients(first: 1) { totalCount } }`,
   );
 
-  // ---- Scheduled items (visits) — next 50, filter client-side ----
-  // Inline fragment on Visit grabs job+client+address. We DON'T filter
-  // server-side by date because the filter input shape varies by schema
-  // version — instead we pull a sensible batch sorted earliest-first and
-  // partition into today/week/upcoming in JS.
+  // ---- Scheduled items (visits) — fetch a bigger batch (100) so the
+  // calendar view has enough data to populate a full month. We don't
+  // filter server-side by date because the filter input shape varies by
+  // schema version — instead we pull and partition client-side.
   const visitsPromise = jobberQuery<{
     scheduledItems: {
       nodes: Array<{
@@ -219,7 +224,7 @@ export async function getJobberMetrics(): Promise<JobberMetrics> {
     };
   }>(
     `query UpcomingVisits {
-      scheduledItems(first: 50) {
+      scheduledItems(first: 100) {
         nodes {
           id
           startAt
@@ -287,43 +292,48 @@ export async function getJobberMetrics(): Promise<JobberMetrics> {
   }
 
   // ---- Partition visits into today / week / upcoming ----
-  const allVisits = visitsRes?.data?.scheduledItems?.nodes ?? [];
-  const futureVisits = allVisits
+  const rawVisits = visitsRes?.data?.scheduledItems?.nodes ?? [];
+  const futureVisits = rawVisits
     .filter((v) => v.startAt && new Date(v.startAt) >= startOfDay)
     .sort((a, b) =>
       (a.startAt ?? '').localeCompare(b.startAt ?? ''),
     );
 
-  const jobsToday = allVisits.filter((v) => {
+  const jobsToday = rawVisits.filter((v) => {
     if (!v.startAt) return false;
     const d = new Date(v.startAt);
     return d >= startOfDay && d < endOfDay;
   }).length;
 
-  const jobsThisWeek = allVisits.filter((v) => {
+  const jobsThisWeek = rawVisits.filter((v) => {
     if (!v.startAt) return false;
     const d = new Date(v.startAt);
     return d >= startOfDay && d <= twoWeeksOut;
   }).length;
 
-  const upcomingJobs = futureVisits
+  // Normalize every visit into our compact JobberVisit shape. Used by
+  // both the calendar view (allVisits, full list) and the compact
+  // upcoming list (upcomingJobs, top 12 in the next 14 days).
+  const normalize = (n: (typeof rawVisits)[number]): JobberVisit => {
+    const address = n.job?.property?.address;
+    const addrStr = address
+      ? [address.street1, address.city].filter(Boolean).join(', ')
+      : null;
+    return {
+      id: n.id,
+      title:
+        n.title ??
+        (n.job?.jobNumber ? `Job #${n.job.jobNumber}` : 'Scheduled visit'),
+      clientName: n.job?.client?.name ?? 'Client',
+      startAt: n.startAt,
+      address: addrStr,
+    };
+  };
+
+  const allVisits = futureVisits.map(normalize);
+  const upcomingJobs = allVisits
     .filter((v) => v.startAt && new Date(v.startAt) <= twoWeeksOut)
-    .slice(0, 12)
-    .map((n) => {
-      const address = n.job?.property?.address;
-      const addrStr = address
-        ? [address.street1, address.city].filter(Boolean).join(', ')
-        : null;
-      return {
-        id: n.id,
-        title:
-          n.title ??
-          (n.job?.jobNumber ? `Job #${n.job.jobNumber}` : 'Scheduled visit'),
-        clientName: n.job?.client?.name ?? 'Client',
-        startAt: n.startAt,
-        address: addrStr,
-      };
-    });
+    .slice(0, 12);
 
   // ---- Partition invoices: paid this week (revenue) vs awaiting payment ----
   // Jobber's invoiceStatus string varies. Treat anything containing "paid"
@@ -355,6 +365,7 @@ export async function getJobberMetrics(): Promise<JobberMetrics> {
     jobsToday,
     jobsThisWeek,
     upcomingJobs,
+    allVisits,
     activeClientCount: clientsRes?.data?.clients?.totalCount ?? 0,
     pendingInvoiceCount,
     pendingInvoiceTotal,

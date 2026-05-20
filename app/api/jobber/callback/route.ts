@@ -103,8 +103,9 @@ export async function GET(req: Request) {
     // vars. If KV isn't configured yet we still show the token on the
     // success page so Tiago can paste it manually as a fallback.
     let persisted = false;
-    const kvUrl = process.env.KV_REST_API_URL;
-    const kvToken = process.env.KV_REST_API_TOKEN;
+    // Accept either Vercel KV's env var names OR Upstash's native names.
+    const kvUrl = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL;
+    const kvToken = process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN;
     if (kvUrl && kvToken) {
       try {
         const kvRes = await fetch(`${kvUrl}/set/${encodeURIComponent('jobber:refresh_token')}`, {

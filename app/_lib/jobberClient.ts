@@ -46,8 +46,10 @@ const KV_REFRESH_KEY = 'jobber:refresh_token';
 const KV_LAST_REFRESH_KEY = 'jobber:last_refresh_at';
 
 async function kvGet(key: string): Promise<string | null> {
-  const url = process.env.KV_REST_API_URL;
-  const token = process.env.KV_REST_API_TOKEN;
+  // Accept either Vercel KV's env var names OR Upstash's native names —
+  // whichever convention the env happens to be set up with.
+  const url = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL;
+  const token = process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN;
   if (!url || !token) return null;
   try {
     const res = await fetch(`${url}/get/${encodeURIComponent(key)}`, {
@@ -64,8 +66,10 @@ async function kvGet(key: string): Promise<string | null> {
 }
 
 async function kvSet(key: string, value: string): Promise<boolean> {
-  const url = process.env.KV_REST_API_URL;
-  const token = process.env.KV_REST_API_TOKEN;
+  // Accept either Vercel KV's env var names OR Upstash's native names —
+  // whichever convention the env happens to be set up with.
+  const url = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL;
+  const token = process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN;
   if (!url || !token) return false;
   try {
     // Upstash REST: POST /set/<key> with body = value
@@ -86,7 +90,10 @@ async function kvSet(key: string, value: string): Promise<boolean> {
 }
 
 export function isJobberKvEnabled(): boolean {
-  return !!(process.env.KV_REST_API_URL && process.env.KV_REST_API_TOKEN);
+  return !!(
+    (process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL) &&
+    (process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN)
+  );
 }
 
 /** Last successful access-token refresh timestamp (ms since epoch). */
@@ -372,14 +379,19 @@ export async function getJobberMetrics(): Promise<JobberMetrics> {
     `query Clients { clients(first: 1) { totalCount } }`,
   );
 
-  // ---- Scheduled items (visits) — Jobber requires a `filter` arg even
-  // though we want the broadest range. Pass a very wide startAt window
-  // (from ~30 days ago through ~90 days in the future) so the calendar
-  // sees both recently-past + upcoming visits.
+  // ---- Scheduled items (visits) ----
+  // Jobber's ScheduledItemsFilterAttributes requires `occursWithin` as a
+  // `DateRange!` (NOT the `startAt: { after, before }` shape I guessed).
+  // The schema told us this directly via the error-surfacing panel:
+  //   "Argument 'occursWithin' on InputObject 'ScheduledItemsFilterAttributes'
+  //    is required. Expected type DateRange!"
+  // DateRange takes { startDate, endDate } (date-only, not full datetime).
   const farPast = new Date(startOfDay);
   farPast.setDate(farPast.getDate() - 30);
   const farFuture = new Date(startOfDay);
   farFuture.setDate(farFuture.getDate() + 90);
+  // Format as YYYY-MM-DD per Jobber's DateRange expectation
+  const ymd = (d: Date) => d.toISOString().slice(0, 10);
 
   const visitsPromise = jobberQuery<{
     scheduledItems: {
@@ -398,8 +410,8 @@ export async function getJobberMetrics(): Promise<JobberMetrics> {
       }>;
     };
   }>(
-    `query UpcomingVisits($startMin: ISO8601DateTime!, $startMax: ISO8601DateTime!) {
-      scheduledItems(filter: { startAt: { after: $startMin, before: $startMax } }, first: 100) {
+    `query UpcomingVisits($start: ISO8601Date!, $end: ISO8601Date!) {
+      scheduledItems(filter: { occursWithin: { startDate: $start, endDate: $end } }, first: 100) {
         nodes {
           id
           startAt
@@ -415,7 +427,7 @@ export async function getJobberMetrics(): Promise<JobberMetrics> {
         }
       }
     }`,
-    { startMin: farPast.toISOString(), startMax: farFuture.toISOString() },
+    { start: ymd(farPast), end: ymd(farFuture) },
   );
 
   // ---- Invoices — pull recent 100, partition client-side ----

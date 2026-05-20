@@ -22,29 +22,65 @@ type Props = {
   error?: string;
 };
 
+type TypeFilter = 'all' | 'individuals' | 'companies';
+
 export default function ClientsTab({ clients, error }: Props) {
   const [query, setQuery] = useState('');
   const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [typeFilter, setTypeFilter] = useState<TypeFilter>('all');
+  const [cityFilter, setCityFilter] = useState<string | null>(null);
 
-  // Filter against name/company/email/phone/city — case-insensitive.
-  // useMemo so we don't re-filter on unrelated re-renders.
+  // ---- Extract unique cities from the client list ----
+  // Sorted alphabetically + counts how many clients per city, so the
+  // chip can show e.g. "Boca Raton · 18". Cities with no clients are
+  // omitted automatically (we build from the actual data).
+  const cityList = useMemo(() => {
+    const counts = new Map<string, number>();
+    for (const c of clients) {
+      if (!c.city) continue;
+      const key = c.city.trim();
+      if (!key) continue;
+      counts.set(key, (counts.get(key) ?? 0) + 1);
+    }
+    return Array.from(counts.entries())
+      .sort((a, b) => a[0].localeCompare(b[0]))
+      .map(([city, count]) => ({ city, count }));
+  }, [clients]);
+
+  // ---- Apply ALL active filters: type + city + search query ----
   const filtered = useMemo(() => {
+    let list = clients;
+
+    // Type filter (individuals vs companies)
+    if (typeFilter === 'individuals') list = list.filter((c) => !c.isCompany);
+    else if (typeFilter === 'companies') list = list.filter((c) => c.isCompany);
+
+    // City filter (exact match on the normalized city string)
+    if (cityFilter) list = list.filter((c) => c.city?.trim() === cityFilter);
+
+    // Free-text search across multiple fields
     const q = query.trim().toLowerCase();
-    if (!q) return clients;
-    return clients.filter((c) => {
-      const haystack = [
-        c.name,
-        c.companyName ?? '',
-        c.email ?? '',
-        c.phone ?? '',
-        c.address ?? '',
-        c.city ?? '',
-      ]
-        .join(' ')
-        .toLowerCase();
-      return haystack.includes(q);
-    });
-  }, [clients, query]);
+    if (q) {
+      list = list.filter((c) => {
+        const haystack = [
+          c.name,
+          c.companyName ?? '',
+          c.email ?? '',
+          c.phone ?? '',
+          c.address ?? '',
+          c.city ?? '',
+        ]
+          .join(' ')
+          .toLowerCase();
+        return haystack.includes(q);
+      });
+    }
+
+    return list;
+  }, [clients, query, typeFilter, cityFilter]);
+
+  const companyCount = clients.filter((c) => c.isCompany).length;
+  const individualCount = clients.length - companyCount;
 
   if (error) {
     return (
@@ -61,6 +97,60 @@ export default function ClientsTab({ clients, error }: Props) {
 
   return (
     <div className={styles.wrap}>
+      {/* ===== TYPE FILTER CHIPS ===== */}
+      <div className={styles.filterRow}>
+        <span className={styles.filterLabel}>SHOW</span>
+        <button
+          type="button"
+          onClick={() => setTypeFilter('all')}
+          className={`${styles.filterChip} ${typeFilter === 'all' ? styles.filterChipActive : ''}`}
+        >
+          All <span className={styles.chipCount}>{clients.length}</span>
+        </button>
+        <button
+          type="button"
+          onClick={() => setTypeFilter('individuals')}
+          className={`${styles.filterChip} ${typeFilter === 'individuals' ? styles.filterChipActive : ''}`}
+        >
+          Individuals <span className={styles.chipCount}>{individualCount}</span>
+        </button>
+        <button
+          type="button"
+          onClick={() => setTypeFilter('companies')}
+          className={`${styles.filterChip} ${typeFilter === 'companies' ? styles.filterChipActive : ''}`}
+        >
+          Companies <span className={styles.chipCount}>{companyCount}</span>
+        </button>
+      </div>
+
+      {/* ===== CITY FILTER CHIPS =====
+          Dynamic — only shows cities that actually have clients, with
+          per-city client counts. Click a city to filter; click again to
+          clear. Lets Tiago instantly see "who's in Boca Raton"
+          vs "who's in Delray". */}
+      {cityList.length > 0 && (
+        <div className={styles.filterRow}>
+          <span className={styles.filterLabel}>CITY</span>
+          <button
+            type="button"
+            onClick={() => setCityFilter(null)}
+            className={`${styles.filterChip} ${cityFilter === null ? styles.filterChipActive : ''}`}
+          >
+            All cities
+          </button>
+          {cityList.map(({ city, count }) => (
+            <button
+              key={city}
+              type="button"
+              onClick={() => setCityFilter(cityFilter === city ? null : city)}
+              className={`${styles.filterChip} ${cityFilter === city ? styles.filterChipActive : ''}`}
+            >
+              {city} <span className={styles.chipCount}>{count}</span>
+            </button>
+          ))}
+        </div>
+      )}
+
       {/* Search bar + total count */}
       <div className={styles.toolbar}>
         <div className={styles.searchWrap}>

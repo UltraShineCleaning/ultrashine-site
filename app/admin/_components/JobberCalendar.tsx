@@ -154,13 +154,23 @@ export default function JobberCalendar({ allVisits }: Props) {
         ))}
       </div>
 
-      {/* ===== 6-ROW CALENDAR GRID ===== */}
+      {/* ===== 6-ROW CALENDAR GRID =====
+          Jobber-style — each visit shows as a small horizontal bar with
+          time + client name. Past visits are struck-through, upcoming
+          are colored. Day cells are tall enough to comfortably show
+          4-5 visit bars; anything more shows "+N more". */}
       <div className={styles.grid}>
         {cells.map(({ date, inMonth }, i) => {
           const visits = visitsByDay.get(dayKey(date)) ?? [];
+          // Sort by start time so the day reads top→bottom chronologically
+          const sortedVisits = [...visits].sort((a, b) =>
+            (a.startAt ?? '').localeCompare(b.startAt ?? ''),
+          );
           const isToday = sameDay(date, today);
           const isSelected = sameDay(date, selectedDay);
           const isPast = date < new Date(today.getFullYear(), today.getMonth(), today.getDate());
+          const visibleVisits = sortedVisits.slice(0, 5);
+          const overflow = sortedVisits.length - visibleVisits.length;
           const cellClass = [
             styles.cell,
             !inMonth && styles.cellOutside,
@@ -182,17 +192,35 @@ export default function JobberCalendar({ allVisits }: Props) {
               <div className={styles.cellTop}>
                 <span className={styles.cellDay}>{date.getDate()}</span>
                 {visits.length > 0 && (
-                  <span className={styles.cellBadge}>{visits.length}</span>
+                  <span className={styles.cellCount}>
+                    {visits.length} {visits.length === 1 ? 'visit' : 'visits'}
+                  </span>
                 )}
               </div>
-              <div className={styles.cellPreview}>
-                {visits.slice(0, 2).map((v) => (
-                  <div key={v.id} className={styles.previewName} title={`${v.clientName} · ${fmtTime(v.startAt)}`}>
-                    {v.clientName}
-                  </div>
-                ))}
-                {visits.length > 2 && (
-                  <div className={styles.previewMore}>+{visits.length - 2} more</div>
+              <div className={styles.cellVisits}>
+                {visibleVisits.map((v) => {
+                  const visitDate = v.startAt ? new Date(v.startAt) : null;
+                  const visitIsPast = visitDate ? visitDate < new Date() : false;
+                  const time = visitDate
+                    ? visitDate.toLocaleTimeString('en-US', {
+                        hour: 'numeric',
+                        minute: '2-digit',
+                        hour12: false,
+                      })
+                    : '—';
+                  return (
+                    <div
+                      key={v.id}
+                      className={`${styles.visitBar} ${visitIsPast ? styles.visitBarPast : ''}`}
+                      title={`${time} ${v.clientName}${v.address ? ' · ' + v.address : ''}`}
+                    >
+                      <span className={styles.visitTime}>{time}</span>
+                      <span className={styles.visitName}>{v.clientName}</span>
+                    </div>
+                  );
+                })}
+                {overflow > 0 && (
+                  <div className={styles.visitOverflow}>+{overflow} more</div>
                 )}
               </div>
             </button>

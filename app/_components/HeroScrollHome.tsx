@@ -79,12 +79,17 @@ type SceneCopy = {
 // that's the job of the Trust Strip immediately below the hero.
 const SCENES: SceneCopy[] = [
   {
+    // SCENE 1 — Kitchen, but BRAND-LEVEL headline. This is the visitor's
+    // first read so it has to land the value-prop. The kitchen surfaces
+    // get mentioned in the body so the copy still ties to what's on
+    // screen, but the headline is the conversion hook from the prior
+    // version. ("A home that shines. Without lifting a finger.")
     id: 'kitchen',
     eyebrow: 'HOUSE CLEANING · BOCA RATON + SOUTH FLORIDA',
-    headlineHtml: 'It starts in the <em>kitchen</em>. Where life happens.',
-    body: 'Marble degreased. Stainless polished. Cabinets wiped inside and out. Boutique house cleaning across 13 South Florida cities — the full standard, every visit.',
+    headlineHtml: 'A home that <em>shines</em>. Without lifting a finger.',
+    body: 'It starts in the kitchen — marble degreased, stainless polished, cabinets wiped inside and out. Boutique house cleaning across 13 South Florida cities, the full standard every visit.',
     start: 0.0,
-    end: 0.12,
+    end: 0.13,
   },
   {
     id: 'living',
@@ -223,16 +228,43 @@ export default function HeroScrollHome() {
         ref={videoRef}
         className={styles.video}
         src="/videos/walkthrough.mp4"
-        poster="/images/hero_scene_01_kitchen.jpg"
+        // Use the video's own frame 0 as the poster — this way the
+        // pre-load image and the first decoded frame are pixel-identical,
+        // so visitors don't see a "swap" when the video starts.
+        poster="/videos/walkthrough_poster.jpg"
         muted
         playsInline
         preload="auto"
       />
       <div className={styles.overlay} />
 
-      {/* Per-scene text overlays — one stays visible at a time */}
+      {/* MOBILE-ONLY copy — on mobile the video auto-loops through all
+          five rooms with no scroll-jacking, so room-specific text like
+          "It starts in the kitchen" doesn't make sense (it would stay
+          on screen while the video shows the bathroom, etc.). Instead
+          we lock in one brand-level message + a CTA. Hidden on desktop
+          via .mobileCopy CSS. */}
+      <div className={`${styles.content} ${styles.mobileCopy}`}>
+        <p className={styles.eyebrow}>HOUSE CLEANING · BOCA RATON + SOUTH FLORIDA</p>
+        <h1 className={styles.headline}>
+          A home that <em>shines</em>. Without lifting a finger.
+        </h1>
+        <p className={styles.body}>
+          Boutique house cleaning across 13 South Florida cities — kitchens,
+          living rooms, bathrooms, and every space in between. The full
+          standard, every visit.
+        </p>
+        <div className={styles.ctaRow}>
+          <Link href="/quote" className="btn btn-coral">Request Your Free Quote</Link>
+          <a href="#services" className="btn btn-secondary">See What&apos;s Included</a>
+        </div>
+      </div>
+
+      {/* DESKTOP per-scene text overlays — one stays visible at a time
+          as the user scrolls the camera through the home. Hidden on
+          mobile via .content CSS (.us-copy → opacity 0). */}
       {SCENES.map((scene, i) => (
-        <div key={scene.id} className={`${styles.content} us-copy us-copy-${i}`}>
+        <div key={scene.id} className={`${styles.content} ${styles.desktopCopy} us-copy us-copy-${i}`}>
           <p className={styles.eyebrow}>{scene.eyebrow}</p>
           <h1
             className={styles.headline}

@@ -501,6 +501,10 @@ export async function getJobberMetrics(): Promise<JobberMetrics> {
   const farFuture = new Date(startOfDay);
   farFuture.setDate(farFuture.getDate() + 90);
 
+  // Visit field name is `isComplete` (boolean), NOT `completed`. Jobber's
+  // schema error told us this directly:
+  //   "Field 'completed' doesn't exist on type 'Visit'
+  //    (Did you mean 'completedBy', 'completedAt' or 'isComplete'?)"
   const visitsPromise = jobberQuery<{
     scheduledItems: {
       nodes: Array<{
@@ -508,7 +512,7 @@ export async function getJobberMetrics(): Promise<JobberMetrics> {
         startAt: string | null;
         endAt?: string | null;
         title: string | null;
-        completed?: boolean | null;
+        isComplete?: boolean | null;
         __typename?: string;
         assignedUsers?: { nodes?: Array<{ id?: string; name?: { full?: string | null } | null }> | null } | null;
         job?: {
@@ -530,7 +534,7 @@ export async function getJobberMetrics(): Promise<JobberMetrics> {
           __typename
           ... on Visit {
             endAt
-            completed
+            isComplete
             assignedUsers {
               nodes {
                 id
@@ -644,7 +648,7 @@ export async function getJobberMetrics(): Promise<JobberMetrics> {
       endAt: n.endAt ?? null,
       address: addrStr,
       team,
-      completed: !!n.completed,
+      completed: !!n.isComplete,
     };
   };
 

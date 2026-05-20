@@ -9,213 +9,177 @@ import styles from './HeroScrollHome.module.css';
 gsap.registerPlugin(ScrollTrigger);
 
 /**
- * HeroScrollHome — GSAP-powered scroll-jacked 4-scene cinematic tour.
+ * HeroScrollHome — SCROLL-SCRUBBED video walkthrough.
+ *
+ * The user scrolls and we drive the playhead of /videos/walkthrough.mp4
+ * forward/backward in lockstep. While the video plays, four text overlays
+ * (one per room) crossfade in and out at their assigned slice of the
+ * timeline. CTA appears on the last slice.
+ *
+ * Why scroll-scrubbed video (not 4 stacked images + crossfades):
+ *   The walkthrough.mp4 is a single continuous Steadicam-style shot
+ *   built by stitching 4 AI-generated transition clips together. Driving
+ *   video.currentTime from scroll progress gives the user the feeling of
+ *   physically walking through the home as they scroll — which is the
+ *   whole point of the boutique luxury cleaning service narrative.
  *
  * How it works:
- *  - The hero is 100vh tall. ScrollTrigger PINS it for an additional
- *    400% of viewport scroll (so the user "spends" 4 viewport heights
- *    of scrolling inside the hero before the page continues).
- *  - During the pin, a master GSAP timeline plays back driven by scroll
- *    position (scrub: 1, with a 1-second smoothing lag for buttery feel).
- *  - Each scene has its OWN entrance + exit motion (Apple-style variety):
- *      Scene 01 KITCHEN  — RISE     (text rises from below, fades up)
- *      Scene 02 LIVING   — SLIDE→   (text slides in from the LEFT)
- *      Scene 03 BATHROOM — ZOOM     (text scales 0.75 → 1.0, fades up)
- *      Scene 04 BEDROOM  — SLIDE←   (text slides in from the RIGHT)
- *  - Each scene's BACKGROUND image dollies in (scale 1.0 → 1.25) and
- *    parallaxes up (-8% Y) during its slice — camera-moving-into-the-room.
- *  - After scene 4, the pin releases and the rest of the page scrolls
- *    normally (trust strip, services, etc.).
- *  - Mobile (<1024px) skips the GSAP setup entirely and shows scene 1
- *    as a static hero — scroll-jacking is too janky on touch screens.
+ *   - Container is 100vh. GSAP ScrollTrigger pins it for `length*100%`
+ *     additional scroll (so the user spends ~4 viewport-heights inside
+ *     the hero before the page continues).
+ *   - On every ScrollTrigger `onUpdate`, we set video.currentTime =
+ *     progress * video.duration. Lenis (in SmoothScrollProvider) feeds
+ *     scroll events to ScrollTrigger so this stays buttery.
+ *   - Text overlays for each room are positioned absolutely on top of
+ *     the video. They fade in/out at their assigned scrub-time window.
+ *   - Last scene (bedroom) shows the CTA buttons + holds longer.
+ *   - Mobile / reduced-motion: GSAP skipped. Video plays autoplay-loop
+ *     muted as a passive background loop; first scene's text + CTA show.
  *
- * Lenis smooth scroll is bridged to ScrollTrigger in SmoothScrollProvider
- * so the entire experience plays smoothly with inertia.
+ * Critical encoding details for buttery scrubbing:
+ *   - H.264 yuv420p (broadly supported)
+ *   - Short GOP: -g 15 -keyint_min 15 (keyframe every 0.5 sec at 30fps)
+ *   - +faststart (moov atom at front so video starts before fully loaded)
  */
 
-type MotionStyle = 'rise' | 'slide-right' | 'slide-left' | 'scale-up';
-
-type Scene = {
+type SceneCopy = {
   id: string;
-  image: string;
   eyebrow: string;
   headlineHtml: string;
   body: string;
-  motion: MotionStyle;
+  /** Fraction of the video at which this scene is centered (0..1) */
+  start: number;
+  end: number;
   showCta?: boolean;
 };
 
-const SCENES: Scene[] = [
+const SCENES: SceneCopy[] = [
   {
     id: 'kitchen',
-    image: '/images/hero_scene_01_kitchen.jpg',
     eyebrow: 'HOUSE CLEANING · BOCA RATON + SOUTH FLORIDA',
     headlineHtml: 'A home that <em>shines</em>. Without lifting a finger.',
     body: 'Boutique house cleaning in Boca Raton and 12 other South Florida cities across Palm Beach + Broward. The full standard — every visit.',
-    motion: 'rise',
+    start: 0.0,
+    end: 0.25,
   },
   {
     id: 'living',
-    image: '/images/hero_scene_02_living.jpg',
     eyebrow: 'EVERY ROOM · EVERY DETAIL',
     headlineHtml: 'Wall-to-wall <em>care</em>. Nothing missed.',
     body: 'From marble countertops to baseboards. Same boutique team every visit. No rotating contractors, no surprises.',
-    motion: 'slide-right',
+    start: 0.25,
+    end: 0.5,
   },
   {
     id: 'bathroom',
-    image: '/images/hero_scene_03_bathroom.jpg',
     eyebrow: 'BACKGROUND-CHECKED · BONDED · INSURED',
     headlineHtml: 'A team you can <em>actually</em> trust at home.',
     body: 'W2 employees, never contractors. Every cleaner background-checked. Every job staffed by a pair — two professionals, every visit.',
-    motion: 'scale-up',
+    start: 0.5,
+    end: 0.75,
   },
   {
     id: 'bedroom',
-    image: '/images/hero_scene_04_bedroom.jpg',
     eyebrow: 'CUSTOM QUOTE · WITHIN THE HOUR',
     headlineHtml: 'Ready for a home that <em>shines</em>?',
     body: 'Tell us about your space. We text you back within the hour with a precise quote — no hidden fees, no upsells.',
-    motion: 'slide-left',
+    start: 0.75,
+    end: 1.0,
     showCta: true,
   },
 ];
 
 export default function HeroScrollHome() {
   const containerRef = useRef<HTMLElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
-    // Respect reduced-motion + mobile fallback — skip scroll-jacking on
-    // small screens and for users who request reduced motion.
     const isMobile = window.matchMedia('(max-width: 1024px)').matches;
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (isMobile || reducedMotion) return;
 
+    const video = videoRef.current;
     const container = containerRef.current;
-    if (!container) return;
+    if (!video || !container) return;
 
-    // gsap.context auto-scopes selectors + makes cleanup one-line via ctx.revert()
+    // Mobile / reduced-motion: don't scroll-jack. Let the video autoplay
+    // as a passive background loop and show the first scene's copy.
+    if (isMobile || reducedMotion) {
+      video.loop = true;
+      video.muted = true;
+      // Best-effort autoplay (muted+playsInline already set as attrs)
+      video.play().catch(() => { /* user-gesture required on some browsers */ });
+      return;
+    }
+
+    // gsap.context scopes selectors + makes cleanup one line via revert()
     const ctx = gsap.context(() => {
-      // Initial state — all scenes invisible except the first
-      gsap.set('.us-scene', { autoAlpha: 0 });
-      gsap.set('.us-scene-0', { autoAlpha: 1 });
+      // Wait for video metadata so duration is known
+      const onReady = () => {
+        const duration = video.duration || 26;
 
-      // Per-scene initial content state (for entrance motion)
-      SCENES.forEach((scene, i) => {
-        const sel = `.us-scene-${i} .us-content`;
-        if (i === 0) {
-          // first scene's text starts visible (the static hero state)
-          gsap.set(sel, { opacity: 1, y: 0, x: 0, scale: 1 });
-        } else {
-          // others start offscreen per their motion variant
-          const initial: gsap.TweenVars = { opacity: 0 };
-          if (scene.motion === 'rise') initial.y = 80;
-          if (scene.motion === 'slide-right') initial.x = -180;
-          if (scene.motion === 'slide-left') initial.x = 180;
-          if (scene.motion === 'scale-up') initial.scale = 0.75;
-          gsap.set(sel, initial);
+        // Initial state for text overlays — first scene visible, rest hidden
+        gsap.set('.us-copy', { autoAlpha: 0 });
+        gsap.set('.us-copy-0', { autoAlpha: 1 });
+
+        // Progress dots — first filled
+        gsap.set('.us-progress-fill-0', { scaleX: 1 });
+        for (let i = 1; i < SCENES.length; i++) {
+          gsap.set(`.us-progress-fill-${i}`, { scaleX: 0 });
         }
-      });
 
-      // Build the master timeline pinned for 4 viewport-heights of scroll.
-      const tl = gsap.timeline({
-        scrollTrigger: {
+        // Build pin + scrub trigger. Length = 4 viewport heights of scroll.
+        ScrollTrigger.create({
           trigger: container,
           start: 'top top',
           end: `+=${SCENES.length * 100}%`,
-          scrub: 1,
+          scrub: 0.6,
           pin: true,
           pinSpacing: true,
           anticipatePin: 1,
           invalidateOnRefresh: true,
-        },
-      });
+          onUpdate: (self) => {
+            // Drive the video playhead from scroll progress
+            const t = self.progress * duration;
+            if (Math.abs(video.currentTime - t) > 1 / 60) {
+              video.currentTime = t;
+            }
 
-      // Progress dots — set initial state (first one filled, rest empty)
-      gsap.set('.us-progress-fill-0', { scaleX: 1 });
-      for (let i = 1; i < SCENES.length; i++) {
-        gsap.set(`.us-progress-fill-${i}`, { scaleX: 0 });
+            // Crossfade text overlays + fill progress dots based on progress
+            const p = self.progress;
+            const fade = 0.04;
+            SCENES.forEach((scene, i) => {
+              let alpha = 0;
+              if (p >= scene.start - fade && p <= scene.end + fade) {
+                if (p < scene.start) {
+                  alpha = (p - (scene.start - fade)) / fade;
+                } else if (p > scene.end) {
+                  alpha = 1 - (p - scene.end) / fade;
+                } else {
+                  alpha = 1;
+                }
+              }
+              alpha = Math.max(0, Math.min(1, alpha));
+              gsap.set(`.us-copy-${i}`, { autoAlpha: alpha });
+
+              const dotProgress =
+                p < scene.start ? 0 : p > scene.end ? 1 : (p - scene.start) / (scene.end - scene.start);
+              gsap.set(`.us-progress-fill-${i}`, { scaleX: dotProgress });
+            });
+
+            // Fade out scroll cue after first nudge
+            const cueAlpha = Math.max(0, 1 - p * 6);
+            gsap.set('.us-scroll-cue', { opacity: cueAlpha });
+          },
+        });
+      };
+
+      if (video.readyState >= 1 && !isNaN(video.duration)) {
+        onReady();
+      } else {
+        video.addEventListener('loadedmetadata', onReady, { once: true });
       }
-
-      // For each scene, choreograph the transition INTO it.
-      //
-      // "WALK INTO THE NEXT ROOM" TECHNIQUE:
-      //   - During the scene's slice, the bg dollies 1.0 → 1.25 (normal zoom-in)
-      //   - DURING the exit transition, the OUTGOING scene continues to zoom
-      //     aggressively from 1.25 → 1.55 (push-through-the-doorway feel) —
-      //     this is what makes the transition feel like motion not blur
-      //   - The INCOMING scene starts at 1.0 (fresh perspective of the next room)
-      //   - Crossfade is faster + uses snappy power3.inOut (not lingering blur)
-      //   - The outgoing scene's zoom acceleration timing matches the crossfade
-      //     so visually the camera "pushes through" right as the next room appears
-      SCENES.forEach((scene, i) => {
-        const sceneSel = `.us-scene-${i}`;
-        const bgSel = `${sceneSel} .us-bg`;
-        const contentSel = `${sceneSel} .us-content`;
-
-        // Background dolly-in during this scene's slice (1.0 → 1.25)
-        tl.fromTo(
-          bgSel,
-          { scale: 1.0, y: '0%' },
-          { scale: 1.25, y: '-8%', ease: 'none', duration: 1 },
-          i,
-        );
-
-        // For scenes 1+, choreograph the transition IN
-        if (i > 0) {
-          // ZOOM-THROUGH on the previous scene during the crossfade —
-          // simulates the camera pushing forward THROUGH the doorway
-          // of the previous room into this one. This is the key change
-          // from blurry crossfade → "walking forward" motion.
-          tl.to(
-            `.us-scene-${i - 1} .us-bg`,
-            { scale: 1.55, ease: 'power2.in', duration: 0.4 },
-            i - 0.4,
-          );
-
-          // Sharp crossfade (faster + snappier easing — less linger = less blur feel)
-          tl.to(sceneSel, { autoAlpha: 1, duration: 0.35, ease: 'power3.inOut' }, i - 0.35);
-          tl.to(`.us-scene-${i - 1}`, { autoAlpha: 0, duration: 0.35, ease: 'power3.inOut' }, i - 0.35);
-
-          // Text entrance — variant-specific motion
-          const fromVars: gsap.TweenVars = { opacity: 0 };
-          if (scene.motion === 'rise') fromVars.y = 80;
-          if (scene.motion === 'slide-right') fromVars.x = -180;
-          if (scene.motion === 'slide-left') fromVars.x = 180;
-          if (scene.motion === 'scale-up') fromVars.scale = 0.75;
-
-          tl.fromTo(
-            contentSel,
-            fromVars,
-            { opacity: 1, y: 0, x: 0, scale: 1, duration: 0.6, ease: 'power3.out' },
-            i - 0.2,
-          );
-        }
-
-        // Text exit (except for last scene which holds with CTAs)
-        if (i < SCENES.length - 1) {
-          const exitVars: gsap.TweenVars = { opacity: 0, duration: 0.4, ease: 'power2.in' };
-          // Exit direction matches entrance direction (continues the motion)
-          if (scene.motion === 'rise') exitVars.y = -80;
-          if (scene.motion === 'slide-right') exitVars.x = 180;
-          if (scene.motion === 'slide-left') exitVars.x = -180;
-          if (scene.motion === 'scale-up') exitVars.scale = 1.15;
-          tl.to(contentSel, exitVars, i + 0.8);
-
-          // Fill the NEXT progress dot as we transition into it
-          tl.fromTo(
-            `.us-progress-fill-${i + 1}`,
-            { scaleX: 0 },
-            { scaleX: 1, duration: 0.5, ease: 'power1.out' },
-            i + 0.6,
-          );
-        }
-      });
-
-      // Hide the "Scroll" cue after the user starts moving past the first scene
-      tl.to('.us-scroll-cue', { opacity: 0, duration: 0.3 }, 0.1);
     }, container);
 
     return () => ctx.revert();
@@ -223,28 +187,33 @@ export default function HeroScrollHome() {
 
   return (
     <section ref={containerRef} className={styles.container}>
-      {SCENES.map((scene, i) => (
-        <div key={scene.id} className={`${styles.scene} us-scene us-scene-${i}`}>
-          <div
-            className={`${styles.bg} us-bg`}
-            style={{ backgroundImage: `url(${scene.image})` }}
-          />
-          <div className={styles.overlay} />
-          <div className={`${styles.content} us-content`}>
-            <p className={styles.eyebrow}>{scene.eyebrow}</p>
-            <h1
-              className={styles.headline}
-              dangerouslySetInnerHTML={{ __html: scene.headlineHtml }}
-            />
-            <p className={styles.body}>{scene.body}</p>
+      <video
+        ref={videoRef}
+        className={styles.video}
+        src="/videos/walkthrough.mp4"
+        poster="/images/hero_scene_01_kitchen.jpg"
+        muted
+        playsInline
+        preload="auto"
+      />
+      <div className={styles.overlay} />
 
-            {scene.showCta && (
-              <div className={styles.ctaRow}>
-                <Link href="/quote" className="btn btn-coral">Request Your Free Quote</Link>
-                <a href="#services" className="btn btn-secondary">See What&apos;s Included</a>
-              </div>
-            )}
-          </div>
+      {/* Per-scene text overlays — one stays visible at a time */}
+      {SCENES.map((scene, i) => (
+        <div key={scene.id} className={`${styles.content} us-copy us-copy-${i}`}>
+          <p className={styles.eyebrow}>{scene.eyebrow}</p>
+          <h1
+            className={styles.headline}
+            dangerouslySetInnerHTML={{ __html: scene.headlineHtml }}
+          />
+          <p className={styles.body}>{scene.body}</p>
+
+          {scene.showCta && (
+            <div className={styles.ctaRow}>
+              <Link href="/quote" className="btn btn-coral">Request Your Free Quote</Link>
+              <a href="#services" className="btn btn-secondary">See What&apos;s Included</a>
+            </div>
+          )}
         </div>
       ))}
 
@@ -266,7 +235,7 @@ export default function HeroScrollHome() {
             <div className={`${styles.progressFill} us-progress-fill-${i}`} />
           </div>
         ))}
-        <span className={styles.progressLabel}>04</span>
+        <span className={styles.progressLabel}>0{SCENES.length}</span>
       </div>
     </section>
   );

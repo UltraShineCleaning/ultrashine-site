@@ -1,45 +1,41 @@
 /* ==========================================================
-   HeroScrollHome · GSAP-pinned 4-scene cinematic scroll-through
-   Desktop: 100vh container, GSAP ScrollTrigger pins it for 400% of
-   additional scroll (4 viewport-heights of scroll-jacked playback).
-   Mobile: pin is skipped, container is just a 100vh static hero of scene 1.
+   HeroScrollHome · GSAP-pinned scroll-SCRUBBED video walkthrough
+   Desktop: 100vh container, GSAP ScrollTrigger pins it and drives
+   video.currentTime from scroll progress so the user "walks through"
+   the home as they scroll. Four text overlays crossfade in/out at
+   their assigned slices of the timeline.
+   Mobile: pin is skipped, video autoplays muted-loop as background.
    ========================================================== */
 
 .container {
   position: relative;
   /* JUST 100VH — GSAP ScrollTrigger handles the 400% pin scroll
-     length via its own mechanism (not CSS height). This is critical:
-     making this 400vh would create extra empty navy space below the
-     hero (the "big blue section" bug). With pin, GSAP inserts a
-     spacer of the right height automatically. */
+     length via its own mechanism (not CSS height). With pin, GSAP
+     inserts a spacer of the right height automatically. */
   height: 100vh;
   overflow: hidden;
   background: var(--navy-deep);
 }
 
-/* Each scene fills the container, stacked on top of each other.
-   GSAP controls opacity via autoAlpha (so visibility is also toggled,
-   not just opacity — prevents invisible scenes from blocking clicks). */
-.scene {
+/* The walkthrough video — fills the container, cropped to fit. */
+.video {
   position: absolute;
   inset: 0;
-  overflow: hidden;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  /* Hint to compositor: this layer redraws on every scroll tick */
+  will-change: transform;
+  background: var(--navy-deep);
+  pointer-events: none;
 }
 
-/* Defensive initial state — scenes 1+ start invisible BEFORE GSAP runs
-   so visitors don't see a flash of all 4 stacked on page-load.
-   GSAP then takes over visibility via autoAlpha during the timeline.
+/* Defensive initial state — text overlays 1+ start invisible BEFORE
+   GSAP runs so visitors don't see a flash of all 4 stacked at page-load.
    Scoped under .container so CSS Modules accepts the :global() selectors. */
-.container :global(.us-scene) { opacity: 0; }
-.container :global(.us-scene-0) { opacity: 1; }
-
-.bg {
-  position: absolute;
-  inset: 0;
-  background-size: cover;
-  background-position: center;
-  will-change: transform, opacity;
-}
+.container :global(.us-copy) { opacity: 0; }
+.container :global(.us-copy-0) { opacity: 1; }
 
 .overlay {
   position: absolute;
@@ -214,19 +210,18 @@
 }
 
 /* ===== MOBILE FALLBACK =====
-   On mobile (≤1024px), the GSAP useEffect bails out (no pin). The
-   component renders all 4 scenes absolutely positioned but we only
-   want scene 1 to show. Force opacity 1 on .us-scene-0 + hide the rest. */
+   On mobile (≤1024px), the GSAP useEffect bails out (no scroll-scrub).
+   Instead the video autoplays muted on loop as a passive background and
+   only the first scene's copy is visible. */
 @media (max-width: 1024px) {
   .container {
     height: 100vh;
     min-height: 600px;
   }
-  /* Only the first scene shows on mobile; the others are hidden.
+  /* Only the first copy block shows on mobile; the others are hidden.
      Scoped under .container so CSS Modules accepts the :global() selector. */
-  .scene { opacity: 0 !important; visibility: hidden; }
-  .container :global(.us-scene-0) { opacity: 1 !important; visibility: visible !important; }
-  .content { padding: 0 32px 56px; }
+  .content { opacity: 0 !important; visibility: hidden; padding: 0 32px 56px; }
+  .container :global(.us-copy-0) { opacity: 1 !important; visibility: visible !important; }
   .headline { font-size: 56px; }
   .body { font-size: 18px; }
   .skipBtn { display: none; }

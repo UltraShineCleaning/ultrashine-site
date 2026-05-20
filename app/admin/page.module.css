@@ -1,379 +1,175 @@
 /* ==========================================================
-   /admin · Private business dashboard
+   /admin · Internal dashboard styles
+   The admin runs inside <AdminShell /> which gives it a left sidebar
+   (dark slate) and a LIGHT MAIN CONTENT AREA. So everything below is
+   designed for dark text on a light background, with neutral GREY
+   accents instead of the brand blue/blush palette — feels like an
+   internal tool, not a marketing page.
+
+   The .loginPage + .loginCard rules at the bottom still serve
+   /admin/login (which uses its own dark navy gradient layout) — those
+   are untouched.
    ========================================================== */
 
-.page {
-  min-height: 100vh;
-  background:
-    radial-gradient(ellipse 1000px 700px at 0% 0%, rgba(28, 97, 240, 0.10) 0%, transparent 60%),
-    radial-gradient(ellipse 800px 700px at 100% 100%, rgba(94, 143, 255, 0.14) 0%, transparent 60%),
-    linear-gradient(165deg, #002C98 0%, #001E6B 60%, #001045 100%);
-  color: var(--cream);
-  padding: 40px 32px 80px;
+/* ===== ADMIN-SCOPED COLOR PALETTE ===== */
+/* Use these inside admin instead of var(--blue) / var(--blush) etc.
+   The values here read as "neutral internal tool" not "brand". */
+.statsRow,
+.statCard,
+.leadsList,
+.leadCard,
+.tilesGrid,
+.tile,
+.quickActions,
+.quickAction,
+.sectionLabel,
+.emptyState,
+.errorState,
+.leadsWrap {
+  /* (just here so the CSS file has a single anchor point — most rules
+      use literal values inline below for clarity) */
 }
 
-.shell {
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-/* ===== HEADER ===== */
-.header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 48px;
-  flex-wrap: wrap;
-  gap: 16px;
-}
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
-.brandMark {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: var(--blush);
-  display: grid;
-  place-items: center;
-  font-family: var(--font-poppins), sans-serif;
-  color: var(--navy-deep);
-  font-size: 22px;
-}
-.brandText {
-  font-family: var(--font-poppins), sans-serif;
-  font-weight: 400;
-  font-weight: 700;
-  font-size: 22px;
-  color: var(--cream);
-  letter-spacing: -0.005em;
-}
-.brandText strong {
-  font-style: normal;
-  font-weight: 400;
-  color: var(--blush);
-  margin-right: 4px;
-}
-
-.headerRight {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
-.headerLink {
-  font-family: var(--font-outfit), sans-serif;
-  font-size: 11px;
-  letter-spacing: 0.32em;
-  text-transform: uppercase;
-  color: var(--cream);
-  opacity: 0.7;
-  text-decoration: none;
-  transition: opacity 0.2s, color 0.2s;
-}
-.headerLink:hover {
-  opacity: 1;
-  color: var(--blush);
-}
-
-/* ===== HERO ===== */
-.hero {
-  margin-bottom: 56px;
-}
-.heroEyebrow {
-  font-family: var(--font-outfit), sans-serif;
-  font-weight: 400;
-  font-size: 11px;
-  letter-spacing: 0.42em;
-  text-transform: uppercase;
-  color: var(--cream);
-  opacity: 0.7;
-  margin-bottom: 14px;
-  display: inline-flex;
-  align-items: center;
-  gap: 14px;
-}
-.heroEyebrow::before {
-  content: '';
-  display: inline-block;
-  width: 32px;
-  height: 1px;
-  background: var(--blush);
-}
-.heroTitle {
-  font-family: var(--font-poppins), sans-serif;
-  font-weight: 400;
-  font-size: 64px;
-  line-height: 1.02;
-  letter-spacing: -0.025em;
-  margin-bottom: 14px;
-  color: var(--cream);
-}
-.heroTitle em {
-  font-weight: 700;
-  color: var(--blush);
-}
-.heroSub {
-  font-family: var(--font-poppins), sans-serif;
-  font-weight: 700;
-  font-weight: 400;
-  font-size: 18px;
-  opacity: 0.85;
-  max-width: 620px;
-}
-
-/* ===== TILES ===== */
-.tilesGrid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 18px;
-  margin-bottom: 48px;
-}
-.tile {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 14px;
-  padding: 32px 30px 30px;
-  text-decoration: none;
-  color: var(--cream);
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-  position: relative;
-  overflow: hidden;
-}
-.tile:hover {
-  border-color: var(--blush);
-  transform: translateY(-3px);
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.3);
-  background: rgba(255, 255, 255, 0.08);
-}
-.tileIcon {
-  font-family: var(--font-poppins), sans-serif;
-  font-size: 28px;
-  color: var(--blush);
-  line-height: 1;
-  margin-bottom: 4px;
-}
-.tileLabel {
-  font-family: var(--font-outfit), sans-serif;
-  font-weight: 400;
-  font-size: 10px;
-  letter-spacing: 0.32em;
-  text-transform: uppercase;
-  color: var(--cream);
-  opacity: 0.7;
-}
-.tileTitle {
-  font-family: var(--font-poppins), sans-serif;
-  font-weight: 400;
-  font-size: 22px;
-  letter-spacing: -0.005em;
-  color: var(--cream);
-  line-height: 1.2;
-}
-.tileBody {
-  font-family: var(--font-outfit), sans-serif;
-  font-weight: 400;
-  font-size: 13px;
-  line-height: 1.55;
-  color: var(--cream);
-  opacity: 0.78;
-}
-.tileLink {
-  margin-top: auto;
-  padding-top: 14px;
-  font-family: var(--font-outfit), sans-serif;
-  font-weight: 500;
-  font-size: 11px;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--blush);
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-}
-.tileLink::after {
-  content: '→';
-  font-family: var(--font-poppins), sans-serif;
-  font-size: 16px;
-  transition: transform 0.2s;
-}
-.tile:hover .tileLink::after { transform: translateX(4px); }
-
-/* Wide tile variant */
-.tileWide { grid-column: span 2; }
-
-/* ===== SECTION ===== */
+/* ===== SECTION LABEL ===== */
 .sectionLabel {
-  font-family: var(--font-outfit), sans-serif;
-  font-weight: 400;
-  font-size: 11px;
-  letter-spacing: 0.42em;
+  font-family: var(--font-poppins), sans-serif;
+  font-weight: 700;
+  font-size: 10px;
+  letter-spacing: 0.28em;
   text-transform: uppercase;
-  color: var(--cream);
-  opacity: 0.7;
-  margin-bottom: 18px;
+  color: #6b7280;
+  margin: 32px 0 14px;
   display: inline-flex;
   align-items: center;
-  gap: 14px;
+  gap: 12px;
 }
 .sectionLabel::before {
   content: '';
   display: inline-block;
-  width: 32px;
+  width: 26px;
   height: 1px;
-  background: var(--blush);
-}
-
-/* ===== QUICK ACTIONS ===== */
-.quickActions {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 12px;
-  margin-bottom: 48px;
-}
-.quickAction {
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.10);
-  border-radius: 999px;
-  padding: 14px 22px;
-  font-family: var(--font-outfit), sans-serif;
-  font-weight: 400;
-  font-size: 12px;
-  letter-spacing: 0.06em;
-  color: var(--cream);
-  text-decoration: none;
-  text-align: center;
-  transition: all 0.2s;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-}
-.quickAction:hover {
-  background: var(--blush);
-  color: var(--navy-deep);
-  border-color: var(--blush);
+  background: #9ca3af;
 }
 
 /* ===== STATS ROW ===== */
 .statsRow {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  gap: 14px;
-  margin-bottom: 36px;
+  gap: 12px;
+  margin-bottom: 8px;
 }
 .statCard {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
   border-radius: 12px;
-  padding: 22px 22px 18px;
-  position: relative;
-  overflow: hidden;
+  padding: 18px 20px 16px;
+  min-height: 116px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
 }
+.statCard:hover {
+  border-color: #d1d5db;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04);
+  transform: translateY(-1px);
+}
+/* "Hi" variant — used for today's quotes (the freshest metric) */
 .statCardHi {
-  background: rgba(28, 97, 240, 0.10);
-  border-color: rgba(28, 97, 240, 0.30);
+  background: #f3f4f6;
+  border-color: #d1d5db;
 }
 .statLabel {
-  font-family: var(--font-outfit), sans-serif;
-  font-weight: 400;
+  font-family: var(--font-poppins), sans-serif;
+  font-weight: 700;
   font-size: 10px;
-  letter-spacing: 0.32em;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: var(--cream);
-  opacity: 0.7;
-  margin-bottom: 10px;
+  color: #6b7280;
 }
 .statValue {
   font-family: var(--font-poppins), sans-serif;
-  font-weight: 400;
-  font-size: 48px;
+  font-weight: 700;
+  font-size: 32px;
   line-height: 1;
-  letter-spacing: -0.025em;
-  color: var(--cream);
+  letter-spacing: -0.02em;
+  color: #111827;
+  margin: 8px 0 4px;
 }
 .statValue em {
-  font-weight: 700;
-  color: var(--blush);
+  font-style: normal;
+  color: #d1d5db;
+  font-weight: 400;
 }
 .statSub {
-  font-family: var(--font-outfit), sans-serif;
+  font-family: var(--font-poppins), sans-serif;
   font-size: 11px;
-  letter-spacing: 0.06em;
-  color: var(--cream);
-  opacity: 0.65;
-  margin-top: 8px;
+  color: #9ca3af;
+  letter-spacing: 0.01em;
 }
 
 /* ===== LEADS LIST ===== */
 .leadsWrap {
-  margin-bottom: 36px;
+  margin-top: 4px;
+  margin-bottom: 8px;
 }
 .leadsList {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
 }
 .leadCard {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
   border-radius: 12px;
-  padding: 18px 22px;
+  padding: 16px 20px;
   display: grid;
   grid-template-columns: 1fr auto;
-  gap: 16px;
+  gap: 14px;
   align-items: center;
-  transition: border-color 0.2s, background 0.2s;
+  transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
 }
 .leadCard:hover {
-  border-color: rgba(28, 97, 240, 0.3);
-  background: rgba(255, 255, 255, 0.07);
+  border-color: #d1d5db;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04);
+  transform: translateY(-1px);
 }
 .leadInfo {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 3px;
   min-width: 0;
 }
 .leadType {
-  font-family: var(--font-outfit), sans-serif;
-  font-weight: 400;
+  font-family: var(--font-poppins), sans-serif;
+  font-weight: 700;
   font-size: 9px;
-  letter-spacing: 0.32em;
+  letter-spacing: 0.24em;
   text-transform: uppercase;
-  color: var(--blush);
-  opacity: 0.9;
+  color: #6b7280;
 }
 .leadName {
   font-family: var(--font-poppins), sans-serif;
-  font-weight: 400;
-  font-size: 17px;
+  font-weight: 700;
+  font-size: 15px;
   letter-spacing: -0.005em;
-  color: var(--cream);
+  color: #111827;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 .leadMeta {
-  font-family: var(--font-outfit), sans-serif;
+  font-family: var(--font-poppins), sans-serif;
   font-size: 12px;
-  color: var(--cream);
-  opacity: 0.65;
+  color: #6b7280;
 }
 .leadStatus {
   font-size: 11px;
-  letter-spacing: 0.06em;
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
+  letter-spacing: 0.02em;
 }
-.statusDelivered { color: #9BD9A8; }
-.statusBounced  { color: #FDB5A8; }
-.statusOther    { color: var(--cream); opacity: 0.6; }
+.statusDelivered { color: #166534; }
+.statusBounced  { color: #B91C1C; }
+.statusOther    { color: #6b7280; }
 
 .leadActions {
   display: flex;
@@ -381,117 +177,219 @@
   flex-shrink: 0;
 }
 .actBtn {
-  width: 38px;
-  height: 38px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: #f3f4f6;
+  border: 1px solid #e5e7eb;
   display: grid;
   place-items: center;
-  color: var(--cream);
+  color: #374151;
   text-decoration: none;
-  font-size: 15px;
-  transition: all 0.2s;
+  font-size: 14px;
+  transition: all 0.15s;
 }
 .actBtn:hover {
-  background: var(--blush);
-  color: var(--navy-deep);
-  border-color: var(--blush);
+  background: #111827;
+  color: #ffffff;
+  border-color: #111827;
 }
 .actBtnPrimary {
-  background: var(--blush);
-  color: var(--navy-deep);
-  border-color: var(--blush);
+  background: #111827;
+  color: #ffffff;
+  border-color: #111827;
 }
-
-/* "★ Review →" per-lead button — gold-tinted to read as a customer action.
-   Wider pill (not a circle) so the text fits. */
+/* "★ Review →" per-lead button — kept warm-gold so it's visually
+   distinct as a customer-facing action, but on a light surface. */
 .actBtnReview {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 0 14px;
-  height: 38px;
+  padding: 0 12px;
+  height: 36px;
   border-radius: 999px;
-  background: rgba(255, 200, 87, 0.14);
-  border: 1px solid rgba(255, 200, 87, 0.45);
-  color: var(--gold);
+  background: #fef3c7;
+  border: 1px solid #fde68a;
+  color: #92400e;
   text-decoration: none;
   font-family: var(--font-poppins), sans-serif;
-  font-weight: 600;
-  font-size: 11px;
+  font-weight: 700;
+  font-size: 10px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   white-space: nowrap;
-  transition: all 0.2s;
+  transition: all 0.15s;
 }
 .actBtnReview:hover {
-  background: var(--gold);
-  color: var(--navy-deep);
-  border-color: var(--gold);
+  background: #f59e0b;
+  color: #ffffff;
+  border-color: #f59e0b;
   text-decoration: none;
 }
 
+/* ===== EMPTY + ERROR STATES ===== */
 .emptyState {
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px dashed rgba(255, 255, 255, 0.20);
+  background: #f9fafb;
+  border: 1px dashed #d1d5db;
   border-radius: 12px;
   padding: 28px 24px;
   text-align: center;
   font-family: var(--font-poppins), sans-serif;
-  font-weight: 700;
-  color: var(--cream);
-  opacity: 0.75;
-  font-size: 15px;
+  font-weight: 500;
+  color: #6b7280;
+  font-size: 14px;
+  line-height: 1.5;
 }
 .errorState {
-  background: rgba(254, 202, 202, 0.06);
-  border: 1px solid rgba(254, 202, 202, 0.30);
+  background: #FEF2F2;
+  border: 1px solid #FECACA;
   border-radius: 10px;
   padding: 14px 18px;
-  font-family: var(--font-outfit), sans-serif;
-  font-size: 12px;
-  color: #FDB5A8;
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 13px;
+  color: #B91C1C;
   margin-bottom: 18px;
 }
 
-/* ===== HELP CARD ===== */
-.helpCard {
-  background: rgba(255, 255, 255, 0.04);
-  border-left: 2px solid var(--blush);
-  border-radius: 4px;
-  padding: 24px 28px;
-  margin-bottom: 32px;
+/* ===== TILES (external analytics shortcuts) ===== */
+.tilesGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+  margin-bottom: 8px;
 }
-.helpTitle {
+.tile {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 22px 24px 20px;
+  text-decoration: none;
+  color: #111827;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
+  min-height: 160px;
+}
+.tile:hover {
+  border-color: #9ca3af;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+  transform: translateY(-2px);
+}
+.tileIcon {
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 22px;
+  color: #6b7280;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.tileLabel {
+  font-family: var(--font-poppins), sans-serif;
+  font-weight: 700;
+  font-size: 9px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: #9ca3af;
+}
+.tileTitle {
   font-family: var(--font-poppins), sans-serif;
   font-weight: 700;
   font-size: 17px;
-  color: var(--blush);
-  margin-bottom: 8px;
+  letter-spacing: -0.01em;
+  color: #111827;
+  line-height: 1.2;
 }
-.helpBody {
-  font-family: var(--font-outfit), sans-serif;
-  font-weight: 400;
-  font-size: 13px;
-  line-height: 1.65;
-  color: var(--cream);
-  opacity: 0.85;
+.tileBody {
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 12px;
+  line-height: 1.55;
+  color: #6b7280;
+  flex: 1;
+}
+.tileLink {
+  margin-top: 6px;
+  font-family: var(--font-poppins), sans-serif;
+  font-weight: 600;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: #374151;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.tileLink::after {
+  content: '→';
+  font-size: 14px;
+  transition: transform 0.2s;
+}
+.tile:hover .tileLink { color: #111827; }
+.tile:hover .tileLink::after { transform: translateX(3px); }
+
+.tileWide { grid-column: span 2; }
+
+/* ===== QUICK ACTIONS ===== */
+.quickActions {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+.quickAction {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 999px;
+  padding: 12px 18px;
+  font-family: var(--font-poppins), sans-serif;
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  color: #374151;
+  text-decoration: none;
+  text-align: center;
+  transition: all 0.15s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.quickAction:hover {
+  background: #111827;
+  color: #ffffff;
+  border-color: #111827;
 }
 
-/* ===== FOOTER NOTE ===== */
 .footNote {
-  font-family: var(--font-outfit), sans-serif;
-  font-size: 11px;
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 10px;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--cream);
-  opacity: 0.4;
+  color: #9ca3af;
   text-align: center;
-  margin-top: 48px;
+  margin-top: 36px;
+  padding-top: 24px;
+  border-top: 1px solid #e5e7eb;
 }
 
-/* ===== LOGIN PAGE ===== */
+/* ===== MOBILE ===== */
+@media (max-width: 1024px) {
+  .statsRow { grid-template-columns: repeat(3, 1fr); }
+  .tilesGrid { grid-template-columns: 1fr; }
+  .tileWide { grid-column: span 1; }
+  .quickActions { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 640px) {
+  .statsRow { grid-template-columns: repeat(2, 1fr); }
+  .statsRow > :nth-child(5) { grid-column: span 2; }
+  .statValue { font-size: 28px; }
+  .leadCard { grid-template-columns: 1fr; gap: 10px; }
+  .leadActions { justify-content: flex-start; }
+  .quickActions { grid-template-columns: 1fr; }
+}
+
+/* ==========================================================
+   LOGIN PAGE — separate dark-themed layout for /admin/login.
+   Keeps the navy gradient + cream text since it's a standalone
+   gate, not the dashboard.
+   ========================================================== */
 .loginPage {
   min-height: 100vh;
   display: flex;
@@ -499,10 +397,10 @@
   justify-content: center;
   padding: 40px 24px;
   background:
-    radial-gradient(ellipse 1000px 700px at 0% 0%, rgba(28, 97, 240, 0.10) 0%, transparent 60%),
-    radial-gradient(ellipse 800px 700px at 100% 100%, rgba(94, 143, 255, 0.14) 0%, transparent 60%),
-    linear-gradient(165deg, #002C98 0%, #001E6B 60%, #001045 100%);
-  color: var(--cream);
+    radial-gradient(ellipse 1000px 700px at 0% 0%, rgba(31, 41, 55, 0.30) 0%, transparent 60%),
+    radial-gradient(ellipse 800px 700px at 100% 100%, rgba(75, 85, 99, 0.25) 0%, transparent 60%),
+    linear-gradient(165deg, #1f2937 0%, #111827 60%, #0b1220 100%);
+  color: #f9fafb;
 }
 .loginCard {
   max-width: 420px;
@@ -515,7 +413,7 @@
 }
 .loginSpark {
   font-family: var(--font-poppins), sans-serif;
-  color: var(--blush);
+  color: #d1d5db;
   font-size: 38px;
   line-height: 1;
   margin-bottom: 18px;
@@ -529,11 +427,11 @@
 }
 .loginTitle em {
   font-weight: 700;
-  color: var(--blush);
+  color: #d1d5db;
+  font-style: normal;
 }
 .loginSub {
   font-family: var(--font-poppins), sans-serif;
-  font-weight: 700;
   font-size: 14px;
   opacity: 0.75;
   margin-bottom: 28px;
@@ -544,28 +442,27 @@
   background: rgba(255, 255, 255, 0.10);
   border: 1px solid rgba(255, 255, 255, 0.20);
   border-radius: 10px;
-  font-family: var(--font-outfit), sans-serif;
-  font-weight: 400;
+  font-family: var(--font-poppins), sans-serif;
   font-size: 16px;
-  color: var(--cream);
+  color: #f9fafb;
   outline: none;
   text-align: center;
   letter-spacing: 0.06em;
   margin-bottom: 14px;
 }
-.loginInput:focus { border-color: var(--blush); }
-.loginInput::placeholder { color: var(--cream); opacity: 0.4; }
+.loginInput:focus { border-color: #d1d5db; }
+.loginInput::placeholder { color: #f9fafb; opacity: 0.4; }
 .loginBtn {
   width: 100%;
   padding: 14px 22px;
-  background: var(--blush);
-  color: var(--navy-deep);
+  background: #f9fafb;
+  color: #111827;
   border: none;
   border-radius: 10px;
-  font-family: var(--font-outfit), sans-serif;
-  font-weight: 500;
+  font-family: var(--font-poppins), sans-serif;
+  font-weight: 700;
   font-size: 13px;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   cursor: pointer;
   transition: transform 0.15s;
@@ -574,30 +471,6 @@
 .loginBtn:disabled { opacity: 0.55; cursor: not-allowed; }
 .loginError {
   margin-top: 14px;
-  color: #FDB5A8;
+  color: #FCA5A5;
   font-size: 13px;
-}
-
-/* ===== MOBILE ===== */
-@media (max-width: 900px) {
-  .tilesGrid { grid-template-columns: 1fr; }
-  .tileWide { grid-column: span 1; }
-  .quickActions { grid-template-columns: 1fr 1fr; }
-  .heroTitle { font-size: 42px; }
-  .statsRow { grid-template-columns: 1fr 1fr; }
-  /* With 5 stats, item 5 ("Total · all time") would orphan in a 2-col grid.
-     Span it across both columns for a balanced layout. */
-  .statsRow > :nth-child(5) { grid-column: span 2; }
-  .statValue { font-size: 38px; }
-  .leadCard { grid-template-columns: 1fr; gap: 12px; }
-  .leadActions { justify-content: flex-start; }
-}
-@media (max-width: 480px) {
-  .page { padding: 28px 18px 60px; }
-  .heroTitle { font-size: 32px; }
-  .heroSub { font-size: 15px; }
-  .tile { padding: 24px 22px; }
-  .quickActions { grid-template-columns: 1fr; }
-  .loginCard { padding: 36px 26px; }
-  .loginTitle { font-size: 28px; }
 }

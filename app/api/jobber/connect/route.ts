@@ -51,13 +51,17 @@ export async function GET() {
     );
   }
 
-  // Generate CSRF state token
+  // Generate CSRF state token. 15-min lifetime (was 5 min) gives Tiago
+  // breathing room if he gets distracted during the Jobber approval
+  // screen — the old 5-min window expired too often, producing
+  // "state mismatch" errors on the callback. sameSite=lax is correct
+  // for top-level OAuth redirects; secure required for cross-site.
   const state = randomBytes(32).toString('hex');
   cookies().set(STATE_COOKIE, state, {
     httpOnly: true,
     secure: true,
     sameSite: 'lax',
-    maxAge: 60 * 5, // 5 minutes
+    maxAge: 60 * 15, // 15 minutes
     path: '/',
   });
 

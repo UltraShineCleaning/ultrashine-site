@@ -149,7 +149,7 @@ export default async function AdminDashboard() {
         <div className={styles.leadName}>
           {lead.name}
           {lead.city && (
-            <span style={{ color: 'var(--blush)', fontWeight: 300, fontStyle: 'italic', marginLeft: 8, fontSize: 14 }}>
+            <span style={{ color: '#6b7280', fontWeight: 400, fontStyle: 'italic', marginLeft: 8, fontSize: 13 }}>
               · {lead.city}
             </span>
           )}
@@ -365,7 +365,7 @@ export default async function AdminDashboard() {
           <div className={styles.statLabel}>Google · 18 reviews</div>
           <div className={styles.statValue}>5.0 ★</div>
           <div className={styles.statSub}>
-            <a href="https://search.google.com/local/reviews" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--blue)' }}>
+            <a href="https://search.google.com/local/reviews" target="_blank" rel="noopener noreferrer" style={{ color: '#374151', fontWeight: 600 }}>
               Manage on Google →
             </a>
           </div>
@@ -374,7 +374,7 @@ export default async function AdminDashboard() {
           <div className={styles.statLabel}>HomeAdvisor · 25 reviews</div>
           <div className={styles.statValue}>4.9 ★</div>
           <div className={styles.statSub}>
-            <a href="https://www.homeadvisor.com/rated.UltraShineCleaning.68124585.html" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--blue)' }}>
+            <a href="https://www.homeadvisor.com/rated.UltraShineCleaning.68124585.html" target="_blank" rel="noopener noreferrer" style={{ color: '#374151', fontWeight: 600 }}>
               Open profile →
             </a>
           </div>
@@ -397,16 +397,16 @@ export default async function AdminDashboard() {
 
   const socialPanel = (
     <div className={styles.emptyState} style={{ padding: 36, textAlign: 'left' }}>
-      <h2 style={{ fontFamily: 'var(--font-poppins), sans-serif', fontWeight: 700, fontSize: 22, color: 'var(--navy-deep)', marginBottom: 12 }}>
+      <h2 style={{ fontFamily: 'var(--font-poppins), sans-serif', fontWeight: 700, fontSize: 22, color: '#111827', marginBottom: 12 }}>
         Social analytics — coming next
       </h2>
-      <p style={{ fontSize: 14, color: 'var(--navy-deep)', opacity: 0.8, lineHeight: 1.6, marginBottom: 18, maxWidth: 640 }}>
+      <p style={{ fontSize: 14, color: '#374151', lineHeight: 1.6, marginBottom: 18, maxWidth: 640 }}>
         We&apos;ll wire this tab up to your Instagram + Facebook accounts so you can see per-post performance, follower growth, engagement rate, and what content is driving DMs / quote requests — all without leaving your dashboard.
       </p>
-      <p style={{ fontSize: 13, color: 'var(--gray)', lineHeight: 1.6, marginBottom: 14 }}>
+      <p style={{ fontSize: 13, color: '#6b7280', lineHeight: 1.6, marginBottom: 14 }}>
         <strong>What we&apos;ll show here:</strong>
       </p>
-      <ul style={{ fontSize: 13, color: 'var(--gray)', lineHeight: 1.8, paddingLeft: 20, marginBottom: 22, maxWidth: 640 }}>
+      <ul style={{ fontSize: 13, color: '#6b7280', lineHeight: 1.8, paddingLeft: 20, marginBottom: 22, maxWidth: 640 }}>
         <li>Follower growth graph (7/30/90-day)</li>
         <li>Per-post reach, likes, comments, saves, shares</li>
         <li>Top-performing posts ranked by engagement</li>
@@ -414,10 +414,10 @@ export default async function AdminDashboard() {
         <li>Profile visits → website clicks → quote-form submits funnel</li>
         <li>Best time of day / day of week to post (from your actual data)</li>
       </ul>
-      <p style={{ fontSize: 13, color: 'var(--gray)', lineHeight: 1.6, marginBottom: 14 }}>
+      <p style={{ fontSize: 13, color: '#6b7280', lineHeight: 1.6, marginBottom: 14 }}>
         <strong>What I need from you to build it:</strong>
       </p>
-      <ul style={{ fontSize: 13, color: 'var(--gray)', lineHeight: 1.8, paddingLeft: 20, maxWidth: 640 }}>
+      <ul style={{ fontSize: 13, color: '#6b7280', lineHeight: 1.8, paddingLeft: 20, maxWidth: 640 }}>
         <li>Confirm which platforms — Instagram, Facebook, both, plus TikTok / LinkedIn?</li>
         <li>I&apos;ll set up Meta Graph API access (similar OAuth flow to Jobber)</li>
         <li>For each platform, I&apos;ll need you to do a one-time connect (click a button, approve scopes)</li>

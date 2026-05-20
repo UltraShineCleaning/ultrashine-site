@@ -1,0 +1,147 @@
+import { getJobberMetrics } from '../../_lib/jobberClient';
+import styles from './JobberDashboard.module.css';
+
+/**
+ * Live Jobber dashboard widget — renders when JOBBER_REFRESH_TOKEN is set.
+ * Pulls today/week stats + upcoming visits + revenue in one parallel
+ * GraphQL burst.
+ *
+ * If the token is somehow rejected (revoked, scopes changed, etc.), the
+ * fetcher returns zero values + an `error` field; the UI shows a banner
+ * inviting Tiago to re-connect.
+ */
+export default async function JobberDashboard() {
+  const m = await getJobberMetrics();
+
+  // Token broke — surface the issue + a reconnect link
+  if (m.error === 'token_unavailable') {
+    return (
+      <div className={styles.errorPanel}>
+        <div className={styles.errorTitle}>Jobber token isn&apos;t working</div>
+        <p className={styles.errorBody}>
+          Your refresh token may have been revoked, or the Jobber app scopes
+          changed. Reconnect to fix it.
+        </p>
+        <a href="/api/jobber/connect" className={styles.reconnectBtn}>
+          Reconnect Jobber →
+        </a>
+      </div>
+    );
+  }
+
+  const fmtMoney = (n: number) =>
+    new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      maximumFractionDigits: 0,
+    }).format(n);
+
+  const fmtTime = (iso: string | null) => {
+    if (!iso) return 'Time TBD';
+    const d = new Date(iso);
+    const dayLabel =
+      d.toDateString() === new Date().toDateString()
+        ? 'Today'
+        : d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+    const timeLabel = d.toLocaleTimeString('en-US', {
+      hour: 'numeric',
+      minute: '2-digit',
+    });
+    return `${dayLabel} · ${timeLabel}`;
+  };
+
+  return (
+    <div className={styles.wrap}>
+      {/* CONNECTION CONFIRMATION BANNER */}
+      <div className={styles.statusBar}>
+        <span className={styles.statusDot} />
+        <span className={styles.statusText}>
+          <strong>Connected to Jobber</strong> · live data refreshed on every visit
+        </span>
+      </div>
+
+      {/* TOP STAT ROW */}
+      <div className={styles.statRow}>
+        <div className={styles.stat}>
+          <div className={styles.statLabel}>Jobs · today</div>
+          <div className={styles.statValue}>
+            {m.jobsToday > 0 ? m.jobsToday : <em className={styles.dim}>—</em>}
+          </div>
+          <div className={styles.statSub}>
+            {m.jobsToday === 0
+              ? 'No jobs scheduled today'
+              : m.jobsToday === 1
+              ? '1 visit on the calendar'
+              : `${m.jobsToday} visits on the calendar`}
+          </div>
+        </div>
+
+        <div className={styles.stat}>
+          <div className={styles.statLabel}>Jobs · next 14 days</div>
+          <div className={styles.statValue}>{m.jobsThisWeek}</div>
+          <div className={styles.statSub}>Scheduled visits ahead</div>
+        </div>
+
+        <div className={styles.stat}>
+          <div className={styles.statLabel}>Revenue · this week</div>
+          <div className={styles.statValue}>{fmtMoney(m.thisWeekRevenue)}</div>
+          <div className={styles.statSub}>Invoices paid in current week</div>
+        </div>
+
+        <div className={styles.stat}>
+          <div className={styles.statLabel}>Active clients</div>
+          <div className={styles.statValue}>{m.activeClientCount}</div>
+          <div className={styles.statSub}>Not archived in Jobber</div>
+        </div>
+
+        <div className={`${styles.stat} ${m.pendingInvoiceCount > 0 ? styles.statAlert : ''}`}>
+          <div className={styles.statLabel}>Awaiting payment</div>
+          <div className={styles.statValue}>{fmtMoney(m.pendingInvoiceTotal)}</div>
+          <div className={styles.statSub}>
+            {m.pendingInvoiceCount === 0
+              ? 'No open invoices'
+              : `${m.pendingInvoiceCount} invoice${m.pendingInvoiceCount === 1 ? '' : 's'} unpaid`}
+          </div>
+        </div>
+      </div>
+
+      {/* UPCOMING VISITS LIST */}
+      <div className={styles.upcomingBlock}>
+        <div className={styles.upcomingHeader}>
+          <div>
+            <div className={styles.upcomingEyebrow}>NEXT TWO WEEKS</div>
+            <div className={styles.upcomingTitle}>Upcoming visits</div>
+          </div>
+          <a
+            href="https://secure.getjobber.com/work_orders"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={styles.openInJobber}
+          >
+            Open in Jobber →
+          </a>
+        </div>
+
+        {m.upcomingJobs.length === 0 ? (
+          <div className={styles.empty}>
+            No visits scheduled in the next 14 days. Once a job is on your
+            Jobber calendar it&apos;ll appear here.
+          </div>
+        ) : (
+          <div className={styles.upcomingList}>
+            {m.upcomingJobs.map((j) => (
+              <div key={j.id} className={styles.visit}>
+                <div className={styles.visitLeft}>
+                  <div className={styles.visitClient}>{j.clientName}</div>
+                  <div className={styles.visitTitle}>{j.title}</div>
+                  {j.address && <div className={styles.visitAddr}>{j.address}</div>}
+                </div>
+                <div className={styles.visitTime}>{fmtTime(j.startAt)}</div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}

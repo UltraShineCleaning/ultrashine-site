@@ -1,12 +1,14 @@
 import styles from './JobberStatusCard.module.css';
+import JobberDashboard from './JobberDashboard';
 
 /**
  * Server-rendered card showing Jobber connection status on /admin.
  *
  * - If no JOBBER_CLIENT_ID set: shows "not configured" hint
  * - If client ID set but no refresh_token: shows big "Connect Jobber" button
- * - If both set: shows ✓ "Connected" (Phase 2 will replace this with the
- *   actual live data widget — today/week jobs, revenue, team schedule)
+ * - If both set: renders the live <JobberDashboard /> with today/week
+ *   jobs, revenue, active clients, pending invoices, and the next 14
+ *   days of upcoming visits — pulled fresh from Jobber on every page load
  */
 export default function JobberStatusCard() {
   const hasCredentials = !!process.env.JOBBER_CLIENT_ID;
@@ -56,29 +58,7 @@ export default function JobberStatusCard() {
     );
   }
 
-  // Step 3 — fully connected (Phase 2 will replace this with live data)
-  return (
-    <div className={`${styles.card} ${styles.cardConnected}`}>
-      <div className={styles.cardHeader}>
-        <div className={`${styles.cardIcon} ${styles.iconSuccess}`}>✓</div>
-        <div>
-          <div className={styles.cardLabel}>JOBBER · CONNECTED</div>
-          <div className={styles.cardTitle}>
-            Your dashboard is wired to Jobber
-          </div>
-        </div>
-      </div>
-      <p className={styles.cardBody}>
-        Live job, revenue, and team data will appear here in Phase 2.
-        Right now we&apos;ve confirmed the connection works — credentials
-        + refresh token are in place.
-      </p>
-      <p className={styles.cardBodyDim}>
-        <strong>Next session:</strong> I&apos;ll build the GraphQL queries
-        to pull today&apos;s scheduled jobs (with cleaner assigned),
-        this week&apos;s revenue, total active clients, and pending
-        invoices — all inline on this page.
-      </p>
-    </div>
-  );
+  // Step 3 — fully connected. Hand off to the live data dashboard
+  // (server-renders Jobber GraphQL data on every page load).
+  return <JobberDashboard />;
 }

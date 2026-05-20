@@ -1,0 +1,269 @@
+/* ==========================================================
+   Admin · Jobber live data dashboard
+   Replaces the Phase-2 placeholder in JobberStatusCard when
+   JOBBER_REFRESH_TOKEN is set + the API actually responds.
+   ========================================================== */
+
+.wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  margin-bottom: 24px;
+}
+
+/* ----- Connection-confirmed banner ----- */
+.statusBar {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  align-self: flex-start;
+  background: rgba(27, 127, 58, 0.08);
+  border: 1px solid rgba(27, 127, 58, 0.22);
+  color: #0F5C26;
+  padding: 10px 16px;
+  border-radius: 999px;
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+}
+.statusDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #1B7F3A;
+  box-shadow: 0 0 0 4px rgba(27, 127, 58, 0.15);
+}
+.statusText strong {
+  font-weight: 700;
+  margin-right: 4px;
+}
+
+/* ----- Top stat row ----- */
+.statRow {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 14px;
+}
+.stat {
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  padding: 18px 20px;
+  box-shadow: var(--shadow-soft);
+  min-height: 118px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.statAlert {
+  border-color: rgba(229, 134, 78, 0.4);
+  background: linear-gradient(180deg, rgba(229, 134, 78, 0.04) 0%, var(--white) 100%);
+}
+
+.statLabel {
+  font-family: var(--font-poppins), sans-serif;
+  font-weight: 700;
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--blue);
+  opacity: 0.9;
+}
+.statValue {
+  font-family: var(--font-poppins), sans-serif;
+  font-weight: 700;
+  font-size: 32px;
+  letter-spacing: -0.02em;
+  color: var(--navy-deep);
+  line-height: 1;
+  margin: 6px 0 4px;
+}
+.statValue em {
+  font-style: normal;
+  color: var(--gray-light);
+  font-weight: 400;
+}
+.statSub {
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 11px;
+  color: var(--gray);
+  letter-spacing: 0.01em;
+}
+
+.dim {
+  color: var(--gray-light);
+}
+
+/* ----- Upcoming visits block ----- */
+.upcomingBlock {
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  padding: 24px 28px;
+  box-shadow: var(--shadow-soft);
+}
+.upcomingHeader {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.upcomingEyebrow {
+  font-family: var(--font-poppins), sans-serif;
+  font-weight: 700;
+  font-size: 10px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--blue);
+  margin-bottom: 4px;
+}
+.upcomingTitle {
+  font-family: var(--font-poppins), sans-serif;
+  font-weight: 700;
+  font-size: 18px;
+  letter-spacing: -0.015em;
+  color: var(--navy-deep);
+}
+.openInJobber {
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--blue);
+  text-decoration: none;
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(28, 97, 240, 0.22);
+  transition: background 0.15s, transform 0.15s;
+}
+.openInJobber:hover {
+  background: rgba(28, 97, 240, 0.06);
+  transform: translateY(-1px);
+}
+
+.empty {
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 13px;
+  color: var(--gray);
+  background: var(--cream-2);
+  border-radius: 10px;
+  padding: 18px 20px;
+}
+
+.upcomingList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.visit {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 16px;
+  background: var(--cream-2);
+  border-radius: 10px;
+  transition: background 0.15s, transform 0.15s;
+}
+.visit:hover {
+  background: rgba(28, 97, 240, 0.06);
+  transform: translateY(-1px);
+}
+.visitLeft {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.visitClient {
+  font-family: var(--font-poppins), sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--navy-deep);
+  letter-spacing: -0.01em;
+}
+.visitTitle {
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 12px;
+  color: var(--blue);
+  opacity: 0.9;
+}
+.visitAddr {
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 11px;
+  color: var(--gray);
+  margin-top: 2px;
+}
+.visitTime {
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--navy-deep);
+  letter-spacing: 0.02em;
+  text-align: right;
+  white-space: nowrap;
+  padding-left: 14px;
+}
+
+/* ----- Token-failed error panel ----- */
+.errorPanel {
+  background: linear-gradient(180deg, rgba(229, 134, 78, 0.06) 0%, var(--white) 100%);
+  border: 1px solid rgba(229, 134, 78, 0.3);
+  border-radius: var(--r-md);
+  padding: 22px 26px;
+  box-shadow: var(--shadow-soft);
+  margin-bottom: 24px;
+}
+.errorTitle {
+  font-family: var(--font-poppins), sans-serif;
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--navy-deep);
+  margin-bottom: 6px;
+}
+.errorBody {
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 13px;
+  color: var(--gray);
+  line-height: 1.5;
+  margin-bottom: 14px;
+}
+.reconnectBtn {
+  display: inline-flex;
+  padding: 10px 18px;
+  border-radius: 999px;
+  background: var(--blue);
+  color: var(--white);
+  text-decoration: none;
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+.reconnectBtn:hover {
+  background: var(--blue-deep);
+}
+
+/* ----- Tablet ----- */
+@media (max-width: 1080px) {
+  .statRow {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* ----- Mobile ----- */
+@media (max-width: 720px) {
+  .statRow {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .visit {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .visitTime {
+    text-align: left;
+    padding-left: 0;
+  }
+}

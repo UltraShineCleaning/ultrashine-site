@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useEffect } from 'react';
+import React, { useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -50,6 +50,25 @@ gsap.registerPlugin(ScrollTrigger);
  *   - +faststart (moov atom at front so video starts before fully loaded)
  */
 
+/**
+ * A single absolutely-positioned block inside the hero. We anchor by
+ * corner (top OR bottom + left OR right) so text never needs a
+ * translate-centering hack on the corners — it just hangs off the
+ * specified edge. Center-anchored blocks use the `centerX` flag.
+ */
+type SlotPos = {
+  top?: string;
+  bottom?: string;
+  left?: string;
+  right?: string;
+  width: string;
+  align: 'left' | 'center' | 'right';
+  /** Apply translateX(-50%) — used when left is "50%" for true centering */
+  centerX?: boolean;
+  /** Optional headline font-size override (default = 88px) */
+  headlineSize?: string;
+};
+
 type SceneCopy = {
   id: string;
   eyebrow: string;
@@ -59,24 +78,10 @@ type SceneCopy = {
   start: number;
   end: number;
   showCta?: boolean;
-  /**
-   * On-screen positioning so each scene's text anchors to a real wall
-   * in its room instead of all 5 stacking in the bottom-left. Values
-   * are CSS strings used directly. `rotateY` gives the wall-projected
-   * perspective look (left walls rotateY negative, right walls positive).
-   */
-  position: {
-    /** CSS left % of the text block's LEFT edge */
-    left: string;
-    /** CSS top % of the text block's vertical center */
-    top: string;
-    /** max-width of the text block (so it doesn't stretch full-bleed) */
-    width: string;
-    /** Y-axis rotation in degrees; negative = left-wall feel, positive = right-wall */
-    rotateY: number;
-    /** Horizontal alignment of the text itself within the block */
-    textAlign: 'left' | 'center' | 'right';
-  };
+  /** Eyebrow + headline anchor (one corner) */
+  head: SlotPos;
+  /** Body text + optional CTAs anchor (opposite corner) */
+  bodySlot: SlotPos;
 };
 
 // SCENES — one per ROOM the camera physically walks into. Each
@@ -91,73 +96,102 @@ type SceneCopy = {
 //   Bathroom    15–20 s   (58–76 %)
 //   Bedroom     22–26 s   (84–100 %)
 //
-// Copy strategy: each headline describes the ROOM the visitor sees
-// at that scroll moment + what we DO to it. Trust messaging
-// (insured, background-checked, etc.) is intentionally NOT here —
-// that's the job of the Trust Strip immediately below the hero.
+// Layout strategy: every scene splits text into TWO anchors — a
+// HEADLINE block (eyebrow + h1) and a BODY block (paragraph + optional
+// CTAs) — positioned in OPPOSITE corners for a magazine-spread feel.
+// Headlines use explicit <br> for line breaks so they never word-wrap
+// awkwardly. Rotation has been removed across the board because at
+// our font sizes it hurt readability more than it added depth.
 const SCENES: SceneCopy[] = [
   {
-    // SCENE 1 — Kitchen, brand-level headline. Text anchored to the
-    // LEFT navy cabinet wall area (which recedes back-right in the
-    // shot), so rotateY -8° makes it read like signage on that wall.
+    // SCENE 1 — Kitchen. Camera centered on marble island with vanishing
+    // point through to the living room. Headline anchors TOP-LEFT (above
+    // the navy cabinets, against the lighter ceiling area). Body anchors
+    // BOTTOM-RIGHT (next to the sunset glass doors, smaller column).
     id: 'kitchen',
     eyebrow: 'HOUSE CLEANING · BOCA RATON + SOUTH FLORIDA',
-    headlineHtml: 'A home that <em>shines</em>. Without lifting a finger.',
+    headlineHtml: 'A home that <em>shines</em>.<br/>Without lifting a finger.',
     body: 'It starts in the kitchen — marble degreased, stainless polished, cabinets wiped inside and out. Boutique house cleaning across 13 South Florida cities, the full standard every visit.',
     start: 0.0,
     end: 0.13,
-    position: { left: '6%', top: '60%', width: '38%', rotateY: -8, textAlign: 'left' },
+    head: { top: '18vh', left: '5vw', width: '54vw', align: 'left', headlineSize: '80px' },
+    bodySlot: { bottom: '16vh', right: '5vw', width: '30vw', align: 'right' },
   },
   {
-    // SCENE 2 — Living room. Symmetric composition, back wall holds
-    // the abstract artwork above the wooden console. Text sits in the
-    // UPPER-CENTER, no rotation (back wall is perpendicular to camera).
+    // SCENE 2 — Living room. Symmetric composition with back-wall artwork.
+    // Headline TOP-RIGHT, body BOTTOM-LEFT — magazine spread diagonal.
     id: 'living',
     eyebrow: 'FABRICS · SURFACES · LIGHT',
-    headlineHtml: 'Into the <em>living room</em>. Not a speck of dust.',
+    headlineHtml: 'Into the <em>living room</em>.<br/>Not a speck of dust.',
     body: 'Sectionals vacuumed. Coffee tables hand-polished. Glass crystal-clear. The room your guests linger in — kept guest-ready.',
     start: 0.17,
     end: 0.28,
-    position: { left: '50%', top: '32%', width: '52%', rotateY: 0, textAlign: 'center' },
+    head: { top: '18vh', right: '5vw', width: '50vw', align: 'right', headlineSize: '78px' },
+    bodySlot: { bottom: '16vh', left: '5vw', width: '32vw', align: 'left' },
   },
   {
-    // SCENE 3 — Office. Walnut bookshelves dominate the RIGHT side, so
-    // text goes LEFT where the abstract art column lives. Left wall
-    // recedes back-LEFT, so rotateY +8° projects text onto it.
+    // SCENE 3 — Office. Walnut bookshelves dominate the right side, so
+    // text frames LEFT (over the marble column area). Headline BOTTOM-LEFT,
+    // body TOP-RIGHT — flipped diagonal from the living room.
     id: 'office',
     eyebrow: 'SHELVES · SCREENS · SURFACES',
-    headlineHtml: 'Through to the <em>office</em>. A space that lets you focus.',
+    headlineHtml: 'Through to the <em>office</em>.<br/>A space that lets you focus.',
     body: 'Bookshelves dusted top to bottom. Glass streak-free. Surfaces spotless. The room that finally lets your mind clear.',
     start: 0.33,
     end: 0.45,
-    position: { left: '5%', top: '55%', width: '38%', rotateY: 8, textAlign: 'left' },
+    head: { bottom: '16vh', left: '5vw', width: '52vw', align: 'left', headlineSize: '72px' },
+    bodySlot: { top: '18vh', right: '5vw', width: '30vw', align: 'right' },
   },
   {
-    // SCENE 4 — Bathroom. Tub centered, navy vanity on LEFT against
-    // marble wall. Text on the marble wall above the vanity, rotateY
-    // -8° to match the left wall's recession back-right.
+    // SCENE 4 — Bathroom. Tub centered, navy vanity left. Headline
+    // BOTTOM-LEFT (against marble wall), body TOP-RIGHT (over shower glass).
     id: 'bathroom',
     eyebrow: 'MARBLE · GROUT · FIXTURES',
-    headlineHtml: 'Down the hall to the <em>bathroom</em>. Spa-grade clean.',
+    headlineHtml: 'Down the hall to the <em>bathroom</em>.<br/>Spa-grade clean.',
     body: 'Marble protected. Glass spotless. Grout treated. Fixtures polished to a mirror finish — like the day it was built.',
     start: 0.58,
     end: 0.76,
-    position: { left: '6%', top: '48%', width: '40%', rotateY: -8, textAlign: 'left' },
+    head: { bottom: '16vh', left: '5vw', width: '54vw', align: 'left', headlineSize: '74px' },
+    bodySlot: { top: '20vh', right: '5vw', width: '30vw', align: 'right' },
   },
   {
-    // SCENE 5 — Bedroom + CTA. Bed against LEFT wall. The closer
-    // scene needs CTA-friendly centered layout, so this one stays
-    // bottom-center with no rotation — readability + button room win.
+    // SCENE 5 — Bedroom + CTA closer. Headline TOP-CENTER for impact,
+    // body + CTAs BOTTOM-CENTER but pulled HIGHER (bottom: 18vh) so the
+    // trust strip below the hero doesn't crowd the buttons when the pin
+    // releases and the page resumes normal flow.
     id: 'bedroom',
     eyebrow: 'CUSTOM QUOTE · WITHIN THE HOUR',
-    headlineHtml: 'And into the <em>bedroom</em>. Wall to wall, every visit.',
+    headlineHtml: 'And into the <em>bedroom</em>.<br/>Wall to wall, every visit.',
     body: 'Tell us about your space — we\'ll text you a precise quote within the hour. No hidden fees, no upsells.',
     start: 0.84,
     end: 1.0,
     showCta: true,
-    position: { left: '50%', top: '70%', width: '62%', rotateY: 0, textAlign: 'center' },
+    head: { top: '16vh', left: '50%', width: '74vw', align: 'center', centerX: true, headlineSize: '84px' },
+    bodySlot: { bottom: '20vh', left: '50%', width: '56vw', align: 'center', centerX: true },
   },
 ];
+
+/**
+ * Turn a SlotPos config into an inline-style object so the absolute-
+ * positioned block hangs off the chosen corner. We pass top/bottom +
+ * left/right directly; for center-X anchored blocks we add a
+ * translateX(-50%) so the block's CENTER aligns to the `left: 50%`
+ * coordinate. text-align is also passed through so the contents
+ * align to the slot's chosen edge.
+ */
+function slotStyle(p: SlotPos): React.CSSProperties {
+  return {
+    position: 'absolute',
+    top: p.top,
+    bottom: p.bottom,
+    left: p.left,
+    right: p.right,
+    width: p.width,
+    maxWidth: '900px',
+    textAlign: p.align,
+    transform: p.centerX ? 'translateX(-50%)' : undefined,
+  };
+}
 
 export default function HeroScrollHome() {
   const containerRef = useRef<HTMLElement>(null);
@@ -293,41 +327,40 @@ export default function HeroScrollHome() {
         </div>
       </div>
 
-      {/* DESKTOP per-scene text overlays — one stays visible at a time
-          as the user scrolls the camera through the home. Each scene
-          gets its own position + perspective rotation via CSS vars so
-          the text anchors to a wall in the room currently on screen
-          instead of all 5 stacking in the bottom-left. */}
+      {/* DESKTOP per-scene text overlays. Each scene splits into TWO
+          absolutely-positioned blocks (headline + body) anchored to
+          OPPOSITE corners of the hero for a magazine-spread feel.
+          Both blocks share the `us-copy-${i}` class so GSAP fades them
+          together as the camera reaches that scene's scrub window. */}
       {SCENES.map((scene, i) => (
-        <div
-          key={scene.id}
-          className={`${styles.content} ${styles.desktopCopy} us-copy us-copy-${i}`}
-          style={{
-            // Per-scene wall-anchored positioning passed through CSS
-            // variables so the stylesheet can compose them with the
-            // transform: translate(-50%, -50%) trick for clean centering.
-            // (TS doesn't know about CSS custom props, so cast through unknown.)
-            ['--scene-left' as string]: scene.position.left,
-            ['--scene-top' as string]: scene.position.top,
-            ['--scene-width' as string]: scene.position.width,
-            ['--scene-rotate-y' as string]: `${scene.position.rotateY}deg`,
-            ['--scene-text-align' as string]: scene.position.textAlign,
-          } as React.CSSProperties}
-        >
-          <p className={styles.eyebrow}>{scene.eyebrow}</p>
-          <h1
-            className={styles.headline}
-            dangerouslySetInnerHTML={{ __html: scene.headlineHtml }}
-          />
-          <p className={styles.body}>{scene.body}</p>
+        <React.Fragment key={scene.id}>
+          {/* HEADLINE block — eyebrow + h1 */}
+          <div
+            className={`${styles.desktopCopy} ${styles.headSlot} us-copy us-copy-${i}`}
+            style={slotStyle(scene.head)}
+          >
+            <p className={styles.eyebrow}>{scene.eyebrow}</p>
+            <h1
+              className={styles.headline}
+              style={scene.head.headlineSize ? { fontSize: scene.head.headlineSize } : undefined}
+              dangerouslySetInnerHTML={{ __html: scene.headlineHtml }}
+            />
+          </div>
 
-          {scene.showCta && (
-            <div className={styles.ctaRow}>
-              <Link href="/quote" className="btn btn-coral">Request Your Free Quote</Link>
-              <a href="#services" className="btn btn-secondary">See What&apos;s Included</a>
-            </div>
-          )}
-        </div>
+          {/* BODY block — paragraph + optional CTAs */}
+          <div
+            className={`${styles.desktopCopy} ${styles.bodySlotEl} us-copy us-copy-${i}`}
+            style={slotStyle(scene.bodySlot)}
+          >
+            <p className={styles.body}>{scene.body}</p>
+            {scene.showCta && (
+              <div className={styles.ctaRow}>
+                <Link href="/quote" className="btn btn-coral">Request Your Free Quote</Link>
+                <a href="#services" className="btn btn-secondary">See What&apos;s Included</a>
+              </div>
+            )}
+          </div>
+        </React.Fragment>
       ))}
 
       {/* Skip intro — top right, visible during pin */}

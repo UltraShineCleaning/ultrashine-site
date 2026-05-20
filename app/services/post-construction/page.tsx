@@ -4,7 +4,7 @@ import ServicePage, { type ServiceData } from '../_components/ServicePage';
 export const metadata: Metadata = {
   title: 'Post-Construction Cleaning · Ultra Shine Cleaning',
   description:
-    'Post-construction + renovation cleanup in Boca Raton + South Florida. HEPA vacuum, fine-dust removal, sticker + paint speck removal, move-in ready finish. Custom quote in 1 hour.',
+    'Post-construction + renovation cleanup in Boca Raton + South Florida. Fine-dust removal, sticker + paint speck removal, move-in ready finish. Custom quote in 1 hour.',
 };
 
 const data: ServiceData = {
@@ -41,7 +41,7 @@ const data: ServiceData = {
       'Wall scuff + paint speck removal',
     ],
     wholeHome: [
-      'HEPA vacuum every surface',
+      'Fine-dust vacuum on every surface',
       'Floor finish (engineered hardwood, LVP, tile)',
       'Light fixtures + ceiling fans + bulbs',
       'Sticker + tape residue everywhere',
@@ -82,14 +82,14 @@ const data: ServiceData = {
       'Fine drywall + construction dust',
       'Sticker + protective film removal',
       'Paint speck + grout haze cleanup',
-      'HEPA vacuum (filters fine dust)',
+      'Fine-dust vacuuming + sealed waste containment',
       'Empty home, contractor-grade finish',
     ],
   },
   faq: [
     {
       q: 'How is this different from a deep clean?',
-      a: "Deep cleans handle household dust + buildup. Post-construction handles drywall dust (which is much finer + harder to remove), paint specks, sticker residue, grout haze, and protective film on appliances. We use HEPA-filtered vacuums + specific products that don't damage new finishes.",
+      a: "Deep cleans handle household dust + buildup. Post-construction handles drywall dust (which is much finer + harder to remove), paint specks, sticker residue, grout haze, and protective film on appliances. We vacuum every surface and use specific products that don't damage new finishes.",
     },
     {
       q: 'How long does it take?',

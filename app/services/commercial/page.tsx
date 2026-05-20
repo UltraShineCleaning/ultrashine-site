@@ -60,7 +60,7 @@ const data: ServiceData = {
     },
     {
       title: 'Medical + dental suites',
-      body: 'We follow OSHA-aware protocols for clinical settings — color-coded cloths, EPA-registered disinfectants, sharps-area procedures. Ask for our medical checklist.',
+      body: 'We follow OSHA-aware protocols for clinical settings — no cross-contamination between rooms, EPA-registered disinfectants, sharps-area procedures. Ask for our medical checklist.',
     },
     {
       title: 'Move-out / lease-end',
@@ -101,7 +101,7 @@ const data: ServiceData = {
     },
     {
       q: 'Do you handle medical or dental offices?',
-      a: "Yes. We follow color-coded cloth protocols (no cross-contamination between exam rooms), use EPA-registered disinfectants, and have specific procedures for sharps-area clean-down. Ask for our medical checklist.",
+      a: "Yes. We follow strict no-cross-contamination protocols between exam rooms, use EPA-registered disinfectants, and have specific procedures for sharps-area clean-down. Ask for our medical checklist.",
     },
     {
       q: 'What about supplies — soap, paper, trash bags?',

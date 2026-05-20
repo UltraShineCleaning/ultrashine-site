@@ -71,7 +71,7 @@ const SERVICES: ServiceItem[] = [
     name: 'Post-Construction',
     tagline: 'Wall-to-Wall · Full Detail',
     description:
-      'Drywall dust gets everywhere. We bring professional-grade vacuums + the right cloths to leave a remodel actually move-in ready, not just construction-clean.',
+      'Drywall dust gets everywhere. We bring the right tools and finish-safe products to leave a remodel actually move-in ready, not just construction-clean.',
     image: '/images/service_postconstruction.jpg',
     bestFor: 'Renovations, remodels, new builds',
   },
@@ -125,7 +125,7 @@ export default function ServicesIndexPage() {
     },
     {
       q: 'Do you bring all the supplies + equipment?',
-      a: 'Yes. We bring everything: EPA-safe products (Method, Mrs Meyer’s, ECOS, vinegar, baking soda), professional-grade vacuums, color-coded microfiber cloths, mops, and a full tool kit. You do not need to provide anything — though if you prefer we use your specific products, just let us know in advance.',
+      a: 'Yes. We bring everything we need — EPA-safe products that are kid and pet friendly, vacuums, microfiber cloths, mops, and the rest of the kit. You do not need to provide anything. If you prefer we use your own products, just tell us in advance.',
     },
     {
       q: 'What if my home is bigger or messier than the quote assumed?',
@@ -178,8 +178,8 @@ export default function ServicesIndexPage() {
 
           <p className={styles.heroSub}>
             Every home is different. Every clean is custom. But the bar never moves —
-            background-checked W2 crews, color-coded cloths, EPA-safe products,
-            and a 100% satisfaction guarantee on every single visit.
+            background-checked W2 crews, EPA-safe products, and a 100% satisfaction
+            guarantee on every single visit.
           </p>
         </div>
 
@@ -303,8 +303,8 @@ export default function ServicesIndexPage() {
           </div>
 
           <p className={styles.compareNote}>
-            All services include background-checked W2 cleaners, color-coded cloths
-            (no cross-contamination), EPA-safe products, and our 100% satisfaction guarantee.
+            All services include background-checked W2 cleaners, EPA-safe products,
+            and our 100% satisfaction guarantee.
             <br />
             <br />
             <strong>Add-ons available on any service:</strong> inside oven, inside fridge,

@@ -70,7 +70,7 @@ const CATEGORIES: FaqCategory[] = [
       },
       {
         q: 'Do you do post-construction cleanup?',
-        a: "Yes — drywall dust, paint specks, sticker residue, grout haze, protective film on appliances. We use HEPA vacuums + products formulated for new finishes. Several South Florida builders use us as their go-to post-construction partner.",
+        a: "Yes — drywall dust, paint specks, sticker residue, grout haze, protective film on appliances. We bring the right tools for fine-dust cleanup and use products formulated for new finishes. Several South Florida builders use us as their go-to post-construction partner.",
       },
       {
         q: 'Can I customize what gets cleaned?',
@@ -128,7 +128,7 @@ const CATEGORIES: FaqCategory[] = [
       },
       {
         q: 'Do you bring your own supplies?',
-        a: "Yes — all cleaning chemicals, microfiber cloths, vacuums, mops. You don't need to provide anything. We use Method, Mrs Meyer's, ECOS, white vinegar — all kid + pet safe.",
+        a: "Yes — products, cloths, vacuums, mops, the whole kit. You don't need to provide anything. Everything we bring is EPA-safe — kid and pet friendly across the board.",
       },
       {
         q: 'What if I have pets or allergies?',

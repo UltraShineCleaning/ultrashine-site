@@ -136,7 +136,7 @@ export default function HomePage() {
             href="/services/post-construction"
             image="/images/service_postconstruction.jpg"
             label="Post-Construction"
-            description="HEPA-filtered, wall-to-wall — the dust the contractor leaves behind."
+            description="Wall-to-wall fine-dust cleanup — the mess the contractor leaves behind."
           />
         </div>
       </MotionSection>
@@ -173,7 +173,7 @@ export default function HomePage() {
           Built on <em>detail</em>. Trusted on results.
         </h2>
         <div className={styles.whyGrid}>
-          <WhyCard title="Eco + Pet-Safe" body="Method, Mrs Meyer's, ECOS, vinegar, baking soda. EPA-safe across the board." />
+          <WhyCard title="Eco + Pet-Safe" body="EPA-safe products across the board. Kid and pet friendly. Nothing that damages your finishes — ever." />
           <WhyCard title="Same Crew, Every Visit" body="W2 employees, never contractors. Two cleaners per visit — paired, trained to the same boutique standard, and in uniform every time." />
           <WhyCard title="Satisfaction Guaranteed" body="100% guarantee. If you're not happy, we come back free until you are." />
           <WhyCard title="Flexible Scheduling" body="Weekly, bi-weekly, monthly, or one-time. Reschedule with one text." />

@@ -4,7 +4,7 @@ import ServicePage, { type ServiceData } from '../_components/ServicePage';
 export const metadata: Metadata = {
   title: 'Regular Cleaning · Ultra Shine Cleaning',
   description:
-    'Weekly, bi-weekly, or monthly house cleaning across Boca Raton + South Florida. Background-checked W2 team, color-coded cloths, 100% satisfaction guarantee. Custom quote in 1 hour.',
+    'Weekly, bi-weekly, or monthly house cleaning across Boca Raton + South Florida. Background-checked W2 team, EPA-safe products, 100% satisfaction guarantee. Custom quote in 1 hour.',
 };
 
 const data: ServiceData = {
@@ -102,7 +102,7 @@ const data: ServiceData = {
     },
     {
       q: 'What products do you use?',
-      a: "Method, Mrs Meyer's, ECOS, distilled white vinegar, baking soda. All EPA-safe + kid + pet friendly. If you have specific allergies or product preferences, tell us in advance and we'll bring those instead.",
+      a: "EPA-safe products — kid and pet friendly across the board. If you have specific allergies or product preferences, tell us in advance and we'll bring yours instead.",
     },
     {
       q: 'Can I skip a week / change my schedule?',

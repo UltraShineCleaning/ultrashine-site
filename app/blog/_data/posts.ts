@@ -244,7 +244,7 @@ export const POSTS: BlogPost[] = [
 
       <h3>Phase 1: Heavy debris + dust removal</h3>
 
-      <p>Before any wiping happens, all loose debris gets vacuumed out using high-suction vacuums with sealed filtration so dust doesn’t blow back into the air. This includes wood shavings, drywall chunks the contractor missed, tile shards, screws, nails. We work top-down: ceiling fans first, then upper cabinets, then mid-level, then floors last.</p>
+      <p>Before any wiping happens, all loose debris gets vacuumed out so dust doesn’t blow back into the air. That covers wood shavings, drywall chunks the contractor missed, tile shards, screws, nails. We work top-down: ceiling fans first, then upper cabinets, then mid-level, then floors last.</p>
 
       <h3>Phase 2: Detail cleaning</h3>
 
@@ -416,7 +416,7 @@ export const POSTS: BlogPost[] = [
 
       <p>We’re registered with Sunbiz, hold $2M general liability + workers’ comp on every cleaner, carry a $25,000 surety bond, and employ all cleaners as W2 staff (not 1099). We can send a Certificate of Insurance within an hour of being asked &mdash; just request one when you reach out for a quote, and we’ll include it with your estimate.</p>
 
-      <p>This is also why we run background checks on every team member and use color-coded cloths to prevent cross-contamination. The whole point of a professional cleaning service is that you don’t have to think about the operational risks &mdash; they’re managed.</p>
+      <p>This is also why we run background checks on every team member and follow strict no-cross-contamination protocols between rooms. The whole point of a professional cleaning service is that you don’t have to think about the operational risks &mdash; they’re managed.</p>
 
       <h2>Bottom line</h2>
 

@@ -102,7 +102,7 @@ const data: ServiceData = {
     },
     {
       q: 'Will harsh chemicals damage my surfaces?',
-      a: "We never use anything that can damage your surfaces. We use Method, Mrs Meyer's, ECOS, and white vinegar — all kid + pet safe. For tougher buildup like hard water and grease, we use targeted (still-safe) cleaners and test on a small area first.",
+      a: "We never use anything that can damage your surfaces. Our products are EPA-safe — kid and pet friendly across the board. For tougher buildup like hard water or grease, we use targeted (still-safe) cleaners and test on a small area first.",
     },
     {
       q: 'What if I have pets or kids?',

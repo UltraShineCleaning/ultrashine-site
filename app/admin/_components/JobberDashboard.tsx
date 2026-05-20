@@ -13,8 +13,11 @@ import styles from './JobberDashboard.module.css';
 export default async function JobberDashboard() {
   const m = await getJobberMetrics();
 
-  // Token broke — surface the issue + a reconnect link
-  if (m.error === 'token_unavailable') {
+  // If the token couldn't be obtained at all, the queries returned null.
+  // That's almost always a "refresh_token revoked / expired" situation —
+  // show a dedicated reconnect panel.
+  const tokenBroken = m.errorDetail?.includes('token: access token could not be obtained');
+  if (tokenBroken) {
     return (
       <div className={styles.errorPanel}>
         <div className={styles.errorTitle}>Jobber token isn&apos;t working</div>
@@ -59,6 +62,33 @@ export default async function JobberDashboard() {
           <strong>Connected to Jobber</strong> · live data refreshed on every visit
         </span>
       </div>
+
+      {/* GRAPHQL ERROR DETAIL — only shows when one or more queries returned
+          errors, even though we got an access token. Surfaces the actual
+          Jobber message so we can tweak the query shapes. */}
+      {m.errorDetail && !tokenBroken && (
+        <div className={styles.errorPanel}>
+          <div className={styles.errorTitle}>Some Jobber queries returned errors</div>
+          <p className={styles.errorBody}>
+            The connection is working but Jobber rejected one or more queries.
+            Stats below may show partial / zero values. The exact errors:
+          </p>
+          <pre style={{
+            background: '#fff',
+            border: '1px solid #fde68a',
+            borderRadius: 8,
+            padding: '10px 14px',
+            fontSize: 11,
+            color: '#92400e',
+            whiteSpace: 'pre-wrap',
+            wordBreak: 'break-word',
+            margin: 0,
+            fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
+          }}>
+            {m.errorDetail}
+          </pre>
+        </div>
+      )}
 
       {/* TOP STAT ROW */}
       <div className={styles.statRow}>

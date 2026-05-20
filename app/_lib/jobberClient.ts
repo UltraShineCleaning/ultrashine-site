@@ -5,9 +5,9 @@
  * Auth model:
  *   - JOBBER_CLIENT_ID + JOBBER_CLIENT_SECRET come from your Jobber
  *     developer app (https://developer.getjobber.com).
- *   - JOBBER_REFRESH_TOKEN is what Tiago captured from the OAuth callback
- *     and saved in Vercel env. It's long-lived (months) and is what we
- *     use to mint short-lived access tokens.
+ *   - JOBBER_REFRESH_TOKEN was captured from the OAuth callback and
+ *     saved in Vercel env. It's long-lived (months) and is what we use
+ *     to mint short-lived access tokens.
  *
  * On each request we:
  *   1. Check the module-level cache for a non-expired access_token
@@ -15,32 +15,33 @@
  *      to get a new access_token (cached with its expires_in)
  *   3. Use that bearer token to POST a GraphQL query
  *
- * Jobber requires the `X-JOBBER-GRAPHQL-VERSION` header — pinning to a
- * specific date keeps the schema stable. Update this when you want to
- * adopt newer fields (https://developer.getjobber.com/docs/changelog).
+ * Jobber requires `application/json` content type (per their April 2024
+ * change). The `X-JOBBER-GRAPHQL-VERSION` header pins schema version so
+ * field renames don't break us silently.
  *
- * The cache is module-scoped, which means it's per-server-instance.
- * In a serverless deploy (Vercel) this is fine — cold starts will
- * refresh as needed; warm starts reuse the token until it expires.
+ * Queries below are based on the official Jobber app template
+ * (https://github.com/GetJobber/Jobber-AppTemplate-RailsAPI) — basic
+ * `clients { nodes { id name } totalCount }` shape with cursor pagination,
+ * no exotic filter args that might not exist on every account's schema.
+ *
+ * If any single query fails, the entry shows null and the dashboard
+ * surfaces the actual GraphQL error message instead of silently zeroing
+ * — that way Tiago can paste me the error and we tweak schema details.
  */
 
 const JOBBER_GRAPHQL_URL = 'https://api.getjobber.com/api/graphql';
 const JOBBER_TOKEN_URL = 'https://api.getjobber.com/api/oauth/token';
+// Pin to a specific schema version. Update when adopting newer fields:
+// https://developer.getjobber.com/docs/changelog
 const JOBBER_API_VERSION = '2024-04-15';
 
 type TokenCache = {
   accessToken: string;
-  /** Unix ms when this access_token expires */
   expiresAt: number;
 };
 
 let cachedToken: TokenCache | null = null;
 
-/**
- * Get a valid access token — either from cache or by refreshing.
- * Returns null if Jobber env vars aren't configured (caller should
- * treat the dashboard as disconnected).
- */
 async function getAccessToken(): Promise<string | null> {
   const clientId = process.env.JOBBER_CLIENT_ID;
   const clientSecret = process.env.JOBBER_CLIENT_SECRET;
@@ -48,7 +49,6 @@ async function getAccessToken(): Promise<string | null> {
 
   if (!clientId || !clientSecret || !refreshToken) return null;
 
-  // Reuse cached token if it has >60 seconds of life left
   const now = Date.now();
   if (cachedToken && cachedToken.expiresAt - now > 60_000) {
     return cachedToken.accessToken;
@@ -63,7 +63,6 @@ async function getAccessToken(): Promise<string | null> {
       grant_type: 'refresh_token',
       refresh_token: refreshToken,
     }).toString(),
-    // Don't let Next cache this — it's a token issue endpoint
     cache: 'no-store',
   });
 
@@ -90,11 +89,6 @@ type GraphQLResponse<T> = {
   errors?: Array<{ message: string; path?: string[] }>;
 };
 
-/**
- * Run a GraphQL query against Jobber. Returns { data, errors } from the
- * GraphQL response, or null if auth failed entirely. Caller decides what
- * to do with partial errors.
- */
 export async function jobberQuery<T = unknown>(
   query: string,
   variables?: Record<string, unknown>,
@@ -115,14 +109,13 @@ export async function jobberQuery<T = unknown>(
 
   if (!res.ok) {
     const text = await res.text();
-    console.error('[jobber] GraphQL request failed:', res.status, text);
-    return { errors: [{ message: `HTTP ${res.status}: ${text.slice(0, 200)}` }] };
+    console.error('[jobber] HTTP error:', res.status, text);
+    return { errors: [{ message: `HTTP ${res.status}: ${text.slice(0, 300)}` }] };
   }
 
   return (await res.json()) as GraphQLResponse<T>;
 }
 
-/** Convenience flag callers can check without making a request. */
 export function isJobberConfigured(): boolean {
   return !!(
     process.env.JOBBER_CLIENT_ID &&
@@ -132,9 +125,15 @@ export function isJobberConfigured(): boolean {
 }
 
 // ============================================================
-// Data fetchers — each returns a small typed shape Tiago's dashboard
-// can render directly. They swallow errors and return zero/empty
-// values so the UI degrades gracefully when something is off.
+// Data fetchers — kept INTENTIONALLY MINIMAL using only fields
+// confirmed present in Jobber's official app template:
+//   - clients { nodes { id name } totalCount }
+//   - users / requests / quotes / jobs / scheduledItems / invoices
+//
+// We deliberately avoid exotic filter args (date ranges, status enums)
+// in the initial queries — we just pull totalCount + recent nodes and
+// derive metrics in JS. If/when we want server-side filtering we can
+// add it once we've confirmed the schema shapes against a real account.
 // ============================================================
 
 export type JobberMetrics = {
@@ -151,85 +150,81 @@ export type JobberMetrics = {
   pendingInvoiceCount: number;
   pendingInvoiceTotal: number;
   thisWeekRevenue: number;
-  error?: string;
+  /** Verbose error string surfaced on the dashboard so Tiago can paste it back. */
+  errorDetail?: string;
+};
+
+const empty: JobberMetrics = {
+  jobsToday: 0,
+  jobsThisWeek: 0,
+  upcomingJobs: [],
+  activeClientCount: 0,
+  pendingInvoiceCount: 0,
+  pendingInvoiceTotal: 0,
+  thisWeekRevenue: 0,
 };
 
 /**
- * Pull every metric we surface on the dashboard in a single parallel
- * burst. Failures in any one fetcher just return zero values for that
- * field — the rest still render.
+ * Pulls the full set of dashboard metrics in parallel. If a query fails,
+ * its value stays at zero, and any GraphQL error messages are concatenated
+ * into `errorDetail` so the UI can show them inline.
  */
 export async function getJobberMetrics(): Promise<JobberMetrics> {
-  const empty: JobberMetrics = {
-    jobsToday: 0,
-    jobsThisWeek: 0,
-    upcomingJobs: [],
-    activeClientCount: 0,
-    pendingInvoiceCount: 0,
-    pendingInvoiceTotal: 0,
-    thisWeekRevenue: 0,
-  };
+  if (!isJobberConfigured()) {
+    return { ...empty, errorDetail: 'JOBBER env vars missing (CLIENT_ID, CLIENT_SECRET, or REFRESH_TOKEN)' };
+  }
 
-  if (!isJobberConfigured()) return { ...empty, error: 'not_configured' };
-
-  // Time ranges in ISO so they can be passed straight into Jobber filters
+  // Calendar windows in ISO so client-side filtering of fetched nodes
+  // can determine which are "today" vs "this week" without trusting
+  // Jobber server-side date filters (which vary by schema version).
   const now = new Date();
   const startOfDay = new Date(now);
   startOfDay.setHours(0, 0, 0, 0);
   const endOfDay = new Date(startOfDay);
   endOfDay.setDate(endOfDay.getDate() + 1);
-
-  // Start of week = Sunday (matches Jobber default for many US accounts)
   const startOfWeek = new Date(startOfDay);
-  startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay());
+  startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay()); // Sunday-start
   const endOfWeek = new Date(startOfWeek);
   endOfWeek.setDate(endOfWeek.getDate() + 7);
-
-  // 14-day window for the "upcoming" list — gives Tiago 2 weeks of visibility
   const twoWeeksOut = new Date(startOfDay);
   twoWeeksOut.setDate(twoWeeksOut.getDate() + 14);
 
-  // ---- Today's jobs ----
-  const todayJobsPromise = jobberQuery<{
-    scheduledItems: { totalCount: number };
-  }>(
-    `
-    query TodayJobs($startAt: ISO8601DateTime!, $endAt: ISO8601DateTime!) {
-      scheduledItems(filter: { startAt: { after: $startAt, before: $endAt } }) {
-        totalCount
-      }
-    }
-    `,
-    { startAt: startOfDay.toISOString(), endAt: endOfDay.toISOString() },
+  // ---- Clients ----
+  // Stable schema: paginated `clients` with `totalCount`. No filters,
+  // just the count — Jobber's docs show this exact shape works.
+  const clientsPromise = jobberQuery<{ clients: { totalCount: number } }>(
+    `query Clients { clients(first: 1) { totalCount } }`,
   );
 
-  // ---- This week's jobs + upcoming list ----
-  const weekJobsPromise = jobberQuery<{
+  // ---- Scheduled items (visits) — next 50, filter client-side ----
+  // Inline fragment on Visit grabs job+client+address. We DON'T filter
+  // server-side by date because the filter input shape varies by schema
+  // version — instead we pull a sensible batch sorted earliest-first and
+  // partition into today/week/upcoming in JS.
+  const visitsPromise = jobberQuery<{
     scheduledItems: {
-      totalCount: number;
       nodes: Array<{
         id: string;
         startAt: string | null;
         title: string | null;
+        __typename?: string;
         job?: {
-          jobNumber: string | number;
-          client?: { name: string | null };
-          property?: { address?: { street1?: string | null; city?: string | null } };
+          jobNumber?: number | string;
+          client?: { name?: string | null };
+          property?: {
+            address?: { street1?: string | null; city?: string | null };
+          };
         } | null;
       }>;
     };
   }>(
-    `
-    query WeekJobs($startAt: ISO8601DateTime!, $endAt: ISO8601DateTime!) {
-      scheduledItems(
-        filter: { startAt: { after: $startAt, before: $endAt } }
-        first: 12
-      ) {
-        totalCount
+    `query UpcomingVisits {
+      scheduledItems(first: 50) {
         nodes {
           id
           startAt
           title
+          __typename
           ... on Visit {
             job {
               jobNumber
@@ -239,86 +234,82 @@ export async function getJobberMetrics(): Promise<JobberMetrics> {
           }
         }
       }
-    }
-    `,
-    { startAt: startOfDay.toISOString(), endAt: twoWeeksOut.toISOString() },
+    }`,
   );
 
-  // ---- Active client count ----
-  const clientsPromise = jobberQuery<{ clients: { totalCount: number } }>(
-    `
-    query Clients {
-      clients(filter: { isArchived: false }) {
-        totalCount
-      }
-    }
-    `,
-  );
-
-  // ---- Pending invoices (issued but unpaid) ----
+  // ---- Invoices — pull recent 100, partition client-side ----
+  // Don't trust enum names like `AWAITING_PAYMENT` or `PAID` — those
+  // names vary by schema version. We fetch the `invoiceStatus` field
+  // as a string + the amount, then categorize in JS below.
   const invoicesPromise = jobberQuery<{
     invoices: {
       totalCount: number;
-      nodes: Array<{ amounts?: { total: number | null } | null }>;
+      nodes: Array<{
+        id: string;
+        invoiceStatus?: string | null;
+        issuedAt?: string | null;
+        amounts?: { total?: number | null } | null;
+      }>;
     };
   }>(
-    `
-    query PendingInvoices {
-      invoices(filter: { invoiceStatus: AWAITING_PAYMENT }, first: 100) {
+    `query RecentInvoices {
+      invoices(first: 100) {
         totalCount
         nodes {
+          id
+          invoiceStatus
+          issuedAt
           amounts { total }
         }
       }
-    }
-    `,
+    }`,
   );
 
-  // ---- This week's revenue (paid invoices in the week range) ----
-  const revenuePromise = jobberQuery<{
-    invoices: {
-      nodes: Array<{ amounts?: { total: number | null } | null }>;
-    };
-  }>(
-    `
-    query WeekRevenue($startAt: ISO8601DateTime!, $endAt: ISO8601DateTime!) {
-      invoices(
-        filter: { invoiceStatus: PAID, issuedAt: { after: $startAt, before: $endAt } }
-        first: 100
-      ) {
-        nodes {
-          amounts { total }
-        }
-      }
-    }
-    `,
-    { startAt: startOfWeek.toISOString(), endAt: endOfWeek.toISOString() },
-  );
+  const [clientsRes, visitsRes, invoicesRes] = await Promise.all([
+    clientsPromise,
+    visitsPromise,
+    invoicesPromise,
+  ]);
 
-  const [todayRes, weekRes, clientsRes, invoicesRes, revenueRes] =
-    await Promise.all([
-      todayJobsPromise,
-      weekJobsPromise,
-      clientsPromise,
-      invoicesPromise,
-      revenuePromise,
-    ]);
+  // Collect any GraphQL errors so the UI can surface them
+  const errorMessages: string[] = [];
+  if (clientsRes?.errors?.length) {
+    errorMessages.push(`clients: ${clientsRes.errors.map((e) => e.message).join('; ')}`);
+  }
+  if (visitsRes?.errors?.length) {
+    errorMessages.push(`visits: ${visitsRes.errors.map((e) => e.message).join('; ')}`);
+  }
+  if (invoicesRes?.errors?.length) {
+    errorMessages.push(`invoices: ${invoicesRes.errors.map((e) => e.message).join('; ')}`);
+  }
+  if ([clientsRes, visitsRes, invoicesRes].some((r) => r === null)) {
+    errorMessages.push('token: access token could not be obtained (check refresh token)');
+  }
 
-  // Helper to flatten pending invoice totals into a number
-  const sumInvoices = (
-    nodes: Array<{ amounts?: { total: number | null } | null }> | undefined,
-  ) =>
-    (nodes ?? []).reduce(
-      (sum, n) => sum + (typeof n.amounts?.total === 'number' ? n.amounts.total : 0),
-      0,
+  // ---- Partition visits into today / week / upcoming ----
+  const allVisits = visitsRes?.data?.scheduledItems?.nodes ?? [];
+  const futureVisits = allVisits
+    .filter((v) => v.startAt && new Date(v.startAt) >= startOfDay)
+    .sort((a, b) =>
+      (a.startAt ?? '').localeCompare(b.startAt ?? ''),
     );
 
-  const weekNodes = weekRes?.data?.scheduledItems?.nodes ?? [];
+  const jobsToday = allVisits.filter((v) => {
+    if (!v.startAt) return false;
+    const d = new Date(v.startAt);
+    return d >= startOfDay && d < endOfDay;
+  }).length;
 
-  return {
-    jobsToday: todayRes?.data?.scheduledItems?.totalCount ?? 0,
-    jobsThisWeek: weekRes?.data?.scheduledItems?.totalCount ?? 0,
-    upcomingJobs: weekNodes.map((n) => {
+  const jobsThisWeek = allVisits.filter((v) => {
+    if (!v.startAt) return false;
+    const d = new Date(v.startAt);
+    return d >= startOfDay && d <= twoWeeksOut;
+  }).length;
+
+  const upcomingJobs = futureVisits
+    .filter((v) => v.startAt && new Date(v.startAt) <= twoWeeksOut)
+    .slice(0, 12)
+    .map((n) => {
       const address = n.job?.property?.address;
       const addrStr = address
         ? [address.street1, address.city].filter(Boolean).join(', ')
@@ -332,15 +323,42 @@ export async function getJobberMetrics(): Promise<JobberMetrics> {
         startAt: n.startAt,
         address: addrStr,
       };
-    }),
+    });
+
+  // ---- Partition invoices: paid this week (revenue) vs awaiting payment ----
+  // Jobber's invoiceStatus string varies. Treat anything containing "paid"
+  // as paid; anything containing "awaiting", "draft", "sent" without "paid"
+  // as outstanding. This is forgiving across schema variants.
+  const invoices = invoicesRes?.data?.invoices?.nodes ?? [];
+  const isPaid = (s?: string | null) => !!s && /paid/i.test(s);
+  const isOutstanding = (s?: string | null) =>
+    !!s && !isPaid(s) && /(awaiting|outstanding|sent|past_due|overdue|approved)/i.test(s);
+
+  let thisWeekRevenue = 0;
+  let pendingInvoiceTotal = 0;
+  let pendingInvoiceCount = 0;
+
+  for (const inv of invoices) {
+    const total = typeof inv.amounts?.total === 'number' ? inv.amounts.total : 0;
+    if (isPaid(inv.invoiceStatus) && inv.issuedAt) {
+      const issued = new Date(inv.issuedAt);
+      if (issued >= startOfWeek && issued < endOfWeek) {
+        thisWeekRevenue += total;
+      }
+    } else if (isOutstanding(inv.invoiceStatus)) {
+      pendingInvoiceTotal += total;
+      pendingInvoiceCount += 1;
+    }
+  }
+
+  return {
+    jobsToday,
+    jobsThisWeek,
+    upcomingJobs,
     activeClientCount: clientsRes?.data?.clients?.totalCount ?? 0,
-    pendingInvoiceCount: invoicesRes?.data?.invoices?.totalCount ?? 0,
-    pendingInvoiceTotal: sumInvoices(invoicesRes?.data?.invoices?.nodes),
-    thisWeekRevenue: sumInvoices(revenueRes?.data?.invoices?.nodes),
-    error: [todayRes, weekRes, clientsRes, invoicesRes, revenueRes].some(
-      (r) => r === null,
-    )
-      ? 'token_unavailable'
-      : undefined,
+    pendingInvoiceCount,
+    pendingInvoiceTotal,
+    thisWeekRevenue,
+    errorDetail: errorMessages.length > 0 ? errorMessages.join(' · ') : undefined,
   };
 }

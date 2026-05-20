@@ -24,7 +24,7 @@ export const dynamic = 'force-dynamic';
 export default function JobberConnectedPage({
   searchParams,
 }: {
-  searchParams: { refresh_token?: string; error?: string; expires_in?: string };
+  searchParams: { refresh_token?: string; error?: string; expires_in?: string; auto_saved?: string };
 }) {
   // Admin gate
   const cookie = cookies().get(COOKIE_NAME)?.value;
@@ -33,6 +33,31 @@ export default function JobberConnectedPage({
 
   const error = searchParams.error;
   const refreshToken = searchParams.refresh_token;
+  const autoSaved = searchParams.auto_saved === '1';
+
+  // KV-persisted happy path — no copy/paste required, token already saved
+  if (autoSaved && !error) {
+    return (
+      <main className={styles.page}>
+        <div className={styles.card}>
+          <div className={styles.iconSuccess}>✓</div>
+          <h1 className={styles.title}>Jobber connected. You&apos;re done.</h1>
+          <p className={styles.body}>
+            Your refresh token was saved automatically to encrypted storage.
+            No env-var pasting needed — the dashboard will keep itself
+            connected indefinitely. Token rotation is handled for you.
+          </p>
+          <p className={styles.bodyDim}>
+            If you ever need to disconnect, just remove the token from
+            Vercel KV in your project Storage tab.
+          </p>
+          <Link href="/admin#jobber" className={styles.btnSecondary}>
+            ← Open Jobber dashboard
+          </Link>
+        </div>
+      </main>
+    );
+  }
 
   // Error state. The most common error is `state_mismatch` — happens when
   // the CSRF cookie expires (now 15min, was 5min) or the user landed here

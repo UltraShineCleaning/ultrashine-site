@@ -98,16 +98,49 @@ export async function GET(req: Request) {
       );
     }
 
-    // Redirect to success page WITH the refresh_token so Tiago can copy it.
-    // The page is admin-only (also cookie-gated) so the token is only visible
-    // to Tiago. He copies it manually to Vercel env vars; that becomes the
-    // persistent storage for all future API calls.
+    // Persist the fresh refresh token straight to Vercel KV so subsequent
+    // dashboard loads don't need the user to copy/paste anything to env
+    // vars. If KV isn't configured yet we still show the token on the
+    // success page so Tiago can paste it manually as a fallback.
+    let persisted = false;
+    const kvUrl = process.env.KV_REST_API_URL;
+    const kvToken = process.env.KV_REST_API_TOKEN;
+    if (kvUrl && kvToken) {
+      try {
+        const kvRes = await fetch(`${kvUrl}/set/${encodeURIComponent('jobber:refresh_token')}`, {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${kvToken}`,
+            'Content-Type': 'text/plain',
+          },
+          body: tokens.refresh_token,
+        });
+        persisted = kvRes.ok;
+        if (persisted) {
+          await fetch(`${kvUrl}/set/${encodeURIComponent('jobber:last_refresh_at')}`, {
+            method: 'POST',
+            headers: {
+              Authorization: `Bearer ${kvToken}`,
+              'Content-Type': 'text/plain',
+            },
+            body: String(Date.now()),
+          });
+        }
+      } catch (err) {
+        console.error('[jobber/callback] KV write failed:', err);
+      }
+    }
+
+    // Redirect to success page. When KV persisted the token, we don't
+    // expose the token in the URL (no manual copy needed). When KV
+    // wasn't configured, we still show the token for fallback copy/paste.
     const successUrl = new URL('/jobber-connected', url.origin);
-    successUrl.searchParams.set('refresh_token', tokens.refresh_token);
-    successUrl.searchParams.set(
-      'expires_in',
-      String(tokens.expires_in ?? 3600),
-    );
+    if (!persisted) {
+      successUrl.searchParams.set('refresh_token', tokens.refresh_token);
+      successUrl.searchParams.set('expires_in', String(tokens.expires_in ?? 3600));
+    } else {
+      successUrl.searchParams.set('auto_saved', '1');
+    }
     return NextResponse.redirect(successUrl);
   } catch (err: any) {
     console.error('[jobber/callback] Unexpected error:', err);

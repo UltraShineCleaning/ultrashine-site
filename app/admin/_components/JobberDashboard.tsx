@@ -1,6 +1,17 @@
-import { getJobberMetrics } from '../../_lib/jobberClient';
+import { getJobberMetrics, isJobberKvEnabled, getLastRefreshAt } from '../../_lib/jobberClient';
 import styles from './JobberDashboard.module.css';
 import JobberCalendar from './JobberCalendar';
+
+function formatRelative(ts: number): string {
+  const diff = Date.now() - ts;
+  const min = Math.floor(diff / 60_000);
+  const hr = Math.floor(diff / 3_600_000);
+  if (min < 1) return 'just now';
+  if (min < 60) return `${min} min ago`;
+  if (hr < 24) return `${hr}h ago`;
+  const d = Math.floor(diff / 86_400_000);
+  return `${d}d ago`;
+}
 
 /**
  * Live Jobber dashboard widget — renders when JOBBER_REFRESH_TOKEN is set.
@@ -12,7 +23,11 @@ import JobberCalendar from './JobberCalendar';
  * inviting Tiago to re-connect.
  */
 export default async function JobberDashboard() {
-  const m = await getJobberMetrics();
+  const [m, lastRefresh] = await Promise.all([
+    getJobberMetrics(),
+    getLastRefreshAt(),
+  ]);
+  const kvEnabled = isJobberKvEnabled();
 
   // If the token refresh failed, show a dedicated reconnect panel with
   // the specific error reason from Jobber surfaced inline (invalid_grant,
@@ -77,13 +92,60 @@ export default async function JobberDashboard() {
 
   return (
     <div className={styles.wrap}>
-      {/* CONNECTION CONFIRMATION BANNER */}
+      {/* CONNECTION CONFIRMATION + STATUS BAR
+          Shows live status, last refresh timestamp, KV persistence state,
+          and a manual refresh button. The refresh link points at the same
+          admin URL with a cache-buster query so server re-pulls Jobber. */}
       <div className={styles.statusBar}>
         <span className={styles.statusDot} />
         <span className={styles.statusText}>
-          <strong>Connected to Jobber</strong> · live data refreshed on every visit
+          <strong>Connected to Jobber</strong>
+          {lastRefresh && (
+            <span style={{ opacity: 0.7, marginLeft: 6 }}>
+              · last refreshed {formatRelative(lastRefresh)}
+            </span>
+          )}
+          {kvEnabled && (
+            <span style={{ marginLeft: 8, padding: '2px 8px', background: '#dcfce7', color: '#166534', borderRadius: 999, fontSize: 10, fontWeight: 700, letterSpacing: '0.04em' }}>
+              KV PERSISTED
+            </span>
+          )}
         </span>
+        <a
+          href={`/admin?t=${Date.now()}#jobber`}
+          style={{
+            marginLeft: 'auto',
+            padding: '6px 12px',
+            borderRadius: 999,
+            background: '#ffffff',
+            color: '#374151',
+            border: '1px solid #d1d5db',
+            textDecoration: 'none',
+            fontSize: 11,
+            fontWeight: 600,
+            letterSpacing: '0.02em',
+          }}
+        >
+          ↻ Refresh now
+        </a>
       </div>
+      {!kvEnabled && (
+        <div className={styles.errorPanel} style={{ background: '#eff6ff', borderColor: '#bfdbfe' }}>
+          <div className={styles.errorTitle} style={{ color: '#1e40af' }}>
+            One-time setup to make this truly permanent
+          </div>
+          <p className={styles.errorBody}>
+            Jobber rotates refresh tokens on every refresh. To survive Vercel cold starts and never need a manual reconnect again, enable Vercel KV:
+          </p>
+          <ol style={{ fontSize: 13, lineHeight: 1.6, color: '#374151', paddingLeft: 20, marginBottom: 14 }}>
+            <li>Open <a href="https://vercel.com/contact-8079s-projects/ultrashine-site/stores" target="_blank" rel="noopener noreferrer" style={{ color: '#1e40af', fontWeight: 600 }}>Vercel Storage</a></li>
+            <li>Click <strong>Create Database</strong> → <strong>KV (Redis)</strong></li>
+            <li>Name it <code style={{ background: '#fff', padding: '1px 6px', borderRadius: 4 }}>ultrashine-jobber-tokens</code></li>
+            <li>Connect it to this project (auto-injects <code style={{ background: '#fff', padding: '1px 6px', borderRadius: 4 }}>KV_REST_API_URL</code> + <code style={{ background: '#fff', padding: '1px 6px', borderRadius: 4 }}>KV_REST_API_TOKEN</code>)</li>
+            <li>Push an empty commit to redeploy. Then reconnect Jobber once. From then on, it stays connected forever.</li>
+          </ol>
+        </div>
+      )}
 
       {/* GRAPHQL ERROR DETAIL — only shows when one or more queries returned
           errors, even though we got an access token. Surfaces the actual

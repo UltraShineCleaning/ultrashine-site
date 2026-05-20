@@ -31,6 +31,71 @@
 
 const JOBBER_GRAPHQL_URL = 'https://api.getjobber.com/api/graphql';
 const JOBBER_TOKEN_URL = 'https://api.getjobber.com/api/oauth/token';
+
+/**
+ * Vercel KV (Upstash Redis) persistence for the rotated Jobber refresh
+ * token. When Vercel KV is linked to the project, Vercel auto-injects
+ * `KV_REST_API_URL` + `KV_REST_API_TOKEN` env vars, and we use the
+ * Upstash REST API directly — no extra npm package required.
+ *
+ * If KV isn't set up yet (env vars absent), these helpers degrade
+ * gracefully: kvGet returns null, kvSet is a no-op, and the rest of
+ * the code falls back to the env var + in-memory cache like before.
+ */
+const KV_REFRESH_KEY = 'jobber:refresh_token';
+const KV_LAST_REFRESH_KEY = 'jobber:last_refresh_at';
+
+async function kvGet(key: string): Promise<string | null> {
+  const url = process.env.KV_REST_API_URL;
+  const token = process.env.KV_REST_API_TOKEN;
+  if (!url || !token) return null;
+  try {
+    const res = await fetch(`${url}/get/${encodeURIComponent(key)}`, {
+      headers: { Authorization: `Bearer ${token}` },
+      cache: 'no-store',
+    });
+    if (!res.ok) return null;
+    const data = await res.json();
+    return typeof data.result === 'string' ? data.result : null;
+  } catch (err) {
+    console.error('[jobber] kvGet error:', err);
+    return null;
+  }
+}
+
+async function kvSet(key: string, value: string): Promise<boolean> {
+  const url = process.env.KV_REST_API_URL;
+  const token = process.env.KV_REST_API_TOKEN;
+  if (!url || !token) return false;
+  try {
+    // Upstash REST: POST /set/<key> with body = value
+    const res = await fetch(`${url}/set/${encodeURIComponent(key)}`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'text/plain',
+      },
+      body: value,
+      cache: 'no-store',
+    });
+    return res.ok;
+  } catch (err) {
+    console.error('[jobber] kvSet error:', err);
+    return false;
+  }
+}
+
+export function isJobberKvEnabled(): boolean {
+  return !!(process.env.KV_REST_API_URL && process.env.KV_REST_API_TOKEN);
+}
+
+/** Last successful access-token refresh timestamp (ms since epoch). */
+export async function getLastRefreshAt(): Promise<number | null> {
+  const v = await kvGet(KV_LAST_REFRESH_KEY);
+  if (!v) return null;
+  const n = parseInt(v, 10);
+  return Number.isFinite(n) ? n : null;
+}
 // Pin to Jobber's LATEST STABLE schema version. Each active version is
 // listed in their changelog — using something not in that list returns
 // "GraphQL API version 'X' does not exist". The full active list as of
@@ -48,6 +113,24 @@ type TokenCache = {
 
 let cachedToken: TokenCache | null = null;
 /**
+ * In-memory store of the LATEST refresh token Jobber issued us.
+ *
+ * IMPORTANT — Jobber rotates refresh tokens. Every successful refresh
+ * returns a NEW refresh_token + invalidates the one we just used. If we
+ * keep using the env-var token forever it dies on the second refresh.
+ *
+ * We capture the rotated token in this module-level variable and prefer
+ * it over the env var on subsequent refreshes. This survives ONLY for
+ * the lifetime of a warm serverless instance — on cold starts we fall
+ * back to the env var. Combined with Jobber's typical multi-day refresh
+ * token lifetime, this keeps the integration alive in practice.
+ *
+ * Proper fix (future): write rotated tokens to Vercel KV or Postgres so
+ * they persist across cold starts. For a single-admin tool the in-memory
+ * approach is usually enough.
+ */
+let rotatedRefreshToken: string | null = null;
+/**
  * Last token-refresh error message captured for UI surfacing. Module-level
  * so the dashboard can read it after the queries fail and tell Tiago WHAT
  * went wrong (e.g. "invalid_grant") instead of just "token isn't working".
@@ -61,7 +144,7 @@ export function getLastTokenError(): string | null {
 async function getAccessToken(): Promise<string | null> {
   const clientId = process.env.JOBBER_CLIENT_ID;
   const clientSecret = process.env.JOBBER_CLIENT_SECRET;
-  const refreshToken = process.env.JOBBER_REFRESH_TOKEN;
+  const envRefreshToken = process.env.JOBBER_REFRESH_TOKEN;
 
   if (!clientId) {
     lastTokenError = 'JOBBER_CLIENT_ID env var not set on Vercel';
@@ -71,8 +154,26 @@ async function getAccessToken(): Promise<string | null> {
     lastTokenError = 'JOBBER_CLIENT_SECRET env var not set on Vercel';
     return null;
   }
+
+  // Refresh-token preference order:
+  //   1. In-memory rotated token from this warm instance
+  //   2. Persistent KV-stored token (survives cold starts + deploys)
+  //   3. Env var (the original token user pasted when first connecting)
+  // KV is the linchpin that makes the integration truly permanent —
+  // every time Jobber rotates, we write the new one to KV, so the next
+  // request (even from a fresh serverless instance) sees the live token.
+  let refreshToken = rotatedRefreshToken;
   if (!refreshToken) {
-    lastTokenError = 'JOBBER_REFRESH_TOKEN env var not set on Vercel';
+    const kvToken = await kvGet(KV_REFRESH_KEY);
+    if (kvToken) {
+      refreshToken = kvToken;
+      rotatedRefreshToken = kvToken; // warm the in-memory cache too
+    }
+  }
+  if (!refreshToken) refreshToken = envRefreshToken ?? null;
+
+  if (!refreshToken) {
+    lastTokenError = 'No Jobber refresh token available (KV empty + env var unset)';
     return null;
   }
 
@@ -107,6 +208,14 @@ async function getAccessToken(): Promise<string | null> {
     }
     lastTokenError = `HTTP ${res.status} from Jobber token endpoint — ${detail}`;
     console.error('[jobber] Token refresh failed:', lastTokenError);
+    // The token we tried is dead. If it was the rotated in-memory one
+    // (possibly stale across a cold start), clear it so the next attempt
+    // falls back to the env var token. We don't auto-reconnect because
+    // that requires a browser session.
+    if (rotatedRefreshToken) {
+      console.warn('[jobber] Clearing stale rotated refresh token, falling back to env on next call');
+      rotatedRefreshToken = null;
+    }
     return null;
   }
 
@@ -116,6 +225,25 @@ async function getAccessToken(): Promise<string | null> {
     console.error('[jobber] Token refresh returned no access_token:', data);
     return null;
   }
+
+  // KEY: capture the rotated refresh_token Jobber gave us. Without this
+  // step the next refresh dies because Jobber invalidates the previous
+  // refresh token whenever it issues a new access_token. We:
+  //   1. Save it in memory (fast lookup for next request in warm instance)
+  //   2. Persist to Vercel KV (survives cold starts + redeploys)
+  if (data.refresh_token && data.refresh_token !== refreshToken) {
+    console.log('[jobber] Captured rotated refresh token from Jobber');
+    rotatedRefreshToken = data.refresh_token;
+    const persisted = await kvSet(KV_REFRESH_KEY, data.refresh_token);
+    if (persisted) {
+      console.log('[jobber] Persisted rotated refresh token to Vercel KV');
+    }
+  }
+
+  // Record successful refresh timestamp so the dashboard can show
+  // "Token last refreshed: X min ago" — gives Tiago confidence the
+  // integration is alive without manually testing it.
+  await kvSet(KV_LAST_REFRESH_KEY, String(now));
 
   // Success — clear any previous error
   lastTokenError = null;

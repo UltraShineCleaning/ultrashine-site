@@ -302,6 +302,42 @@ export function isJobberConfigured(): boolean {
 }
 
 // ============================================================
+// RESPONSE CACHE — prevents Jobber rate-limit throttling.
+//
+// Jobber's API enforces a per-account rate limit (~50 points/sec restore
+// rate). Each GraphQL query consumes points proportional to its complexity.
+// Rapid page refreshes during testing burn the budget and we get
+// "Throttled" errors from Jobber. We cache the heavy fetcher results for
+// 60 seconds so repeated visits within that window serve from memory.
+//
+// Cache is module-scoped: shared across requests within a warm serverless
+// instance, reset on cold starts. That's fine — cold starts are uncommon
+// enough that the budget regenerates between them.
+//
+// Call sites can opt out with `force: true` to bypass the cache (used by
+// the "Refresh now" button so the user can always pull truly-live data).
+// ============================================================
+
+const CACHE_TTL_MS = 60_000; // 60 seconds
+
+type Cached<T> = { data: T; expiresAt: number };
+const responseCache = new Map<string, Cached<unknown>>();
+
+function getCached<T>(key: string): T | null {
+  const entry = responseCache.get(key);
+  if (!entry) return null;
+  if (entry.expiresAt < Date.now()) {
+    responseCache.delete(key);
+    return null;
+  }
+  return entry.data as T;
+}
+
+function setCached<T>(key: string, data: T): void {
+  responseCache.set(key, { data, expiresAt: Date.now() + CACHE_TTL_MS });
+}
+
+// ============================================================
 // Data fetchers — kept INTENTIONALLY MINIMAL using only fields
 // confirmed present in Jobber's official app template:
 //   - clients { nodes { id name } totalCount }
@@ -343,9 +379,16 @@ export type JobberClient = {
  * Used independently from the dashboard metrics so a tab-specific call
  * keeps the home page light. Returns a flat sorted list.
  */
-export async function getJobberClients(): Promise<{ clients: JobberClient[]; error?: string }> {
+export async function getJobberClients(opts: { force?: boolean } = {}): Promise<{ clients: JobberClient[]; error?: string }> {
   if (!isJobberConfigured()) {
     return { clients: [], error: 'JOBBER env vars missing' };
+  }
+
+  // Serve from cache unless caller asked for fresh data
+  const cacheKey = 'clients';
+  if (!opts.force) {
+    const cached = getCached<{ clients: JobberClient[]; error?: string }>(cacheKey);
+    if (cached) return cached;
   }
 
   const res = await jobberQuery<{
@@ -385,7 +428,17 @@ export async function getJobberClients(): Promise<{ clients: JobberClient[]; err
 
   if (!res) return { clients: [], error: 'No Jobber access (token issue)' };
   if (res.errors?.length) {
-    return { clients: [], error: res.errors.map((e) => e.message).join(' · ') };
+    const msg = res.errors.map((e) => e.message).join(' · ');
+    // If Jobber rate-limited us, serve the last cached snapshot instead of
+    // showing zeros. The cache may be slightly older than 60s — that's
+    // still much better than an empty list during throttling.
+    if (/throttled/i.test(msg)) {
+      const stale = responseCache.get(cacheKey)?.data as
+        | { clients: JobberClient[]; error?: string }
+        | undefined;
+      if (stale) return { ...stale, error: 'Jobber rate-limited; showing recent cache' };
+    }
+    return { clients: [], error: msg };
   }
 
   // Normalize a city name to canonical Title Case so "Boca raton" + "boca
@@ -427,7 +480,9 @@ export async function getJobberClients(): Promise<{ clients: JobberClient[]; err
 
   // Sort alphabetically for predictable list ordering
   clients.sort((a, b) => a.name.localeCompare(b.name));
-  return { clients };
+  const result = { clients };
+  setCached(cacheKey, result);
+  return result;
 }
 
 export type JobberMetrics = {
@@ -461,9 +516,17 @@ const empty: JobberMetrics = {
  * its value stays at zero, and any GraphQL error messages are concatenated
  * into `errorDetail` so the UI can show them inline.
  */
-export async function getJobberMetrics(): Promise<JobberMetrics> {
+export async function getJobberMetrics(opts: { force?: boolean } = {}): Promise<JobberMetrics> {
   if (!isJobberConfigured()) {
     return { ...empty, errorDetail: 'JOBBER env vars missing (CLIENT_ID, CLIENT_SECRET, or REFRESH_TOKEN)' };
+  }
+
+  // 60-second cache — see CACHE_TTL_MS comment above. Bypassable via
+  // `{ force: true }` from the "Refresh now" button.
+  const cacheKey = 'metrics';
+  if (!opts.force) {
+    const cached = getCached<JobberMetrics>(cacheKey);
+    if (cached) return cached;
   }
 
   // Calendar windows in ISO so client-side filtering of fetched nodes
@@ -526,7 +589,7 @@ export async function getJobberMetrics(): Promise<JobberMetrics> {
     };
   }>(
     `query UpcomingVisits($start: ISO8601DateTime!, $end: ISO8601DateTime!) {
-      scheduledItems(filter: { occursWithin: { startAt: $start, endAt: $end } }, first: 100) {
+      scheduledItems(filter: { occursWithin: { startAt: $start, endAt: $end } }, first: 50) {
         nodes {
           id
           startAt
@@ -607,6 +670,20 @@ export async function getJobberMetrics(): Promise<JobberMetrics> {
     errorMessages.push(`token: ${detail}`);
   }
 
+  // If Jobber rate-limited ANY of the queries, fall back to the most
+  // recent successful cache snapshot instead of returning zeros. This
+  // is what makes the dashboard resilient to bursty refreshes.
+  const wasThrottled = errorMessages.some((m) => /throttled/i.test(m));
+  if (wasThrottled) {
+    const stale = responseCache.get(cacheKey)?.data as JobberMetrics | undefined;
+    if (stale) {
+      return {
+        ...stale,
+        errorDetail: 'Jobber rate-limited; showing data from the last successful fetch. Wait 30s and refresh to retry.',
+      };
+    }
+  }
+
   // ---- Partition visits into today / week / upcoming ----
   const rawVisits = visitsRes?.data?.scheduledItems?.nodes ?? [];
   const futureVisits = rawVisits
@@ -683,7 +760,7 @@ export async function getJobberMetrics(): Promise<JobberMetrics> {
     }
   }
 
-  return {
+  const result: JobberMetrics = {
     jobsToday,
     jobsThisWeek,
     upcomingJobs,
@@ -694,4 +771,13 @@ export async function getJobberMetrics(): Promise<JobberMetrics> {
     thisWeekRevenue,
     errorDetail: errorMessages.length > 0 ? errorMessages.join(' · ') : undefined,
   };
+
+  // Only cache responses that succeeded fully — caching partial-error
+  // results would mean returning stale errors for 60s if the next
+  // refresh would have succeeded.
+  if (!result.errorDetail) {
+    setCached(cacheKey, result);
+  }
+
+  return result;
 }

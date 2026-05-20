@@ -318,7 +318,11 @@ export function isJobberConfigured(): boolean {
 // the "Refresh now" button so the user can always pull truly-live data).
 // ============================================================
 
-const CACHE_TTL_MS = 60_000; // 60 seconds
+// 5 minute cache — much friendlier to Jobber's rate limit. The data is
+// "live" enough for a single-admin dashboard (you'd never look at it
+// 50 times in 5 min normally). The "Refresh now" button bypasses cache
+// for genuine live data.
+const CACHE_TTL_MS = 300_000; // 5 minutes
 
 type Cached<T> = { data: T; expiresAt: number };
 const responseCache = new Map<string, Cached<unknown>>();
@@ -598,12 +602,6 @@ export async function getJobberMetrics(opts: { force?: boolean } = {}): Promise<
           ... on Visit {
             endAt
             isComplete
-            assignedUsers {
-              nodes {
-                id
-                name { full }
-              }
-            }
             job {
               jobNumber
               client { name }

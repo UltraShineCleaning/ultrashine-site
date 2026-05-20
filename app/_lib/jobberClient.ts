@@ -31,9 +31,15 @@
 
 const JOBBER_GRAPHQL_URL = 'https://api.getjobber.com/api/graphql';
 const JOBBER_TOKEN_URL = 'https://api.getjobber.com/api/oauth/token';
-// Pin to a specific schema version. Update when adopting newer fields:
-// https://developer.getjobber.com/docs/changelog
-const JOBBER_API_VERSION = '2024-04-15';
+// Pin to Jobber's LATEST STABLE schema version. Each active version is
+// listed in their changelog — using something not in that list returns
+// "GraphQL API version 'X' does not exist". The full active list as of
+// this writing: 2025-04-16, 2025-01-20, 2024-12-05, 2024-11-12,
+// 2024-11-07, 2024-09-23, 2024-09-12, 2024-08-30, 2024-06-10,
+// 2024-04-17, 2023-11-15, 2023-08-18, 2023-05-05, 2023-03-29,
+// 2022-12-07, 2022-09-15, 2022-05-23.
+// See: https://developer.getjobber.com/docs/changelog
+const JOBBER_API_VERSION = '2025-04-16';
 
 type TokenCache = {
   accessToken: string;

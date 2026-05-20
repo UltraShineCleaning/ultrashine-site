@@ -47,13 +47,34 @@ type TokenCache = {
 };
 
 let cachedToken: TokenCache | null = null;
+/**
+ * Last token-refresh error message captured for UI surfacing. Module-level
+ * so the dashboard can read it after the queries fail and tell Tiago WHAT
+ * went wrong (e.g. "invalid_grant") instead of just "token isn't working".
+ */
+let lastTokenError: string | null = null;
+
+export function getLastTokenError(): string | null {
+  return lastTokenError;
+}
 
 async function getAccessToken(): Promise<string | null> {
   const clientId = process.env.JOBBER_CLIENT_ID;
   const clientSecret = process.env.JOBBER_CLIENT_SECRET;
   const refreshToken = process.env.JOBBER_REFRESH_TOKEN;
 
-  if (!clientId || !clientSecret || !refreshToken) return null;
+  if (!clientId) {
+    lastTokenError = 'JOBBER_CLIENT_ID env var not set on Vercel';
+    return null;
+  }
+  if (!clientSecret) {
+    lastTokenError = 'JOBBER_CLIENT_SECRET env var not set on Vercel';
+    return null;
+  }
+  if (!refreshToken) {
+    lastTokenError = 'JOBBER_REFRESH_TOKEN env var not set on Vercel';
+    return null;
+  }
 
   const now = Date.now();
   if (cachedToken && cachedToken.expiresAt - now > 60_000) {
@@ -73,16 +94,31 @@ async function getAccessToken(): Promise<string | null> {
   });
 
   if (!res.ok) {
-    console.error('[jobber] Token refresh failed:', await res.text());
+    const text = await res.text();
+    // Try to extract the OAuth error field for a cleaner UI message
+    let detail = text.slice(0, 300);
+    try {
+      const j = JSON.parse(text);
+      if (j.error || j.error_description) {
+        detail = `${j.error ?? 'error'}${j.error_description ? ': ' + j.error_description : ''}`;
+      }
+    } catch {
+      /* not JSON, use raw */
+    }
+    lastTokenError = `HTTP ${res.status} from Jobber token endpoint — ${detail}`;
+    console.error('[jobber] Token refresh failed:', lastTokenError);
     return null;
   }
 
   const data = await res.json();
   if (!data.access_token) {
+    lastTokenError = `Jobber returned no access_token. Response: ${JSON.stringify(data).slice(0, 300)}`;
     console.error('[jobber] Token refresh returned no access_token:', data);
     return null;
   }
 
+  // Success — clear any previous error
+  lastTokenError = null;
   cachedToken = {
     accessToken: data.access_token,
     expiresAt: now + (data.expires_in ?? 3600) * 1000,
@@ -294,7 +330,11 @@ export async function getJobberMetrics(): Promise<JobberMetrics> {
     errorMessages.push(`invoices: ${invoicesRes.errors.map((e) => e.message).join('; ')}`);
   }
   if ([clientsRes, visitsRes, invoicesRes].some((r) => r === null)) {
-    errorMessages.push('token: access token could not be obtained (check refresh token)');
+    // Pull the specific reason from the captured last-error so the UI
+    // can show "invalid_grant" / "expired refresh token" / etc. rather
+    // than the generic "could not obtain access token" message.
+    const detail = getLastTokenError() ?? 'unknown reason';
+    errorMessages.push(`token: ${detail}`);
   }
 
   // ---- Partition visits into today / week / upcoming ----

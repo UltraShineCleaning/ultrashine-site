@@ -14,18 +14,39 @@ import JobberCalendar from './JobberCalendar';
 export default async function JobberDashboard() {
   const m = await getJobberMetrics();
 
-  // If the token couldn't be obtained at all, the queries returned null.
-  // That's almost always a "refresh_token revoked / expired" situation —
-  // show a dedicated reconnect panel.
-  const tokenBroken = m.errorDetail?.includes('token: access token could not be obtained');
+  // If the token refresh failed, show a dedicated reconnect panel with
+  // the specific error reason from Jobber surfaced inline (invalid_grant,
+  // expired, env-var-missing, etc.). Knowing the exact error is what
+  // tells us whether to reconnect or fix a missing env var.
+  const tokenBroken = m.errorDetail?.startsWith('token:') || m.errorDetail?.includes('token: ');
   if (tokenBroken) {
+    // Extract just the "token: ..." part for clarity
+    const tokenMsg = m.errorDetail
+      ?.split('·')
+      .find((s) => s.trim().startsWith('token:'))
+      ?.replace(/^.*token:\s*/, '')
+      .trim() ?? 'unknown';
     return (
       <div className={styles.errorPanel}>
         <div className={styles.errorTitle}>Jobber token isn&apos;t working</div>
         <p className={styles.errorBody}>
           Your refresh token may have been revoked, or the Jobber app scopes
-          changed. Reconnect to fix it.
+          changed. The exact reason Jobber returned:
         </p>
+        <pre style={{
+          background: '#fff',
+          border: '1px solid #fde68a',
+          borderRadius: 8,
+          padding: '10px 14px',
+          fontSize: 11,
+          color: '#92400e',
+          whiteSpace: 'pre-wrap',
+          wordBreak: 'break-word',
+          margin: '0 0 14px',
+          fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
+        }}>
+          {tokenMsg}
+        </pre>
         <a href="/api/jobber/connect" className={styles.reconnectBtn}>
           Reconnect Jobber →
         </a>

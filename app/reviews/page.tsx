@@ -6,9 +6,9 @@ import JsonLd from '../_components/JsonLd';
 import styles from './page.module.css';
 
 export const metadata: Metadata = {
-  title: 'Reviews · Ultra Shine Cleaning · 4.9★ on Google',
+  title: 'Reviews · Ultra Shine Cleaning · 5.0★ on Google',
   description:
-    'Read what 100+ South Florida families say about Ultra Shine Cleaning. 4.9-star Google rating across Boca Raton, Delray Beach, Fort Lauderdale, Parkland, and 9 other cities. Real reviews from real clients.',
+    'Read what 100+ South Florida families say about Ultra Shine Cleaning. 5.0-star Google rating across Boca Raton, Delray Beach, Fort Lauderdale, Parkland, and 9 other cities. Real reviews from real clients.',
 };
 
 // Real verified reviews — sourced from HomeAdvisor profile (CT chapter,

@@ -195,8 +195,8 @@ export default function ServicesIndexPage() {
               <span className={styles.trustLabel}>Cities Served</span>
             </div>
             <div className={styles.trustItem}>
-              <span className={styles.trustValue}>4.9★</span>
-              <span className={styles.trustLabel}>Verified Avg Rating</span>
+              <span className={styles.trustValue}>5.0★</span>
+              <span className={styles.trustLabel}>Google Verified</span>
             </div>
             <div className={styles.trustItem}>
               <span className={styles.trustValue}>100%</span>

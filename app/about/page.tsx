@@ -151,7 +151,7 @@ export default function AboutPage() {
             <div className={styles.timelineTitle}>Today</div>
             <p className={styles.timelineBody}>
               Thirteen cities across South Florida. A trained, background-checked
-              W2 team. A 4.9-star Google rating. And the same standard from
+              W2 team. A 5.0-star Google rating. And the same standard from
               day one — because we still hand the keys back personally.
             </p>
           </div>
@@ -278,7 +278,7 @@ export default function AboutPage() {
           </div>
           <div className={styles.statCell}>
             <div className={styles.statNum}>
-              <CountUp to={4.9} decimals={1} duration={1.6} /><em>★</em>
+              <CountUp to={5.0} decimals={1} duration={1.6} /><em>★</em>
             </div>
             <div className={styles.statCap}>Google Rating</div>
           </div>

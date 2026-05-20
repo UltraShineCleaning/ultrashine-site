@@ -12,8 +12,9 @@ import MobileNav from './_components/MobileNav';
 
 // Real verified reviews — sourced from HomeAdvisor profile
 // (https://www.homeadvisor.com/rated.UltraShineCleaning.68124585.html)
-// 4.9★ from 25 verified reviews · attribution kept generic since the
-// original profile shows names as 'First L.' format we don't have here
+// 4.9★ from 25 verified reviews on HomeAdvisor; 5.0★ on Google
+// (canonical rating shown across the site). Attribution kept generic
+// since the original profile shows names as 'First L.' format we don't have.
 const TESTIMONIALS = [
   { name: 'Verified Client', city: 'HomeAdvisor', text: 'Ultra Shine Cleaning was very professional when they came to my home, they got right to work. I have a dog, and they were very friendly and kind towards him.' },
   { name: 'Verified Client', city: 'HomeAdvisor', text: 'Ultra Shine Cleaning is wonderful. Easy to make an appointment with flexible times. Did a great job cleaning the entire house. I would highly recommend.' },
@@ -70,7 +71,7 @@ export default function HomePage() {
         </div>
         <div className={styles.trustBadge}>
           <div className={styles.trustValue}>
-            ★ <CountUp to={4.9} decimals={1} duration={1.4} /> Google
+            ★ <CountUp to={5.0} decimals={1} duration={1.4} /> Google
           </div>
           <div className={styles.trustLabel}>Verified reviews</div>
         </div>
@@ -173,7 +174,7 @@ export default function HomePage() {
         </h2>
         <div className={styles.whyGrid}>
           <WhyCard title="Eco + Pet-Safe" body="Method, Mrs Meyer's, ECOS, vinegar, baking soda. EPA-safe across the board." />
-          <WhyCard title="Trained + Vetted" body="W2 employees only. Background-checked, bonded, fully insured. Same crew when possible." />
+          <WhyCard title="Same Crew, Every Visit" body="W2 employees, never contractors. Two cleaners per visit — paired, trained to the same boutique standard, and in uniform every time." />
           <WhyCard title="Satisfaction Guaranteed" body="100% guarantee. If you're not happy, we come back free until you are." />
           <WhyCard title="Flexible Scheduling" body="Weekly, bi-weekly, monthly, or one-time. Reschedule with one text." />
         </div>
@@ -185,7 +186,7 @@ export default function HomePage() {
           <p className={`eyebrow ${styles.reviewsEyebrow}`}>TRUSTED ACROSS SOUTH FLORIDA</p>
           <h2 className={`fraunces ${styles.sectionHeadline}`}>What our <em>clients</em> say.</h2>
           <div className={styles.reviewsHeadlineStars}>★ ★ ★ ★ ★</div>
-          <div className={styles.reviewsMeta}>4.9 ★ GOOGLE RATING · VERIFIED REVIEWS</div>
+          <div className={styles.reviewsMeta}>5.0 ★ GOOGLE RATING · VERIFIED REVIEWS</div>
         </div>
         <div className={styles.marquee}>
           <div className={styles.marqueeTrack}>

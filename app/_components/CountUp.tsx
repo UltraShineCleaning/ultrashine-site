@@ -8,13 +8,13 @@ type Props = {
   prefix?: string;
   suffix?: string;
   className?: string;
-  /** Format with one decimal (e.g. 4.9) */
+  /** Format with one decimal (e.g. 5.0) */
   decimals?: number;
 };
 
 /**
  * Counts up from 0 to `to` when scrolled into view.
- * Used in trust strip ("13 Cities Served") and review rating ("4.9 Google").
+ * Used in trust strip ("13 Cities Served") and review rating ("5.0 Google").
  */
 export default function CountUp({ to, duration = 1.6, prefix = '', suffix = '', className, decimals = 0 }: Props) {
   const ref = useRef<HTMLSpanElement>(null);

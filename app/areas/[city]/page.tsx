@@ -113,7 +113,7 @@ export default function CityPage({ params }: { params: Params }) {
       <div className={styles.trustRow}>
         <span className={styles.trustItem}>Fully Insured + Bonded</span>
         <span className={styles.trustItem}>Background-Checked Team</span>
-        <span className={styles.trustItem}>4.9 ★ Google Verified</span>
+        <span className={styles.trustItem}>5.0 ★ Google Verified</span>
         <span className={styles.trustItem}>Custom Quote in 1 Hour</span>
       </div>
 

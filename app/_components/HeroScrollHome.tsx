@@ -9,30 +9,38 @@ import styles from './HeroScrollHome.module.css';
 gsap.registerPlugin(ScrollTrigger);
 
 /**
- * HeroScrollHome — SCROLL-SCRUBBED video walkthrough.
+ * HeroScrollHome — SCROLL-SCRUBBED 5-room video walkthrough.
  *
  * The user scrolls and we drive the playhead of /videos/walkthrough.mp4
- * forward/backward in lockstep. While the video plays, four text overlays
- * (one per room) crossfade in and out at their assigned slice of the
- * timeline. CTA appears on the last slice.
+ * forward/backward in lockstep. As the camera walks through five rooms
+ * (Kitchen → Living → Office → Bathroom → Bedroom) over 26.27 sec of
+ * video, five text overlays — one per room — crossfade in/out at the
+ * exact scrub-position where that room is centered on camera. The CTA
+ * appears in the bedroom (final scene), which holds for ~16 % of the
+ * scroll window so visitors have time to act on it.
  *
- * Why scroll-scrubbed video (not 4 stacked images + crossfades):
+ * Why scroll-scrubbed video (not stacked images + crossfades):
  *   The walkthrough.mp4 is a single continuous Steadicam-style shot
  *   built by stitching 4 AI-generated transition clips together. Driving
  *   video.currentTime from scroll progress gives the user the feeling of
  *   physically walking through the home as they scroll — which is the
  *   whole point of the boutique luxury cleaning service narrative.
  *
+ * Copy strategy:
+ *   Each room's text describes WHAT IS VISIBLE + WHAT WE DO TO IT — not
+ *   generic brand boilerplate. Trust messaging (insured, bonded,
+ *   background-checked) is intentionally NOT in the hero because it
+ *   lives in the Trust Strip immediately below.
+ *
  * How it works:
  *   - Container is 100vh. GSAP ScrollTrigger pins it for `length*100%`
- *     additional scroll (so the user spends ~4 viewport-heights inside
+ *     additional scroll (so the user spends ~5 viewport-heights inside
  *     the hero before the page continues).
  *   - On every ScrollTrigger `onUpdate`, we set video.currentTime =
  *     progress * video.duration. Lenis (in SmoothScrollProvider) feeds
  *     scroll events to ScrollTrigger so this stays buttery.
  *   - Text overlays for each room are positioned absolutely on top of
  *     the video. They fade in/out at their assigned scrub-time window.
- *   - Last scene (bedroom) shows the CTA buttons + holds longer.
  *   - Mobile / reduced-motion: GSAP skipped. Video plays autoplay-loop
  *     muted as a passive background loop; first scene's text + CTA show.
  *
@@ -53,37 +61,61 @@ type SceneCopy = {
   showCta?: boolean;
 };
 
+// SCENES — one per ROOM the camera physically walks into. Each
+// `start`/`end` window is calibrated to the room's dwell-time in
+// walkthrough.mp4 (26.27 sec), with small gaps between rooms for
+// clean crossfades during the transition shots.
+//
+// Room timing (verified frame-by-frame against the stitched video):
+//   Kitchen     0–3 s     (0–12 %)
+//   Living     4.5–7.5 s  (17–28 %)
+//   Office     8.5–12 s   (33–45 %)
+//   Bathroom    15–20 s   (58–76 %)
+//   Bedroom     22–26 s   (84–100 %)
+//
+// Copy strategy: each headline describes the ROOM the visitor sees
+// at that scroll moment + what we DO to it. Trust messaging
+// (insured, background-checked, etc.) is intentionally NOT here —
+// that's the job of the Trust Strip immediately below the hero.
 const SCENES: SceneCopy[] = [
   {
     id: 'kitchen',
     eyebrow: 'HOUSE CLEANING · BOCA RATON + SOUTH FLORIDA',
-    headlineHtml: 'A home that <em>shines</em>. Without lifting a finger.',
-    body: 'Boutique house cleaning in Boca Raton and 12 other South Florida cities across Palm Beach + Broward. The full standard — every visit.',
+    headlineHtml: 'It starts in the <em>kitchen</em>. Where life happens.',
+    body: 'Marble degreased. Stainless polished. Cabinets wiped inside and out. Boutique house cleaning across 13 South Florida cities — the full standard, every visit.',
     start: 0.0,
-    end: 0.25,
+    end: 0.12,
   },
   {
     id: 'living',
-    eyebrow: 'EVERY ROOM · EVERY DETAIL',
-    headlineHtml: 'Wall-to-wall <em>care</em>. Nothing missed.',
-    body: 'From marble countertops to baseboards. Same boutique team every visit. No rotating contractors, no surprises.',
-    start: 0.25,
-    end: 0.5,
+    eyebrow: 'FABRICS · SURFACES · LIGHT',
+    headlineHtml: 'Into the <em>living room</em>. Not a speck of dust.',
+    body: 'Sectionals vacuumed. Coffee tables hand-polished. Glass crystal-clear. The room your guests linger in — kept guest-ready.',
+    start: 0.17,
+    end: 0.28,
+  },
+  {
+    id: 'office',
+    eyebrow: 'SHELVES · SCREENS · SURFACES',
+    headlineHtml: 'Through to the <em>office</em>. A space that lets you focus.',
+    body: 'Bookshelves dusted top to bottom. Glass streak-free. Surfaces spotless. The room that finally lets your mind clear.',
+    start: 0.33,
+    end: 0.45,
   },
   {
     id: 'bathroom',
-    eyebrow: 'BACKGROUND-CHECKED · BONDED · INSURED',
-    headlineHtml: 'A team you can <em>actually</em> trust at home.',
-    body: 'W2 employees, never contractors. Every cleaner background-checked. Every job staffed by a pair — two professionals, every visit.',
-    start: 0.5,
-    end: 0.75,
+    eyebrow: 'MARBLE · GROUT · FIXTURES',
+    headlineHtml: 'Down the hall to the <em>bathroom</em>. Spa-grade clean.',
+    body: 'Marble protected. Glass spotless. Grout treated. Fixtures polished to a mirror finish — like the day it was built.',
+    start: 0.58,
+    end: 0.76,
   },
   {
     id: 'bedroom',
     eyebrow: 'CUSTOM QUOTE · WITHIN THE HOUR',
-    headlineHtml: 'Ready for a home that <em>shines</em>?',
-    body: 'Tell us about your space. We text you back within the hour with a precise quote — no hidden fees, no upsells.',
-    start: 0.75,
+    headlineHtml: 'And into the <em>bedroom</em>. Wall to wall, every visit.',
+    body: 'Tell us about your space — we\'ll text you a precise quote within the hour. No hidden fees, no upsells.',
+    start: 0.84,
     end: 1.0,
     showCta: true,
   },

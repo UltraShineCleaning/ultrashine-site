@@ -212,7 +212,7 @@ export default function QuotePage() {
             </div>
             <div className={styles.statCell}>
               <div className={styles.statNumSmall}>
-                4.9<em>★</em>
+                5.0<em>★</em>
               </div>
               <div className={styles.statCap}>Google Rating</div>
             </div>

@@ -57,7 +57,7 @@ export const POSTS: BlogPost[] = [
     author: 'Tiago Rena',
     publishedAt: '2026-05-17',
     readingMinutes: 5,
-    coverImage: '/images/flow_hand_marble.jpg',
+    coverImage: '/images/blog/humidity-boca-raton.jpg',
     tags: ['Deep Cleaning', 'Boca Raton', 'Florida Living'],
     bodyHtml: `
       <p>If you Google "how often should I deep clean my house," every article gives you the same answer: <strong>every three months</strong>. That guidance comes from northern-climate cleaning companies. It does not account for what 80% summer humidity does to a Boca Raton home.</p>
@@ -128,7 +128,7 @@ export const POSTS: BlogPost[] = [
     author: 'Tiago Rena',
     publishedAt: '2026-05-17',
     readingMinutes: 6,
-    coverImage: '/images/service_movein_boxes.jpg',
+    coverImage: '/images/blog/move-out-cleaning.jpg',
     tags: ['Move-In/Out', 'Palm Beach County', 'Renters'],
     bodyHtml: `
       <p>According to the Florida Department of Business and Professional Regulation, fewer than 60% of Florida renters get their full security deposit back. The number one reason cited by landlords? <strong>"Cleaning condition."</strong> Not damage. Not unpaid rent. Cleaning.</p>
@@ -225,7 +225,7 @@ export const POSTS: BlogPost[] = [
     author: 'Tiago Rena',
     publishedAt: '2026-05-17',
     readingMinutes: 5,
-    coverImage: '/images/service_postconstruction.jpg',
+    coverImage: '/images/blog/post-construction.jpg',
     tags: ['Post-Construction', 'South Florida', 'Renovation'],
     bodyHtml: `
       <p>The contractor finishes. They sweep up the obvious debris and call the job done. You walk in expecting a clean space &mdash; and instead, there’s a fine layer of dust on every horizontal surface, every blade of every ceiling fan, every shelf inside every cabinet, and somehow inside the refrigerator that wasn’t even moved.</p>
@@ -297,7 +297,7 @@ export const POSTS: BlogPost[] = [
     author: 'Tiago Rena',
     publishedAt: '2026-05-17',
     readingMinutes: 4,
-    coverImage: '/images/flow_before_after.jpg',
+    coverImage: '/images/blog/5-spots-missed.jpg',
     tags: ['Cleaning Tips', 'How-To', 'Standards'],
     bodyHtml: `
       <p>Even cleaning services we respect tend to miss the same spots. It’s not because the team is sloppy &mdash; it’s because these spots are out of the standard scan-pattern of a 45-minute room clean. They take an extra 30 seconds each, but if no one trained the cleaner to look there, they get skipped every visit until someone says something.</p>
@@ -356,7 +356,7 @@ export const POSTS: BlogPost[] = [
     author: 'Tiago Rena',
     publishedAt: '2026-05-17',
     readingMinutes: 5,
-    coverImage: '/images/team_van.jpg',
+    coverImage: '/images/blog/verify-licensed.jpg',
     tags: ['Hiring Guide', 'Trust', 'Florida'],
     bodyHtml: `
       <p>Open any cleaning company’s website in Florida and you’ll see the same three words near the top: "<strong>Licensed, Bonded, and Insured.</strong>" It’s become so standard that it’s lost meaning &mdash; and many companies that advertise it actually aren’t.</p>

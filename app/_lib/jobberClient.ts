@@ -557,16 +557,11 @@ export async function getJobberMetrics(opts: { force?: boolean } = {}): Promise<
 
   // ---- Scheduled items (visits) ----
   // Jobber's ScheduledItemsFilterAttributes requires `occursWithin` as a
-  // `DateRange!`. DateRange's fields are { startAt, endAt } as
-  // ISO8601DateTime (full datetime), NOT { startDate, endDate } as Date.
-  // The schema told us this exactly:
-  //   "Argument 'startAt' on InputObject 'DateRange' is required.
-  //    Expected type ISO8601DateTime!"
-  // So we send full ISO datetimes.
-  const farPast = new Date(startOfDay);
-  farPast.setDate(farPast.getDate() - 30);
-  const farFuture = new Date(startOfDay);
-  farFuture.setDate(farFuture.getDate() + 90);
+  // `DateRange!`. We deliberately pass a VERY wide range (years on
+  // either side of today) to make sure no visit is excluded by a
+  // too-narrow filter — the calendar UI partitions client-side anyway.
+  const farPast = new Date('2020-01-01T00:00:00Z');
+  const farFuture = new Date('2030-12-31T23:59:59Z');
 
   // Visit field name is `isComplete` (boolean), NOT `completed`. Jobber's
   // schema error told us this directly:

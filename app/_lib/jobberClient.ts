@@ -568,14 +568,14 @@ export async function getJobberMetrics(opts: { force?: boolean } = {}): Promise<
 
   // ---- Scheduled items (visits) ----
   // Jobber's ScheduledItemsFilterAttributes requires `occursWithin` as a
-  // `DateRange!`. Constraints we've discovered the hard way:
-  //   - Range must be < 1.5 years total (or Jobber rejects with error)
-  //   - Symmetric past/future ranges have returned 0 visits in testing
-  //     (unclear why — maybe Jobber's filter prefers future-leaning)
-  // Sticking with the asymmetric -30 / +90 day window that originally
-  // worked + populated the calendar with real visits.
-  const farPast = new Date(startOfDay);
-  farPast.setDate(farPast.getDate() - 30);
+  // `DateRange!`. CRITICAL learnings from diagnostic surfacing:
+  //   - Jobber returns OLDEST-FIRST within the filter window
+  //   - At 339 visits in a -30/+90 window, fetching first:50 only reaches
+  //     ~3 weeks into the past — all upcoming visits get cut off
+  // Fix: start the window AT TODAY so Jobber's oldest-first ordering
+  // returns the soonest upcoming visits. Also bump first:100 for headroom.
+  // Range cap of 1.5 years still applies — 90 days is well under that.
+  const farPast = new Date(startOfDay); // = TODAY, not 30 days back
   const farFuture = new Date(startOfDay);
   farFuture.setDate(farFuture.getDate() + 90);
 
@@ -605,7 +605,7 @@ export async function getJobberMetrics(opts: { force?: boolean } = {}): Promise<
     };
   }>(
     `query UpcomingVisits($start: ISO8601DateTime!, $end: ISO8601DateTime!) {
-      scheduledItems(filter: { occursWithin: { startAt: $start, endAt: $end } }, first: 50) {
+      scheduledItems(filter: { occursWithin: { startAt: $start, endAt: $end } }, first: 100) {
         totalCount
         nodes {
           id

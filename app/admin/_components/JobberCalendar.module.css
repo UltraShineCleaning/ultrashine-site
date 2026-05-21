@@ -145,9 +145,16 @@
   transition: background 0.15s, border-color 0.15s, transform 0.1s;
 }
 .cell:hover {
-  background: #ffffff;
-  border-color: #9ca3af;
-  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+  background: #f3f4f6;
+  border-color: #6b7280;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
+}
+/* Empty day cells (no visits) — keep the day number visible on hover.
+   Without this, hover changes background to white which makes the
+   already-light day number text invisible. */
+.cell:hover .cellDay {
+  color: #111827;
+  font-weight: 700;
 }
 .cellOutside {
   opacity: 0.4;

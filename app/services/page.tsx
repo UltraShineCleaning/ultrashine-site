@@ -187,7 +187,7 @@ export default function ServicesIndexPage() {
         <div className={styles.trustBand}>
           <div className={styles.trustBandInner}>
             <div className={styles.trustItem}>
-              <span className={styles.trustValue}>7+</span>
+              <span className={styles.trustValue}>8</span>
               <span className={styles.trustLabel}>Years in Business</span>
             </div>
             <div className={styles.trustItem}>

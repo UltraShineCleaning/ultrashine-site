@@ -204,9 +204,13 @@
 
 /* ===== PROGRESS DOTS (4 across, fill as you scroll) ===== */
 .progress {
+  /* Moved to bottom-CENTER so Skip Intro (bottom-right) and Scroll Cue
+     (bottom-left) and Progress (bottom-center) each occupy their own
+     hero corner without overlapping. */
   position: absolute;
   bottom: 36px;
-  right: 60px;
+  left: 50%;
+  transform: translateX(-50%);
   z-index: 5;
   display: flex;
   gap: 10px;
@@ -243,8 +247,11 @@
 
 /* ===== SKIP INTRO ===== */
 .skipBtn {
+  /* Moved from top-right to BOTTOM-RIGHT — the nav lives at top:0 and
+     its Get Quote button used to overlap this Skip Intro link. Now Skip
+     Intro sits opposite the scroll cue at the bottom of the hero. */
   position: absolute;
-  top: 28px;
+  bottom: 28px;
   right: 60px;
   z-index: 5;
   background: rgba(255, 255, 255, 0.08);
@@ -331,7 +338,6 @@
   .body { font-size: 16px; margin-bottom: 24px; }
   .eyebrow { font-size: 10px; letter-spacing: 0.3em; margin-bottom: 18px; }
   .eyebrow::before { width: 24px; }
-  .progress { right: 22px; }
   .scrollCue { left: 22px; bottom: 22px; }
   .ctaRow { gap: 10px; }
 }

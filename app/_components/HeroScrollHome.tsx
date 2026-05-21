@@ -314,7 +314,14 @@ export default function HeroScrollHome() {
         poster="/videos/walkthrough_poster.jpg"
         muted
         playsInline
-        preload="auto"
+        // preload="metadata" only fetches the moov atom + dimensions
+        // upfront, NOT the full file. The browser streams the rest as
+        // playback approaches it. Saves ~25 MB of upfront bandwidth on
+        // first page load, especially critical on mobile cellular.
+        // Combined with the +faststart MP4 flag (set during encode), the
+        // video starts playing within ~1 second instead of waiting for
+        // a full download.
+        preload="metadata"
       />
       <div className={styles.overlay} />
 

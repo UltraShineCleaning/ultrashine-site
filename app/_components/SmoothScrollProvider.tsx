@@ -18,6 +18,29 @@ gsap.registerPlugin(ScrollTrigger);
  */
 export default function SmoothScrollProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
+    // SKIP Lenis on mobile and on reduced-motion. On mobile, native touch
+    // scrolling is already buttery and Lenis's wheel virtualization adds
+    // jank (every scroll event goes through extra RAF + transform math).
+    // The desktop scroll-scrub still needs Lenis for ScrollTrigger sync.
+    const isMobile = window.matchMedia('(max-width: 1024px)').matches;
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (isMobile || reducedMotion) {
+      // Still smooth-scroll anchor clicks on mobile, just without Lenis
+      const onAnchorClick = (e: MouseEvent) => {
+        const target = e.target as HTMLElement;
+        const link = target.closest('a[href^="#"]') as HTMLAnchorElement | null;
+        if (!link) return;
+        const id = link.getAttribute('href')?.slice(1);
+        if (!id) return;
+        const el = document.getElementById(id);
+        if (!el) return;
+        e.preventDefault();
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      };
+      document.addEventListener('click', onAnchorClick);
+      return () => document.removeEventListener('click', onAnchorClick);
+    }
+
     const lenis = new Lenis({
       duration: 1.2,
       easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),

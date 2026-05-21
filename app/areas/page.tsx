@@ -51,7 +51,10 @@ export default function AreasIndexPage() {
             <em>{palmBeach.length}</em> cities served.
           </h2>
         </div>
-        <div className={styles.servicesGrid} style={{ gridTemplateColumns: 'repeat(4, 1fr)' }}>
+        <div
+          className={styles.servicesGrid}
+          style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))' }}
+        >
           {palmBeach.map((c) => (
             <Link key={c.slug} href={`/areas/${c.slug}`} className={styles.serviceLink}>
               <div className={styles.serviceNum}>{c.county === 'Palm Beach' ? 'PBC' : 'BWD'}</div>
@@ -70,7 +73,10 @@ export default function AreasIndexPage() {
             <em>{broward.length}</em> cities served.
           </h2>
         </div>
-        <div className={styles.servicesGrid} style={{ gridTemplateColumns: 'repeat(3, 1fr)' }}>
+        <div
+          className={styles.servicesGrid}
+          style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))' }}
+        >
           {broward.map((c) => (
             <Link key={c.slug} href={`/areas/${c.slug}`} className={styles.serviceLink}>
               <div className={styles.serviceNum}>BWD</div>

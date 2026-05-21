@@ -1018,6 +1018,14 @@
   text-underline-offset: 3px;
 }
 
+/* Mobile-only "skip the form, just call" CTA. Hidden on desktop where
+   the left trust panel already gives full context. On mobile, this lets
+   the ~40% of leads who'd rather call skip the form entirely — direct
+   line to revenue without form friction. */
+.mobileCallCta {
+  display: none;
+}
+
 /* ============== MOBILE ============== */
 @media (max-width: 1100px) {
   .page { grid-template-columns: 1fr; }
@@ -1028,6 +1036,45 @@
   .right { padding: 48px 32px; }
   .formTitle { font-size: 42px; }
   .testimonials { margin-top: 36px; }
+
+  /* Show + style the mobile-only call CTA */
+  .mobileCallCta {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin: 0 0 32px;
+    padding: 16px 22px;
+    background: linear-gradient(135deg, var(--blue) 0%, #002C98 100%);
+    border-radius: 14px;
+    color: #fff;
+    text-decoration: none;
+    box-shadow: 0 8px 24px rgba(28, 97, 240, 0.18);
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+  }
+  .mobileCallCta:hover, .mobileCallCta:active {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 28px rgba(28, 97, 240, 0.28);
+  }
+  .mobileCallCtaIcon {
+    font-size: 22px;
+    line-height: 1;
+  }
+  .mobileCallCtaLabel {
+    display: block;
+    font-family: var(--font-poppins), sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    opacity: 0.85;
+    margin-bottom: 2px;
+  }
+  .mobileCallCtaNumber {
+    display: block;
+    font-family: var(--font-poppins), sans-serif;
+    font-weight: 700;
+    font-size: 20px;
+    letter-spacing: -0.01em;
+  }
 }
 
 @media (max-width: 640px) {

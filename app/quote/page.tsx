@@ -250,6 +250,17 @@ export default function QuotePage() {
           </div>
         </div>
 
+        {/* Mobile-only "skip the form, just call" CTA — visible above the form
+            on phones where ~40% of cleaning leads prefer to call vs type. Hidden
+            on desktop where the left trust panel already includes phone context. */}
+        <a href="tel:5615836694" className={styles.mobileCallCta}>
+          <span className={styles.mobileCallCtaIcon}>📞</span>
+          <span>
+            <span className={styles.mobileCallCtaLabel}>Rather call?</span>
+            <span className={styles.mobileCallCtaNumber}>(561) 583-6694</span>
+          </span>
+        </a>
+
         <AnimatePresence mode="wait">
           {submitted ? (
             <motion.div
@@ -503,6 +514,7 @@ export default function QuotePage() {
                     <span className={styles.inputLabel}>City</span>
                     <input
                       type="text"
+                      autoComplete="address-level2"
                       className={`${styles.input} ${city ? styles.inputHasValue : ''}`}
                       value={city}
                       onChange={(e) => setCity(e.target.value)}
@@ -514,6 +526,7 @@ export default function QuotePage() {
                     <input
                       type="text"
                       inputMode="numeric"
+                      autoComplete="postal-code"
                       className={`${styles.input} ${zip ? styles.inputHasValue : ''}`}
                       value={zip}
                       onChange={(e) => setZip(e.target.value.replace(/[^0-9]/g, '').slice(0, 5))}
@@ -568,6 +581,7 @@ export default function QuotePage() {
                     <input
                       type="text"
                       required
+                      autoComplete="given-name"
                       className={`${styles.input} ${first ? styles.inputHasValue : ''}`}
                       value={first}
                       onChange={(e) => setFirst(e.target.value)}
@@ -578,6 +592,7 @@ export default function QuotePage() {
                     <span className={styles.inputLabel}>Last Name</span>
                     <input
                       type="text"
+                      autoComplete="family-name"
                       className={`${styles.input} ${last ? styles.inputHasValue : ''}`}
                       value={last}
                       onChange={(e) => setLast(e.target.value)}
@@ -591,6 +606,7 @@ export default function QuotePage() {
                     <input
                       type="tel"
                       required
+                      autoComplete="tel"
                       className={`${styles.input} ${phone ? styles.inputHasValue : ''}`}
                       value={phone}
                       onChange={(e) => setPhone(e.target.value)}
@@ -601,6 +617,7 @@ export default function QuotePage() {
                     <span className={styles.inputLabel}>Email</span>
                     <input
                       type="email"
+                      autoComplete="email"
                       className={`${styles.input} ${email ? styles.inputHasValue : ''}`}
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}

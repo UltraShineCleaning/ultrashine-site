@@ -207,18 +207,11 @@ export default function HeroScrollHome() {
     const container = containerRef.current;
     if (!video || !container) return;
 
-    // RESPONSIVE SOURCE SWAP
-    // We ship two encodings:
-    //   /videos/walkthrough.mp4         — 4K (3840×2136) ~78 MB · for desktop
-    //   /videos/walkthrough_mobile.mp4  — 1080p (1920×1068) ~28 MB · for mobile
-    // The default <video src> in the JSX points at the 4K file. On mobile
-    // (≤1024 px viewport) we swap to the 1080p source BEFORE first play
-    // so cellular users don't burn 78 MB on a video that'll be downscaled
-    // to their phone screen anyway.
-    if (isMobile) {
-      video.src = '/videos/walkthrough_mobile.mp4';
-      video.load();
-    }
+    // Single encoding: /videos/walkthrough.mp4 — 1080p (1920×1068) ~28 MB.
+    // Used to ship a 4K (78 MB) desktop variant too, but 1080p is
+    // indistinguishable on consumer displays for a 26-sec windowed hero
+    // loop and the 50 MB savings on every desktop visit is huge for LCP
+    // and Vercel bandwidth. No source swap needed.
 
     // Mobile / reduced-motion: don't scroll-jack. Let the video autoplay
     // as a passive background loop and show the first scene's copy.

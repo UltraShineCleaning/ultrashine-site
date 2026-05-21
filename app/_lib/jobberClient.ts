@@ -502,6 +502,17 @@ export type JobberMetrics = {
   thisWeekRevenue: number;
   /** Verbose error string surfaced on the dashboard so Tiago can paste it back. */
   errorDetail?: string;
+  /** Diagnostic data about what Jobber actually returned for visits.
+   *  Surfaced on the dashboard so we can see WHY the calendar is empty. */
+  visitDebug?: {
+    totalCount: number;
+    rawNodeCount: number;
+    typenameCounts: Record<string, number>;
+    earliestStartAt: string | null;
+    latestStartAt: string | null;
+    futureCount: number;
+    dateRangeRequested: { start: string; end: string };
+  };
 };
 
 const empty: JobberMetrics = {
@@ -574,6 +585,7 @@ export async function getJobberMetrics(opts: { force?: boolean } = {}): Promise<
   //    (Did you mean 'completedBy', 'completedAt' or 'isComplete'?)"
   const visitsPromise = jobberQuery<{
     scheduledItems: {
+      totalCount?: number;
       nodes: Array<{
         id: string;
         startAt: string | null;
@@ -594,6 +606,7 @@ export async function getJobberMetrics(opts: { force?: boolean } = {}): Promise<
   }>(
     `query UpcomingVisits($start: ISO8601DateTime!, $end: ISO8601DateTime!) {
       scheduledItems(filter: { occursWithin: { startAt: $start, endAt: $end } }, first: 50) {
+        totalCount
         nodes {
           id
           startAt
@@ -732,6 +745,29 @@ export async function getJobberMetrics(opts: { force?: boolean } = {}): Promise<
     .filter((v) => v.startAt && new Date(v.startAt) <= twoWeeksOut)
     .slice(0, 12);
 
+  // Diagnostics — surface what Jobber actually returned so we can see
+  // root cause of empty calendar without guessing.
+  const typenameCounts: Record<string, number> = {};
+  let earliestStartAt: string | null = null;
+  let latestStartAt: string | null = null;
+  for (const n of rawVisits) {
+    const t = n.__typename ?? 'Unknown';
+    typenameCounts[t] = (typenameCounts[t] ?? 0) + 1;
+    if (n.startAt) {
+      if (!earliestStartAt || n.startAt < earliestStartAt) earliestStartAt = n.startAt;
+      if (!latestStartAt || n.startAt > latestStartAt) latestStartAt = n.startAt;
+    }
+  }
+  const visitDebug = {
+    totalCount: visitsRes?.data?.scheduledItems?.totalCount ?? 0,
+    rawNodeCount: rawVisits.length,
+    typenameCounts,
+    earliestStartAt,
+    latestStartAt,
+    futureCount: futureVisits.length,
+    dateRangeRequested: { start: farPast.toISOString(), end: farFuture.toISOString() },
+  };
+
   // ---- Partition invoices: paid this week (revenue) vs awaiting payment ----
   // Jobber's invoiceStatus string varies. Treat anything containing "paid"
   // as paid; anything containing "awaiting", "draft", "sent" without "paid"
@@ -768,6 +804,7 @@ export async function getJobberMetrics(opts: { force?: boolean } = {}): Promise<
     pendingInvoiceTotal,
     thisWeekRevenue,
     errorDetail: errorMessages.length > 0 ? errorMessages.join(' · ') : undefined,
+    visitDebug,
   };
 
   // Only cache responses that succeeded fully — caching partial-error

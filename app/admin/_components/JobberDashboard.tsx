@@ -117,7 +117,7 @@ export default async function JobberDashboard({ force = false }: { force?: boole
           </span>
         </span>
         <a
-          href={`/admin?t=${Date.now()}#jobber`}
+          href={`/admin?t=${Date.now()}#schedule`}
           style={{
             marginLeft: 'auto',
             padding: '6px 12px',
@@ -134,6 +134,45 @@ export default async function JobberDashboard({ force = false }: { force?: boole
           ↻ Refresh now
         </a>
       </div>
+
+      {/* DEEP DIAGNOSTIC — surfaces exact response shape from Jobber so we
+          can debug empty-calendar in one screenshot instead of guessing. */}
+      {m.visitDebug && (
+        <details style={{
+          background: '#f9fafb',
+          border: '1px solid #e5e7eb',
+          borderRadius: 10,
+          padding: '12px 16px',
+          fontSize: 12,
+          fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
+          color: '#374151',
+        }} open>
+          <summary style={{
+            cursor: 'pointer',
+            fontWeight: 700,
+            color: '#111827',
+            fontFamily: 'var(--font-poppins), sans-serif',
+            fontSize: 11,
+            letterSpacing: '0.16em',
+            textTransform: 'uppercase',
+          }}>
+            🔍 Visit query diagnostics
+          </summary>
+          <div style={{ marginTop: 12, lineHeight: 1.65 }}>
+            <div><strong>totalCount from Jobber:</strong> {m.visitDebug.totalCount}</div>
+            <div><strong>Raw nodes returned:</strong> {m.visitDebug.rawNodeCount}</div>
+            <div><strong>Node types:</strong> {Object.entries(m.visitDebug.typenameCounts).map(([k, v]) => `${k}=${v}`).join(', ') || '(none)'}</div>
+            <div><strong>Earliest startAt:</strong> {m.visitDebug.earliestStartAt ?? '(none)'}</div>
+            <div><strong>Latest startAt:</strong> {m.visitDebug.latestStartAt ?? '(none)'}</div>
+            <div><strong>Future visits (after today):</strong> {m.visitDebug.futureCount}</div>
+            <div style={{ marginTop: 8, color: '#9ca3af' }}>
+              <strong>Date filter sent to Jobber:</strong><br />
+              start = {m.visitDebug.dateRangeRequested.start}<br />
+              end&nbsp;&nbsp; = {m.visitDebug.dateRangeRequested.end}
+            </div>
+          </div>
+        </details>
+      )}
       {!kvEnabled && (
         <div className={styles.errorPanel} style={{ background: '#eff6ff', borderColor: '#bfdbfe' }}>
           <div className={styles.errorTitle} style={{ color: '#1e40af' }}>

@@ -215,12 +215,17 @@ export default function JobberCalendar({ allVisits }: Props) {
                         hour12: false,
                       })
                     : '—';
-                  // Jobber-style label: "Client - Service Title" — falls back
-                  // to just the client name when service title is generic.
-                  const label =
-                    v.title && v.title !== 'Cleaning Service'
-                      ? `${v.clientName} - ${v.title}`
-                      : v.clientName;
+                  // Jobber-style label. Skip the title suffix when (1) it's
+                  // generic "Cleaning Service" or (2) it matches the client
+                  // name (Jobber often sets the title to the client name
+                  // itself, which produced "Will Bordelon - Will Bordelon").
+                  const titleIsRedundant =
+                    !v.title ||
+                    v.title === 'Cleaning Service' ||
+                    v.title.toLowerCase().trim() === v.clientName.toLowerCase().trim();
+                  const label = titleIsRedundant
+                    ? v.clientName
+                    : `${v.clientName} · ${v.title}`;
                   return (
                     <div
                       key={v.id}

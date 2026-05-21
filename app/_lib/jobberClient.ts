@@ -557,11 +557,15 @@ export async function getJobberMetrics(opts: { force?: boolean } = {}): Promise<
 
   // ---- Scheduled items (visits) ----
   // Jobber's ScheduledItemsFilterAttributes requires `occursWithin` as a
-  // `DateRange!`. We deliberately pass a VERY wide range (years on
-  // either side of today) to make sure no visit is excluded by a
-  // too-narrow filter — the calendar UI partitions client-side anyway.
-  const farPast = new Date('2020-01-01T00:00:00Z');
-  const farFuture = new Date('2030-12-31T23:59:59Z');
+  // `DateRange!`. IMPORTANT: Jobber caps the range at 1.5 years — anything
+  // wider returns "Requested time range must be less than 1.5 years".
+  // We use 6 months back + 6 months forward = 1 year window. Plenty
+  // for the calendar (which only shows month-view) + past visits for
+  // history scroll-back.
+  const farPast = new Date(startOfDay);
+  farPast.setMonth(farPast.getMonth() - 6);
+  const farFuture = new Date(startOfDay);
+  farFuture.setMonth(farFuture.getMonth() + 6);
 
   // Visit field name is `isComplete` (boolean), NOT `completed`. Jobber's
   // schema error told us this directly:

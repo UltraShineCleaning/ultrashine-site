@@ -443,7 +443,52 @@
   display: inline-flex;
   align-items: center;
   margin-left: 4px;
-  opacity: 0.85;
+  opacity: 0.9;
+}
+/* Prominent "live from Google" badge — shown above the marquee when the
+   Places API is wired and returning fresh data. Google's brand colors
+   stay intact in the G logo; the badge sits on a translucent white pill
+   so the multi-color logo reads cleanly against the dark reviews section. */
+.googleLiveBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 16px;
+  padding: 10px 18px 10px 14px;
+  background: rgba(255, 255, 255, 0.96);
+  border-radius: 999px;
+  color: #1a1a1a;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.18);
+}
+.googleLiveBadge strong {
+  font-weight: 700;
+  color: #1a1a1a;
+}
+.googleLiveBadgeDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #34A853;
+  box-shadow: 0 0 0 0 rgba(52, 168, 83, 0.6);
+  animation: liveDotPulse 2.2s ease-in-out infinite;
+  margin-left: 6px;
+}
+.googleLiveBadgePulse {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  color: #34A853;
+}
+@keyframes liveDotPulse {
+  0%   { box-shadow: 0 0 0 0   rgba(52, 168, 83, 0.55); }
+  70%  { box-shadow: 0 0 0 8px rgba(52, 168, 83, 0);   }
+  100% { box-shadow: 0 0 0 0   rgba(52, 168, 83, 0);   }
+}
+@media (prefers-reduced-motion: reduce) {
+  .googleLiveBadgeDot { animation: none; }
 }
 .marquee {
   display: flex;

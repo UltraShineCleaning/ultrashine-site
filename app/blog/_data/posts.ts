@@ -86,7 +86,7 @@ export const POSTS: BlogPost[] = [
 
       <p>South Florida’s rainy season pushes indoor humidity into the 70&ndash;80% range even with A/C running. During those months, we shorten the deep-clean interval for clients who notice the difference &mdash; you’ll feel it most on bathroom grout and behind toilets.</p>
 
-      ${img('/images/flow_living_room_navy.jpg', 'Living room corner — humidity dust settles in low-traffic spots faster than you’d think.')}
+      ${img('/images/flow_sparkles.jpg', 'When grout, vents, and baseboards are reset on the right cadence, the whole home catches light instead of dust.')}
 
       <h2>What a Boca-specific deep clean covers that a regular clean doesn’t</h2>
 
@@ -162,6 +162,8 @@ export const POSTS: BlogPost[] = [
 
       <h3>Bathrooms (the #2 inspected area)</h3>
 
+      ${img('/images/bathroom.jpg', 'Shower-door tracks + behind-the-toilet are the two specific spots landlords always check.')}
+
       <ul>
         <li>Toilet scrubbed inside + outside + base + behind</li>
         <li>Shower/tub scrubbed, soap scum + mildew removed, grout cleaned</li>
@@ -184,8 +186,6 @@ export const POSTS: BlogPost[] = [
         <li>Walls spot-cleaned for marks</li>
         <li>All light switches + outlet plates wiped</li>
       </ul>
-
-      ${img('/images/bathroom.jpg', 'Shower-door tracks + behind-the-toilet are the two specific spots landlords always check.')}
 
       <h3>Whole-home detail</h3>
 
@@ -308,8 +308,6 @@ export const POSTS: BlogPost[] = [
 
       <p>The visible part of the toilet usually gets cleaned. The 4-inch ring of floor behind the toilet base &mdash; where the porcelain meets the tile &mdash; almost never does. That gap traps dust, hair, and (in humid Florida) early-stage mildew. It looks fine in the mirror but a quick crouch will show it.</p>
 
-      ${img('/images/bedroom.jpg', 'Bedrooms hide dust on baseboards + window tracks — quiet spots get overlooked first.')}
-
       <h2>2. Top edges of door frames</h2>
 
       <p>Run your finger along the top of any interior door frame. If a cleaner has been there in the last month and you see gray on your finger &mdash; they didn’t reach up there. Most cleaners are eye-level focused. Tops of door frames, tops of cabinets, and tops of picture frames are quietly collecting dust.</p>
@@ -317,6 +315,8 @@ export const POSTS: BlogPost[] = [
       <h2>3. Refrigerator coils + sides</h2>
 
       <p>Side of the fridge (the inch-wide space between the appliance and the cabinet) and the floor underneath are dust + crumb traps. Coils on the back (or underneath, depending on the model) collect a fuzz of dust that hurts the fridge’s efficiency and adds heat to your kitchen. A real cleaning pulls the fridge forward and gets behind it &mdash; at least quarterly.</p>
+
+      ${img('/images/bedroom.jpg', 'Low-traffic spots — under furniture, behind appliances, top edges — are where dust quietly accumulates between visits.')}
 
       <h2>4. Vent grilles (return + supply)</h2>
 
@@ -414,9 +414,9 @@ export const POSTS: BlogPost[] = [
 
       <h2>How we handle it</h2>
 
-      <p>We’re registered with Sunbiz, hold $2M general liability + workers’ comp on every cleaner, carry a $25,000 surety bond, and employ all cleaners as W2 staff (not 1099). We can send a Certificate of Insurance within an hour of being asked &mdash; just request one when you reach out for a quote, and we’ll include it with your estimate.</p>
+      <p>We’re <a href="/about">a registered Florida business</a>, hold $2M general liability + workers’ comp on every cleaner, carry a $25,000 surety bond, and employ all cleaners as <a href="/work-for-us">W2 staff (not 1099)</a>. We can send a Certificate of Insurance within an hour of being asked &mdash; just request one when you reach out for a quote, and we’ll include it with your estimate.</p>
 
-      <p>This is also why we run background checks on every team member and follow strict no-cross-contamination protocols between rooms. The whole point of a professional cleaning service is that you don’t have to think about the operational risks &mdash; they’re managed.</p>
+      <p>This is also why we run background checks on every team member and follow strict no-cross-contamination protocols between rooms across every <a href="/services">service we offer</a>. The whole point of a professional cleaning service is that you don’t have to think about the operational risks &mdash; they’re managed.</p>
 
       <h2>Bottom line</h2>
 

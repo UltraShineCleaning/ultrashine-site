@@ -43,7 +43,7 @@ export default function HomePage() {
         <div className={styles.navMenu}>
           <a href="#services">Services</a>
           <a href="#areas">Areas</a>
-          <a href="#about">About</a>
+          <Link href="/about">About</Link>
           <Link href="/blog">Blog</Link>
           <a href="#reviews">Reviews</a>
           <Link href="/leave-a-review" className={styles.navReview}>★ Leave Review</Link>
@@ -280,9 +280,9 @@ export default function HomePage() {
         </div>
         <div className={styles.footerCol}>
           <h4>Company</h4>
-          <a href="#about">About</a>
+          <Link href="/about">About</Link>
           <a href="#reviews">Reviews</a>
-          <a href="/work-for-us">Work For Us</a>
+          <Link href="/work-for-us">Work For Us</Link>
         </div>
         <div className={styles.footerCol}>
           <h4>Contact</h4>

@@ -66,7 +66,11 @@
 /* ============ HERO ============ */
 .hero {
   position: relative;
-  min-height: 920px;
+  /* Reduced from 920px so the headline + CTAs fit above the fold on the
+     majority of laptop viewports (13-14" screens are ~800-900px tall).
+     Keeps the hero impactful without forcing the visitor to scroll to find
+     the headline. */
+  min-height: 720px;
   width: 100%;
   overflow: hidden;
   background: var(--navy-deep);
@@ -81,18 +85,24 @@
 .heroOverlay {
   position: absolute;
   inset: 0;
+  /* Lowered opacity slightly (0.35 was 0.5, 0.30 mid was 0.35) so the
+     photography breathes through the blue tint while still keeping
+     contrast on the white headline text. */
   background:
-    linear-gradient(180deg, rgba(0, 44, 152,0.5) 0%, rgba(0, 44, 152,0.35) 40%, rgba(0, 44, 152,0.85) 100%),
+    linear-gradient(180deg, rgba(0, 44, 152,0.4) 0%, rgba(0, 44, 152,0.28) 40%, rgba(0, 44, 152,0.78) 100%),
     radial-gradient(ellipse at 80% 30%, rgba(28, 97, 240,0.18) 0%, transparent 60%);
 }
 .heroContent {
   position: relative;
   z-index: 10;
-  min-height: 920px;
+  /* Matched to .hero min-height. justify-content changed from flex-end to
+     center so the breadcrumb + eyebrow + headline + sub + CTAs sit in the
+     middle of the hero — fully visible without scrolling. */
+  min-height: 720px;
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
-  padding: 140px 100px 110px;
+  justify-content: center;
+  padding: 120px 100px 80px;
   color: var(--cream);
 }
 .heroHeadline {
@@ -175,7 +185,24 @@
 /* ============ SERVICES ============ */
 .services {
   padding: 64px 60px 72px;
-  background: var(--cream);
+  /* Subtle ambient gradient — two faint blue spots drift slowly across the
+     cream so the section isn't a dead solid color. Honors prefers-reduced-
+     motion (see @media block below). Matching motion lives on .how, .why
+     so the flat homepage sections feel alive without being distracting. */
+  background:
+    radial-gradient(circle at 20% 25%, rgba(28, 97, 240, 0.05) 0%, transparent 45%),
+    radial-gradient(circle at 80% 75%, rgba(94, 143, 255, 0.05) 0%, transparent 45%),
+    var(--cream);
+  background-size: 140% 140%, 140% 140%, 100% 100%;
+  animation: ambientDrift 24s ease-in-out infinite alternate;
+}
+@keyframes ambientDrift {
+  0%   { background-position: 0% 0%, 100% 100%, center; }
+  50%  { background-position: 30% 20%, 70% 80%, center; }
+  100% { background-position: 60% 40%, 40% 60%, center; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .services, .how, .why { animation: none; }
 }
 .servicesGrid {
   display: grid;
@@ -245,7 +272,14 @@
 /* ============ HOW IT WORKS ============ */
 .how {
   padding: 64px 60px 72px;
-  background: var(--cream-2);
+  /* Ambient gradient drift — matches .services for visual rhythm with a
+     slightly slower cadence so the page doesn't feel synchronized. */
+  background:
+    radial-gradient(circle at 70% 30%, rgba(28, 97, 240, 0.05) 0%, transparent 45%),
+    radial-gradient(circle at 25% 80%, rgba(94, 143, 255, 0.05) 0%, transparent 45%),
+    var(--cream-2);
+  background-size: 140% 140%, 140% 140%, 100% 100%;
+  animation: ambientDrift 28s ease-in-out infinite alternate;
   text-align: center;
 }
 .steps {
@@ -304,7 +338,14 @@
 /* ============ WHY ============ */
 .why {
   padding: 64px 60px 72px;
-  background: var(--cream);
+  /* Ambient gradient drift — paired with .services and .how, offset timing
+     so the three sections don't pulse together. */
+  background:
+    radial-gradient(circle at 30% 70%, rgba(28, 97, 240, 0.05) 0%, transparent 45%),
+    radial-gradient(circle at 75% 20%, rgba(94, 143, 255, 0.05) 0%, transparent 45%),
+    var(--cream);
+  background-size: 140% 140%, 140% 140%, 100% 100%;
+  animation: ambientDrift 26s ease-in-out infinite alternate;
   text-align: center;
 }
 .whyGrid {
@@ -905,8 +946,8 @@
 @media (max-width: 1024px) {
   .nav { padding: 20px 32px; }
   .navMenu { display: none; }
-  .heroContent { padding: 120px 32px 80px; min-height: 700px; }
-  .hero, .heroContent { min-height: 700px; }
+  .heroContent { padding: 110px 32px 70px; min-height: 640px; }
+  .hero, .heroContent { min-height: 640px; }
   .heroHeadline { font-size: 56px; line-height: 1; }
   .heroSub { font-size: 17px; }
   .trustStrip { grid-template-columns: 1fr 1fr; padding: 24px 32px; gap: 24px; }
@@ -937,8 +978,8 @@
   .nav { padding: 14px 20px; }
   .navRight { gap: 10px; }
   .navPhone { display: none; }
-  .heroContent { padding: 90px 20px 60px; min-height: 600px; }
-  .hero, .heroContent { min-height: 600px; }
+  .heroContent { padding: 90px 20px 60px; min-height: 580px; }
+  .hero, .heroContent { min-height: 580px; }
   .heroHeadline { font-size: 40px; line-height: 1.02; }
   .heroSub { font-size: 16px; margin-bottom: 32px; }
   .heroCtaRow { gap: 12px; }

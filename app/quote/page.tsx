@@ -7,7 +7,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import styles from './page.module.css';
 
 /* ----- Form data shapes ----- */
-type ServiceKey = 'regular' | 'deep' | 'move' | 'post';
+type ServiceKey = 'regular' | 'deep' | 'move' | 'post' | 'commercial';
 type FreqKey = 'one' | 'monthly' | 'biweekly' | 'weekly';
 type AddOnKey = 'oven' | 'fridge' | 'windows' | 'cabinets' | 'laundry' | 'pet';
 
@@ -16,6 +16,7 @@ const SERVICES: { key: ServiceKey; name: string; desc: string }[] = [
   { key: 'deep', name: 'Deep Cleaning', desc: 'Top-to-bottom reset · 2× the time' },
   { key: 'move', name: 'Move In / Out', desc: 'Empty home, deposit-back clean' },
   { key: 'post', name: 'Post-Construction', desc: 'After renovation, dust + detail' },
+  { key: 'commercial', name: 'Commercial', desc: 'Offices + retail, custom schedule' },
 ];
 
 const FREQS: { key: FreqKey; label: string; sub: string }[] = [
@@ -70,6 +71,7 @@ export default function QuotePage() {
         'Deep Cleaning': 'deep',
         'Move-In / Move-Out': 'move',
         'Post-Construction': 'post',
+        'Commercial': 'commercial',
       };
       const mapped = map[serviceParam];
       if (mapped) setService(mapped);

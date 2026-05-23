@@ -123,16 +123,22 @@ export default async function HomePage() {
       </MotionSection>
 
       {/* ============ BEFORE / AFTER INTERACTIVE SLIDER ============
-          Disabled until real same-room before/after photos are shot.
-          The placeholders (bedroom → kitchen) didn't make sense as a B/A —
-          they were just two different rooms. Tiago is shooting real pairs
-          this week. To re-enable, pass real image URLs as props:
-            <BeforeAfterSlider
-              beforeImage="/images/ba_kitchen_before.jpg"
-              afterImage="/images/ba_kitchen_after.jpg"
-            />
-      */}
-      {/* <BeforeAfterSlider /> */}
+          Re-enabled May 23, 2026 with the real kitchen-counter B/A pair.
+          Source: flow_before_after.jpg composite (Tiago, May 15 Flow shoot)
+          was split programmatically into ba_kitchen_before.jpg +
+          ba_kitchen_after.jpg (3:2 landscape, central crop, same camera
+          angle since both halves come from one composite). Placement
+          chosen deliberately: right after the trust strip so visitors
+          encounter "we exist / we're trusted / look at the transformation"
+          BEFORE they see what we sell. Cleaning-industry conversion
+          research consistently puts B/A high on the page. */}
+      <BeforeAfterSlider
+        beforeImage="/images/ba_kitchen_before.jpg"
+        afterImage="/images/ba_kitchen_after.jpg"
+        eyebrow="BEFORE · AFTER · OURS"
+        headline="The difference. Drag to see."
+        sub="Same kitchen, same counter, same camera. The only thing that changed is us. Slide the handle across to see the transformation."
+      />
 
       {/* SERVICE AREA MAP was previously here. Moved to the bottom third
           (replaces the redundant text-list /areas section below) per 2026

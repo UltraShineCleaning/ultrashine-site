@@ -134,23 +134,10 @@ export default function BlogPostPage({ params }: { params: Params }) {
           dangerouslySetInnerHTML={{ __html: post.bodyHtml }}
         />
 
-        {/* Author card */}
-        <div className={styles.authorCard}>
-          <div className={styles.authorAvatar}>
-            {post.author
-              .split(/\s+/)
-              .map((n) => n[0])
-              .join('')
-              .slice(0, 2)
-              .toUpperCase()}
-          </div>
-          <div className={styles.authorMeta}>
-            <p className={styles.authorName}>{post.author}</p>
-            <p className={styles.authorBio}>
-              Co-founder of Ultra Shine Cleaning. Boca Raton-based since 2021.
-            </p>
-          </div>
-        </div>
+        {/* Author card removed per product decision (May 23, 2026) —
+            having "Tiago Rena · Co-founder" at the bottom of every post
+            read as too personal for a service-business blog. The blog
+            byline at the top of the article remains. */}
 
         {/* Inline CTA */}
         <div className={styles.inlineCta}>

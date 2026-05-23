@@ -26,20 +26,24 @@ export default function CountUp({ to, duration = 1.6, prefix = '', suffix = '', 
   const reducedMotion = useReducedMotion();
   const motionValue = useMotionValue(0);
   const spring = useSpring(motionValue, { duration: duration * 1000, bounce: 0 });
-  const [display, setDisplay] = useState(reducedMotion ? to : 0);
+  // Stored as string so trailing-zero decimals (e.g. "5.0") survive — Number()
+  // strips them, so "5.0" would render as "5" without a string round-trip.
+  const [display, setDisplay] = useState<string>(() =>
+    reducedMotion ? to.toFixed(decimals) : (0).toFixed(decimals)
+  );
   const hasFired = useRef(false);
 
   // Primary trigger: IntersectionObserver via framer-motion's useInView.
   useEffect(() => {
     if (reducedMotion) {
-      setDisplay(to);
+      setDisplay(to.toFixed(decimals));
       return;
     }
     if (inView && !hasFired.current) {
       hasFired.current = true;
       motionValue.set(to);
     }
-  }, [inView, to, motionValue, reducedMotion]);
+  }, [inView, to, motionValue, reducedMotion, decimals]);
 
   // Fallback: on mount, if the element is already in the viewport (e.g. the
   // user lands deep-linked or clicks "Skip Intro" and the trust strip is
@@ -59,7 +63,7 @@ export default function CountUp({ to, duration = 1.6, prefix = '', suffix = '', 
 
   useEffect(() => {
     return spring.on('change', (latest) => {
-      setDisplay(decimals > 0 ? Number(latest.toFixed(decimals)) : Math.round(latest));
+      setDisplay(decimals > 0 ? latest.toFixed(decimals) : String(Math.round(latest)));
     });
   }, [spring, decimals]);
 

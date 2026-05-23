@@ -3,6 +3,7 @@ import Link from 'next/link';
 import SiteHeader from '../_components/SiteHeader';
 import SiteFooter from '../_components/SiteFooter';
 import JsonLd from '../_components/JsonLd';
+import { fetchGoogleReviews } from '../_lib/google-reviews';
 import styles from './page.module.css';
 
 export const metadata: Metadata = {
@@ -64,10 +65,18 @@ const TESTIMONIALS = [
 // + tap "Write a review" directly. Provided by Tiago, May 2026.
 const GOOGLE_REVIEW_URL = 'https://maps.app.goo.gl/EGeuJViEFazQQe579';
 
-export default function ReviewsPage() {
+export default async function ReviewsPage() {
+  // Live Google reviews — falls back gracefully when env vars are unset
+  // or the Places API call fails. See app/_lib/google-reviews.ts.
+  const google = await fetchGoogleReviews();
+
+  const googleRating = google.ok && google.rating != null ? google.rating : 5.0;
+  const googleCount = google.ok && google.count != null ? google.count : 18;
+
   // Schema for the reviews page — aggregate rating + individual reviews.
   // This is the BIG SEO win: makes star ratings appear next to the
-  // ultrashinecleaningfl.com result in Google search.
+  // ultrashinecleaningfl.com result in Google search. Prefers live Google
+  // data when available, falls back to the canonical hardcoded values.
   const reviewsSchema = {
     '@context': 'https://schema.org',
     '@type': 'LocalBusiness',
@@ -75,18 +84,30 @@ export default function ReviewsPage() {
     name: 'Ultra Shine Cleaning',
     aggregateRating: {
       '@type': 'AggregateRating',
-      ratingValue: '5.0',
-      reviewCount: '18',
+      ratingValue: googleRating.toFixed(1),
+      reviewCount: String(googleCount),
       bestRating: '5',
       worstRating: '1',
     },
-    review: TESTIMONIALS.map((t) => ({
-      '@type': 'Review',
-      reviewRating: { '@type': 'Rating', ratingValue: '5', bestRating: '5' },
-      author: { '@type': 'Person', name: t.name },
-      publisher: { '@type': 'Organization', name: t.city },
-      reviewBody: t.text,
-    })),
+    review: [
+      // Live Google reviews first (real names + ratings + dates from the API)
+      ...google.reviews.map((r) => ({
+        '@type': 'Review',
+        reviewRating: { '@type': 'Rating', ratingValue: String(r.rating), bestRating: '5' },
+        author: { '@type': 'Person', name: r.author_name },
+        publisher: { '@type': 'Organization', name: 'Google' },
+        datePublished: new Date(r.time * 1000).toISOString().slice(0, 10),
+        reviewBody: r.text,
+      })),
+      // Then HomeAdvisor testimonials
+      ...TESTIMONIALS.map((t) => ({
+        '@type': 'Review',
+        reviewRating: { '@type': 'Rating', ratingValue: '5', bestRating: '5' },
+        author: { '@type': 'Person', name: t.name },
+        publisher: { '@type': 'Organization', name: t.city },
+        reviewBody: t.text,
+      })),
+    ],
   };
 
   return (
@@ -113,8 +134,8 @@ export default function ReviewsPage() {
           </p>
           <div className={styles.ratingBar} style={{ display: 'inline-flex', flexWrap: 'wrap', gap: 18, justifyContent: 'center' }}>
             <span className={styles.stars}>★ ★ ★ ★ ★</span>
-            <span className={styles.ratingValue}>5.0</span>
-            <span className={styles.ratingLabel}>Google · 18 reviews</span>
+            <span className={styles.ratingValue}>{googleRating.toFixed(1)}</span>
+            <span className={styles.ratingLabel}>Google · {googleCount} reviews</span>
             <span style={{ opacity: 0.4 }}>·</span>
             <span className={styles.ratingValue}>4.9</span>
             <span className={styles.ratingLabel}>HomeAdvisor · 25 reviews</span>
@@ -122,11 +143,23 @@ export default function ReviewsPage() {
         </div>
       </section>
 
-      {/* TESTIMONIAL GRID */}
+      {/* TESTIMONIAL GRID — Google reviews first (real names + dates + photos),
+          HomeAdvisor testimonials underneath. Both render in the same grid. */}
       <section className={styles.gridSection}>
         <div className={styles.grid}>
+          {google.reviews.map((r, i) => (
+            <article key={`g-${i}`} className={styles.card}>
+              <div className={styles.cardStars}>
+                {Array.from({ length: Math.max(1, Math.round(r.rating)) }).map((_, idx) => '★ ').join('').trim()}
+              </div>
+              <p className={styles.cardQuote}>"{r.text}"</p>
+              <p className={styles.cardAuthor}>
+                {r.author_name} <span>· {r.relative_time_description} · Google</span>
+              </p>
+            </article>
+          ))}
           {TESTIMONIALS.map((t, i) => (
-            <article key={i} className={styles.card}>
+            <article key={`ha-${i}`} className={styles.card}>
               <div className={styles.cardStars}>★ ★ ★ ★ ★</div>
               <p className={styles.cardQuote}>"{t.text}"</p>
               <p className={styles.cardAuthor}>

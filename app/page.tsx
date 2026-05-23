@@ -9,13 +9,15 @@ import MotionSection, { MotionItem } from './_components/MotionSection';
 import TiltCard from './_components/TiltCard';
 import CountUp from './_components/CountUp';
 import MobileNav from './_components/MobileNav';
+import { fetchGoogleReviews } from './_lib/google-reviews';
 
-// Real verified reviews — sourced from HomeAdvisor profile
+// Fallback testimonials — sourced from the HomeAdvisor profile
 // (https://www.homeadvisor.com/rated.UltraShineCleaning.68124585.html)
-// 4.9★ from 25 verified reviews on HomeAdvisor; 5.0★ on Google
-// (canonical rating shown across the site). Attribution kept generic
-// since the original profile shows names as 'First L.' format we don't have.
-const TESTIMONIALS = [
+// 4.9★ from 25 verified reviews on HomeAdvisor; 5.0★ on Google.
+// Used to (a) pad the marquee when there are fewer than 8 Google reviews
+// available, and (b) cover the whole marquee if Google Places API is
+// unconfigured or unreachable so the site never shows an empty section.
+const FALLBACK_TESTIMONIALS = [
   { name: 'Verified Client', city: 'HomeAdvisor', text: 'Ultra Shine Cleaning was very professional when they came to my home, they got right to work. I have a dog, and they were very friendly and kind towards him.' },
   { name: 'Verified Client', city: 'HomeAdvisor', text: 'Ultra Shine Cleaning is wonderful. Easy to make an appointment with flexible times. Did a great job cleaning the entire house. I would highly recommend.' },
   { name: 'Verified Client', city: 'HomeAdvisor', text: 'Anna and her team came on time and they were friendly, professional and efficient. My house has never looked better. I will definitely use them not only again but continuously.' },
@@ -26,7 +28,42 @@ const TESTIMONIALS = [
   { name: 'Verified Client', city: 'HomeAdvisor', text: 'Great first job. Will be coming back!' },
 ];
 
-export default function HomePage() {
+type DisplayReview = {
+  name: string;
+  city: string;
+  text: string;
+  source: 'google' | 'homeadvisor';
+  photo?: string;
+  authorUrl?: string;
+};
+
+export default async function HomePage() {
+  // Live Google data — falls back gracefully when env vars are unset or
+  // the Places API call fails. See app/_lib/google-reviews.ts.
+  const google = await fetchGoogleReviews();
+
+  // Build the unified marquee list. Google reviews come first (real names,
+  // real photos, fresh dates = highest social proof). HomeAdvisor testimonials
+  // pad the marquee to ensure at least 8 cards so the seamless scroll looks
+  // dense regardless of how many live Google reviews are available.
+  const googleAsDisplay: DisplayReview[] = google.reviews.map((r) => ({
+    name: r.author_name,
+    city: r.relative_time_description || 'Google',
+    text: r.text,
+    source: 'google' as const,
+    photo: r.profile_photo_url,
+    authorUrl: r.author_url,
+  }));
+  const ALL_REVIEWS: DisplayReview[] = [
+    ...googleAsDisplay,
+    ...FALLBACK_TESTIMONIALS.map((t) => ({ ...t, source: 'homeadvisor' as const })),
+  ];
+
+  // Live rating + count for the trust strip badge. Falls back to the
+  // canonical 5.0 + 18 reviews label if no live data.
+  const liveRating = google.ok && google.rating != null ? google.rating : 5.0;
+  const liveCount = google.ok && google.count != null ? google.count : 18;
+
   return (
     <main>
       {/* ============ STICKY NAV ============ */}
@@ -71,9 +108,11 @@ export default function HomePage() {
         </div>
         <div className={styles.trustBadge}>
           <div className={styles.trustValue}>
-            ★ <CountUp to={5.0} decimals={1} duration={1.4} /> Google
+            ★ <CountUp to={liveRating} decimals={1} duration={1.4} /> Google
           </div>
-          <div className={styles.trustLabel}>Verified reviews</div>
+          <div className={styles.trustLabel}>
+            <CountUp to={liveCount} duration={1.4} /> verified reviews
+          </div>
         </div>
         <div className={styles.trustBadge}>
           <div className={styles.trustValue}>
@@ -186,15 +225,36 @@ export default function HomePage() {
           <p className={`eyebrow ${styles.reviewsEyebrow}`}>TRUSTED ACROSS SOUTH FLORIDA</p>
           <h2 className={`fraunces ${styles.sectionHeadline}`}>What our <em>clients</em> say.</h2>
           <div className={styles.reviewsHeadlineStars}>★ ★ ★ ★ ★</div>
-          <div className={styles.reviewsMeta}>5.0 ★ GOOGLE RATING · VERIFIED REVIEWS</div>
+          <div className={styles.reviewsMeta}>
+            {liveRating.toFixed(1)} ★ GOOGLE RATING · {liveCount} VERIFIED REVIEWS
+          </div>
+          {google.profileUrl && (
+            <a
+              href={google.profileUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={styles.reviewsProfileLink}
+            >
+              Read all reviews on Google →
+            </a>
+          )}
         </div>
         <div className={styles.marquee}>
           <div className={styles.marqueeTrack}>
-            {[...TESTIMONIALS, ...TESTIMONIALS].map((t, i) => (
+            {[...ALL_REVIEWS, ...ALL_REVIEWS].map((t, i) => (
               <div key={i} className={styles.reviewCard}>
                 <div className={styles.rStars}>★ ★ ★ ★ ★</div>
                 <div className={`fraunces ${styles.rText}`}>"{t.text}"</div>
-                <div className={styles.rAuthor}><strong>{t.name}</strong> · {t.city}</div>
+                <div className={styles.rAuthor}>
+                  <strong>{t.name}</strong> · {t.city}
+                  {t.source === 'google' && (
+                    <span className={styles.rSourceBadge} aria-label="Google review">
+                      <svg viewBox="0 0 24 24" width="12" height="12" aria-hidden="true" style={{ verticalAlign: 'middle', marginLeft: 4 }}>
+                        <path fill="#4285F4" d="M21.35 11.1h-9.17v2.73h6.51c-.33 3.81-3.5 5.44-6.5 5.44C8.36 19.27 5 16.25 5 12c0-4.1 3.2-7.27 7.2-7.27 3.09 0 4.9 1.97 4.9 1.97L19 4.72S16.56 2 12.1 2C6.42 2 2.03 6.8 2.03 12c0 5.05 4.13 10 10.22 10 5.35 0 9.25-3.67 9.25-9.09 0-1.15-.15-1.81-.15-1.81Z" />
+                      </svg>
+                    </span>
+                  )}
+                </div>
               </div>
             ))}
           </div>

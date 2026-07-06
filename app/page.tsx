@@ -3,7 +3,6 @@ import Link from 'next/link';
 import styles from './page.module.css';
 import FaqSection from './_components/FaqSection';
 import HeroScrollHome from './_components/HeroScrollHome';
-import BeforeAfterSlider from './_components/BeforeAfterSlider';
 import ServiceAreaMap from './_components/ServiceAreaMap';
 import MotionSection, { MotionItem } from './_components/MotionSection';
 import TiltCard from './_components/TiltCard';
@@ -122,23 +121,13 @@ export default async function HomePage() {
         </div>
       </MotionSection>
 
-      {/* ============ BEFORE / AFTER INTERACTIVE SLIDER ============
-          Re-enabled May 23, 2026 with the real kitchen-counter B/A pair.
-          Source: flow_before_after.jpg composite (Tiago, May 15 Flow shoot)
-          was split programmatically into ba_kitchen_before.jpg +
-          ba_kitchen_after.jpg (3:2 landscape, central crop, same camera
-          angle since both halves come from one composite). Placement
-          chosen deliberately: right after the trust strip so visitors
-          encounter "we exist / we're trusted / look at the transformation"
-          BEFORE they see what we sell. Cleaning-industry conversion
-          research consistently puts B/A high on the page. */}
-      <BeforeAfterSlider
-        beforeImage="/images/ba_kitchen_before.jpg"
-        afterImage="/images/ba_kitchen_after.jpg"
-        eyebrow="BEFORE · AFTER · OURS"
-        headline="The difference. Drag to see."
-        sub="Same kitchen, same counter, same camera. The only thing that changed is us. Slide the handle across to see the transformation."
-      />
+      {/* Before/After slider removed (per Tiago) — was placed above Services
+          which broke the flow, and the composite kitchen halves didn't read
+          as a true B/A pair. Ready to re-enable when we have proper same-room
+          before/after pairs from a real client shoot. Files still exist:
+          public/images/ba_kitchen_before.jpg + ba_kitchen_after.jpg,
+          component at app/_components/BeforeAfterSlider.tsx.
+          See 00_STATE/ba-image-prompts.md for AI-generation prompts. */}
 
       {/* SERVICE AREA MAP was previously here. Moved to the bottom third
           (replaces the redundant text-list /areas section below) per 2026

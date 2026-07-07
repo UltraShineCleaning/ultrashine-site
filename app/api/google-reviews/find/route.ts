@@ -28,17 +28,23 @@ function fidToPlaceId(fidHex: string): string | null {
   const parts = fidHex.split(':');
   if (parts.length !== 2) return null;
   try {
+    // BigInt literal suffixes (0x7fn etc) require ES2020 — the project's
+    // tsconfig currently targets ES2019, so we construct bigints via the
+    // BigInt() constructor which is broadly available.
+    const BI_7F = BigInt(0x7f);
+    const BI_80 = BigInt(0x80);
+    const BI_7 = BigInt(7);
     const hi = BigInt(parts[0]);
     const lo = BigInt(parts[1]);
 
     const encodeVarint = (n: bigint): Uint8Array => {
       const out: number[] = [];
       let v = n;
-      while (v > 0x7fn) {
-        out.push(Number((v & 0x7fn) | 0x80n));
-        v >>= 7n;
+      while (v > BI_7F) {
+        out.push(Number((v & BI_7F) | BI_80));
+        v >>= BI_7;
       }
-      out.push(Number(v & 0x7fn));
+      out.push(Number(v & BI_7F));
       return new Uint8Array(out);
     };
 

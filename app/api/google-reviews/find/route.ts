@@ -147,48 +147,83 @@ export async function GET(request: Request) {
       }
     }
 
-    // Third strategy: synthesize a Place ID from the known Feature ID and
-    // test it against Place Details. If Details returns the business, that
-    // Place ID is valid and we're done.
-    const synthesizedPlaceId = fidToPlaceId(KNOWN_FID);
-    let fidLookup: {
-      synthesized_place_id: string | null;
-      status: string;
-      error?: string;
+    // Strategy 3: fetch the actual Google Maps page for this business
+    // (URL resolved from Tiago's maps.app.goo.gl share link) and scrape the
+    // canonical Place ID from its embedded metadata. Google Maps pages
+    // include the Place ID in several places: the meta tags, a "place_id"
+    // JSON blob, or the canonical URL parameters.
+    const MAPS_URL = 'https://www.google.com/maps/place/Ultra+Shine+Cleaning/@26.2809936,-80.1761665,15z/data=!4m6!3m5!1s0x21c11105853a24d1:0x2ecf48759762b5e3!8m2!3d26.2809936!4d-80.1761665!16s%2Fg%2F11nbkcv0wy';
+
+    let scrape: {
+      attempted: boolean;
+      candidates: string[];
+      picked?: string;
+      details_status?: string;
+      details_error?: string;
       name?: string;
       address?: string;
       rating?: number;
       review_count?: number;
-    } = { synthesized_place_id: synthesizedPlaceId, status: 'not_attempted' };
+    } = { attempted: false, candidates: [] };
 
-    if (synthesizedPlaceId) {
-      const detailsUrl =
-        `https://maps.googleapis.com/maps/api/place/details/json` +
-        `?place_id=${encodeURIComponent(synthesizedPlaceId)}` +
-        `&fields=name,formatted_address,rating,user_ratings_total` +
-        `&key=${apiKey}`;
-      const detailsRes = await fetch(detailsUrl, { cache: 'no-store' });
-      const detailsJson = await detailsRes.json();
-      fidLookup = {
-        synthesized_place_id: synthesizedPlaceId,
-        status: detailsJson.status,
-        error: detailsJson.error_message,
-        name: detailsJson.result?.name,
-        address: detailsJson.result?.formatted_address,
-        rating: detailsJson.result?.rating,
-        review_count: detailsJson.result?.user_ratings_total,
-      };
+    try {
+      const htmlRes = await fetch(MAPS_URL, {
+        cache: 'no-store',
+        headers: {
+          // Real UA so Google returns the full HTML page, not a redirect
+          // to the mobile / consent screen.
+          'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36',
+          'Accept-Language': 'en-US,en;q=0.9',
+        },
+      });
+      const html = await htmlRes.text();
+      scrape.attempted = true;
+
+      // Google embeds Place IDs in maps HTML as raw ChIJ... strings.
+      // Grab every unique ChIJ... token we see; the right one is usually
+      // the first one that resolves via Place Details.
+      const matches = html.match(/ChIJ[A-Za-z0-9_-]{20,90}/g) || [];
+      const uniq = Array.from(new Set(matches)).slice(0, 10);
+      scrape.candidates = uniq;
+
+      // Try each candidate against Place Details until one returns OK with
+      // a name that looks like ours.
+      for (const cand of uniq) {
+        const detailsUrl =
+          `https://maps.googleapis.com/maps/api/place/details/json` +
+          `?place_id=${encodeURIComponent(cand)}` +
+          `&fields=name,formatted_address,rating,user_ratings_total` +
+          `&key=${apiKey}`;
+        const detailsRes = await fetch(detailsUrl, { cache: 'no-store' });
+        const detailsJson = await detailsRes.json();
+        if (detailsJson.status === 'OK' && detailsJson.result) {
+          const name = String(detailsJson.result.name || '').toLowerCase();
+          // Match only if the name looks right — avoid picking up some other
+          // ChIJ... that happens to appear elsewhere in the HTML.
+          if (name.includes('ultra shine') || name.includes('shine cleaning')) {
+            scrape.picked = cand;
+            scrape.details_status = detailsJson.status;
+            scrape.name = detailsJson.result.name;
+            scrape.address = detailsJson.result.formatted_address;
+            scrape.rating = detailsJson.result.rating;
+            scrape.review_count = detailsJson.result.user_ratings_total;
+            break;
+          }
+        }
+      }
+    } catch (err) {
+      scrape.details_error = err instanceof Error ? err.message : 'scrape failed';
     }
 
     return NextResponse.json(
       {
-        ok: merged.length > 0 || fidLookup.status === 'OK',
+        ok: merged.length > 0 || !!scrape.picked,
         query: q,
         found: merged.length,
         text_search_status: textJson.status,
         find_place_status: findJson.status,
         candidates: merged,
-        fid_lookup: fidLookup,
+        maps_scrape: scrape,
       },
       { headers: { 'Cache-Control': 'no-store' } },
     );

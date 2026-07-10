@@ -147,6 +147,58 @@ export async function GET(request: Request) {
       }
     }
 
+    // Strategy 2b: Place Autocomplete — designed for search-as-you-type and
+    // more forgiving with obscure SABs than Text Search / Find Place.
+    const autocompleteUrl =
+      `https://maps.googleapis.com/maps/api/place/autocomplete/json` +
+      `?input=${encodeURIComponent(q)}` +
+      `&location=26.2809936,-80.1761665` +
+      `&radius=5000` +
+      `&types=establishment` +
+      `&key=${apiKey}`;
+    const acRes = await fetch(autocompleteUrl, { cache: 'no-store' });
+    const acJson = await acRes.json();
+    const autocompletePredictions = (acJson.predictions || [])
+      .filter((p: { place_id?: string }) => p.place_id && !seen.has(p.place_id))
+      .map((p: {
+        place_id: string;
+        description: string;
+        structured_formatting?: { main_text?: string; secondary_text?: string };
+      }) => {
+        seen.add(p.place_id);
+        merged.push({
+          source: 'autocomplete',
+          name: p.structured_formatting?.main_text || p.description,
+          formatted_address: p.structured_formatting?.secondary_text || p.description,
+          place_id: p.place_id,
+        });
+        return p;
+      });
+
+    // Strategy 2c: Nearby Search at exact business coordinates, tiny radius.
+    // Different endpoint from Text Search — sometimes returns SABs the others miss.
+    const nearbyUrl =
+      `https://maps.googleapis.com/maps/api/place/nearbysearch/json` +
+      `?location=26.2809936,-80.1761665` +
+      `&radius=100` +
+      `&keyword=${encodeURIComponent('ultra shine cleaning')}` +
+      `&key=${apiKey}`;
+    const nearbyRes = await fetch(nearbyUrl, { cache: 'no-store' });
+    const nearbyJson = await nearbyRes.json();
+    for (const r of nearbyJson.results || []) {
+      if (r.place_id && !seen.has(r.place_id)) {
+        seen.add(r.place_id);
+        merged.push({
+          source: 'nearby',
+          name: r.name,
+          formatted_address: r.vicinity || r.formatted_address,
+          place_id: r.place_id,
+          rating: r.rating,
+          user_ratings_total: r.user_ratings_total,
+        });
+      }
+    }
+
     // Strategy 3: fetch the actual Google Maps page for this business
     // (URL resolved from Tiago's maps.app.goo.gl share link) and scrape the
     // canonical Place ID from its embedded metadata. Google Maps pages
@@ -222,6 +274,8 @@ export async function GET(request: Request) {
         found: merged.length,
         text_search_status: textJson.status,
         find_place_status: findJson.status,
+        autocomplete_status: acJson.status,
+        nearby_status: nearbyJson.status,
         candidates: merged,
         maps_scrape: scrape,
       },

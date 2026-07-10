@@ -199,6 +199,76 @@ export async function GET(request: Request) {
       }
     }
 
+    // Strategy 2d: search by phone number. Ultra Shine's phone is
+    // (561) 583-6694. SABs that don't surface by name search often surface
+    // by phone number search because Google treats phone as a strong signal.
+    const phoneUrl =
+      `https://maps.googleapis.com/maps/api/place/textsearch/json` +
+      `?query=${encodeURIComponent('(561) 583-6694')}` +
+      `&location=26.2809936,-80.1761665` +
+      `&radius=50000` +
+      `&key=${apiKey}`;
+    const phoneRes = await fetch(phoneUrl, { cache: 'no-store' });
+    const phoneJson = await phoneRes.json();
+    for (const r of phoneJson.results || []) {
+      if (r.place_id && !seen.has(r.place_id)) {
+        seen.add(r.place_id);
+        merged.push({
+          source: 'phone_search',
+          name: r.name,
+          formatted_address: r.formatted_address || r.vicinity,
+          place_id: r.place_id,
+          rating: r.rating,
+          user_ratings_total: r.user_ratings_total,
+        });
+      }
+    }
+
+    // Strategy 2e: Places API (New) — v1 endpoint supports SABs where the
+    // legacy API filters them out. This is a POST with different auth
+    // header (X-Goog-Api-Key) and a JSON body.
+    let placesNewStatus = 'not_attempted';
+    try {
+      const newRes = await fetch(
+        'https://places.googleapis.com/v1/places:searchText',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Goog-Api-Key': apiKey,
+            'X-Goog-FieldMask': 'places.id,places.displayName,places.formattedAddress,places.rating,places.userRatingCount',
+          },
+          body: JSON.stringify({
+            textQuery: q,
+            locationBias: {
+              circle: {
+                center: { latitude: 26.2809936, longitude: -80.1761665 },
+                radius: 20000,
+              },
+            },
+          }),
+          cache: 'no-store',
+        },
+      );
+      const newJson = await newRes.json();
+      placesNewStatus = newRes.ok ? 'OK' : `HTTP_${newRes.status}`;
+      for (const p of newJson.places || []) {
+        if (p.id && !seen.has(p.id)) {
+          seen.add(p.id);
+          merged.push({
+            source: 'places_v1',
+            name: p.displayName?.text || 'unknown',
+            formatted_address: p.formattedAddress,
+            place_id: p.id,
+            rating: p.rating,
+            user_ratings_total: p.userRatingCount,
+          });
+        }
+      }
+    } catch (err) {
+      placesNewStatus = `error: ${err instanceof Error ? err.message : 'unknown'}`;
+    }
+
     // Strategy 3: fetch the actual Google Maps page for this business
     // (URL resolved from Tiago's maps.app.goo.gl share link) and scrape the
     // canonical Place ID from its embedded metadata. Google Maps pages
@@ -276,6 +346,8 @@ export async function GET(request: Request) {
         find_place_status: findJson.status,
         autocomplete_status: acJson.status,
         nearby_status: nearbyJson.status,
+        phone_search_status: phoneJson.status,
+        places_new_status: placesNewStatus,
         candidates: merged,
         maps_scrape: scrape,
       },

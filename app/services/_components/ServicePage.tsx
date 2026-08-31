@@ -38,6 +38,19 @@ export type ServiceData = {
   faq: { q: string; a: string }[];
   /** Final CTA keyword (e.g. "DEEP", "MOVE", "OFFICE") */
   ctaKeyword: string;
+  /**
+   * Ballpark price range shown in the estimator callout's preview card.
+   * These MUST match what /cleaning-time-estimator actually computes for
+   * the reference scenario (3BR / 2 bath / last cleaned months ago / no
+   * pets / one-time) — otherwise the preview promises a number the tool
+   * then contradicts. Recompute if the estimator's rate table changes.
+   */
+  estimatorPreview?: { low: number; high: number };
+  /**
+   * Set false to hide the estimator callout. Used for Commercial, where the
+   * estimator's questions (bedrooms, pets) don't apply to offices/retail.
+   */
+  showEstimator?: boolean;
 };
 
 function renderHeadline(text: string) {
@@ -244,6 +257,59 @@ export default function ServicePage({ data }: { data: ServiceData }) {
         </div>
       </MotionSection>
 
+      {/* ESTIMATOR CALLOUT
+          Placed directly after "What's Included" — the visitor has just
+          absorbed the full scope of the service, so the natural next
+          question is "what does all that cost for MY home?" Deep-links
+          into the estimator with this page's service pre-selected. */}
+      {data.showEstimator !== false && (
+      <section className={service.estimatorCallout}>
+        <div className={service.estimatorCalloutInner}>
+          <div className={service.estimatorCalloutLeft}>
+            <p className={service.estimatorCalloutEyebrow}>
+              INSTANT BALLPARK · NO SIGN-UP
+            </p>
+            <h2 className={`fraunces ${service.estimatorCalloutHead}`}>
+              What would <em>your</em> {data.name.toLowerCase()} run?
+            </h2>
+            <p className={service.estimatorCalloutBody}>
+              Answer 6 quick questions about your home and get a ballpark
+              price range plus how long we&apos;d be on site. No email, no
+              sign-up, no waiting.
+            </p>
+            <Link
+              href={`/cleaning-time-estimator?service=${data.slug}`}
+              className={service.estimatorCalloutBtn}
+            >
+              Get My Ballpark →
+            </Link>
+          </div>
+          <div className={service.estimatorCalloutRight}>
+            <div className={service.estimatorPreviewCard}>
+              <div className={service.previewLabel}>EXAMPLE</div>
+              <div className={service.previewLine}>3 Bedrooms · 2 Bathrooms</div>
+              <div className={service.previewLine}>{data.name}</div>
+              <div className={service.previewLine}>Last cleaned months ago</div>
+              <div className={service.previewResult}>
+                <span className={service.previewResultCurrency}>$</span>
+                <span className={service.previewResultNum}>
+                  {data.estimatorPreview?.low ?? 240}
+                </span>
+                <span className={service.previewResultSep}>–</span>
+                <span className={service.previewResultCurrency}>$</span>
+                <span className={service.previewResultNum}>
+                  {data.estimatorPreview?.high ?? 340}
+                </span>
+              </div>
+              <div className={service.previewSub}>
+                with 2 cleaners on site · your home may differ
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      )}
+
       {/* WHEN YOU NEED THIS */}
       <MotionSection className={service.scenariosSection}>
         <p className="eyebrow">WHEN YOU NEED THIS</p>
@@ -352,12 +418,9 @@ export default function ServicePage({ data }: { data: ServiceData }) {
         <p className={styles.finalNote}>
           Or comment <strong>{data.ctaKeyword}</strong> on our IG · Custom quote in 1 hour · No pricing surprises
         </p>
-        {/* Subtle estimator entry point — for visitors not ready to fill the
-            quote form but curious about how long their cleaning would take. */}
-        <p className={styles.finalEstimatorHint}>
-          Not ready to commit yet?{' '}
-          <Link href="/cleaning-time-estimator">Try the 60-second time estimator →</Link>
-        </p>
+        {/* Estimator entry point removed here — it now lives as a full
+            callout band directly after "What's Included", where visitors
+            actually ask the price question. Keeping both was redundant. */}
       </MotionSection>
 
       <SiteFooter />

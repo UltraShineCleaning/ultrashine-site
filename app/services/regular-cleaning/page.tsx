@@ -114,6 +114,7 @@ const data: ServiceData = {
     },
   ],
   ctaKeyword: 'WEEKLY',
+  estimatorPreview: { low: 170, high: 290 },
 };
 
 export default function RegularCleaningPage() {

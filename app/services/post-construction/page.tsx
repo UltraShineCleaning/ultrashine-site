@@ -113,6 +113,7 @@ const data: ServiceData = {
     },
   ],
   ctaKeyword: 'POST',
+  estimatorPreview: { low: 420, high: 680 },
 };
 
 export default function PostConstructionPage() {

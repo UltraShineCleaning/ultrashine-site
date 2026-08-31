@@ -113,6 +113,9 @@ const data: ServiceData = {
     },
   ],
   ctaKeyword: 'OFFICE',
+  // Estimator hidden here — its questions (bedrooms, pets, last cleaned)
+  // are residential. Offices/retail need a real walkthrough to scope.
+  showEstimator: false,
 };
 
 export default function CommercialPage() {

@@ -114,6 +114,7 @@ const data: ServiceData = {
     },
   ],
   ctaKeyword: 'DEEP',
+  estimatorPreview: { low: 280, high: 470 },
 };
 
 export default function DeepCleaningPage() {

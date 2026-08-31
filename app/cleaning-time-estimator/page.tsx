@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import SiteHeader from '../_components/SiteHeader';
 import SiteFooter from '../_components/SiteFooter';
@@ -92,6 +92,33 @@ const FREQUENCY_LABEL: Record<Frequency, string> = {
 /* Ultra Shine ALWAYS sends a pair — 2 cleaners on every job, always. */
 const ALWAYS_CLEANERS = 2;
 
+/**
+ * Maps a `?service=` URL param to the internal Service key. Lets the five
+ * service pages deep-link into the estimator with their own service already
+ * selected — e.g. /cleaning-time-estimator?service=deep from the Deep
+ * Cleaning page. Falls back to 'regular' for unknown values.
+ */
+function serviceFromParam(raw: string | null): Service {
+  if (!raw) return 'regular';
+  const key = raw.toLowerCase().replace(/[^a-z]/g, '');
+  const map: Record<string, Service> = {
+    regular: 'regular',
+    regularcleaning: 'regular',
+    deep: 'deep',
+    deepcleaning: 'deep',
+    moveout: 'moveout',
+    movein: 'moveout',
+    moveinout: 'moveout',
+    moveinmoveout: 'moveout',
+    postconstruction: 'postconstruction',
+    // Commercial has no estimator profile of its own — post-construction
+    // is the closest analogue in scope, but default to regular so we don't
+    // over-quote an office. Commercial always needs a custom walkthrough.
+    commercial: 'regular',
+  };
+  return map[key] ?? 'regular';
+}
+
 export default function CleaningTimeEstimatorPage() {
   const [homeSize, setHomeSize] = useState<HomeSize>('3br');
   const [bathrooms, setBathrooms] = useState(2);
@@ -99,6 +126,15 @@ export default function CleaningTimeEstimatorPage() {
   const [lastCleaned, setLastCleaned] = useState<LastCleaned>('recent');
   const [pets, setPets] = useState<Pets>('none');
   const [frequency, setFrequency] = useState<Frequency>('one');
+
+  // Pre-select the service when arriving from a service page deep-link.
+  // Runs once on mount — after this the user's own clicks take over.
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const params = new URLSearchParams(window.location.search);
+    const fromParam = params.get('service');
+    if (fromParam) setService(serviceFromParam(fromParam));
+  }, []);
 
   const estimate = useMemo(() => {
     const base = HOME_BASE_HOURS[homeSize];

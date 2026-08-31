@@ -1,9 +1,9 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'How Long Will My Cleaning Take? · Time Estimator · Ultra Shine',
+  title: 'What Will My Cleaning Cost? · Instant Estimator · Ultra Shine',
   description:
-    'Rough estimate of how long your house cleaning will take in Boca Raton + South Florida. Answer 5 quick questions — get an honest time range. No prices, no sign-up.',
+    'Get a ballpark price range and time estimate for house cleaning in Boca Raton + South Florida. Answer 6 quick questions — no email, no sign-up, no waiting.',
   alternates: {
     canonical: 'https://ultrashinecleaningfl.com/cleaning-time-estimator',
   },

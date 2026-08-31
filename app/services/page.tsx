@@ -342,28 +342,31 @@ export default function ServicesIndexPage() {
       <section className={styles.estimatorCallout}>
         <div className={styles.estimatorCalloutInner}>
           <div className={styles.estimatorCalloutLeft}>
-            <p className={styles.estimatorCalloutEyebrow}>NEW TOOL · NO SIGN-UP</p>
+            <p className={styles.estimatorCalloutEyebrow}>INSTANT BALLPARK · NO SIGN-UP</p>
             <h2 className={`fraunces ${styles.estimatorCalloutHead}`}>
-              How long will <em>your</em> cleaning take?
+              What will <em>your</em> cleaning cost?
             </h2>
             <p className={styles.estimatorCalloutBody}>
-              5 quick questions &mdash; we&apos;ll give you a rough time
-              estimate before you request a full quote. No pricing, no
-              sign-up, no email required.
+              6 quick questions &mdash; we&apos;ll give you a ballpark price
+              range plus how long we&apos;d be on site. No email, no sign-up,
+              no waiting.
             </p>
             <Link href="/cleaning-time-estimator" className={styles.estimatorCalloutBtn}>
-              Try the Estimator →
+              Get My Ballpark →
             </Link>
           </div>
           <div className={styles.estimatorCalloutRight}>
             <div className={styles.estimatorPreviewCard}>
               <div className={styles.previewLabel}>EXAMPLE</div>
               <div className={styles.previewLine}>3 Bedrooms · 2 Bathrooms</div>
-              <div className={styles.previewLine}>Deep Cleaning · Few months ago</div>
-              <div className={styles.previewLine}>1–2 pets</div>
+              <div className={styles.previewLine}>Deep Cleaning</div>
+              <div className={styles.previewLine}>Last cleaned months ago</div>
               <div className={styles.previewResult}>
-                <span className={styles.previewResultNum}>3.5–5</span>
-                <span className={styles.previewResultUnit}>hrs</span>
+                <span className={styles.previewResultUnit}>$</span>
+                <span className={styles.previewResultNum}>280</span>
+                <span className={styles.previewResultUnit}>–</span>
+                <span className={styles.previewResultUnit}>$</span>
+                <span className={styles.previewResultNum}>470</span>
               </div>
               <div className={styles.previewSub}>with 2 cleaners on site</div>
             </div>

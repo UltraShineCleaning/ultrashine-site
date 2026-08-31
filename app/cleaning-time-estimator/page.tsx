@@ -218,7 +218,7 @@ export default function CleaningTimeEstimatorPage() {
             <span> / </span>
             <span style={{ opacity: 0.8 }}>Time Estimator</span>
           </p>
-          <p className={styles.eyebrow}>QUICK ESTIMATOR · 5 QUESTIONS · NO SIGN-UP</p>
+          <p className={styles.eyebrow}>QUICK ESTIMATOR · 6 QUESTIONS · NO SIGN-UP</p>
           <h1 className={`fraunces ${styles.headline}`}>
             How long will my cleaning <em>take</em>?
           </h1>

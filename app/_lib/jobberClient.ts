@@ -816,3 +816,305 @@ export async function getJobberMetrics(opts: { force?: boolean } = {}): Promise<
 
   return result;
 }
+
+/* ============================================================
+   MONEY — invoices, payments, revenue trends
+   ============================================================
+   Powers the /admin Money tab. Fetches a wider invoice window than
+   getJobberMetrics (which only needs pending totals for the Home
+   snapshot) and joins in client names so the outstanding list is
+   actionable — "who owes me, how much, how late".
+
+   Defensive by design: Jobber's InvoiceAmounts fields vary by API
+   version, so every field is optional-chained and we surface a
+   `fieldDebug` blob when something comes back empty. That way a
+   schema mismatch shows up as a readable message in the UI instead
+   of silent zeros.
+   ============================================================ */
+
+export type JobberInvoice = {
+  id: string;
+  invoiceNumber: string | null;
+  clientName: string;
+  status: string;
+  issuedDate: string | null;
+  dueDate: string | null;
+  total: number;
+  balance: number;
+  paid: number;
+  /** Days past due. Negative = not yet due. null = no due date. */
+  daysOverdue: number | null;
+};
+
+export type RevenueBucket = {
+  /** ISO date of the bucket start (week start or month start) */
+  key: string;
+  /** Human label e.g. "Aug 4" or "Aug 2026" */
+  label: string;
+  amount: number;
+  invoiceCount: number;
+};
+
+export type JobberMoney = {
+  /** Unpaid invoices, most overdue first */
+  outstanding: JobberInvoice[];
+  outstandingTotal: number;
+  /** How much of the outstanding total is actually past its due date */
+  overdueTotal: number;
+  overdueCount: number;
+
+  paidThisWeek: number;
+  paidLastWeek: number;
+  paidThisMonth: number;
+  paidLastMonth: number;
+  paidThisQuarter: number;
+
+  averageInvoice: number;
+  /** Median days from issue to paid, across invoices we can measure */
+  avgCollectionDays: number | null;
+
+  /** Last 8 weeks of collected revenue, oldest first */
+  weeklyRevenue: RevenueBucket[];
+  /** Last 12 months of collected revenue, oldest first */
+  monthlyRevenue: RevenueBucket[];
+
+  /** Top clients by total invoiced value */
+  topClients: { name: string; total: number; invoiceCount: number }[];
+
+  invoiceCount: number;
+  errorDetail?: string;
+  fieldDebug?: {
+    rawNodeCount: number;
+    sampleKeys: string[];
+    sampleAmountKeys: string[];
+    statusCounts: Record<string, number>;
+  };
+};
+
+const EMPTY_MONEY: JobberMoney = {
+  outstanding: [], outstandingTotal: 0, overdueTotal: 0, overdueCount: 0,
+  paidThisWeek: 0, paidLastWeek: 0, paidThisMonth: 0, paidLastMonth: 0,
+  paidThisQuarter: 0, averageInvoice: 0, avgCollectionDays: null,
+  weeklyRevenue: [], monthlyRevenue: [], topClients: [], invoiceCount: 0,
+};
+
+/** Jobber invoice statuses that mean "money already collected". */
+const PAID_STATUSES = new Set(['PAID', 'paid']);
+/** Statuses that mean "still owed to us". */
+const UNPAID_STATUSES = new Set([
+  'AWAITING_PAYMENT', 'awaiting_payment', 'PAST_DUE', 'past_due',
+  'PARTIAL', 'partial', 'SENT', 'sent',
+]);
+
+function startOfWeek(d: Date): Date {
+  const x = new Date(d);
+  x.setHours(0, 0, 0, 0);
+  x.setDate(x.getDate() - x.getDay()); // Sunday start
+  return x;
+}
+function startOfMonth(d: Date): Date {
+  return new Date(d.getFullYear(), d.getMonth(), 1);
+}
+function daysBetween(a: Date, b: Date): number {
+  return Math.round((a.getTime() - b.getTime()) / 86_400_000);
+}
+
+export async function getJobberMoney(
+  opts: { force?: boolean } = {},
+): Promise<JobberMoney> {
+  if (!isJobberConfigured()) {
+    return { ...EMPTY_MONEY, errorDetail: 'JOBBER env vars missing (CLIENT_ID, CLIENT_SECRET, or REFRESH_TOKEN)' };
+  }
+
+  const cacheKey = 'money';
+  if (!opts.force) {
+    const cached = getCached<JobberMoney>(cacheKey);
+    if (cached) return cached;
+  }
+
+  // Pull a wide window — 200 invoices covers well over a year for a
+  // business at this volume, and lets us build 12-month trends.
+  const res = await jobberQuery<{
+    invoices: {
+      totalCount: number;
+      nodes: Array<{
+        id: string;
+        invoiceNumber?: string | null;
+        invoiceStatus?: string | null;
+        issuedDate?: string | null;
+        dueDate?: string | null;
+        client?: { name?: string | null } | null;
+        amounts?: {
+          total?: number | null;
+          invoiceBalance?: number | null;
+          paymentsTotal?: number | null;
+        } | null;
+      }>;
+    };
+  }>(
+    `query MoneyInvoices {
+      invoices(first: 200) {
+        totalCount
+        nodes {
+          id
+          invoiceNumber
+          invoiceStatus
+          issuedDate
+          dueDate
+          client { name }
+          amounts { total invoiceBalance paymentsTotal }
+        }
+      }
+    }`,
+  );
+
+  if (res?.errors?.length) {
+    const msg = res.errors.map((e) => e.message).join('; ');
+    // Throttled? Serve the last good snapshot rather than zeros.
+    if (/throttled/i.test(msg)) {
+      const stale = responseCache.get(cacheKey)?.data as JobberMoney | undefined;
+      if (stale) {
+        return { ...stale, errorDetail: 'Jobber rate-limited; showing last successful fetch. Wait 30s and refresh.' };
+      }
+    }
+    return { ...EMPTY_MONEY, errorDetail: `invoices: ${msg}` };
+  }
+
+  const nodes = res?.data?.invoices?.nodes ?? [];
+  const now = new Date();
+  const todayStart = new Date(now); todayStart.setHours(0, 0, 0, 0);
+
+  // ---- Normalize ----
+  const invoices: JobberInvoice[] = nodes.map((n) => {
+    const total = Number(n.amounts?.total ?? 0);
+    const balance = Number(n.amounts?.invoiceBalance ?? 0);
+    const paidRaw = n.amounts?.paymentsTotal;
+    // paymentsTotal isn't present on every API version — derive it.
+    const paid = paidRaw != null ? Number(paidRaw) : Math.max(0, total - balance);
+    const due = n.dueDate ? new Date(n.dueDate) : null;
+    return {
+      id: n.id,
+      invoiceNumber: n.invoiceNumber ?? null,
+      clientName: n.client?.name ?? 'Client',
+      status: n.invoiceStatus ?? 'UNKNOWN',
+      issuedDate: n.issuedDate ?? null,
+      dueDate: n.dueDate ?? null,
+      total, balance, paid,
+      daysOverdue: due ? daysBetween(todayStart, due) : null,
+    };
+  });
+
+  const isPaid = (i: JobberInvoice) =>
+    PAID_STATUSES.has(i.status) || (i.total > 0 && i.balance <= 0.005);
+  const isOwed = (i: JobberInvoice) =>
+    !isPaid(i) && (i.balance > 0.005 || UNPAID_STATUSES.has(i.status));
+
+  // ---- Outstanding ----
+  const outstanding = invoices
+    .filter(isOwed)
+    .sort((a, b) => (b.daysOverdue ?? -9999) - (a.daysOverdue ?? -9999));
+  const outstandingTotal = outstanding.reduce((s, i) => s + i.balance, 0);
+  const overdue = outstanding.filter((i) => (i.daysOverdue ?? -1) > 0);
+  const overdueTotal = overdue.reduce((s, i) => s + i.balance, 0);
+
+  // ---- Collected revenue by period ----
+  // Attribute collected money to the invoice's issued date. Jobber
+  // doesn't expose a per-payment date on this query, so issuedDate is
+  // the best available proxy and is stable for trend purposes.
+  const paidInvoices = invoices.filter((i) => i.paid > 0 && i.issuedDate);
+  const sumPaidBetween = (from: Date, to: Date) =>
+    paidInvoices.reduce((s, i) => {
+      const d = new Date(i.issuedDate as string);
+      return d >= from && d < to ? s + i.paid : s;
+    }, 0);
+
+  const thisWeekStart = startOfWeek(now);
+  const lastWeekStart = new Date(thisWeekStart); lastWeekStart.setDate(lastWeekStart.getDate() - 7);
+  const thisMonthStart = startOfMonth(now);
+  const lastMonthStart = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+  const quarterStart = new Date(now.getFullYear(), Math.floor(now.getMonth() / 3) * 3, 1);
+  const nextWeekStart = new Date(thisWeekStart); nextWeekStart.setDate(nextWeekStart.getDate() + 7);
+
+  // ---- 8-week trend ----
+  const weeklyRevenue: RevenueBucket[] = [];
+  for (let w = 7; w >= 0; w--) {
+    const from = new Date(thisWeekStart); from.setDate(from.getDate() - w * 7);
+    const to = new Date(from); to.setDate(to.getDate() + 7);
+    const bucket = paidInvoices.filter((i) => {
+      const d = new Date(i.issuedDate as string);
+      return d >= from && d < to;
+    });
+    weeklyRevenue.push({
+      key: from.toISOString().slice(0, 10),
+      label: from.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+      amount: bucket.reduce((s, i) => s + i.paid, 0),
+      invoiceCount: bucket.length,
+    });
+  }
+
+  // ---- 12-month trend ----
+  const monthlyRevenue: RevenueBucket[] = [];
+  for (let m = 11; m >= 0; m--) {
+    const from = new Date(now.getFullYear(), now.getMonth() - m, 1);
+    const to = new Date(now.getFullYear(), now.getMonth() - m + 1, 1);
+    const bucket = paidInvoices.filter((i) => {
+      const d = new Date(i.issuedDate as string);
+      return d >= from && d < to;
+    });
+    monthlyRevenue.push({
+      key: from.toISOString().slice(0, 7),
+      label: from.toLocaleDateString('en-US', { month: 'short', year: '2-digit' }),
+      amount: bucket.reduce((s, i) => s + i.paid, 0),
+      invoiceCount: bucket.length,
+    });
+  }
+
+  // ---- Top clients by invoiced value ----
+  const byClient = new Map<string, { total: number; invoiceCount: number }>();
+  for (const i of invoices) {
+    if (i.total <= 0) continue;
+    const cur = byClient.get(i.clientName) ?? { total: 0, invoiceCount: 0 };
+    cur.total += i.total; cur.invoiceCount += 1;
+    byClient.set(i.clientName, cur);
+  }
+  const topClients = Array.from(byClient.entries())
+    .map(([name, v]) => ({ name, ...v }))
+    .sort((a, b) => b.total - a.total)
+    .slice(0, 10);
+
+  const withTotals = invoices.filter((i) => i.total > 0);
+  const averageInvoice = withTotals.length
+    ? withTotals.reduce((s, i) => s + i.total, 0) / withTotals.length
+    : 0;
+
+  // ---- Diagnostics (mirrors visitDebug pattern) ----
+  const statusCounts: Record<string, number> = {};
+  for (const i of invoices) statusCounts[i.status] = (statusCounts[i.status] ?? 0) + 1;
+
+  const result: JobberMoney = {
+    outstanding: outstanding.slice(0, 50),
+    outstandingTotal,
+    overdueTotal,
+    overdueCount: overdue.length,
+    paidThisWeek: sumPaidBetween(thisWeekStart, nextWeekStart),
+    paidLastWeek: sumPaidBetween(lastWeekStart, thisWeekStart),
+    paidThisMonth: sumPaidBetween(thisMonthStart, new Date(now.getFullYear(), now.getMonth() + 1, 1)),
+    paidLastMonth: sumPaidBetween(lastMonthStart, thisMonthStart),
+    paidThisQuarter: sumPaidBetween(quarterStart, new Date(now.getFullYear(), now.getMonth() + 1, 1)),
+    averageInvoice,
+    avgCollectionDays: null,
+    weeklyRevenue,
+    monthlyRevenue,
+    topClients,
+    invoiceCount: res?.data?.invoices?.totalCount ?? invoices.length,
+    fieldDebug: {
+      rawNodeCount: nodes.length,
+      sampleKeys: nodes[0] ? Object.keys(nodes[0]) : [],
+      sampleAmountKeys: nodes[0]?.amounts ? Object.keys(nodes[0].amounts) : [],
+      statusCounts,
+    },
+  };
+
+  setCached(cacheKey, result);
+  return result;
+}

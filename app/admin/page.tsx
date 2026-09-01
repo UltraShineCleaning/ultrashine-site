@@ -8,7 +8,8 @@ import SendReviewRequestCard from './_components/SendReviewRequestCard';
 import JobberStatusCard from './_components/JobberStatusCard';
 import AdminShell from './_components/AdminShell';
 import ClientsTab from './_components/ClientsTab';
-import { getJobberClients } from '../_lib/jobberClient';
+import MoneyTab from './_components/MoneyTab';
+import { getJobberClients, getJobberMoney } from '../_lib/jobberClient';
 
 export const metadata: Metadata = {
   title: 'Dashboard · Ultra Shine Cleaning',
@@ -125,10 +126,11 @@ export default async function AdminDashboard({
   // pull truly-live data from Jobber. Same effect if ?refresh=1 is passed.
   const force = !!(searchParams?.t || searchParams?.refresh);
 
-  // Live data from Resend + Jobber clients in parallel
-  const [{ leads, error }, jobberClientsRes] = await Promise.all([
+  // Live data from Resend + Jobber (clients + money) in parallel
+  const [{ leads, error }, jobberClientsRes, moneyRes] = await Promise.all([
     fetchLeads(),
     getJobberClients({ force }),
+    getJobberMoney({ force }),
   ]);
 
   const quoteLeads = leads.filter((l) => l.kind === 'quote');
@@ -407,26 +409,7 @@ export default async function AdminDashboard({
     <ClientsTab clients={jobberClientsRes.clients} error={jobberClientsRes.error} />
   );
 
-  const moneyPanel = (
-    <div className={styles.emptyState} style={{ padding: 36, textAlign: 'left' }}>
-      <h2 style={{ fontFamily: 'var(--font-poppins), sans-serif', fontWeight: 700, fontSize: 22, color: '#111827', marginBottom: 12 }}>
-        Money — coming next
-      </h2>
-      <p style={{ fontSize: 14, color: '#374151', lineHeight: 1.6, marginBottom: 18, maxWidth: 640 }}>
-        Full invoice + payment view pulled straight from Jobber. You&apos;ll see what&apos;s paid, what&apos;s outstanding, who&apos;s late, and your week-over-week revenue trend.
-      </p>
-      <p style={{ fontSize: 13, color: '#6b7280', lineHeight: 1.6, marginBottom: 14 }}>
-        <strong>What&apos;ll be in here:</strong>
-      </p>
-      <ul style={{ fontSize: 13, color: '#6b7280', lineHeight: 1.8, paddingLeft: 20, marginBottom: 22, maxWidth: 640 }}>
-        <li>Outstanding invoices ranked by days overdue</li>
-        <li>Paid this week / month / quarter — with comparison to last period</li>
-        <li>Average invoice size + collection time</li>
-        <li>Per-client lifetime revenue (joins clients with invoices)</li>
-        <li>Pending payment links to send to slow-paying clients in one click</li>
-      </ul>
-    </div>
-  );
+  const moneyPanel = <MoneyTab money={moneyRes} />;
 
   const insightsPanel = (
     <div className={styles.emptyState} style={{ padding: 36, textAlign: 'left' }}>

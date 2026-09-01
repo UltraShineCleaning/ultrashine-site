@@ -85,7 +85,7 @@ const CATEGORIES: FaqCategory[] = [
     questions: [
       {
         q: 'Are your cleaners insured and bonded?',
-        a: "Yes — we carry $2M general liability + workers comp + bonding. Email us and we can send a Certificate of Insurance naming you (or your property management) as additional insured.",
+        a: "Yes — we carry comprehensive general liability coverage, workers' compensation on every cleaner, and we're fully bonded. Email us and we'll send a Certificate of Insurance naming you (or your property management) as additional insured.",
       },
       {
         q: 'Are your cleaners background-checked?',

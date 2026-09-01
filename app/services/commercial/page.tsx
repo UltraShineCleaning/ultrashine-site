@@ -93,7 +93,7 @@ const data: ServiceData = {
     },
     {
       q: 'Do you provide a Certificate of Insurance?',
-      a: "Yes. We carry $2M general liability + workers comp + bonding. We email a COI naming your business + property management as additional insured before our first visit. No charge.",
+      a: "Yes. We carry comprehensive general liability coverage, workers' compensation on every cleaner, and we're fully bonded. We email a Certificate of Insurance naming your business + property management as additional insured before our first visit. No charge.",
     },
     {
       q: 'How are you priced for commercial?',

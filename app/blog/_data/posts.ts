@@ -414,7 +414,7 @@ export const POSTS: BlogPost[] = [
 
       <h2>How we handle it</h2>
 
-      <p>We’re <a href="/about">a registered Florida business</a>, hold $2M general liability + workers’ comp on every cleaner, carry a $25,000 surety bond, and employ all cleaners as <a href="/work-for-us">W2 staff (not 1099)</a>. We can send a Certificate of Insurance within an hour of being asked &mdash; just request one when you reach out for a quote, and we’ll include it with your estimate.</p>
+      <p>We’re <a href="/about">a registered Florida business</a>, carry comprehensive general liability coverage plus workers’ comp on every cleaner, are fully bonded through a licensed surety, and employ all cleaners as <a href="/work-for-us">W2 staff (not 1099)</a>. We can send a Certificate of Insurance within an hour of being asked &mdash; just request one when you reach out for a quote, and we’ll include it with your estimate. We’d rather show you the document than ask you to take our word for it.</p>
 
       <p>This is also why we run background checks on every team member and follow strict no-cross-contamination protocols between rooms across every <a href="/services">service we offer</a>. The whole point of a professional cleaning service is that you don’t have to think about the operational risks &mdash; they’re managed.</p>
 

@@ -29,6 +29,58 @@
  * — that way Tiago can paste me the error and we tweak schema details.
  */
 
+/**
+ * Ultra Shine operates in Florida; Vercel's servers run in UTC. Any date
+ * math done with the raw server clock silently shifts by 4-5 hours, which
+ * after ~8pm Eastern rolls the server into "tomorrow" while the person
+ * reading the dashboard is still on today. That made the Schedule calendar
+ * render the current month empty every evening.
+ *
+ * `businessNow()` returns a Date whose local-time fields (getFullYear,
+ * getMonth, getDate, getHours...) read as America/New_York wall-clock time,
+ * so all the setHours(0,0,0,0) / getDay() logic below behaves the way a
+ * person in Boca Raton would expect.
+ */
+const BUSINESS_TZ = 'America/New_York';
+
+function businessNow(): Date {
+  const parts = new Intl.DateTimeFormat('en-US', {
+    timeZone: BUSINESS_TZ,
+    year: 'numeric', month: '2-digit', day: '2-digit',
+    hour: '2-digit', minute: '2-digit', second: '2-digit',
+    hour12: false,
+  }).formatToParts(new Date());
+  const get = (t: string) => Number(parts.find((p) => p.type === t)?.value ?? 0);
+  // Note: hour can come back as 24 for midnight in some ICU versions.
+  const hour = get('hour') % 24;
+  return new Date(
+    get('year'), get('month') - 1, get('day'),
+    hour, get('minute'), get('second'),
+  );
+}
+
+/** Shape of the paginated scheduledItems (visits) query response. */
+type VisitsQueryData = {
+  scheduledItems: {
+    totalCount?: number;
+    pageInfo?: { hasNextPage?: boolean; endCursor?: string | null } | null;
+    nodes: Array<{
+      id: string;
+      startAt: string | null;
+      endAt?: string | null;
+      title: string | null;
+      isComplete?: boolean | null;
+      __typename?: string;
+      assignedUsers?: { nodes?: Array<{ id?: string; name?: { full?: string | null } | null }> | null } | null;
+      job?: {
+        jobNumber?: number | string;
+        client?: { name?: string | null };
+        property?: { address?: { street1?: string | null; city?: string | null } };
+      } | null;
+    }>;
+  };
+};
+
 const JOBBER_GRAPHQL_URL = 'https://api.getjobber.com/api/graphql';
 const JOBBER_TOKEN_URL = 'https://api.getjobber.com/api/oauth/token';
 
@@ -547,7 +599,14 @@ export async function getJobberMetrics(opts: { force?: boolean } = {}): Promise<
   // Calendar windows in ISO so client-side filtering of fetched nodes
   // can determine which are "today" vs "this week" without trusting
   // Jobber server-side date filters (which vary by schema version).
-  const now = new Date();
+  //
+  // TIMEZONE: Vercel runs in UTC, but the business (and everyone reading
+  // this dashboard) is in Florida. Using the server's raw local day meant
+  // that every evening after 8pm EDT the server had already rolled over to
+  // "tomorrow" in UTC — so the visit window started a day ahead and the
+  // calendar rendered the current month empty. Anchor every date
+  // calculation to America/New_York instead.
+  const now = businessNow();
   const startOfDay = new Date(now);
   startOfDay.setHours(0, 0, 0, 0);
   const endOfDay = new Date(startOfDay);
@@ -575,7 +634,14 @@ export async function getJobberMetrics(opts: { force?: boolean } = {}): Promise<
   // Fix: start the window AT TODAY so Jobber's oldest-first ordering
   // returns the soonest upcoming visits. Also bump first:100 for headroom.
   // Range cap of 1.5 years still applies — 90 days is well under that.
-  const farPast = new Date(startOfDay); // = TODAY, not 30 days back
+  // Window now starts at the FIRST OF THE CURRENT MONTH, not today.
+  // The Schedule tab renders a month-view calendar that opens on the
+  // current month — starting the fetch at "today" meant days 1..N of the
+  // month were never fetched and the calendar looked empty for anyone
+  // checking mid-month. Pagination below (not a bigger `first:`) is what
+  // makes the wider window safe: Jobber returns oldest-first, so without
+  // paging the extra past days would push upcoming visits off the end.
+  const farPast = new Date(startOfDay.getFullYear(), startOfDay.getMonth(), 1);
   const farFuture = new Date(startOfDay);
   farFuture.setDate(farFuture.getDate() + 90);
 
@@ -583,30 +649,10 @@ export async function getJobberMetrics(opts: { force?: boolean } = {}): Promise<
   // schema error told us this directly:
   //   "Field 'completed' doesn't exist on type 'Visit'
   //    (Did you mean 'completedBy', 'completedAt' or 'isComplete'?)"
-  const visitsPromise = jobberQuery<{
-    scheduledItems: {
-      totalCount?: number;
-      nodes: Array<{
-        id: string;
-        startAt: string | null;
-        endAt?: string | null;
-        title: string | null;
-        isComplete?: boolean | null;
-        __typename?: string;
-        assignedUsers?: { nodes?: Array<{ id?: string; name?: { full?: string | null } | null }> | null } | null;
-        job?: {
-          jobNumber?: number | string;
-          client?: { name?: string | null };
-          property?: {
-            address?: { street1?: string | null; city?: string | null };
-          };
-        } | null;
-      }>;
-    };
-  }>(
-    `query UpcomingVisits($start: ISO8601DateTime!, $end: ISO8601DateTime!) {
-      scheduledItems(filter: { occursWithin: { startAt: $start, endAt: $end } }, first: 100) {
+  const visitsQueryText = `query UpcomingVisits($start: ISO8601DateTime!, $end: ISO8601DateTime!, $after: String) {
+      scheduledItems(filter: { occursWithin: { startAt: $start, endAt: $end } }, first: 100, after: $after) {
         totalCount
+        pageInfo { hasNextPage endCursor }
         nodes {
           id
           startAt
@@ -623,7 +669,10 @@ export async function getJobberMetrics(opts: { force?: boolean } = {}): Promise<
           }
         }
       }
-    }`,
+    }`;
+
+  const visitsPromise = jobberQuery<VisitsQueryData>(
+    visitsQueryText,
     { start: farPast.toISOString(), end: farFuture.toISOString() },
   );
 
@@ -656,9 +705,35 @@ export async function getJobberMetrics(opts: { force?: boolean } = {}): Promise<
     }`,
   );
 
-  const [clientsRes, visitsRes, invoicesRes] = await Promise.all([
+  // Page through ALL visits in the window. Jobber returns oldest-first and
+  // caps a page at 100, so a single call would truncate the upcoming visits
+  // now that the window reaches back to the 1st of the month. Cap at 6 pages
+  // (600 visits) as a runaway guard — far more than this business schedules
+  // in a ~4 month window.
+  const visitsRes = await (async () => {
+    const first = await visitsPromise;
+    if (!first?.data?.scheduledItems?.nodes) return first;
+    let cursor = first.data.scheduledItems.pageInfo?.endCursor ?? null;
+    let hasNext = !!first.data.scheduledItems.pageInfo?.hasNextPage;
+    let pages = 1;
+    while (hasNext && cursor && pages < 6) {
+      const next = await jobberQuery<VisitsQueryData>(visitsQueryText, {
+        start: farPast.toISOString(),
+        end: farFuture.toISOString(),
+        after: cursor,
+      });
+      const si = next?.data?.scheduledItems;
+      if (!si?.nodes?.length) break;
+      first.data.scheduledItems.nodes.push(...si.nodes);
+      cursor = si.pageInfo?.endCursor ?? null;
+      hasNext = !!si.pageInfo?.hasNextPage;
+      pages += 1;
+    }
+    return first;
+  })();
+
+  const [clientsRes, invoicesRes] = await Promise.all([
     clientsPromise,
-    visitsPromise,
     invoicesPromise,
   ]);
 

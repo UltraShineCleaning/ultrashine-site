@@ -399,7 +399,7 @@ export const POSTS: BlogPost[] = [
 
       <p>This is the one most people skip, and it is the one that actually protects you. A policy existing is not the same as a policy covering the specific person standing in your kitchen. Ask directly: <strong>"Does your coverage extend to every cleaner who will be in my home, and can you show me that on the certificate?"</strong> A company that can answer it in writing has thought about it. A company that gets vague has not — and you would find out the expensive way.</p>
 
-      ${img('/images/team_action.jpg', 'A real insured + bonded crew on site. Ask for the names of the people who will be in your home.')}
+      ${img('/images/team_van.jpg', 'A uniformed cleaner and a marked vehicle — the visible signs of a registered, insured company. Ask for the names of the people who will be in your home.')}
 
       <h2>Red flags to watch for</h2>
 

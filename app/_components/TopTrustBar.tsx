@@ -20,7 +20,7 @@ import styles from './TopTrustBar.module.css';
 export default function TopTrustBar() {
   const items: { icon: string; text: string }[] = [
     { icon: '✓', text: 'Fully Insured + Bonded' },
-    { icon: '✓', text: 'W2 Employees · Background-Checked' },
+    { icon: '✓', text: 'Insured & Bonded · Background-Checked' },
     { icon: '✓', text: 'EPA-Safe · Pet + Kid Friendly' },
     { icon: '★', text: '5.0 Google · 25+ Verified Reviews' },
     { icon: '✦', text: 'Family-Owned · Since 2018' },

@@ -154,7 +154,7 @@ export default function WorkForUsPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.9, delay: 0.7 }}
           >
-            Real W2 employment. Fair pay. Same routes, same clients —
+            Fair pay. Paid drive time. Same routes, same clients —
             you build relationships, not turnover. Apply below.
           </motion.p>
         </div>
@@ -172,10 +172,10 @@ export default function WorkForUsPage() {
         <div className={styles.whyGrid}>
           <div className={styles.whyCard}>
             <div className={styles.whySpark}>✦</div>
-            <h3 className={styles.whyTitle}>W2 employee</h3>
+            <h3 className={styles.whyTitle}>Covered while you work</h3>
             <p className={styles.whyBody}>
-              Not 1099. Taxes withheld, paystubs, real employment record.
-              Bonded + insured at no cost to you.
+              Bonding and insurance are carried by us, at no cost to you.
+              You are never asked to cover them out of your own pay.
             </p>
           </div>
           <div className={styles.whyCard}>

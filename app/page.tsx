@@ -208,7 +208,7 @@ export default async function HomePage() {
         </h2>
         <div className={styles.whyGrid}>
           <WhyCard title="Eco + Pet-Safe" body="EPA-safe products across the board. Kid and pet friendly. Nothing that damages your finishes — ever." />
-          <WhyCard title="Same Crew, Every Visit" body="W2 employees, never contractors. Two cleaners per visit — paired, trained to the same boutique standard, and in uniform every time." />
+          <WhyCard title="Same Crew, Every Visit" body="Two cleaners per visit — the same pair whenever scheduling allows, trained to the same boutique standard, background-checked, and in uniform every time." />
           <WhyCard title="Satisfaction Guaranteed" body="100% guarantee. If you're not happy, we come back free until you are." />
           <WhyCard title="Flexible Scheduling" body="Weekly, bi-weekly, monthly, or one-time. Reschedule with one text." />
         </div>

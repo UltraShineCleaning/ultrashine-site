@@ -4,7 +4,7 @@ import ServicePage, { type ServiceData } from '../_components/ServicePage';
 export const metadata: Metadata = {
   title: 'Commercial Office Cleaning · Ultra Shine Cleaning',
   description:
-    'Commercial + office cleaning across Boca Raton + South Florida. After-hours service, custom schedules, COI on file, background-checked W2 team. Custom quote in 1 hour.',
+    'Commercial + office cleaning across Boca Raton + South Florida. After-hours service, custom schedules, COI on file, background-checked team. Custom quote in 1 hour.',
 };
 
 const data: ServiceData = {

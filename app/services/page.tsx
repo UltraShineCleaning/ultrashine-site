@@ -178,7 +178,7 @@ export default function ServicesIndexPage() {
 
           <p className={styles.heroSub}>
             Every home is different. Every clean is custom. But the bar never moves —
-            background-checked W2 crews, EPA-safe products, and a 100% satisfaction
+            background-checked crews, EPA-safe products, and a 100% satisfaction
             guarantee on every single visit.
           </p>
         </div>
@@ -303,7 +303,7 @@ export default function ServicesIndexPage() {
           </div>
 
           <p className={styles.compareNote}>
-            All services include background-checked W2 cleaners, EPA-safe products,
+            All services include background-checked cleaners, EPA-safe products,
             and our 100% satisfaction guarantee.
             <br />
             <br />

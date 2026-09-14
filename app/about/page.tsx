@@ -151,7 +151,7 @@ export default function AboutPage() {
             <div className={styles.timelineTitle}>Today</div>
             <p className={styles.timelineBody}>
               Thirteen cities across South Florida. A trained, background-checked
-              W2 team. A 5.0-star Google rating. And the same standard from
+              team. A 5.0-star Google rating. And the same standard from
               day one — because we still hand the keys back personally.
             </p>
           </div>
@@ -190,12 +190,13 @@ export default function AboutPage() {
 
           <div className={styles.valueCard}>
             <div className={styles.valueSpark}>✦</div>
-            <h3 className={styles.valueTitle}>W2 team, not contractors</h3>
+            <h3 className={styles.valueTitle}>Insured, bonded, checked</h3>
             <p className={styles.valueBody}>
-              Our team are W2 employees, fully bonded + insured + background-
-              checked. They get fair pay, real benefits, and proper training.
-              Better-treated cleaners do better work — and stay long enough
-              to actually know your home.
+              Comprehensive general liability coverage, full bonding through a
+              licensed surety, and a background check on every cleaner before
+              they hold a key. A Certificate of Insurance is available on
+              request — we'd rather show you the document than ask you to take
+              our word for it.
             </p>
           </div>
 

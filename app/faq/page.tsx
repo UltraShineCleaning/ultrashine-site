@@ -92,8 +92,8 @@ const CATEGORIES: FaqCategory[] = [
         a: "Every team member, before they ever step into a client's home. We run criminal background checks + verify employment history. We've never had a complaint about trust or theft.",
       },
       {
-        q: 'Are your cleaners W2 employees or contractors?',
-        a: "W2 employees — not 1099 contractors. We pay them fairly, withhold taxes, provide benefits, and cover their bonding + insurance. Better-treated cleaners stay longer + do better work. It's the same reason we have low turnover.",
+        q: 'Who exactly will be in my home?',
+        a: "A dedicated pair — and the same two whenever scheduling allows, so they learn your layout and your preferences rather than starting fresh every visit. If your regular pair is ever out, you'll know who's coming before they arrive. Everyone is background-checked before they ever hold a key, and arrives in uniform.",
       },
       {
         q: 'Will the same person clean my home every time?',

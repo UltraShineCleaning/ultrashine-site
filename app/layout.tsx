@@ -108,7 +108,7 @@ const SITE_SCHEMA = [
     name: 'Ultra Shine Cleaning',
     alternateName: 'Ultra Shine Cleaning FL',
     description:
-      'Boutique house and commercial cleaning across Palm Beach and Broward County. Background-checked W2 team, fully insured + bonded, family-owned since 2018. Every job staffed by a pair of cleaners.',
+      'Boutique house and commercial cleaning across Palm Beach and Broward County. Background-checked team, fully insured + bonded, family-owned since 2018. Every job staffed by a pair of cleaners.',
     url: 'https://ultrashinecleaningfl.com',
     telephone: '+1-561-583-6694',
     email: 'contact@ultrashinecleaningfl.com',
@@ -284,7 +284,7 @@ export const metadata: Metadata = {
     template: '%s · Ultra Shine Cleaning',
   },
   description:
-    'Professional house cleaning in Boca Raton, FL and across Palm Beach + Broward County. Background-checked W2 team, fully insured + bonded. ★ 5.0 verified reviews. Free quote in 1 hour.',
+    'Professional house cleaning in Boca Raton, FL and across Palm Beach + Broward County. Background-checked team, fully insured + bonded. ★ 5.0 verified reviews. Free quote in 1 hour.',
   openGraph: {
     title: 'Ultra Shine Cleaning · South Florida',
     description:

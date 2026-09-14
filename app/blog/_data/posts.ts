@@ -395,9 +395,9 @@ export const POSTS: BlogPost[] = [
 
       <p>"Bonded" means a third-party insurer guarantees payment to you (the customer) if an employee steals from you. Ask which surety company issued the bond. You can call that surety company directly to verify the bond is active. Real bonds are usually $5,000&ndash;$25,000 in coverage.</p>
 
-      <h3>Step 4: Confirm employees, not 1099 contractors</h3>
+      <h3>Step 4: Confirm the coverage reaches the person in your home</h3>
 
-      <p>This is the one most people skip. If a cleaning company classifies its cleaners as 1099 contractors instead of W2 employees, the workers’ comp + general liability often <em>doesn’t cover</em> the cleaner working in your home &mdash; because they’re technically a separate business. Ask directly: "Are your cleaners W2 employees or 1099 contractors?" The answer matters legally.</p>
+      <p>This is the one most people skip, and it is the one that actually protects you. A policy existing is not the same as a policy covering the specific person standing in your kitchen. Ask directly: <strong>"Does your coverage extend to every cleaner who will be in my home, and can you show me that on the certificate?"</strong> A company that can answer it in writing has thought about it. A company that gets vague has not — and you would find out the expensive way.</p>
 
       ${img('/images/team_action.jpg', 'A real insured + bonded crew on site. Ask for the names of the people who will be in your home.')}
 
@@ -405,16 +405,16 @@ export const POSTS: BlogPost[] = [
 
       <ul>
         <li>Won’t send a Certificate of Insurance, or sends one with you not named as certificate holder</li>
-        <li>Uses 1099 contractors (workers’ comp + liability coverage gaps)</li>
+        <li>Can’t confirm in writing that coverage extends to every cleaner entering your home</li>
         <li>No business registration found on Sunbiz</li>
         <li>Pays cash only, no invoices</li>
-        <li>Different cleaners every visit with no team training (signals high turnover + likely no W2 system)</li>
+        <li>Different cleaners every visit with no team training (signals high turnover)</li>
         <li>Pressure to book before you’ve verified anything</li>
       </ul>
 
       <h2>How we handle it</h2>
 
-      <p>We’re <a href="/about">a registered Florida business</a>, carry comprehensive general liability coverage plus workers’ comp on every cleaner, are fully bonded through a licensed surety, and employ all cleaners as <a href="/work-for-us">W2 staff (not 1099)</a>. We can send a Certificate of Insurance within an hour of being asked &mdash; just request one when you reach out for a quote, and we’ll include it with your estimate. We’d rather show you the document than ask you to take our word for it.</p>
+      <p>We’re <a href="/about">a registered Florida business</a>, carry comprehensive general liability coverage, are fully bonded through a licensed surety, and background-check every cleaner before they ever hold a key. We can send a Certificate of Insurance within an hour of being asked &mdash; naming you or your property manager directly if that’s useful &mdash; just request one when you reach out for a quote and we’ll include it with your estimate. We’d rather show you the document than ask you to take our word for it.</p>
 
       <p>This is also why we run background checks on every team member and follow strict no-cross-contamination protocols between rooms across every <a href="/services">service we offer</a>. The whole point of a professional cleaning service is that you don’t have to think about the operational risks &mdash; they’re managed.</p>
 

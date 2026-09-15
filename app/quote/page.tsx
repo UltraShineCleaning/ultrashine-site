@@ -42,6 +42,7 @@ export default function QuotePage() {
   const [bedrooms, setBedrooms] = useState(3);
   const [bathrooms, setBathrooms] = useState(2);
   const [sqft, setSqft] = useState(2400);
+  const [street, setStreet] = useState('');
   const [city, setCity] = useState('Boca Raton');
   const [zip, setZip] = useState('33428');
   const [addOns, setAddOns] = useState<Set<AddOnKey>>(() => new Set<AddOnKey>(['oven']));
@@ -109,7 +110,7 @@ export default function QuotePage() {
   }, [bedrooms, bathrooms, sqft, first, phone]);
 
   const canSubmit =
-    !!first.trim() && !!phone.trim() && !!city.trim() && !submitting;
+    !!first.trim() && !!phone.trim() && !!street.trim() && !!city.trim() && !submitting;
 
   /* ----- Submit ----- */
   async function onSubmit(e: React.FormEvent) {
@@ -125,6 +126,7 @@ export default function QuotePage() {
         bedrooms,
         bathrooms,
         sqft,
+        street,
         city,
         zip,
         addOns: Array.from(addOns).map((k) => ADD_ONS.find((a) => a.key === k)?.name),
@@ -510,6 +512,17 @@ export default function QuotePage() {
                     <span className={styles.title}>Service Area</span>
                   </div>
                   <span className={styles.hint}>Palm Beach + Broward</span>
+                </div>
+                <div className={styles.inputRow}>
+                  <span className={styles.inputLabel}>Street Address</span>
+                  <input
+                    type="text"
+                    autoComplete="street-address"
+                    className={`${styles.input} ${street ? styles.inputHasValue : ''}`}
+                    value={street}
+                    onChange={(e) => setStreet(e.target.value)}
+                    placeholder="1234 Mizner Blvd, Apt 5B"
+                  />
                 </div>
                 <div className={`${styles.inputRow} ${styles.inputRowSplit}`}>
                   <div>

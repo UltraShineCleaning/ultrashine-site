@@ -30,6 +30,7 @@ type QuotePayload = {
   bedrooms?: number;
   bathrooms?: number;
   sqft?: number;
+  street?: string;
   city?: string;
   zip?: string;
   addOns?: string[];
@@ -182,7 +183,7 @@ function renderHtml(p: QuotePayload): string {
         <strong>${p.bedrooms ?? '—'}</strong> bed &nbsp;·&nbsp;
         <strong>${p.bathrooms ?? '—'}</strong> bath &nbsp;·&nbsp;
         <strong>${p.sqft?.toLocaleString() ?? '—'}</strong> sq ft<br/>
-        ${p.city || '—'}${p.zip ? `, FL ${p.zip}` : ''}
+        ${p.street ? `<a href="https://maps.google.com/?q=${encodeURIComponent([p.street, p.city, p.zip ? `FL ${p.zip}` : ''].filter(Boolean).join(', '))}" style="color:#002C98;font-weight:600;text-decoration:none;border-bottom:1px solid rgba(28,97,240,0.35);">${p.street}</a><br/>` : ''}${p.city || '—'}${p.zip ? `, FL ${p.zip}` : ''}
       </td></tr>
 
       <!-- NOTES -->
@@ -233,6 +234,7 @@ function renderText(p: QuotePayload): string {
     `  Subtotal: ${addOnTotal}`,
     '',
     `Home:      ${p.bedrooms ?? '—'} BR / ${p.bathrooms ?? '—'} BA / ${p.sqft?.toLocaleString() ?? '—'} sqft`,
+    `Address:   ${p.street || '—'}`,
     `Location:  ${p.city || '—'}${p.zip ? `, FL ${p.zip}` : ''}`,
     '',
     `Notes:     ${p.notes?.trim() || '—'}`,

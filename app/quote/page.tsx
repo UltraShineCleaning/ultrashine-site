@@ -666,7 +666,7 @@ export default function QuotePage() {
                     <option value="Facebook">Facebook</option>
                     <option value="Nextdoor">Nextdoor</option>
                     <option value="Referral / Friend">Referral from a friend</option>
-                    <option value="HomeAdvisor / Angi">HomeAdvisor / Angi</option>
+                    <option value="Building / Property Manager">My building or property manager</option>
                     <option value="Drove past truck / sign">Drove past truck / sign</option>
                     <option value="Other">Other</option>
                   </select>

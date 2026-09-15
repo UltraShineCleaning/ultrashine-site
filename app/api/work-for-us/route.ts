@@ -8,7 +8,12 @@ import { Resend } from 'resend';
  */
 
 const TO_EMAIL = 'contact@ultrashinecleaningfl.com';
-const FROM_EMAIL = 'Ultra Shine Hiring <onboarding@resend.dev>';
+// Sender address. Set QUOTE_FROM_EMAIL in Vercel once the domain is verified
+// in Resend — e.g. "Ultra Shine Hiring <quotes@ultrashinecleaningfl.com>".
+// Until then this falls back to Resend's shared sandbox domain, which delivers
+// but carries the spam reputation of every other developer testing on it.
+const FROM_EMAIL =
+  process.env.QUOTE_FROM_EMAIL?.trim() || 'Ultra Shine Hiring <onboarding@resend.dev>';
 
 type ApplicationPayload = {
   contact?: {

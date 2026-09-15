@@ -12,7 +12,12 @@ import { Resend } from 'resend';
 const TO_EMAIL = 'contact@ultrashinecleaningfl.com';
 // Switch to 'Ultra Shine Quotes <quotes@ultrashinecleaningfl.com>' once the
 // domain is verified at resend.com.
-const FROM_EMAIL = 'Ultra Shine Quote Bot <onboarding@resend.dev>';
+// Sender address. Set QUOTE_FROM_EMAIL in Vercel once the domain is verified
+// in Resend — e.g. "Ultra Shine Quote Bot <quotes@ultrashinecleaningfl.com>".
+// Until then this falls back to Resend's shared sandbox domain, which delivers
+// but carries the spam reputation of every other developer testing on it.
+const FROM_EMAIL =
+  process.env.QUOTE_FROM_EMAIL?.trim() || 'Ultra Shine Quote Bot <onboarding@resend.dev>';
 
 // Keep this in sync with /quote ADD_ONS labels — used for the email totals
 const ADDON_PRICES: Record<string, { display: string; lowEstimate: number; highEstimate: number }> = {

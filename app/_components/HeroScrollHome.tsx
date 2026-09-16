@@ -222,15 +222,12 @@ export default function HeroScrollHome() {
     // loop and the 50 MB savings on every desktop visit is huge for LCP
     // and Vercel bandwidth. No source swap needed.
 
-    // Mobile / reduced-motion: don't scroll-jack. Let the video autoplay
-    // as a passive background loop and show the first scene's copy.
-    if (isMobile || reducedMotion) {
-      video.loop = true;
-      video.muted = true;
-      // Best-effort autoplay (muted+playsInline already set as attrs)
-      video.play().catch(() => { /* user-gesture required on some browsers */ });
-      return;
-    }
+    // Mobile now has its own hero — HeroScrollMobile, a canvas flipbook
+    // that actually scrubs on touch. This component is display:none below
+    // 1025px, so bail before touching the video at all. Previously it
+    // autoplayed a silent loop here, which meant every phone visitor
+    // streamed a 15 MB file to watch a background they couldn't control.
+    if (isMobile || reducedMotion) return;
 
     // DESKTOP ONLY: upgrade to full buffering. The markup ships
     // preload="metadata" so MOBILE (which never scrubs) stays light on
@@ -364,31 +361,13 @@ export default function HeroScrollHome() {
         // Combined with the +faststart MP4 flag (set during encode), the
         // video starts playing within ~1 second instead of waiting for
         // a full download.
-        preload="metadata"
+        // "none", not "metadata": on a phone this component is
+        // display:none and its effect bails, so nothing should be
+        // fetched at all. The desktop effect raises this to "auto".
+        preload="none"
       />
       <div className={styles.overlay} />
 
-      {/* MOBILE-ONLY copy — on mobile the video auto-loops through all
-          five rooms with no scroll-jacking, so room-specific text like
-          "It starts in the kitchen" doesn't make sense (it would stay
-          on screen while the video shows the bathroom, etc.). Instead
-          we lock in one brand-level message + a CTA. Hidden on desktop
-          via .mobileCopy CSS. */}
-      <div className={`${styles.content} ${styles.mobileCopy}`}>
-        <p className={styles.eyebrow}>HOUSE CLEANING · BOCA RATON + SOUTH FLORIDA</p>
-        <h1 className={styles.headline}>
-          A home that <em>shines</em>. Without lifting a finger.
-        </h1>
-        <p className={styles.body}>
-          Boutique house cleaning across 13 South Florida cities — kitchens,
-          living rooms, bathrooms, and every space in between. The full
-          standard, every visit.
-        </p>
-        <div className={styles.ctaRow}>
-          <Link href="/quote" className="btn btn-coral">Request Your Free Quote</Link>
-          <a href="#services" className="btn btn-secondary">See What&apos;s Included</a>
-        </div>
-      </div>
 
       {/* DESKTOP per-scene text overlays. Each scene splits into TWO
           absolutely-positioned blocks (headline + body) anchored to

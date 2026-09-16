@@ -3,6 +3,7 @@ import Link from 'next/link';
 import styles from './page.module.css';
 import FaqSection from './_components/FaqSection';
 import HeroScrollHome from './_components/HeroScrollHome';
+import HeroScrollMobile from './_components/HeroScrollMobile';
 import ServiceAreaMap from './_components/ServiceAreaMap';
 import MotionSection, { MotionItem } from './_components/MotionSection';
 import TiltCard from './_components/TiltCard';
@@ -94,6 +95,7 @@ export default async function HomePage() {
 
       {/* ============ HERO (cinematic 4-scene scroll-through) ============ */}
       <HeroScrollHome />
+      <HeroScrollMobile />
 
       {/* ============ TRUST STRIP ============ */}
       <MotionSection className={styles.trustStrip}>

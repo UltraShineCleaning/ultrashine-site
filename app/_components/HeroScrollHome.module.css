@@ -7,6 +7,13 @@
    Mobile: pin is skipped, video autoplays muted-loop as background.
    ========================================================== */
 
+/* Phones render HeroScrollMobile instead. See the matching note there. */
+@media (max-width: 1024px) {
+  .container {
+    display: none;
+  }
+}
+
 .container {
   position: relative;
   /* JUST 100VH — GSAP ScrollTrigger handles the 400% pin scroll
@@ -186,12 +193,6 @@
   justify-content: flex-end;
 }
 
-/* Mobile-only copy block (one brand-level message + CTA, shown only
-   on mobile where there's no scroll-jacking). Hidden on desktop. */
-.mobileCopy {
-  display: none;
-}
-
 .eyebrow {
   font-family: var(--font-outfit), sans-serif;
   /* Bumped 12 → 14.5px and weight 400 → 500. At 12px with 0.42em tracking
@@ -362,40 +363,15 @@
   50% { transform: translateY(8px); opacity: 1; }
 }
 
-/* ===== MOBILE FALLBACK =====
-   On mobile (≤1024px), the GSAP useEffect bails out (no scroll-scrub).
-   The video autoplays muted on a loop as a passive background and the
-   DESKTOP per-scene copy blocks are hidden — only the dedicated
-   .mobileCopy block (brand-level message + CTA) shows.
-   Without this swap, the user would see room-specific text like
-   "It starts in the kitchen" pinned on screen while the video loops
-   through the bathroom + bedroom. */
-@media (max-width: 1024px) {
-  .container {
-    height: 100vh;
-    min-height: 600px;
-  }
-  /* Hide every desktop scene block on mobile. */
-  .desktopCopy { display: none !important; }
-  /* Show the mobile-only block, with mobile-appropriate padding. */
-  .mobileCopy {
-    display: flex;
-    padding: 0 32px 56px;
-    opacity: 1 !important;
-    visibility: visible !important;
-  }
-  .headline { font-size: 56px; }
-  .body { font-size: 18px; }
-  .skipBtn { display: none; }
-  .progress { display: none; }
-  .scrollCue { display: none; }
-}
-@media (max-width: 640px) {
-  .content { padding: 0 22px 44px; }
-  .headline { font-size: 38px; line-height: 1; margin-bottom: 18px; }
-  .body { font-size: 16px; margin-bottom: 24px; }
-  .eyebrow { font-size: 10px; letter-spacing: 0.3em; margin-bottom: 18px; }
-  .eyebrow::before { width: 24px; }
-  .scrollCue { left: 22px; bottom: 22px; }
-  .ctaRow { gap: 10px; }
-}
+/* ===== MOBILE =====
+   Nothing here any more. This component is `display: none` below 1025px
+   (see the rule at the top of the file) and phones render
+   HeroScrollMobile instead — a canvas flipbook that actually scrubs on
+   touch, at 3.7 MB against this hero's 15 MB video.
+
+   What used to live here was a fallback: the pin was skipped, the video
+   autoplayed on a silent loop, the five per-scene copy blocks were
+   force-hidden and a single `.mobileCopy` block was force-shown. All of
+   it is deleted rather than left commented out — dead CSS that still
+   reads as live is how the next person spends an hour wondering why
+   their change to `.mobileCopy` does nothing. */

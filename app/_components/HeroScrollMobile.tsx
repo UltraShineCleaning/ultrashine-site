@@ -261,21 +261,49 @@ export default function HeroScrollMobile() {
       });
     }, container);
 
-    // Rotation and the iOS URL bar collapsing both change innerHeight.
+    // Two very different things fire `resize` on a phone, and they need
+    // opposite treatment:
+    //
+    //   1. The URL bar sliding away as you scroll. Height changes by
+    //      ~60–90px, MID-SCROLL, and it happens constantly. Calling
+    //      ScrollTrigger.refresh() here recalculates every trigger on the
+    //      page while the user's finger is still moving — that is a visible
+    //      jump, and it would fire on almost every downward swipe.
+    //   2. An actual rotation. Height changes enormously and the pin
+    //      genuinely has to be rebuilt.
+    //
+    // So: always resize + redraw the canvas (cheap, and it is what keeps
+    // the picture filling the screen as the chrome collapses), but only
+    // refresh ScrollTrigger when the change is too big to be the URL bar.
+    let lastHeight = window.innerHeight;
+    const CHROME_TOGGLE_MAX = 160; // generous — tallest mobile chrome is ~140
+
     const onResize = () => {
+      const h = window.innerHeight;
+      const delta = Math.abs(h - lastHeight);
+      lastHeight = h;
+
+      sizeCanvas();
+      const i = nearestLoaded(Math.max(currentFrame.current, 0));
+      if (i >= 0) draw(i);
+
+      if (delta > CHROME_TOGGLE_MAX) ScrollTrigger.refresh();
+    };
+    const onOrientation = () => {
+      lastHeight = window.innerHeight;
       sizeCanvas();
       const i = nearestLoaded(Math.max(currentFrame.current, 0));
       if (i >= 0) draw(i);
       ScrollTrigger.refresh();
     };
     window.addEventListener('resize', onResize);
-    window.addEventListener('orientationchange', onResize);
+    window.addEventListener('orientationchange', onOrientation);
 
     return () => {
       cancelled = true;
       window.clearTimeout(rest);
       window.removeEventListener('resize', onResize);
-      window.removeEventListener('orientationchange', onResize);
+      window.removeEventListener('orientationchange', onOrientation);
       gctx.revert();
     };
   }, []);

@@ -19,12 +19,19 @@
 
 .container {
   position: relative;
-  /* 100svh, not 100vh. On iOS `vh` is locked to the URL-bar-collapsed
-     height, so a 100vh hero is taller than the visible screen on first
-     paint and the bottom of the composition — the caption panel — sits
-     under the browser chrome. `svh` is the SMALL viewport height, which
-     is the one that is always fully visible. */
-  height: 100svh;
+  /* 🔴 This was `100svh` and that is what produced the white strip along
+     the bottom of the hero once the URL bar slid away.
+     `svh` is the SMALL viewport — the height you get while the browser
+     chrome is SHOWING. The moment the chrome hides, the real viewport
+     grows to the LARGE height and a hero sized to `svh` is now shorter
+     than the screen. The page background shows through underneath it.
+     `dvh` is the DYNAMIC height: it tracks the viewport as the chrome
+     comes and goes, so the hero fills the screen in both states. The
+     usual objection to `dvh` is reflow thrash during the transition,
+     which does not apply here — everything inside is absolutely
+     positioned, so nothing re-flows, it just resizes. */
+  height: 100vh; /* fallback for anything without dvh */
+  height: 100dvh;
   overflow: hidden;
   background: var(--navy-deep);
 }
@@ -75,11 +82,15 @@
    --------------------------------------------------------------------- */
 .copy {
   position: absolute;
-  /* env() keeps the block clear of the notch and the home indicator. */
-  top: calc(84px + env(safe-area-inset-top));
-  bottom: calc(28px + env(safe-area-inset-bottom));
-  left: 22px;
-  right: 22px;
+  /* 84px was not enough. The site nav is ~74px tall and the Skip Intro
+     pill sits inside that band, so the eyebrow was landing directly
+     under the logo with the headline crowding the GET QUOTE button.
+     Clearing the whole nav plus a real gap under it. */
+  top: calc(118px + env(safe-area-inset-top));
+  /* Room for the scroll cue, which shares this bottom edge. */
+  bottom: calc(46px + env(safe-area-inset-bottom));
+  left: 20px;
+  right: 20px;
   z-index: 2;
   display: flex;
   flex-direction: column;
@@ -90,11 +101,16 @@
 .eyebrow {
   font-family: var(--font-outfit), sans-serif;
   font-weight: 500;
-  font-size: 11px;
-  letter-spacing: 0.22em;
+  font-size: 10.5px;
+  /* Tracking pulled in from 0.22em. On a 352px-wide column the long
+     eyebrows ("MARBLE · GROUT · FIXTURES") were wrapping to two lines,
+     which pushed every headline down by a different amount and is why
+     the five scenes didn't line up with each other. */
+  letter-spacing: 0.16em;
   text-transform: uppercase;
-  opacity: 0.88;
-  margin-bottom: 12px;
+  opacity: 0.9;
+  margin-bottom: 10px;
+  white-space: nowrap;
   text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
 }
 
@@ -150,9 +166,13 @@
   text-align: center;
 }
 
+/* Moved out of the nav band entirely — it was overlapping the hamburger
+   and the GET QUOTE button, which is the collision in the recording.
+   It now sits just below the nav, right-aligned to the same 20px gutter
+   as the copy so the two edges agree. */
 .skipBtn {
   position: absolute;
-  top: calc(20px + env(safe-area-inset-top));
+  top: calc(84px + env(safe-area-inset-top));
   right: 20px;
   z-index: 3;
   font-family: var(--font-outfit), sans-serif;
@@ -172,8 +192,8 @@
 
 .cue {
   position: absolute;
-  left: 22px;
-  bottom: calc(14px + env(safe-area-inset-bottom));
+  left: 20px;
+  bottom: calc(16px + env(safe-area-inset-bottom));
   z-index: 3;
   display: flex;
   align-items: center;

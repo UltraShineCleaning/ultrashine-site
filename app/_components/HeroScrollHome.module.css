@@ -125,8 +125,49 @@
 
 /* Body slot — body text + optional CTA row. CTAs respect the slot's
    text-align via justify-content (they're flex). */
+/* ---------------------------------------------------------------
+   FROSTED CAPTION PANEL
+   The side captions ("It starts in the kitchen — marble degreased…")
+   sat directly on the photography. Over a bright marble island or a
+   sunlit window they washed out, and a drop-shadow alone couldn't
+   rescue them without looking heavy.
+
+   A soft blurred panel fixes it properly: the text gets a consistent
+   dark backing whatever frame is behind it, and the blur keeps the
+   room visible through it so the layer still feels part of the shot
+   rather than a box pasted on top.
+
+   PERFORMANCE — this is over a scrubbing video, the single most
+   expensive place to put a backdrop-filter, so:
+     · Only ONE panel is ever composited. GSAP's autoAlpha sets
+       visibility:hidden at 0, which takes the other four out of the
+       render path entirely.
+     · Blur is kept at 14px. Past ~20px the GPU cost climbs sharply
+       for a difference nobody can see.
+     · No will-change here — the panel doesn't move relative to the
+       viewport while pinned, so promoting it would cost memory and
+       buy nothing.
+   --------------------------------------------------------------- */
 .bodySlotEl {
   gap: 24px;
+  padding: 26px 30px 28px;
+  border-radius: 22px;
+  background: rgba(9, 20, 40, 0.34);
+  backdrop-filter: blur(14px) saturate(115%);
+  -webkit-backdrop-filter: blur(14px) saturate(115%);
+  border: 1px solid rgba(255, 255, 255, 0.11);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.28);
+  /* The panel now carries the contrast, so the heavy text-shadow
+     inherited from .desktopCopy can relax to a soft edge. */
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.35);
+}
+
+/* Safari < 18 and Firefox with backdrop-filter disabled fall back to a
+   flatter, more opaque panel so the text is never left unreadable. */
+@supports not (backdrop-filter: blur(4px)) {
+  .bodySlotEl {
+    background: rgba(9, 20, 40, 0.68);
+  }
 }
 .bodySlotEl .ctaRow {
   margin-top: 4px;

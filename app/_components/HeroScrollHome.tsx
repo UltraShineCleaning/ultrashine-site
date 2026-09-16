@@ -102,6 +102,15 @@ type SceneCopy = {
 // Headlines use explicit <br> for line breaks so they never word-wrap
 // awkwardly. Rotation has been removed across the board because at
 // our font sizes it hurt readability more than it added depth.
+/**
+ * Exact duration of /videos/walkthrough.mp4, measured with ffprobe.
+ * We ship this file ourselves, so its length is a known constant — which
+ * lets us build the ScrollTrigger on first paint instead of waiting for
+ * the browser to report `video.duration`. See the note at the pin below.
+ * If the video is ever re-encoded, re-measure and update this number.
+ */
+const FALLBACK_DURATION = 26.267;
+
 const SCENES: SceneCopy[] = [
   {
     // SCENE 1 — Kitchen. Camera centered on marble island with vanishing
@@ -223,12 +232,41 @@ export default function HeroScrollHome() {
       return;
     }
 
+    // DESKTOP ONLY: upgrade to full buffering. The markup ships
+    // preload="metadata" so MOBILE (which never scrubs) stays light on
+    // cellular. But on desktop the scroll-scrub seeks the playhead
+    // constantly, and seeking into an UNBUFFERED range stalls the
+    // decoder — the frame freezes while the text overlays keep
+    // advancing. Buffering the whole 15 MB up front is what makes the
+    // scrub feel solid from the very first wheel tick.
+    video.preload = 'auto';
+    video.load();
+
     // gsap.context scopes selectors + makes cleanup one line via revert()
     const ctx = gsap.context(() => {
-      // Wait for video metadata so duration is known
-      const onReady = () => {
-        const duration = video.duration || 26;
+      // 🔴 DO NOT defer this behind `loadedmetadata`.
+      //
+      // It used to be, and that was the "hero glitches on landing" bug:
+      // with preload="metadata" on a 15 MB file, metadata can take well
+      // over a second. If the visitor scrolled inside that window there
+      // was NO PIN YET, so the page scrolled straight past the hero —
+      // and then metadata arrived, the pin was created, ScrollTrigger
+      // recalculated every offset on the page, and everything JUMPED.
+      //
+      // The duration is a fixed property of a file we ship ourselves, so
+      // we seed it from a constant and correct it if the real value ever
+      // differs. The pin now exists on first paint and there is no race.
+      let duration = FALLBACK_DURATION;
 
+      const syncDuration = () => {
+        if (!isNaN(video.duration) && video.duration > 0) {
+          duration = video.duration;
+        }
+      };
+      if (video.readyState >= 1) syncDuration();
+      else video.addEventListener('loadedmetadata', syncDuration, { once: true });
+
+      {
         // Initial state for text overlays — first scene visible, rest hidden
         gsap.set('.us-copy', { autoAlpha: 0 });
         gsap.set('.us-copy-0', { autoAlpha: 1 });
@@ -253,7 +291,21 @@ export default function HeroScrollHome() {
             // Drive the video playhead from scroll progress
             const t = self.progress * duration;
             if (Math.abs(video.currentTime - t) > 1 / 60) {
-              video.currentTime = t;
+              // Only seek where the browser actually has data. Assigning
+              // currentTime into an unbuffered range queues a network
+              // fetch and blocks the decoder, which is what produced
+              // stuttering during the first seconds on a cold load.
+              // Skipping the write leaves the last good frame on screen —
+              // far less noticeable than a freeze, and it self-corrects
+              // the instant the buffer catches up.
+              let seekable = false;
+              for (let b = 0; b < video.buffered.length; b++) {
+                if (t >= video.buffered.start(b) && t <= video.buffered.end(b)) {
+                  seekable = true;
+                  break;
+                }
+              }
+              if (seekable) video.currentTime = t;
             }
 
             // Crossfade text overlays + fill progress dots based on progress
@@ -283,12 +335,6 @@ export default function HeroScrollHome() {
             gsap.set('.us-scroll-cue', { opacity: cueAlpha });
           },
         });
-      };
-
-      if (video.readyState >= 1 && !isNaN(video.duration)) {
-        onReady();
-      } else {
-        video.addEventListener('loadedmetadata', onReady, { once: true });
       }
     }, container);
 
@@ -304,7 +350,11 @@ export default function HeroScrollHome() {
         // Use the video's own frame 0 as the poster — this way the
         // pre-load image and the first decoded frame are pixel-identical,
         // so visitors don't see a "swap" when the video starts.
-        poster="/videos/walkthrough_poster.jpg"
+        // 597 KB JPG → 116 KB WebP, and re-sized 3840×2136 → 1920×1068 to
+        // MATCH the video exactly. The old poster was 4K over a 1080p video,
+        // so the hero visibly softened the moment the first frame decoded —
+        // the opposite of the pixel-identical handoff this was meant to be.
+        poster="/videos/walkthrough_poster.webp"
         muted
         playsInline
         // preload="metadata" only fetches the moov atom + dimensions

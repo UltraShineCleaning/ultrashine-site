@@ -8,11 +8,12 @@ type Props = {
   href: string;
   image: string;
   label: string;
-  description: string;
+  /** Short scannable claims — rendered as a minimal list, not a sentence. */
+  points: string[];
   wide?: boolean;
 };
 
-export default function TiltCard({ href, image, label, description, wide }: Props) {
+export default function TiltCard({ href, image, label, points, wide }: Props) {
   const ref = useRef<HTMLAnchorElement>(null);
   const reducedMotion = useReducedMotion();
 
@@ -28,8 +29,13 @@ export default function TiltCard({ href, image, label, description, wide }: Prop
   // Convert position to rotation degrees (max ±8°)
   const rotateY = useTransform(smoothX, [0, 1], [-8, 8]);
   const rotateX = useTransform(smoothY, [0, 1], [6, -6]);
-  // Subtle lift (z-translate via shadow + scale)
-  const liftScale = useTransform(smoothY, [0, 0.5, 1], [1.02, 1.04, 1.02]);
+  // 🔴 There used to be a `liftScale` here mapped to [1.02, 1.04, 1.02].
+  // Read the middle number: at REST the pointer sits at y = 0.5, so every
+  // card rendered permanently 4 % larger than the grid cell holding it.
+  // On a ~600 px card that is 24 px of extra width — 12 px bleeding out of
+  // each side, which swallowed the entire 20 px gutter and made the cards
+  // appear to touch in the middle of the row. An idle card must be exactly
+  // 1. The lift now lives on whileHover, where it belongs.
   // Background image gets gentle parallax against the card tilt
   const bgX = useTransform(smoothX, [0, 1], ['52%', '48%']);
   const bgY = useTransform(smoothY, [0, 1], ['52%', '48%']);
@@ -61,9 +67,10 @@ export default function TiltCard({ href, image, label, description, wide }: Prop
         style={{
           rotateY: reducedMotion ? 0 : rotateY,
           rotateX: reducedMotion ? 0 : rotateX,
-          scale: reducedMotion ? 1 : liftScale,
           transformStyle: 'preserve-3d',
         }}
+        whileHover={reducedMotion ? undefined : { scale: 1.025 }}
+        transition={{ type: 'spring', stiffness: 260, damping: 24 }}
         whileTap={{ scale: 0.99 }}
       >
         <motion.div
@@ -76,7 +83,14 @@ export default function TiltCard({ href, image, label, description, wide }: Prop
         />
         <div className={styles.serviceContent}>
           <h3 className="fraunces">{label}</h3>
-          <p>{description}</p>
+          {/* A sentence has to be read start-to-finish before it means
+              anything. A homeowner comparing five services is scanning,
+              not reading — so each claim gets its own line. */}
+          <ul className={styles.servicepoints}>
+            {points.map((p) => (
+              <li key={p}>{p}</li>
+            ))}
+          </ul>
           <motion.span
             className={styles.serviceArrow}
             initial={{ x: 0 }}

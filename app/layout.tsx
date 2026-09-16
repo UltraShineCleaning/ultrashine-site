@@ -315,6 +315,18 @@ export default function RootLayout({
   return (
     <html lang="en" className={poppins.variable}>
       <head>
+        {/* The hero's first painted pixels are the video POSTER, which makes
+            it the LCP element on the homepage. Without this hint the browser
+            doesn't discover it until it has parsed the <video> tag deep in
+            the component tree, so the hero stays navy for a beat on landing.
+            Preloading it at high priority removes that gap. */}
+        <link
+          rel="preload"
+          as="image"
+          href="/videos/walkthrough_poster.webp"
+          type="image/webp"
+          fetchPriority="high"
+        />
         <JsonLd data={SITE_SCHEMA} />
       </head>
       <body>

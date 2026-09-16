@@ -145,32 +145,52 @@ export default async function HomePage() {
             href="/services/regular-cleaning"
             image="/images/flow_living_room_navy.jpg"
             label="Regular Cleaning"
-            description="Weekly, bi-weekly, or monthly maintenance to keep your home consistently clean."
+            points={[
+              'Weekly, bi-weekly or monthly',
+              'Same team every visit',
+              'No long-term contract',
+            ]}
             wide
           />
           <TiltCard
             href="/services/deep-cleaning"
             image="/images/flow_hand_marble.jpg"
             label="Deep Cleaning"
-            description="Quarterly reset for baseboards, ovens, grout, fixtures — the works."
+            points={[
+              'Baseboards, grout, ceiling fans',
+              'Inside oven and fridge',
+              'Quarterly reset',
+            ]}
           />
           <TiltCard
             href="/services/move-in-out"
             image="/images/service_movein_boxes.jpg"
             label="Move-In / Move-Out"
-            description="Landlord-grade clean to get your full deposit back."
+            points={[
+              'Inside cabinets and drawers',
+              'Landlord-grade detail',
+              'Built to return your deposit',
+            ]}
           />
           <TiltCard
             href="/services/commercial"
             image="/images/service_commercial_office.jpg"
             label="Commercial"
-            description="Offices that close more clients. Custom schedules around your hours."
+            points={[
+              'Offices, retail and clinics',
+              'After-hours scheduling',
+              'COI on request',
+            ]}
           />
           <TiltCard
             href="/services/post-construction"
             image="/images/service_postconstruction.jpg"
             label="Post-Construction"
-            description="Wall-to-wall fine-dust cleanup — the mess the contractor leaves behind."
+            points={[
+              'Fine drywall dust removal',
+              'Paint splatter and debris',
+              'Wall to wall, top to bottom',
+            ]}
           />
         </div>
       </MotionSection>

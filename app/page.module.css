@@ -213,7 +213,13 @@
 .servicesGrid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 20px;
+  /* Was 20px, and the cards still appeared to touch — because each one
+     was rendering at scale 1.04 (see the note in TiltCard.tsx). With the
+     scale bug fixed, 20px is the true gutter, and it reads too tight for
+     cards this size. 28px gives the row room to breathe. */
+  gap: 28px;
+  /* Nothing here should ever bleed into the gutter again. */
+  align-items: stretch;
 }
 .serviceCard {
   position: relative;
@@ -225,11 +231,17 @@
   box-shadow: var(--shadow-soft);
   text-decoration: none;
   color: var(--navy-deep);
-  transition: transform 0.2s, box-shadow 0.2s;
-  min-height: 320px;
+  transition: box-shadow 0.25s ease;
+  /* Trimmed 320 → 288. The cards were taller than their content needed,
+     which is what made the row feel oversized next to the hero. */
+  min-height: 288px;
 }
+/* NOTE: no `transform` in this hover rule. Framer Motion writes transform
+   as an inline style on this element, and inline always wins over a
+   stylesheet — so the old `translateY(-3px)` here never actually ran. The
+   hover lift is `whileHover` in TiltCard.tsx. Adding transform back here
+   would be dead code that reads as if it works. */
 .serviceCard:hover {
-  transform: translateY(-3px);
   box-shadow: var(--shadow-strong);
   text-decoration: none;
 }
@@ -238,7 +250,8 @@
 }
 .serviceCardWide {
   flex-direction: row;
-  min-height: 360px;
+  /* 360 → 320 so the full-width card doesn't tower over the pair below it. */
+  min-height: 320px;
   height: 100%;
 }
 .serviceCardWide .serviceImg { flex: 1.4; }
@@ -268,6 +281,55 @@
   color: var(--navy-deep);
   line-height: 1.55;
   margin-bottom: 16px;
+}
+
+/* ---------------------------------------------------------------
+   SERVICE POINTS
+   Replaces the single prose line under each service title.
+
+   Deliberately NOT a bulleted list with dots — round bullets read
+   as a spec sheet and fight the premium tone everywhere else on
+   the page. Instead each claim sits on its own hairline row, which
+   scans just as fast and looks composed rather than utilitarian.
+   --------------------------------------------------------------- */
+.servicepoints {
+  list-style: none;
+  margin: 0 0 18px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+.servicepoints li {
+  position: relative;
+  font-size: 13.5px;
+  line-height: 1.4;
+  color: var(--navy-deep);
+  opacity: 0.82;
+  padding: 9px 0 9px 18px;
+  border-bottom: 1px solid rgba(0, 44, 152, 0.09);
+}
+.servicepoints li:first-child {
+  padding-top: 0;
+}
+.servicepoints li:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+/* Small brand-blue tick instead of a dot — same scanning function,
+   reads as a checklist of what's included rather than a bullet. */
+.servicepoints li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 15px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--blush, #1c61f0);
+  opacity: 0.55;
+}
+.servicepoints li:first-child::before {
+  top: 6px;
 }
 .serviceArrow {
   font-size: 22px;

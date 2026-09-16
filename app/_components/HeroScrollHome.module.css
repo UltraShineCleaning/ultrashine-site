@@ -149,8 +149,13 @@
        buy nothing.
    --------------------------------------------------------------- */
 .bodySlotEl {
-  gap: 24px;
-  padding: 26px 30px 28px;
+  gap: 22px;
+  /* Even padding on all four sides so the text sits optically centred in
+     the panel. The first pass used 26/30/28 — the uneven bottom made the
+     block look like it had slipped downward inside its own box. */
+  padding: 30px;
+  align-items: center;
+  justify-content: center;
   border-radius: 22px;
   background: rgba(9, 20, 40, 0.34);
   backdrop-filter: blur(14px) saturate(115%);
@@ -189,9 +194,13 @@
 
 .eyebrow {
   font-family: var(--font-outfit), sans-serif;
-  font-weight: 400;
-  font-size: 12px;
-  letter-spacing: 0.42em;
+  /* Bumped 12 → 14.5px and weight 400 → 500. At 12px with 0.42em tracking
+     this was technically present but practically unreadable over a photo.
+     Tracking eased to 0.26em at the same time — wide letterspacing costs
+     legibility fast as size goes up, so the two have to move together. */
+  font-weight: 500;
+  font-size: 14.5px;
+  letter-spacing: 0.26em;
   text-transform: uppercase;
   color: var(--cream);
   opacity: 0.85;

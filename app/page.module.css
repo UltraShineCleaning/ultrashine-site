@@ -299,21 +299,23 @@
   display: flex;
   flex-direction: column;
 }
+/* The first pass put a hairline rule under each row. Removed — a divider
+   earns its place when rows are long enough to run together (pricing
+   tables, spec sheets). Between three-word phrases it is pure noise, and
+   four of them stacked read as a form. Spacing does the same job here
+   without drawing a single line, which is where premium UI has been
+   heading for a while now: hierarchy from weight and air, not borders. */
 .servicepoints li {
   position: relative;
   font-size: 13.5px;
-  line-height: 1.4;
+  line-height: 1.45;
   color: var(--navy-deep);
-  opacity: 0.82;
-  padding: 9px 0 9px 18px;
-  border-bottom: 1px solid rgba(0, 44, 152, 0.09);
-}
-.servicepoints li:first-child {
-  padding-top: 0;
+  opacity: 0.8;
+  padding: 0 0 0 18px;
+  margin-bottom: 10px;
 }
 .servicepoints li:last-child {
-  border-bottom: 0;
-  padding-bottom: 0;
+  margin-bottom: 0;
 }
 /* Small brand-blue tick instead of a dot — same scanning function,
    reads as a checklist of what's included rather than a bullet. */
@@ -321,15 +323,15 @@
   content: '';
   position: absolute;
   left: 0;
-  top: 15px;
-  width: 6px;
-  height: 6px;
+  /* Optically aligned to the cap-height of the first line rather than the
+     line box, which is what makes a dot look "on" the text instead of
+     floating slightly high. */
+  top: 7px;
+  width: 5px;
+  height: 5px;
   border-radius: 50%;
   background: var(--blush, #1c61f0);
-  opacity: 0.55;
-}
-.servicepoints li:first-child::before {
-  top: 6px;
+  opacity: 0.6;
 }
 .serviceArrow {
   font-size: 22px;
@@ -419,13 +421,19 @@
 .whyGrid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
+  gap: 24px;
   max-width: 1280px;
   margin: 0 auto;
+  /* Equal-height cards. Without this the boxes ended at four different
+     depths because each body copy is a different length — the single
+     biggest reason that row read as unfinished. */
+  align-items: stretch;
 }
 .whyCard {
   background: white;
-  padding: 38px 28px;
+  padding: 34px 30px 36px;
+  display: flex;
+  flex-direction: column;
   border-radius: var(--r-md);
   box-shadow: var(--shadow-soft);
   text-align: left;
@@ -435,11 +443,35 @@
   transform: translateY(-4px);
   box-shadow: var(--shadow-strong);
 }
+/* Icon sits in a soft tinted square above the title — gives the four cards
+   a consistent anchor point so the row scans as a set even though the
+   headings are different lengths. */
+.whyIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 14px;
+  margin-bottom: 20px;
+  color: var(--blush, #1c61f0);
+  background: rgba(28, 97, 240, 0.08);
+  transition: background 0.22s ease, color 0.22s ease;
+}
+.whyCard:hover .whyIcon {
+  background: rgba(28, 97, 240, 0.14);
+}
 .whyCard h3 {
   font-weight: 400;
   font-size: 22px;
   margin-bottom: 12px;
   letter-spacing: -0.01em;
+  /* The old cards let "Satisfaction Guaranteed" and "Same Crew, Every
+     Visit" wrap to two lines while the others stayed on one, so the body
+     copy started at four different heights across the row. */
+  min-height: 2.5em;
+  display: flex;
+  align-items: flex-end;
 }
 .whyCard p {
   font-size: 14px;

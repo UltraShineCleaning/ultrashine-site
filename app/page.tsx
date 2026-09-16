@@ -227,10 +227,29 @@ export default async function HomePage() {
           Built on <em>detail</em>. Trusted on results.
         </h2>
         <div className={styles.whyGrid}>
-          <WhyCard title="Eco + Pet-Safe" body="EPA-safe products across the board. Kid and pet friendly. Nothing that damages your finishes — ever." />
-          <WhyCard title="Same Crew, Every Visit" body="Two cleaners per visit — the same pair whenever scheduling allows, trained to the same boutique standard, background-checked, and in uniform every time." />
-          <WhyCard title="Satisfaction Guaranteed" body="100% guarantee. If you're not happy, we come back free until you are." />
-          <WhyCard title="Flexible Scheduling" body="Weekly, bi-weekly, monthly, or one-time. Reschedule with one text." />
+          {/* Bodies trimmed to roughly even length — the old "Same Crew" card
+              ran three times longer than "Flexible Scheduling", which made the
+              row look broken before anyone read a word of it. */}
+          <WhyCard
+            icon="eco"
+            title="Eco + Pet-Safe"
+            body="EPA-safe products throughout. Safe around kids and animals, and gentle on the finishes underneath."
+          />
+          <WhyCard
+            icon="crew"
+            title="Same Crew, Every Visit"
+            body="Two cleaners per visit, the same pair wherever scheduling allows. Background-checked and in uniform."
+          />
+          <WhyCard
+            icon="guarantee"
+            title="Satisfaction Guaranteed"
+            body="If something isn't right, we come back and redo it free. No forms, no argument, no charge."
+          />
+          <WhyCard
+            icon="schedule"
+            title="Flexible Scheduling"
+            body="Weekly, bi-weekly, monthly or one-time. Move a visit with a single text, no fee."
+          />
         </div>
       </MotionSection>
 
@@ -399,9 +418,77 @@ export default async function HomePage() {
 }
 
 /* ---------- Sub-components ---------- */
-function WhyCard({ title, body }: { title: string; body: string }) {
+
+/**
+ * Hand-drawn stroke icons for the "Built on detail" cards.
+ *
+ * Drawn inline rather than pulled from an icon set on purpose: a
+ * generic library glyph is the fastest way to make a site look like
+ * every other site. These share one visual language — 1.8 stroke,
+ * round caps and joins, no fills — so the four read as a set.
+ *
+ * `currentColor` lets the CSS own the colour, so hover states and
+ * dark sections don't need a second copy of each path.
+ */
+const WHY_ICONS: Record<string, React.ReactNode> = {
+  // Leaf — eco / plant-safe
+  eco: (
+    <>
+      <path d="M11 20A7 7 0 0 1 20 4c0 9-5.5 13-9 13Z" />
+      <path d="M11 20c0-4 1.5-7.5 5-10" />
+    </>
+  ),
+  // Two figures — the same pair, every visit
+  crew: (
+    <>
+      <circle cx="9" cy="8" r="3" />
+      <circle cx="17" cy="9.5" r="2.3" />
+      <path d="M3.5 19.5a5.5 5.5 0 0 1 11 0" />
+      <path d="M16 15.5a4.6 4.6 0 0 1 4.5 4" />
+    </>
+  ),
+  // Shield with a check — the guarantee
+  guarantee: (
+    <>
+      <path d="M12 3.2 19 6v5.4c0 4.3-2.9 7.6-7 9.4-4.1-1.8-7-5.1-7-9.4V6Z" />
+      <path d="m9 11.9 2.2 2.2L15.4 10" />
+    </>
+  ),
+  // Calendar with a moved date — flexible scheduling
+  schedule: (
+    <>
+      <rect x="3.5" y="5.5" width="17" height="15" rx="2.5" />
+      <path d="M3.5 10h17M8.5 3.5v4M15.5 3.5v4" />
+      <path d="M8.8 14.6h2.4M8.8 17.4h6.4" />
+    </>
+  ),
+};
+
+function WhyCard({
+  title,
+  body,
+  icon,
+}: {
+  title: string;
+  body: string;
+  icon: keyof typeof WHY_ICONS;
+}) {
   return (
     <div className={styles.whyCard}>
+      <span className={styles.whyIcon} aria-hidden="true">
+        <svg
+          viewBox="0 0 24 24"
+          width="26"
+          height="26"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.8"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          {WHY_ICONS[icon]}
+        </svg>
+      </span>
       <h3 className="fraunces">{title}</h3>
       <p>{body}</p>
     </div>

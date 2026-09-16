@@ -230,10 +230,17 @@ export default async function HomePage() {
           {/* Bodies trimmed to roughly even length — the old "Same Crew" card
               ran three times longer than "Flexible Scheduling", which made the
               row look broken before anyone read a word of it. */}
+          {/* Molly Maid leads on a "44-point checklist" and it is the only
+              thing on any national homepage that isn't interchangeable — a
+              NUMBER is the difference between a claim and a promise. Ultra
+              Shine already has one: 29 tasks written out in the client
+              packet. It was just never said out loud on the site.
+              Source: 06_CLIENT_PACKET/_build_packet.py, "what we always
+              clean" — 9 kitchen, 7 bath, 6 living/bed, 7 detail. */}
           <WhyCard
-            icon="eco"
-            title="Eco + Pet-Safe"
-            body="EPA-safe products throughout. Safe around kids and animals, and gentle on the finishes underneath."
+            icon="checklist"
+            title="The 29-Point Standard"
+            body="The same written checklist every visit — 29 points, countertops to baseboards. EPA-safe products, kid and pet friendly."
           />
           <WhyCard
             icon="crew"
@@ -431,11 +438,12 @@ export default async function HomePage() {
  * dark sections don't need a second copy of each path.
  */
 const WHY_ICONS: Record<string, React.ReactNode> = {
-  // Leaf — eco / plant-safe
-  eco: (
+  // Clipboard with ticks — the 29-point standard
+  checklist: (
     <>
-      <path d="M11 20A7 7 0 0 1 20 4c0 9-5.5 13-9 13Z" />
-      <path d="M11 20c0-4 1.5-7.5 5-10" />
+      <path d="M9 4.5H7.5A2 2 0 0 0 5.5 6.5v13a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-13a2 2 0 0 0-2-2H15" />
+      <rect x="9" y="2.8" width="6" height="3.4" rx="1.2" />
+      <path d="m9.2 11.4 1.3 1.3 2.6-2.6M9.2 16.4l1.3 1.3 2.6-2.6" />
     </>
   ),
   // Two figures — the same pair, every visit

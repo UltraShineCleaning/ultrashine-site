@@ -235,13 +235,21 @@
 
 .body {
   font-family: var(--font-poppins), sans-serif;
-  font-weight: 700;
   font-weight: 400;
   font-size: 22px;
   line-height: 1.5;
   max-width: 680px;
   opacity: 0.9;
   margin-bottom: 36px;
+}
+
+/* 🔴 The 36px above is for the MOBILE copy block, where the paragraph needs
+   air before the CTA buttons. Inside the frosted panel it stacked on top of
+   the panel's own 30px padding — 66px of space below the text against 30px
+   above it, which is why the caption looked like it had sunk in its box.
+   The panel's padding is the only spacing that should apply in there. */
+.bodySlotEl .body {
+  margin-bottom: 0;
 }
 
 /* CTA row only shown on last scene */

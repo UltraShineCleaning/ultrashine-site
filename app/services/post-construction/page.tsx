@@ -2,9 +2,12 @@ import type { Metadata } from 'next';
 import ServicePage, { type ServiceData } from '../_components/ServicePage';
 
 export const metadata: Metadata = {
-  title: 'Post-Construction Cleaning · Ultra Shine Cleaning',
+  title: { absolute: 'Post-Construction Cleaning Boca Raton, FL · Ultra Shine' },
   description:
-    'Post-construction + renovation cleanup in Boca Raton + South Florida. Fine-dust removal, sticker + paint speck removal, move-in ready finish. Custom quote in 1 hour.',
+    'Post-construction and renovation cleanup in Boca Raton, Fort Lauderdale + South Florida. Fine-dust removal, sticker + paint speck removal, move-in ready finish. Custom quote in 1 hour.',
+  alternates: {
+    canonical: 'https://ultrashinecleaningfl.com/services/post-construction',
+  },
 };
 
 const data: ServiceData = {
@@ -12,7 +15,9 @@ const data: ServiceData = {
   name: 'Post-Construction',
   number: '05',
   heroImage: '/images/service_postconstruction.jpg',
-  headline: 'From _construction_ dust to move-in ready.',
+  // SEO: had "construction" but not "post-construction cleaning". One char
+  // longer than before, so the line count is unchanged.
+  headline: 'Post-construction cleaning, dust to _done_.',
   subheadline:
     'Post-construction + renovation cleanup across Palm Beach + Broward — drywall dust, paint specks, stickers, debris. We turn a finished build into a home you can actually move into.',
   included: {

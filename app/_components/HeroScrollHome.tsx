@@ -382,7 +382,11 @@ export default function HeroScrollHome() {
             style={slotStyle(scene.head)}
           >
             <p className={styles.eyebrow}>{scene.eyebrow}</p>
-            <h1
+            {/* SEO: was <h1>, one per scene — and HeroScrollMobile emits five
+                more into the same DOM, so the homepage carried TEN h1s of pure
+                decoration. Same class, so the render is byte-identical; the
+                single real h1 is in app/page.tsx. */}
+            <p
               className={styles.headline}
               style={scene.head.headlineSize ? { fontSize: scene.head.headlineSize } : undefined}
               dangerouslySetInnerHTML={{ __html: scene.headlineHtml }}

@@ -2,9 +2,12 @@ import type { Metadata } from 'next';
 import ServicePage, { type ServiceData } from '../_components/ServicePage';
 
 export const metadata: Metadata = {
-  title: 'Deep Cleaning · Ultra Shine Cleaning',
+  title: { absolute: 'Deep Cleaning Service in Boca Raton, FL · Ultra Shine' },
   description:
-    'Quarterly deep cleaning service in Boca Raton + South Florida. Baseboards hand-wiped, inside oven + fridge, grout scrubbed, ceiling fans + light fixtures, cabinet exteriors. Background-checked team. Custom quote in 1 hour.',
+    'Deep cleaning service in Boca Raton, Delray Beach + South Florida. Baseboards hand-wiped, inside oven + fridge, grout scrubbed, ceiling fans + light fixtures, cabinet exteriors. Background-checked team. Custom quote in 1 hour.',
+  alternates: {
+    canonical: 'https://ultrashinecleaningfl.com/services/deep-cleaning',
+  },
 };
 
 const data: ServiceData = {
@@ -12,7 +15,8 @@ const data: ServiceData = {
   name: 'Deep Cleaning',
   number: '02',
   heroImage: '/images/flow_hand_marble.jpg',
-  headline: 'The deep _reset_ your home deserves.',
+  // SEO: h1 now contains the exact phrase people search. One char shorter.
+  headline: 'Deep cleaning your home _deserves_.',
   subheadline:
     'Quarterly deep cleaning in Palm Beach + Broward — the every-90-day rescue that finds the corners regular cleans skip.',
   included: {

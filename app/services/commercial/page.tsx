@@ -2,9 +2,12 @@ import type { Metadata } from 'next';
 import ServicePage, { type ServiceData } from '../_components/ServicePage';
 
 export const metadata: Metadata = {
-  title: 'Commercial Office Cleaning · Ultra Shine Cleaning',
+  title: { absolute: 'Office Cleaning in Boca Raton, FL · Ultra Shine Cleaning' },
   description:
-    'Commercial + office cleaning across Boca Raton + South Florida. After-hours service, custom schedules, COI on file, background-checked team. Custom quote in 1 hour.',
+    'Commercial and office cleaning in Boca Raton, Fort Lauderdale + South Florida. After-hours janitorial service, custom schedules, COI on file, background-checked team. Custom quote in 1 hour.',
+  alternates: {
+    canonical: 'https://ultrashinecleaningfl.com/services/commercial',
+  },
 };
 
 const data: ServiceData = {
@@ -12,7 +15,9 @@ const data: ServiceData = {
   name: 'Commercial',
   number: '04',
   heroImage: '/images/service_commercial_office.jpg',
-  headline: 'Offices that _stay_ presentable.',
+  // SEO: "office cleaning" is the searched phrase; "Offices that stay
+  // presentable" contained neither word people type.
+  headline: 'Office cleaning that _stays_ presentable.',
   subheadline:
     'After-hours commercial cleaning across Palm Beach + Broward — offices, medical suites, salons, boutique retail. Your team walks into a fresh space every morning, no exceptions.',
   included: {

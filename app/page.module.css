@@ -660,8 +660,6 @@
   70%  { box-shadow: 0 0 0 8px rgba(52, 168, 83, 0);   }
   100% { box-shadow: 0 0 0 0   rgba(52, 168, 83, 0);   }
 }
-@media (prefers-reduced-motion: reduce) {
-  }
 .marquee {
   display: flex;
   overflow: hidden;
@@ -682,7 +680,6 @@
 }
 .marquee:hover .marqueeTrack {
   animation-play-state: paused;
-}
 }
 .reviewCard {
   /* 420 → 330px. Two rows of smaller cards occupy roughly what one row of

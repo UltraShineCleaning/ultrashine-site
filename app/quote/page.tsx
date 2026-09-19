@@ -189,7 +189,14 @@ export default function QuotePage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
           >
-            <div className={styles.leftEyebrow}>A Free, No-Obligation Quote</div>
+            {/* SEO: "Free House Cleaning Quote" carries the keyword and is one
+                character SHORTER than "A Free, No-Obligation Quote", so this
+                12px 0.42em-tracked line cannot wrap where it didn't before.
+                The h1 below is left exactly as designed — its hard <br /> line
+                breaks are load-bearing, and /quote's job is conversion, not
+                ranking (nobody searches "quote"). The keywords for this page
+                live in its title, description and this eyebrow. */}
+            <div className={styles.leftEyebrow}>Free House Cleaning Quote</div>
             <h1 className={styles.leftHeadline}>
               A clean home,
               <br />

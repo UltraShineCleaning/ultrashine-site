@@ -9,7 +9,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "check:css": "node scripts/check-css.js",
+    "verify": "node scripts/check-css.js && tsc --noEmit"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",

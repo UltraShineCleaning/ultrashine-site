@@ -6,9 +6,12 @@ import { CITIES } from './_data/cities';
 import styles from './[city]/page.module.css';
 
 export const metadata: Metadata = {
-  title: 'Service Areas · 13 Cities in Palm Beach + Broward · Ultra Shine Cleaning',
+  // Was 72 characters BEFORE the root template appended the brand again — 95
+  // in total, so Google showed roughly the first two thirds and nothing else.
+  title: { absolute: 'Cleaning Service Areas · Palm Beach + Broward, FL' },
   description:
-    'Ultra Shine Cleaning serves 13 cities across Palm Beach and Broward County, FL. Find your city for local cleaning service info, neighborhoods served, and a custom quote in 1 hour.',
+    'Ultra Shine Cleaning serves 13 cities across Palm Beach and Broward County, FL — Boca Raton, Delray Beach, Boynton Beach, Fort Lauderdale, Parkland and more. Find your city for local house cleaning info and a custom quote in 1 hour.',
+  alternates: { canonical: 'https://ultrashinecleaningfl.com/areas' },
 };
 
 export default function AreasIndexPage() {

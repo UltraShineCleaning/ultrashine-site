@@ -453,7 +453,13 @@ export default function HeroScrollMobile() {
       {SCENES.map((scene, i) => (
         <div key={scene.id} className={`${styles.copy} usm-copy usm-copy-${i}`}>
           <p className={styles.eyebrow}>{scene.eyebrow}</p>
-          <h1
+          {/* SEO: these five scene captions were <h1> each, and this component
+              plus HeroScrollHome are BOTH in the DOM (the other is only
+              CSS-hidden) — so the homepage shipped TEN h1 elements, none of
+              which contained "cleaning" or "Boca Raton". They are <p> now,
+              with the identical class, so nothing moves by a pixel. The one
+              real h1 lives in app/page.tsx. */}
+          <p
             className={styles.headline}
             dangerouslySetInnerHTML={{ __html: scene.headlineHtml }}
           />

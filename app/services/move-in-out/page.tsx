@@ -2,9 +2,12 @@ import type { Metadata } from 'next';
 import ServicePage, { type ServiceData } from '../_components/ServicePage';
 
 export const metadata: Metadata = {
-  title: 'Move-In / Move-Out Cleaning · Ultra Shine Cleaning',
+  title: { absolute: 'Move-Out Cleaning in Boca Raton, FL · Ultra Shine' },
   description:
-    'Landlord-grade move-in / move-out cleaning across Boca Raton + South Florida. Get your full deposit back. Background-checked team, fully insured. Custom quote in 1 hour.',
+    'Move-in and move-out cleaning in Boca Raton, Delray Beach + South Florida. Landlord-grade turnover cleaning that gets your full deposit back. Background-checked team, fully insured. Custom quote in 1 hour.',
+  alternates: {
+    canonical: 'https://ultrashinecleaningfl.com/services/move-in-out',
+  },
 };
 
 const data: ServiceData = {
@@ -12,7 +15,9 @@ const data: ServiceData = {
   name: 'Move-In / Out',
   number: '03',
   heroImage: '/images/service_movein_boxes.jpg',
-  headline: 'Get your _full_ deposit back.',
+  // SEO: keeps the deposit promise AND names the service. The em stays on
+  // "full" exactly as before, so the accent lands in the same place.
+  headline: 'Move-out cleaning, _full_ deposit back.',
   subheadline:
     'Landlord-grade move-in or move-out cleaning across Palm Beach + Broward — every appliance interior, every cabinet, every wall scuff. Most clients walk away with 100% of their security deposit.',
   included: {

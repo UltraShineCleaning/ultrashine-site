@@ -5,7 +5,10 @@ import SiteFooter from '../_components/SiteFooter';
 import styles from './page.module.css';
 
 export const metadata: Metadata = {
-  title: 'Why We Don\'t List Flat Prices · Ultra Shine Cleaning',
+  // `absolute` = the root layout's title.template does not append the brand a
+  // second time. Every page on this site owns its full title string.
+  title: { absolute: 'Why We Don\'t List Flat Cleaning Prices · Ultra Shine' },
+  alternates: { canonical: 'https://ultrashinecleaningfl.com/pricing-philosophy' },
   description:
     "Every home is different. Companies that publish flat cleaning rates either overcharge the easy jobs or under-deliver on the hard ones. Here's why Ultra Shine quotes every home in person — and what makes our pricing process the most honest in South Florida.",
 };

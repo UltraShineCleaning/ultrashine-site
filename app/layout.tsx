@@ -280,11 +280,23 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   metadataBase: new URL('https://ultrashinecleaningfl.com'),
   title: {
-    default: 'Ultra Shine Cleaning · Boca Raton\'s Premier Cleaning Service',
+    // The homepage is the strongest page we have, so it targets the HEAD term
+    // ("house cleaning boca raton") rather than leading with the brand — brand
+    // searches land here regardless. /services/regular-cleaning deliberately
+    // targets the recurring modifier instead, so the two do not compete for the
+    // same query (title cannibalisation).
+    default: 'House Cleaning in Boca Raton, FL · Ultra Shine Cleaning',
+    // Kept for safety, but every route now sets its own `absolute` title, so
+    // nothing should reach this template. It was silently doubling the brand on
+    // 10 pages that already ended with it.
     template: '%s · Ultra Shine Cleaning',
   },
   description:
-    'Professional house cleaning in Boca Raton, FL and across Palm Beach + Broward County. Background-checked team, fully insured + bonded. ★ 5.0 verified reviews. Free quote in 1 hour.',
+    'Professional house cleaning in Boca Raton, FL and across Palm Beach + Broward County. Recurring, deep, move-out and office cleaning. Background-checked team, fully insured + bonded. ★ 5.0 verified reviews. Free quote in 1 hour.',
+  // Self-referencing canonical for the homepage. Child routes that set their own
+  // `alternates` override this; every route that serves content now sets one, so
+  // nothing inherits `/` by accident.
+  alternates: { canonical: 'https://ultrashinecleaningfl.com' },
   openGraph: {
     title: 'Ultra Shine Cleaning · South Florida',
     description:

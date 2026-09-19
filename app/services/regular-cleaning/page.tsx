@@ -2,9 +2,21 @@ import type { Metadata } from 'next';
 import ServicePage, { type ServiceData } from '../_components/ServicePage';
 
 export const metadata: Metadata = {
-  title: 'Regular Cleaning · Ultra Shine Cleaning',
+  // `absolute` opts out of the root layout's `title.template`, which would
+  // otherwise append "· Ultra Shine Cleaning" to a title that already ends
+  // with it. Owning the whole string also lets the searched-for keyword sit
+  // first, where Google weights it and where it survives truncation.
+  // Targets the RECURRING modifier, not the bare head term — the homepage owns
+  // "house cleaning boca raton", and two pages chasing one query split the
+  // signal and let Google pick the wrong one.
+  title: { absolute: 'Weekly + Bi-Weekly House Cleaning · Boca Raton, FL' },
   description:
-    'Weekly, bi-weekly, or monthly house cleaning across Boca Raton + South Florida. Background-checked team, EPA-safe products, 100% satisfaction guarantee. Custom quote in 1 hour.',
+    'Weekly, bi-weekly, or monthly house cleaning in Boca Raton, Delray Beach + South Florida. Background-checked maids, EPA-safe products, 100% satisfaction guarantee. Custom quote in 1 hour.',
+  alternates: {
+    // Self-referencing. Without this the page inherits the canonical from
+    // app/services/layout.tsx and tells Google the real page is /services.
+    canonical: 'https://ultrashinecleaningfl.com/services/regular-cleaning',
+  },
 };
 
 const data: ServiceData = {
@@ -12,7 +24,10 @@ const data: ServiceData = {
   name: 'Regular Cleaning',
   number: '01',
   heroImage: '/images/flow_living_room_navy.jpg',
-  headline: 'The weekly _reset_ that keeps it pristine.',
+  // SEO: the h1 is the strongest on-page signal and the old one
+  // ("The weekly reset that keeps it pristine.") never said "house cleaning".
+  // Two characters shorter than before, so the line count cannot change.
+  headline: 'House cleaning that keeps it _pristine_.',
   subheadline:
     'Weekly, bi-weekly, or monthly maintenance across Palm Beach + Broward — your home stays consistently clean, never spirals into "I need a deep clean" again.',
   included: {

@@ -7,9 +7,13 @@ import { fetchGoogleReviews } from '../_lib/google-reviews';
 import styles from './page.module.css';
 
 export const metadata: Metadata = {
-  title: 'Reviews · Ultra Shine Cleaning · 5.0★ on Google',
+  title: { absolute: 'Ultra Shine Cleaning Reviews · Boca Raton, FL' },
+  // The review COUNT is deliberately gone (it said "43 verified reviews" while
+  // the page body reads the live Google number — two sources for one fact, and
+  // a count invites the reader to judge how small the business is).
   description:
-    'Read 43 verified reviews from South Florida families — 5.0 stars on Google, 4.9 on HomeAdvisor. Serving Boca Raton, Delray Beach, Fort Lauderdale, Parkland, and 9 other cities. Real reviews from real clients.',
+    'Verified reviews from South Florida families — 5.0 stars on Google, 4.9 on HomeAdvisor. House cleaning in Boca Raton, Delray Beach, Fort Lauderdale, Parkland and 9 other cities. Real reviews from real clients.',
+  alternates: { canonical: 'https://ultrashinecleaningfl.com/reviews' },
 };
 
 // Real verified reviews — sourced from HomeAdvisor profile (CT chapter,

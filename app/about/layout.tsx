@@ -1,9 +1,10 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'About · Ultra Shine Cleaning · Tiago + Francine Rena',
+  title: { absolute: 'About Ultra Shine Cleaning · Boca Raton, FL' },
   description:
-    'Husband-and-wife founded Ultra Shine Cleaning in Connecticut in 2018, moved to South Florida in 2021. Today serving 13 cities across Palm Beach + Broward — same team, every visit, fully insured + bonded.',
+    'The family-owned cleaning company behind Ultra Shine. Founded in Connecticut in 2018, moved to South Florida in 2021, today serving 13 cities across Palm Beach + Broward — same team every visit, fully insured + bonded.',
+  alternates: { canonical: 'https://ultrashinecleaningfl.com/about' },
 };
 
 export default function AboutLayout({ children }: { children: React.ReactNode }) {

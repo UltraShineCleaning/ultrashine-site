@@ -89,10 +89,16 @@ export default function ServiceAreaMap() {
           </div>
         </div>
 
+        {/* SEO: /areas had exactly TWO inbound internal links site-wide — the
+            header nav and the 404 page — because the homepage pointed at the
+            "#areas" anchor instead of the real page. This component renders on
+            the homepage, /about and all 13 city pages, so one link here is the
+            cheapest way to tell Google the areas index matters. */}
         <p className={styles.note}>
-          Not on the list?{' '}
-          <Link href="/quote">Tell us where you are</Link> — we&apos;ll let you
-          know if we can route a team your way.
+          <Link href="/areas">Browse all cleaning service areas</Link> — or,
+          not on the list?{' '}
+          <Link href="/quote">Tell us where you are</Link> and we&apos;ll let
+          you know if we can route a team your way.
         </p>
       </div>
     </section>

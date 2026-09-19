@@ -4,7 +4,7 @@ import SiteHeader from './_components/SiteHeader';
 import SiteFooter from './_components/SiteFooter';
 
 export const metadata: Metadata = {
-  title: 'Page Not Found · Ultra Shine Cleaning',
+  title: { absolute: 'Page Not Found · Ultra Shine Cleaning' },
   robots: { index: false, follow: false },
 };
 

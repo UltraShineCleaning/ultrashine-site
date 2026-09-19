@@ -68,6 +68,25 @@
 
 /* ===== RESET ===== */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* Screen-reader-only. Read by assistive tech AND by crawlers, but occupies
+   no layout. Used for the homepage <h1>: the hero's five scene captions are
+   cinematic copy ("A home that shines") and both the desktop and mobile hero
+   components sit in the DOM together, so a visible single h1 is impossible
+   without redesigning an approved layout. This gives the page one honest,
+   accurate h1 that matches its <title>. Do NOT use it to hide keywords that
+   contradict visible content — that is cloaking. */
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
 html, body {
   overflow-x: hidden;
   max-width: 100vw;

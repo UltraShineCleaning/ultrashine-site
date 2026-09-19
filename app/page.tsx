@@ -70,6 +70,20 @@ export default async function HomePage() {
 
   return (
     <main>
+      {/*
+        The homepage's ONE h1. Until 2026-09-19 this page shipped TEN of them:
+        HeroScrollHome and HeroScrollMobile each render an h1 per scene and both
+        components are always in the DOM (the inactive one is only CSS-hidden),
+        so Google read ten headings that said "A home that shines" / "Into the
+        living room" and not one that said what the business does or where.
+        Those are <p> now (identical class — zero visual change) and this is the
+        real heading: the strongest on-page signal on the most important page,
+        finally naming the service and the city.
+      */}
+      <h1 className="srOnly">
+        House Cleaning Services in Boca Raton, FL — Ultra Shine Cleaning
+      </h1>
+
       {/* ============ STICKY NAV ============ */}
       <nav className={styles.nav}>
         <Link href="/" className={styles.navBrand}>
@@ -454,18 +468,30 @@ export default async function HomePage() {
           <p className={styles.footerTagline}>Boca Raton + South Florida</p>
           <p className={styles.footerAddr}>Serving 13 cities across Palm Beach + Broward.</p>
         </div>
+        {/* SEO: this footer is the homepage's own (it does not use SiteFooter),
+            and it was the weakest link hub on the site — the Company column
+            offered three items and pointed "Reviews" at an on-page anchor, so
+            /areas, /faq, /blog, /reviews and /pricing-philosophy got nothing
+            from the highest-authority page we have. Internal <a href> swapped
+            for <Link> at the same time: same crawlability, no full reload. */}
         <div className={styles.footerCol}>
           <h4>Services</h4>
-          <a href="/services/regular-cleaning">Regular Cleaning</a>
-          <a href="/services/deep-cleaning">Deep Cleaning</a>
-          <a href="/services/move-in-out">Move-In / Out</a>
-          <a href="/services/commercial">Commercial</a>
-          <a href="/services/post-construction">Post-Construction</a>
+          <Link href="/services">All Services</Link>
+          <Link href="/services/regular-cleaning">Regular Cleaning</Link>
+          <Link href="/services/deep-cleaning">Deep Cleaning</Link>
+          <Link href="/services/move-in-out">Move-In / Out</Link>
+          <Link href="/services/commercial">Commercial</Link>
+          <Link href="/services/post-construction">Post-Construction</Link>
+          <Link href="/cleaning-time-estimator">Cost Calculator</Link>
         </div>
         <div className={styles.footerCol}>
           <h4>Company</h4>
           <Link href="/about">About</Link>
-          <a href="#reviews">Reviews</a>
+          <Link href="/areas">Service Areas</Link>
+          <Link href="/reviews">Reviews</Link>
+          <Link href="/blog">Blog</Link>
+          <Link href="/faq">FAQ</Link>
+          <Link href="/pricing-philosophy">Our Pricing</Link>
           <Link href="/work-for-us">Work For Us</Link>
         </div>
         <div className={styles.footerCol}>

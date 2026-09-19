@@ -1,10 +1,13 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Cleaning Services · Ultra Shine Cleaning',
+  title: { absolute: 'Cleaning Services in Boca Raton, FL · Ultra Shine' },
   description:
-    'Five professional cleaning services across Boca Raton + South Florida: Regular, Deep, Move-In/Out, Commercial, and Post-Construction. Same standard, every visit. Free quote in 1 hour.',
+    'Five professional cleaning services in Boca Raton + South Florida: house cleaning, deep cleaning, move-out cleaning, office cleaning, and post-construction cleanup. Same standard, every visit. Free quote in 1 hour.',
   alternates: {
+    // Correct for /services itself. Each of the 5 detail pages MUST set its
+    // own canonical, because Next merges this one down into any child that
+    // doesn't — which is what pointed all five at this index page.
     canonical: 'https://ultrashinecleaningfl.com/services',
   },
 };

@@ -29,9 +29,16 @@ export default function SiteFooter() {
         <div className={styles.footerCol}>
           <h4>Company</h4>
           <Link href="/about">About</Link>
+          {/* SEO: /areas and /pricing-philosophy were effectively orphaned —
+              /areas had 2 inbound links, /pricing-philosophy had 1 and it sat
+              inside the post-submit success state of /quote, so a crawler
+              following normal navigation never reached it. */}
+          <Link href="/areas">Service Areas</Link>
           <Link href="/reviews">Reviews</Link>
           <Link href="/leave-a-review">★ Leave a Review</Link>
           <Link href="/blog">Blog</Link>
+          <Link href="/faq">FAQ</Link>
+          <Link href="/pricing-philosophy">Our Pricing</Link>
           <Link href="/work-for-us">Work For Us</Link>
         </div>
         <div className={styles.footerCol}>

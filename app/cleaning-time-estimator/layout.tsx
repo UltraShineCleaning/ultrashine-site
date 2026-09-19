@@ -1,9 +1,11 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'What Will My Cleaning Cost? · Instant Estimator · Ultra Shine',
+  // "how much does house cleaning cost" is one of the highest-intent queries in
+  // this category. Leading with the phrase people type beats leading with ours.
+  title: { absolute: 'House Cleaning Cost Calculator · Boca Raton, FL' },
   description:
-    'Get a ballpark price range and time estimate for house cleaning in Boca Raton + South Florida. Answer 6 quick questions — no email, no sign-up, no waiting.',
+    'How much does house cleaning cost in Boca Raton? Get a ballpark price range and time estimate for house cleaning across South Florida. Answer 6 quick questions — no email, no sign-up, no waiting.',
   alternates: {
     canonical: 'https://ultrashinecleaningfl.com/cleaning-time-estimator',
   },

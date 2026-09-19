@@ -21,8 +21,12 @@ export function generateMetadata({ params }: { params: Params }): Metadata {
   if (!city) return { title: 'City Not Found' };
 
   return {
-    title: `${city.name} Cleaning Service · House, Deep, Move-In/Out + More`,
-    description: `Professional house cleaning, deep cleaning, move-in/out, commercial, and post-construction cleaning in ${city.name}, FL. Background-checked team, fully insured and bonded. Custom quote in 1 hour.`,
+    // `absolute` stops the root title.template appending the brand: for a long
+    // city name the old string ran to 85 characters and Google cut two thirds
+    // of it. "House Cleaning Service" is also the phrase people search, where
+    // the old "Cleaning Service · House, Deep, Move-In/Out + More" buried it.
+    title: { absolute: `${city.name} House Cleaning Service · Ultra Shine` },
+    description: `House cleaning, deep cleaning, move-out cleaning, office cleaning and post-construction cleanup in ${city.name}, FL. Background-checked team, fully insured and bonded. Free quote in 1 hour.`,
     openGraph: {
       title: `Ultra Shine Cleaning · ${city.name}, FL`,
       description: `${city.vibe} ${city.intro.slice(0, 140)}...`,

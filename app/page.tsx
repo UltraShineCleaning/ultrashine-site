@@ -100,22 +100,26 @@ export default async function HomePage() {
       {/* ============ TRUST STRIP ============ */}
       <MotionSection className={styles.trustStrip}>
         <div className={styles.trustBadge}>
-          <div className={styles.trustValue}>Fully Insured</div>
-          <div className={styles.trustLabel}>+ Bonded</div>
+          <span className={styles.trustIcon} aria-hidden="true"><TrustIcon d="shield" /></span>
+          <div className={styles.trustValue}>Insured <em>+</em> Bonded</div>
+          <div className={styles.trustLabel}>Certificate on request</div>
         </div>
         <div className={styles.trustBadge}>
+          <span className={styles.trustIcon} aria-hidden="true"><TrustIcon d="check" /></span>
           <div className={styles.trustValue}>Background-Checked</div>
           <div className={styles.trustLabel}>Every team member</div>
         </div>
         <div className={styles.trustBadge}>
+          <span className={styles.trustIcon} aria-hidden="true"><TrustIcon d="star" /></span>
           <div className={styles.trustValue}>
-            ★ <CountUp to={liveRating} decimals={1} duration={1.4} /> Google
+            <em><CountUp to={liveRating} decimals={1} duration={1.4} /></em> on Google
           </div>
           <div className={styles.trustLabel}>
             <CountUp to={liveCount} duration={1.4} /> verified reviews
           </div>
         </div>
         <div className={styles.trustBadge}>
+          <span className={styles.trustIcon} aria-hidden="true"><TrustIcon d="pin" /></span>
           <div className={styles.trustValue}>
             <CountUp to={13} duration={1.6} /> Cities Served
           </div>
@@ -203,22 +207,33 @@ export default async function HomePage() {
         <h2 className={`fraunces ${styles.sectionHeadline}`}>
           Three simple steps to a <em>spotless</em> home.
         </h2>
-        <div className={styles.steps}>
-          <Link href="/quote" className={styles.step}>
-            <div className={`mono ${styles.stepNum}`}>01</div>
-            <h3 className="fraunces">Connect</h3>
-            <p>Tell us about your home — size, frequency, anything special. Quote in your inbox within an hour.</p>
-          </Link>
-          <Link href="/quote" className={styles.step}>
-            <div className={`mono ${styles.stepNum}`}>02</div>
-            <h3 className="fraunces">Schedule</h3>
-            <p>Pick a date that works for you. We confirm by text. Your team is locked in.</p>
-          </Link>
-          <Link href="/quote" className={styles.step}>
-            <div className={`mono ${styles.stepNum}`}>03</div>
-            <h3 className="fraunces">Enjoy The Sparkle</h3>
-            <p>We arrive on time, clean to the standard, and leave the keys exactly where you asked.</p>
-          </Link>
+        {/* A hairline runs behind all three nodes so the row reads as a
+            JOURNEY rather than three unrelated facts. The old 64px numerals
+            were the loudest thing in the section while carrying the least
+            meaning — they now sit small inside 44px rings, doing the one job
+            a number has here, which is ordering. Icons carry the meaning. */}
+        <div className={styles.stepsTrack}>
+          <div className={styles.stepsLine} aria-hidden="true" />
+          <div className={styles.steps}>
+            <Link href="/quote" className={styles.step}>
+              <div className={styles.stepNode}><span className="mono">01</span></div>
+              <span className={styles.stepIcon} aria-hidden="true"><StepIcon d="chat" /></span>
+              <h3 className="fraunces">Connect</h3>
+              <p>Tell us about your home — size, frequency, anything special. Quote in your inbox within an hour.</p>
+            </Link>
+            <Link href="/quote" className={styles.step}>
+              <div className={styles.stepNode}><span className="mono">02</span></div>
+              <span className={styles.stepIcon} aria-hidden="true"><StepIcon d="calendar" /></span>
+              <h3 className="fraunces">Schedule</h3>
+              <p>Pick a date that works for you. We confirm by text. Your team is locked in.</p>
+            </Link>
+            <Link href="/quote" className={styles.step}>
+              <div className={styles.stepNode}><span className="mono">03</span></div>
+              <span className={styles.stepIcon} aria-hidden="true"><StepIcon d="sparkle" /></span>
+              <h3 className="fraunces">Enjoy The Sparkle</h3>
+              <p>We arrive on time, clean to the standard, and leave the keys exactly where you asked.</p>
+            </Link>
+          </div>
         </div>
       </MotionSection>
 
@@ -427,6 +442,82 @@ export default async function HomePage() {
 }
 
 /* ---------- Sub-components ---------- */
+
+/**
+ * Trust-strip icons. Same stroke language as the service and why-card sets
+ * — 1.5 weight, round caps, no fills — so the three icon groups on this
+ * page read as one system instead of three borrowed sets.
+ */
+const TRUST_PATHS: Record<string, React.ReactNode> = {
+  shield: (
+    <>
+      <path d="M12 3.2 19 6v5.4c0 4.3-2.9 7.6-7 9.4-4.1-1.8-7-5.1-7-9.4V6Z" />
+      <path d="m9 11.9 2.2 2.2L15.4 10" />
+    </>
+  ),
+  check: (
+    <>
+      <circle cx="12" cy="9" r="3.4" />
+      <path d="M5.5 20.2a6.5 6.5 0 0 1 13 0" />
+      <path d="M17.6 4.1 19.3 5.8 22 3" />
+    </>
+  ),
+  star: <path d="m12 3.6 2.6 5.3 5.8.8-4.2 4.1 1 5.8-5.2-2.7-5.2 2.7 1-5.8L3.6 9.7l5.8-.8Z" />,
+  pin: (
+    <>
+      <path d="M12 21s7-5.7 7-11a7 7 0 1 0-14 0c0 5.3 7 11 7 11Z" />
+      <circle cx="12" cy="10" r="2.6" />
+    </>
+  ),
+};
+
+const STEP_PATHS: Record<string, React.ReactNode> = {
+  chat: (
+    <>
+      <path d="M4 6.5h16v11H8.5L4 20.5Z" />
+      <path d="M8 11h8M8 14h5" />
+    </>
+  ),
+  calendar: (
+    <>
+      <rect x="3.5" y="5.5" width="17" height="15" rx="2.5" />
+      <path d="M3.5 10h17M8.5 3.5v4M15.5 3.5v4" />
+      <path d="m9.4 14.8 1.5 1.5 3.4-3.4" />
+    </>
+  ),
+  sparkle: (
+    <>
+      <path d="M12 3.4 13.7 8l4.6 1.7-4.6 1.7L12 16l-1.7-4.6L5.7 9.7 10.3 8Z" />
+      <path d="m18.5 15.2.8 2.1 2.1.8-2.1.8-.8 2.1-.8-2.1-2.1-.8 2.1-.8Z" />
+    </>
+  ),
+};
+
+function StepIcon({ d }: { d: keyof typeof STEP_PATHS }) {
+  return (
+    <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor"
+      strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+      {STEP_PATHS[d]}
+    </svg>
+  );
+}
+
+function TrustIcon({ d }: { d: keyof typeof TRUST_PATHS }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      width="26"
+      height="26"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      {TRUST_PATHS[d]}
+    </svg>
+  );
+}
 
 /**
  * Hand-drawn stroke icons for the "Built on detail" cards.

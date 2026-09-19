@@ -149,34 +149,73 @@
 
 /* ============ TRUST STRIP ============ */
 .trustStrip {
-  /* Brand-book gradient breaks up the solid bright blue feel */
+  /* Blue gradient and four-across layout are unchanged — only the inside
+     of each cell was redesigned. The strip's job is to sit under the hero
+     as one continuous band, and splitting it into cards or stacking it
+     would break that read. */
   background: linear-gradient(95deg, #001045 0%, #002C98 60%, #001E6B 100%);
   color: var(--cream);
-  padding: 24px 60px;     /* tightened from 36px → 24px so it doesn't dominate */
+  padding: 34px 60px;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 12px;
+  gap: 0;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
   border-bottom: 1px solid rgba(0, 0, 0, 0.2);
 }
 .trustBadge {
   text-align: center;
-  border-left: 1px solid rgba(255, 255, 255, 0.15);
-  padding: 6px 16px;      /* slightly tighter */
+  border-left: 1px solid rgba(255, 255, 255, 0.14);
+  padding: 2px 28px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 .trustBadge:first-child { border-left: none; }
+
+/* Icon anchors each cell. Stroke-only, 1.5 weight, one visual family —
+   the same language as the service-card and why-card icons, so the page
+   reads as one system rather than three. Soft blue rather than white so
+   it supports the value instead of competing with it. */
+.trustIcon {
+  display: inline-flex;
+  color: #7FA8FF;
+  margin-bottom: 14px;
+}
 .trustValue {
   font-family: var(--font-poppins), sans-serif;
-  font-weight: 600;       /* SemiBold for clearer punch in Poppins */
-  font-size: 16px;        /* down from 18px — strip is now tighter */
-  letter-spacing: -0.005em;
+  /* 16 → 22px. This is the line people actually read; it was previously
+     the same size as body copy and lost to the labels' letterspacing. */
+  font-weight: 600;
+  font-size: 22px;
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+}
+/* Gold picks out ONLY the figures that carry weight — the rating and the
+   plus. Used anywhere else it stops meaning anything. */
+.trustValue em {
+  font-style: normal;
+  color: var(--gold, #FFC857);
 }
 .trustLabel {
   font-size: 10px;
-  letter-spacing: 0.22em;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
-  opacity: 0.7;
-  margin-top: 4px;
+  color: #8FA3C4;
+  margin-top: 8px;
+}
+@media (max-width: 860px) {
+  .trustStrip {
+    grid-template-columns: 1fr 1fr;
+    padding: 28px 24px;
+    row-gap: 26px;
+  }
+  .trustBadge { padding: 2px 12px; }
+  .trustBadge:nth-child(3) { border-left: none; }
+  .trustValue { font-size: 18px; }
+}
+@media (max-width: 520px) {
+  .trustStrip { grid-template-columns: 1fr; row-gap: 24px; }
+  .trustBadge { border-left: none; }
 }
 
 /* ============ SHARED SECTION HEADLINE ============ */
@@ -369,13 +408,11 @@
   transition: background 0.25s, transform 0.25s;
   cursor: pointer;
 }
+/* No lift and no tint on hover. A timeline is one connected object — if a
+   single column rises off the line, the line visibly breaks. The node
+   filling in is the feedback instead. */
 .step:hover {
-  background: rgba(28, 97, 240, 0.04);
-  transform: translateY(-4px);
   text-decoration: none;
-}
-.step:hover .stepNum {
-  color: var(--coral, var(--blush));
 }
 .step h3 {
   transition: color 0.2s;
@@ -383,12 +420,69 @@
 .step:hover h3 {
   color: var(--navy);
 }
-.stepNum {
-  font-size: 64px;
-  font-weight: 500;
+/* .stepNum is gone. It was a 64px numeral — the loudest element in the
+   section, carrying the least information. Replaced by .stepNode below:
+   a small label inside a ring that sits ON the timeline. */
+
+.stepsTrack {
+  position: relative;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+/* The hairline the nodes sit on. Inset 14% each side and faded at both
+   ends so it reads as a path rather than a border, and stops short of the
+   outer columns instead of running off the edge of the section. */
+.stepsLine {
+  position: absolute;
+  top: 46px;
+  left: 14%;
+  right: 14%;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(28, 97, 240, 0.32) 12%,
+    rgba(28, 97, 240, 0.32) 88%,
+    transparent
+  );
+  pointer-events: none;
+}
+.stepNode {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  /* Opaque fill is load-bearing — the hairline runs BEHIND these, and a
+     transparent node would show the line straight through the middle. */
+  background: var(--cream, #fff);
+  border: 1px solid rgba(28, 97, 240, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   color: var(--blush);
-  margin-bottom: 16px;
-  letter-spacing: -0.02em;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  margin: 0 auto 24px;
+  position: relative;
+  z-index: 2;
+  transition: border-color 0.25s, background 0.25s, color 0.25s;
+}
+.stepIcon {
+  display: inline-flex;
+  color: var(--blush);
+  opacity: 0.9;
+  margin-bottom: 14px;
+  transition: opacity 0.25s;
+}
+.step:hover .stepNode {
+  background: var(--blush);
+  border-color: var(--blush);
+  color: #fff;
+}
+.step:hover .stepIcon { opacity: 1; }
+
+@media (max-width: 900px) {
+  .stepsLine { display: none; }
 }
 .step h3 {
   font-weight: 400;
@@ -1186,7 +1280,6 @@
   .reviewCard { width: 300px; padding: 22px 24px; }
   .reviewsHeadlineStars { font-size: 40px; }
   .reviewsHead .sectionHeadline { font-size: 32px; }
-  .stepNum { font-size: 48px; }
   .step h3 { font-size: 22px; }
   .areasBody { font-size: 17px; }
   .faqHeadBody { font-size: 17px; }

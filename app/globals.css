@@ -201,8 +201,7 @@ a:hover {
    review stars even on dark navy backgrounds. */
 .stars,
 .tStars,
-.cardStars,
-.reviewsHeadlineStars {
+.cardStars {
   color: var(--gold) !important;
   text-shadow: 0 0 14px rgba(255, 200, 87, 0.45);
   letter-spacing: 0.18em;

@@ -59,10 +59,14 @@ export default async function HomePage() {
     ? googleAsDisplay
     : FALLBACK_TESTIMONIALS.map((t) => ({ ...t, source: 'homeadvisor' as const }));
 
-  // Live rating + count for the trust strip badge. Falls back to the
-  // canonical 5.0 + 18 reviews label if no live data.
+  // Second marquee row runs the same reviews in reverse, so a given
+  // review is never directly above its own copy in the other row.
+  const REVERSED_REVIEWS = [...MARQUEE_REVIEWS].reverse();
+
+  // Rating only — the review COUNT is deliberately never displayed. It was
+  // removed everywhere on 2026-09-19; a rating is a claim about quality,
+  // a count invites the reader to judge how small the business is.
   const liveRating = google.ok && google.rating != null ? google.rating : 5.0;
-  const liveCount = google.ok && google.count != null ? google.count : 18;
 
   return (
     <main>
@@ -114,9 +118,7 @@ export default async function HomePage() {
           <div className={styles.trustValue}>
             <em><CountUp to={liveRating} decimals={1} duration={1.4} /></em> on Google
           </div>
-          <div className={styles.trustLabel}>
-            <CountUp to={liveCount} duration={1.4} /> verified reviews
-          </div>
+          <div className={styles.trustLabel}>Verified reviews</div>
         </div>
         <div className={styles.trustBadge}>
           <span className={styles.trustIcon} aria-hidden="true"><TrustIcon d="pin" /></span>
@@ -282,11 +284,18 @@ export default async function HomePage() {
         <div className={styles.reviewsHead}>
           <p className={`eyebrow ${styles.reviewsEyebrow}`}>TRUSTED ACROSS SOUTH FLORIDA</p>
           <h2 className={`fraunces ${styles.sectionHeadline}`}>What our <em>clients</em> say.</h2>
-          <div className={styles.reviewsHeadlineStars}>★ ★ ★ ★ ★</div>
+          {/* The 100px ★★★★★ row that used to sit here is gone. Five
+              enormous gold stars is the single most-used trust graphic on
+              the internet — it made the section read as a template no
+              matter what else changed. The rating now lives once, at a
+              sane size, inside the pill below. */}
 
-          {/* Live-from-Google badge — prominent trust signal. The "G" logo
-              earns its space here; real Google reviews are the highest
-              social proof a local service business can show. */}
+          {/* Glass pill, not the solid white one. White was the brightest
+              thing in a dark section and pulled the eye before the
+              headline did; a translucent fill with a hairline border sits
+              IN the blue instead of on top of it. Review COUNT removed
+              per Tiago — the rating is the claim, the number invites
+              arithmetic about how small we are. */}
           {google.ok ? (
             <div className={styles.googleLiveBadge}>
               <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
@@ -295,15 +304,14 @@ export default async function HomePage() {
                 <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
                 <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
               </svg>
+              <span className={styles.googleBadgeStars} aria-hidden="true">★★★★★</span>
               <span>
-                <strong>{liveRating.toFixed(1)} ★</strong> on Google · {liveCount} verified reviews
+                <strong>{liveRating.toFixed(1)} on Google</strong>
               </span>
-              <span className={styles.googleLiveBadgeDot} aria-hidden="true" />
-              <span className={styles.googleLiveBadgePulse}>LIVE</span>
             </div>
           ) : (
             <div className={styles.reviewsMeta}>
-              {liveRating.toFixed(1)} ★ GOOGLE RATING · {liveCount} VERIFIED REVIEWS
+              ★★★★★ &nbsp;{liveRating.toFixed(1)} GOOGLE RATING
             </div>
           )}
 
@@ -318,27 +326,61 @@ export default async function HomePage() {
             </a>
           )}
         </div>
-        <div className={styles.marquee}>
-          <div className={styles.marqueeTrack}>
-            {[...MARQUEE_REVIEWS, ...MARQUEE_REVIEWS].map((t, i) => (
-              <div key={i} className={styles.reviewCard}>
-                <div className={styles.rStars}>★ ★ ★ ★ ★</div>
-                <div className={`fraunces ${styles.rText}`}>"{t.text}"</div>
-                <div className={styles.rAuthor}>
-                  <strong>{t.name}</strong> · {t.city}
-                  {t.source === 'google' && (
-                    <span className={styles.rSourceBadge} aria-label="Verified Google review">
-                      <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true" style={{ verticalAlign: 'middle', marginLeft: 6 }}>
-                        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-                        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-                      </svg>
-                    </span>
-                  )}
-                </div>
-              </div>
-            ))}
+        {/* TWO rows, counter-scrolling. One long row of big cards reads as
+            a single thing sliding past; two shorter rows moving against
+            each other reads as volume. Row two is reversed so the same
+            reviews never sit directly above one another.
+
+            Each row duplicates its list once — the animation translates
+            exactly -50%, so the copy lands where the original started and
+            the loop is seamless. Change the list length and the loop still
+            works; change the -50% and it will not. */}
+        <div className={styles.marqueeRows}>
+          <div className={`${styles.marquee} ${styles.marqueeL}`}>
+            <div className={styles.marqueeTrack}>
+    {[...MARQUEE_REVIEWS, ...MARQUEE_REVIEWS].map((t, i) => (
+                  <div key={i} className={styles.reviewCard}>
+                    <div className={styles.rStars}>★ ★ ★ ★ ★</div>
+                    <div className={`fraunces ${styles.rText}`}>"{t.text}"</div>
+                    <div className={styles.rAuthor}>
+                      <strong>{t.name}</strong> · {t.city}
+                      {t.source === 'google' && (
+                        <span className={styles.rSourceBadge} aria-label="Verified Google review">
+                          <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true" style={{ verticalAlign: 'middle', marginLeft: 6 }}>
+                            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                          </svg>
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                ))}
+            </div>
+          </div>
+          <div className={`${styles.marquee} ${styles.marqueeR}`}>
+            <div className={styles.marqueeTrack}>
+    {[...REVERSED_REVIEWS, ...REVERSED_REVIEWS].map((t, i) => (
+                  <div key={i} className={styles.reviewCard}>
+                    <div className={styles.rStars}>★ ★ ★ ★ ★</div>
+                    <div className={`fraunces ${styles.rText}`}>"{t.text}"</div>
+                    <div className={styles.rAuthor}>
+                      <strong>{t.name}</strong> · {t.city}
+                      {t.source === 'google' && (
+                        <span className={styles.rSourceBadge} aria-label="Verified Google review">
+                          <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true" style={{ verticalAlign: 'middle', marginLeft: 6 }}>
+                            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                          </svg>
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                ))}
+            </div>
           </div>
         </div>
       </MotionSection>

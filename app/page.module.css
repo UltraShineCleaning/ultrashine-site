@@ -592,15 +592,6 @@
 }
 .reviewsEyebrow::before { content: '— '; }
 .reviewsEyebrow::after { content: ' —'; }
-.reviewsHeadlineStars {
-  font-family: var(--font-poppins), sans-serif;
-  font-weight: 700;
-  font-size: 78px;
-  color: var(--gold);
-  margin-top: 24px;
-  line-height: 1;
-  letter-spacing: 0.04em;
-}
 .reviewsMeta {
   font-weight: 400;
   font-size: 14px;
@@ -641,34 +632,28 @@
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  margin-top: 16px;
-  padding: 10px 18px 10px 14px;
-  background: rgba(255, 255, 255, 0.96);
+  margin-top: 20px;
+  padding: 12px 24px;
+  /* Was solid white with a drop shadow — the brightest object in a dark
+     section, pulling the eye before the headline did. Translucent fill
+     with a hairline border sits IN the blue rather than on top of it. */
+  background: rgba(255, 255, 255, 0.09);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   border-radius: 999px;
-  color: #1a1a1a;
+  color: #EAF1FF;
   font-size: 14px;
   font-weight: 500;
   letter-spacing: 0.01em;
-  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.18);
+}
+.googleLiveBadge strong {
+  color: #fff;
+  font-weight: 600;
 }
 .googleLiveBadge strong {
   font-weight: 700;
   color: #1a1a1a;
-}
-.googleLiveBadgeDot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: #34A853;
-  box-shadow: 0 0 0 0 rgba(52, 168, 83, 0.6);
-  animation: liveDotPulse 2.2s ease-in-out infinite;
-  margin-left: 6px;
-}
-.googleLiveBadgePulse {
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.18em;
-  color: #34A853;
 }
 @keyframes liveDotPulse {
   0%   { box-shadow: 0 0 0 0   rgba(52, 168, 83, 0.55); }
@@ -676,36 +661,41 @@
   100% { box-shadow: 0 0 0 0   rgba(52, 168, 83, 0);   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .googleLiveBadgeDot { animation: none; }
-}
+  }
 .marquee {
   display: flex;
   overflow: hidden;
-  mask-image: linear-gradient(90deg, transparent, black 12%, black 88%, transparent);
-  -webkit-mask-image: linear-gradient(90deg, transparent, black 12%, black 88%, transparent);
+  /* Fade pulled from 12% to 7% — the wider fade was eating most of the
+     first and last card. A card should be arriving or leaving, never
+     chopped, and never half-invisible for a third of its width. */
+  mask-image: linear-gradient(90deg, transparent, black 7%, black 93%, transparent);
+  -webkit-mask-image: linear-gradient(90deg, transparent, black 7%, black 93%, transparent);
 }
 .marqueeTrack {
   display: flex;
-  gap: 24px;
-  animation: marquee 100s linear infinite;
+  gap: 16px;
+  /* No animation here — each ROW sets its own direction and duration via
+     .marqueeL / .marqueeR below. A shared rule here would have both rows
+     running the same way, which is the thing we are fixing. */
   flex-shrink: 0;
-  padding-right: 24px;
+  padding-right: 16px;
 }
 .marquee:hover .marqueeTrack {
   animation-play-state: paused;
 }
-@keyframes marquee {
-  from { transform: translateX(0); }
-  to   { transform: translateX(-50%); }
 }
 .reviewCard {
-  width: 420px;
+  /* 420 → 330px. Two rows of smaller cards occupy roughly what one row of
+     large ones did, while showing twice as many reviews. */
+  width: 330px;
   flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid rgba(255, 255, 255, 0.10);
   border-left: 2px solid var(--blush);
   border-radius: var(--r-sm);
-  padding: 28px 30px;
+  padding: 22px 24px 20px;
   transition: transform 0.22s ease, background 0.22s ease, border-color 0.22s ease;
 }
 .reviewCard:hover {
@@ -722,11 +712,17 @@
 .rText {
   font-weight: 700;
   font-weight: 400;
-  font-size: 15px;
-  line-height: 1.55;
-  margin-bottom: 16px;
+  font-size: 14px;
+  line-height: 1.6;
+  margin-bottom: 14px;
   opacity: 0.95;
-  min-height: 105px;
+  flex: 1;
+  /* Clamp, don't min-height. A 6-line review beside a 3-word one is what
+     made the single row look ragged; min-height only fixed the short ones. */
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 .rAuthor {
   font-weight: 400;
@@ -1232,8 +1228,7 @@
   .faqGrid, .promiseGrid { grid-template-columns: 1fr; gap: 40px; }
   .countyRow { grid-template-columns: 1fr; gap: 20px; }
   .faqImage { aspect-ratio: 16/10; max-height: 400px; }
-  .reviewsHeadlineStars { font-size: 56px; }
-  .reviewsHead .sectionHeadline { font-size: 48px; }
+    .reviewsHead .sectionHeadline { font-size: 48px; }
   .finalHeadline { font-size: 40px; }
   .footer { grid-template-columns: 1fr 1fr; padding: 50px 32px; gap: 32px; }
 }
@@ -1278,8 +1273,7 @@
   .pillar { border-right: none; border-bottom: 1px solid rgba(255, 255, 255,0.10); }
   .pillar:last-child { border-bottom: none; }
   .reviewCard { width: 300px; padding: 22px 24px; }
-  .reviewsHeadlineStars { font-size: 40px; }
-  .reviewsHead .sectionHeadline { font-size: 32px; }
+    .reviewsHead .sectionHeadline { font-size: 32px; }
   .step h3 { font-size: 22px; }
   .areasBody { font-size: 17px; }
   .faqHeadBody { font-size: 17px; }
@@ -1290,4 +1284,43 @@
     font-size: 12px;
   }
   .cityTag::before { left: 14px; font-size: 10px; }
+}
+
+
+/* ============ REVIEWS — dual counter-scrolling marquee ============ */
+.marqueeRows {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.marqueeL .marqueeTrack { animation: usMarqueeL 54s linear infinite; }
+.marqueeR .marqueeTrack { animation: usMarqueeR 62s linear infinite; }
+
+/* Different durations on purpose. Matched speeds make the two rows read
+   as one block sliding sideways; slightly mismatched reads as two
+   independent streams, which is the whole point of counter-scrolling. */
+@keyframes usMarqueeL {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+@keyframes usMarqueeR {
+  from { transform: translateX(-50%); }
+  to   { transform: translateX(0); }
+}
+
+/* Reading a review that slides out from under you is the actual reason
+   marquees annoy people. Pause the row being hovered, not both. */
+.marquee:hover .marqueeTrack { animation-play-state: paused; }
+
+@media (prefers-reduced-motion: reduce) {
+  .marqueeL .marqueeTrack,
+  .marqueeR .marqueeTrack { animation: none; }
+}
+
+/* Glass pill — replaces the solid white badge. */
+.googleBadgeStars {
+  color: var(--gold, #FFC857);
+  font-size: 13px;
+  letter-spacing: 1px;
 }

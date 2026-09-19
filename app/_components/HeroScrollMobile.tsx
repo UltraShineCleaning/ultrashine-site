@@ -221,18 +221,80 @@ export default function HeroScrollMobile() {
      * is close to a 1:1 blit; the maths only matters on tablets and on
      * the short-and-wide shape you get mid rotation.
      */
-    const draw = (index: number) => {
-      const img = images[index];
-      if (!img || !img.complete || img.naturalWidth === 0) return;
-      if (index === currentFrame.current) return;
-      currentFrame.current = index;
-
+    const paint = (img: HTMLImageElement, alpha: number) => {
       const cw = canvas.width;
       const ch = canvas.height;
       const scale = Math.max(cw / img.naturalWidth, ch / img.naturalHeight);
       const w = img.naturalWidth * scale;
       const h = img.naturalHeight * scale;
+      ctx.globalAlpha = alpha;
       ctx.drawImage(img, (cw - w) / 2, (ch - h) / 2, w, h);
+      ctx.globalAlpha = 1;
+    };
+
+    const usable = (i: number) => {
+      const img = images[i];
+      return img && img.complete && img.naturalWidth > 0 ? img : null;
+    };
+
+    const draw = (index: number) => {
+      const img = usable(index);
+      if (!img) return;
+      if (index === currentFrame.current) return;
+      currentFrame.current = index;
+      paint(img, 1);
+    };
+
+    /**
+     * 🔴 THE "GLITCHY WHEN IT STOPS" FIX.
+     *
+     * 121 frames across a 4-viewport-height track is one frame change every
+     * ~28 px of scroll. While your finger is moving you blow through those
+     * far too fast to see. But `scrub` keeps easing AFTER you let go, and
+     * that settle crawls through the last few steps slowly — which is
+     * exactly when a hard swap from one frame to the next becomes visible
+     * as a judder. The scroll was never the problem; the STOP was.
+     *
+     * The obvious fix is more frames, and it is the wrong one: smooth
+     * enough to hide it needs ~10 fps, which is 200+ frames and 15 MB.
+     *
+     * Instead, blend. Take the exact fractional position, draw the frame
+     * below it, then draw the frame above it at the fractional alpha. The
+     * in-between positions now render as an actual blend of two frames
+     * rather than snapping to the nearest, so motion is continuous at any
+     * speed — including the near-zero speed of a settle. Costs one extra
+     * drawImage and zero extra bytes.
+     */
+    const drawBlended = (exact: number) => {
+      const lo = Math.floor(exact);
+      const hi = Math.min(lo + 1, FRAME_COUNT - 1);
+      const f = exact - lo;
+
+      const a = usable(lo) ?? (nearestLoaded(lo) >= 0 ? usable(nearestLoaded(lo)) : null);
+      if (!a) return;
+
+      // Below ~2% or above ~98% there is nothing to blend toward that the
+      // eye can resolve — skip the second draw and keep it cheap.
+      if (f < 0.02 || lo === hi) {
+        if (currentFrame.current === lo) return;
+        currentFrame.current = lo;
+        paint(a, 1);
+        return;
+      }
+
+      const b = usable(hi);
+      if (!b) {
+        if (currentFrame.current === lo) return;
+        currentFrame.current = lo;
+        paint(a, 1);
+        return;
+      }
+
+      // Any blend must repaint every tick — the alpha changed even when the
+      // integer frame did not, so the early-out above would freeze it.
+      currentFrame.current = -1;
+      paint(a, 1);
+      paint(b, f);
     };
 
     /** Nearest frame we actually have decoded, searching backwards. */
@@ -304,12 +366,7 @@ export default function HeroScrollMobile() {
         onUpdate: (self) => {
           const p = self.progress;
 
-          const target = Math.min(
-            FRAME_COUNT - 1,
-            Math.round(p * (FRAME_COUNT - 1)),
-          );
-          const drawable = nearestLoaded(target);
-          if (drawable >= 0) draw(drawable);
+          drawBlended(Math.max(0, Math.min(FRAME_COUNT - 1, p * (FRAME_COUNT - 1))));
 
           const fade = 0.04;
           SCENES.forEach((scene, i) => {

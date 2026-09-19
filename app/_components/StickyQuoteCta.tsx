@@ -30,10 +30,42 @@ export default function StickyQuoteCta() {
 
   useEffect(() => {
     if (skip) return;
-    const onScroll = () => setVisible(window.scrollY > 600);
+
+    /**
+     * 🔴 `scrollY > 600` alone is wrong on the homepage.
+     *
+     * The mobile hero is PINNED for five viewport-heights, so scrollY sails
+     * past 600 while the visitor is still inside the walkthrough — and this
+     * pill lands on top of the caption panel at z-index 90.
+     *
+     * So: also require that the hero has actually been scrolled past. GSAP
+     * pins by wrapping the section in a `.pin-spacer`, and it is the
+     * SPACER that occupies real page space — measuring the section itself
+     * gives a fixed-position rect that never moves. Walk up to the spacer
+     * when there is one.
+     *
+     * Every other page has no #us-hero-mobile, so heroPassed stays true and
+     * the original 600px behaviour is untouched.
+     */
+    const heroCleared = () => {
+      const hero = document.getElementById('us-hero-mobile');
+      if (!hero) return true;
+      // Desktop renders a different hero and hides this one entirely.
+      if (hero.offsetParent === null && getComputedStyle(hero).display === 'none') {
+        return true;
+      }
+      const el = (hero.closest('.pin-spacer') as HTMLElement | null) ?? hero;
+      return el.getBoundingClientRect().bottom <= 0;
+    };
+
+    const onScroll = () => setVisible(window.scrollY > 600 && heroCleared());
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
+    window.addEventListener('resize', onScroll, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+    };
   }, [skip]);
 
   if (skip) return null;

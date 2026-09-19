@@ -28,24 +28,29 @@ gsap.registerPlugin(ScrollTrigger);
  * pixels.
  *
  * ── The frames ───────────────────────────────────────────────────────
- * /public/hero-frames/f0001…f0121.webp — 121 frames, 1050×1890, ~60 KB
- * each, 7.2 MB total. Cut from "Phone site 3d scroll.mp4", a NATIVE 9:16
- * 4K walkthrough (2134×3840) generated room-by-room in Kling, not a crop
- * of the landscape desktop video:
+ * /public/hero-frames/f0001…f0121.webp — 121 frames, 1242×2234, ~78 KB
+ * each, 9.2 MB total. Cut from a NATIVE 9:16 4K walkthrough (2134×3840)
+ * generated room-by-room in Kling — master archived at
+ * 05_LIBRARY/photography/walkthrough_source_stills/
+ * walkthrough_portrait_4K_MASTER.mp4 :
  *
- *   ffmpeg -i "Phone site 3d scroll.mp4" \
- *     -vf "fps=6,scale=1050:-2:flags=lanczos" \
- *     -c:v libwebp -quality 66 -compression_level 6 \
+ *   ffmpeg -i walkthrough_portrait_4K_MASTER.mp4 \
+ *     -vf "fps=6,scale=1242:-2:flags=lanczos" \
+ *     -c:v libwebp -quality 72 -compression_level 6 \
  *     public/hero-frames/f%04d.webp
  *
  * Re-run that if the walkthrough is ever re-cut, and update FRAME_COUNT.
  *
- * WHY 1050 px WIDE. The previous pass cropped the 1920×1068 desktop video
- * to 9:16, which caps at 601 px of real detail — about half of what a
- * modern phone screen resolves, and it looked exactly that soft. The 4K
- * portrait source removes that ceiling. 1050 px is 89 % of an iPhone Pro's
- * 1179 px and the point where file size stops buying visible sharpness on
- * marble this fine-grained.
+ * WHY 1242 px WIDE — and why it moved twice. The first pass cropped the
+ * 1920×1068 desktop video to 9:16, which caps at 601 px of real detail,
+ * roughly half what a phone resolves, and looked exactly that soft. The 4K
+ * portrait source removed that ceiling and the frames went to 1050 px.
+ * That was still wrong, just less visibly: the canvas runs at devicePixel
+ * ratio, so an iPhone Pro backing store is 1179 px and a 1050 px frame was
+ * being UPSCALED into it. 1242 px clears 1179 with headroom, so the frame
+ * is never stretched on any current phone. Match these two numbers if
+ * either ever changes — a frame narrower than the canvas is sharpness
+ * thrown away twice over.
  *
  * ── Full-bleed, and no longer a crop ─────────────────────────────────
  * The source is shot natively in portrait, so nothing is thrown away and
@@ -167,16 +172,30 @@ export default function HeroScrollMobile() {
     imagesRef.current = images;
 
     /**
-     * Size the backing store to the device's real pixels, capped at 2×.
-     * Uncapped, a 3× phone paints ~2.5× the pixels of a 2× one for a
-     * difference nobody can see, and pays for it in fill rate on exactly
-     * the devices with the least of it.
+     * 🔴 THIS CAP WAS COSTING US THE SHARPNESS WE HAD ALREADY PAID FOR.
+     *
+     * It was 2×. On a 3× phone that makes the canvas 393 × 2 = 786 px wide
+     * — so every 1050 px frame was being DOWNSCALED to 786 before it hit
+     * the screen. We shipped the pixels, encoded them, sent them over the
+     * wire, and then threw a quarter of them away in the last step.
+     *
+     * At 3× the canvas is 1179 px and the frame is used at full width.
+     * The cost is one larger drawImage per scroll tick, which is a blit —
+     * the GPU does not care. The cap stays at 3 only to stop a 4× device
+     * from allocating a needlessly huge backing store.
      */
     const sizeCanvas = () => {
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      canvas.width = Math.round(window.innerWidth * dpr);
-      canvas.height = Math.round(window.innerHeight * dpr);
+      const dpr = Math.min(window.devicePixelRatio || 1, 3);
+      const w = Math.round(window.innerWidth * dpr);
+      const h = Math.round(window.innerHeight * dpr);
+      // Assigning width/height CLEARS the canvas, so only touch it when the
+      // size really changed. The URL bar sliding away fires `resize` many
+      // times; doing this every time is what made the hero flash mid-scroll.
+      if (canvas.width === w && canvas.height === h) return false;
+      canvas.width = w;
+      canvas.height = h;
       currentFrame.current = -1; // force a repaint at the new size
+      return true;
     };
 
     /**
@@ -247,11 +266,24 @@ export default function HeroScrollMobile() {
         trigger: container,
         start: 'top top',
         end: `+=${SCENES.length * 100}%`,
-        scrub: 0.6,
+        // 0.6 on desktop is driven by Lenis, which already smooths the
+        // wheel. Touch has no such smoothing — a finger flick arrives as a
+        // burst of large deltas, and at 0.6 the canvas snaps between frames
+        // in steps you can see. 1.1 lets the scrub EASE toward the scroll
+        // position instead of tracking it exactly, which is what reads as
+        // "smooth" on a phone. It is not a slower scroll; the page still
+        // moves with the finger, only the frame catch-up is damped.
+        scrub: 1.1,
         pin: true,
         pinSpacing: true,
         anticipatePin: 1,
         invalidateOnRefresh: true,
+        // Leaving the hero must not leave a stale or blank canvas behind.
+        // Pin the ends explicitly so the last frame stays put when the user
+        // scrolls on into the site, and the first is restored coming back.
+        onLeave: () => draw(nearestLoaded(FRAME_COUNT - 1)),
+        onLeaveBack: () => draw(nearestLoaded(0)),
+        onEnterBack: () => draw(nearestLoaded(FRAME_COUNT - 1)),
         onUpdate: (self) => {
           const p = self.progress;
 
@@ -302,16 +334,21 @@ export default function HeroScrollMobile() {
       const delta = Math.abs(h - lastHeight);
       lastHeight = h;
 
-      sizeCanvas();
-      const i = nearestLoaded(Math.max(currentFrame.current, 0));
-      if (i >= 0) draw(i);
+      // Remember what was on screen BEFORE sizeCanvas() wipes it.
+      const showing = currentFrame.current;
+      const changed = sizeCanvas();
+      if (changed) {
+        const i = nearestLoaded(showing >= 0 ? showing : 0);
+        if (i >= 0) draw(i);
+      }
 
       if (delta > CHROME_TOGGLE_MAX) ScrollTrigger.refresh();
     };
     const onOrientation = () => {
       lastHeight = window.innerHeight;
+      const showing = currentFrame.current;
       sizeCanvas();
-      const i = nearestLoaded(Math.max(currentFrame.current, 0));
+      const i = nearestLoaded(showing >= 0 ? showing : 0);
       if (i >= 0) draw(i);
       ScrollTrigger.refresh();
     };
@@ -328,7 +365,7 @@ export default function HeroScrollMobile() {
   }, []);
 
   return (
-    <section ref={containerRef} className={styles.container}>
+    <section id="us-hero-mobile" ref={containerRef} className={styles.container}>
       <canvas ref={canvasRef} className={styles.canvas} aria-hidden="true" />
       {/* Poster underneath the canvas so the very first paint is the
           kitchen rather than flat navy. It fades out once real frames

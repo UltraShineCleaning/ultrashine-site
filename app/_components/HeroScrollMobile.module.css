@@ -19,19 +19,27 @@
 
 .container {
   position: relative;
-  /* 🔴 This was `100svh` and that is what produced the white strip along
-     the bottom of the hero once the URL bar slid away.
-     `svh` is the SMALL viewport — the height you get while the browser
-     chrome is SHOWING. The moment the chrome hides, the real viewport
-     grows to the LARGE height and a hero sized to `svh` is now shorter
-     than the screen. The page background shows through underneath it.
-     `dvh` is the DYNAMIC height: it tracks the viewport as the chrome
-     comes and goes, so the hero fills the screen in both states. The
-     usual objection to `dvh` is reflow thrash during the transition,
-     which does not apply here — everything inside is absolutely
-     positioned, so nothing re-flows, it just resizes. */
-  height: 100vh; /* fallback for anything without dvh */
-  height: 100dvh;
+  /* 🔴 THIRD attempt at this, so the reasoning is worth writing down.
+     `svh` (small viewport) = the height while browser chrome is SHOWING.
+     `lvh` (large viewport) = the height once the chrome has HIDDEN.
+     `dvh` (dynamic)        = whichever is true right now.
+
+     svh left a white strip the moment the URL bar slid away, because the
+     screen got taller and the hero did not.
+
+     dvh fixed the steady states but not the TRANSITION: GSAP pins by
+     switching the element to position:fixed and inserting a spacer sized
+     at pin time. While the chrome animates away, the viewport and the
+     spacer disagree for a few frames and white flashes through the seam.
+
+     lvh is the one that cannot fail. The hero is ALWAYS sized to the
+     tallest the viewport will ever be, so there is never a gap to show —
+     at worst the bottom strip sits behind the chrome while it is still
+     visible, which is why the copy block below reserves clearance for
+     exactly that. A hero slightly too tall is invisible. A hero slightly
+     too short is a white bar. */
+  height: 100vh;  /* fallback for anything without lvh */
+  height: 100lvh; /* see note above */
   overflow: hidden;
   background: var(--navy-deep);
 }
@@ -87,8 +95,12 @@
      under the logo with the headline crowding the GET QUOTE button.
      Clearing the whole nav plus a real gap under it. */
   top: calc(118px + env(safe-area-inset-top));
-  /* Room for the scroll cue, which shares this bottom edge. */
-  bottom: calc(46px + env(safe-area-inset-bottom));
+  /* CHROME BAND. Because the section is 100lvh, its bottom ~100px sits
+     behind the browser chrome for as long as that chrome is on screen —
+     which is exactly the first moment anyone sees the page. Nothing that
+     matters may live down there. Reserved: 100px for the chrome, then the
+     cue and skip row, then the caption panel above both. */
+  bottom: calc(150px + env(safe-area-inset-bottom));
   left: 20px;
   right: 20px;
   z-index: 2;
@@ -166,34 +178,38 @@
   text-align: center;
 }
 
-/* Moved out of the nav band entirely — it was overlapping the hamburger
-   and the GET QUOTE button, which is the collision in the recording.
-   It now sits just below the nav, right-aligned to the same 20px gutter
-   as the copy so the two edges agree. */
+/* A "skip" control is an escape hatch, not a feature. It was reading as a
+   primary button — too large, too bright, and sitting in the nav band
+   where it fought the hamburger. Now it is small, quiet, bottom-RIGHT,
+   diagonally opposite the scroll cue so the two never collide, and out of
+   the way of both the nav above and the caption panel beside it. */
 .skipBtn {
   position: absolute;
-  top: calc(84px + env(safe-area-inset-top));
+  bottom: calc(100px + env(safe-area-inset-bottom));
   right: 20px;
-  z-index: 3;
+  z-index: 4;
   font-family: var(--font-outfit), sans-serif;
-  font-size: 11px;
-  letter-spacing: 0.14em;
+  font-size: 9.5px;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--cream);
-  opacity: 0.75;
+  opacity: 0.55;
   text-decoration: none;
-  padding: 9px 14px;
-  border: 1px solid rgba(255, 255, 255, 0.28);
+  padding: 7px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 999px;
-  background: rgba(9, 20, 40, 0.3);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
+  background: rgba(9, 20, 40, 0.25);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
 }
 
 .cue {
   position: absolute;
   left: 20px;
-  bottom: calc(16px + env(safe-area-inset-bottom));
+  /* Same baseline as the skip pill on the right — a shared invisible line
+     across the bottom of the frame reads as composed; two controls at two
+     different heights reads as an accident. */
+  bottom: calc(100px + env(safe-area-inset-bottom));
   z-index: 3;
   display: flex;
   align-items: center;

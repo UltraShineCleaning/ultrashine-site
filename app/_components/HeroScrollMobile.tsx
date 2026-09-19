@@ -28,25 +28,33 @@ gsap.registerPlugin(ScrollTrigger);
  * pixels.
  *
  * ── The frames ───────────────────────────────────────────────────────
- * /public/hero-frames/f0001…f0131.webp — 131 frames, 828×1472 (9:16),
- * ~29 KB each, 3.7 MB total. Generated from the same walkthrough.mp4
- * the desktop hero uses, so the two heroes can never drift apart:
+ * /public/hero-frames/f0001…f0121.webp — 121 frames, 1050×1890, ~60 KB
+ * each, 7.2 MB total. Cut from "Phone site 3d scroll.mp4", a NATIVE 9:16
+ * 4K walkthrough (2134×3840) generated room-by-room in Kling, not a crop
+ * of the landscape desktop video:
  *
- *   ffmpeg -i public/videos/walkthrough.mp4 \
- *     -vf "fps=5,crop=in_h*9/16:in_h,scale=828:1472:flags=lanczos" \
- *     -c:v libwebp -quality 60 -compression_level 4 \
+ *   ffmpeg -i "Phone site 3d scroll.mp4" \
+ *     -vf "fps=6,scale=1050:-2:flags=lanczos" \
+ *     -c:v libwebp -quality 66 -compression_level 6 \
  *     public/hero-frames/f%04d.webp
  *
  * Re-run that if the walkthrough is ever re-cut, and update FRAME_COUNT.
  *
- * ── Full-bleed, deliberately ─────────────────────────────────────────
- * The frames are cropped to 9:16 rather than letterboxed into the brand
- * navy. Bars would preserve the whole wide composition but shrink the
- * room to a stripe in the middle of the screen; the point of the hero is
- * that you feel like you are standing in the house.
+ * WHY 1050 px WIDE. The previous pass cropped the 1920×1068 desktop video
+ * to 9:16, which caps at 601 px of real detail — about half of what a
+ * modern phone screen resolves, and it looked exactly that soft. The 4K
+ * portrait source removes that ceiling. 1050 px is 89 % of an iPhone Pro's
+ * 1179 px and the point where file size stops buying visible sharpness on
+ * marble this fine-grained.
+ *
+ * ── Full-bleed, and no longer a crop ─────────────────────────────────
+ * The source is shot natively in portrait, so nothing is thrown away and
+ * nothing is letterboxed. Bars would have preserved a wide composition
+ * but shrunk the room to a stripe in the middle of the screen; the point
+ * of the hero is that you feel like you are standing in the house.
  */
 
-const FRAME_COUNT = 131;
+const FRAME_COUNT = 121;
 const framePath = (i: number) =>
   `/hero-frames/f${String(i).padStart(4, '0')}.webp`;
 
@@ -69,8 +77,19 @@ type Scene = {
 };
 
 /**
- * Same five beats and the same scrub windows as the desktop hero, but the
- * HEADLINES ARE NOT THE DESKTOP HEADLINES.
+ * Five beats, same rooms and same order as desktop — but BOTH the windows
+ * and the headlines are this component's own.
+ *
+ * The windows below were read off "Phone site 3d scroll.mp4" frame by
+ * frame at 1 fps, not copied from desktop. The two videos are different
+ * cuts: desktop runs 26.27 s as one continuous take, this one is 20.225 s
+ * assembled from four Kling transitions, so the rooms sit at completely
+ * different fractions of the scroll. Re-read them if the video is re-cut.
+ *
+ * Measured arrivals (of 20.225 s): kitchen 0–2.5 s · living 4.0–6.8 ·
+ * office 9.3–11.6 · bathroom 13.8–16.5 · bedroom 18.6–20.2.
+ *
+ * THE HEADLINES ARE ALSO NOT THE DESKTOP HEADLINES.
  *
  * Desktop runs 72–84px across two lines. Dropped onto a 390pt phone that
  * is four or five lines of text covering the room you are trying to show.
@@ -86,38 +105,38 @@ const SCENES: Scene[] = [
     headlineHtml: 'A home that <em>shines</em>.',
     body: 'Stovetop degreased, backsplash wiped, cabinet fronts spot-cleaned — and the appliance handles everyone else skips.',
     start: 0.0,
-    end: 0.13,
+    end: 0.12,
   },
   {
     id: 'living',
     eyebrow: 'FABRICS · SURFACES · LIGHT',
     headlineHtml: 'Into the <em>living room</em>.',
     body: 'Baseboards, door tops, switch plates, vent grilles. Then a cobweb sweep, corner to corner.',
-    start: 0.17,
-    end: 0.28,
+    start: 0.19,
+    end: 0.34,
   },
   {
     id: 'office',
     eyebrow: 'SHELVES · SCREENS · SURFACES',
     headlineHtml: 'Through to the <em>office</em>.',
     body: 'A separate cloth for every room, colour-coded — so nothing from a bathroom ever reaches a desk.',
-    start: 0.33,
-    end: 0.45,
+    start: 0.45,
+    end: 0.58,
   },
   {
     id: 'bathroom',
     eyebrow: 'MARBLE · GROUT · FIXTURES',
     headlineHtml: 'Down to the <em>bathroom</em>.',
     body: 'Behind the toilet. Inside the shower door tracks. The exhaust grille. Not just the parts that show.',
-    start: 0.58,
-    end: 0.76,
+    start: 0.67,
+    end: 0.82,
   },
   {
     id: 'bedroom',
     eyebrow: 'CUSTOM QUOTE · WITHIN THE HOUR',
     headlineHtml: 'And the <em>bedroom</em>.',
     body: 'Tell us about your home. A precise quote by text within the hour.',
-    start: 0.84,
+    start: 0.9,
     end: 1.0,
     showCta: true,
   },
@@ -133,7 +152,7 @@ export default function HeroScrollMobile() {
   useEffect(() => {
     // CSS hides this whole section above 1024px, but hidden markup still
     // runs its effects — without this guard every desktop visitor would
-    // quietly download 131 frames they will never see.
+    // quietly download 121 frames they will never see.
     if (window.matchMedia('(min-width: 1025px)').matches) return;
 
     const canvas = canvasRef.current;

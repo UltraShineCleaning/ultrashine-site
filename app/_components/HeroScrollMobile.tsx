@@ -70,6 +70,23 @@ const framePath = (i: number) =>
  */
 const WARMUP_FRAMES = 12;
 
+/**
+ * How much page scroll the pinned hero consumes, in viewport-heights.
+ *
+ * THIS IS THE SPEED DIAL. The 121 frames are spread evenly across this
+ * distance, so a smaller number means the same walkthrough plays out over
+ * less finger travel and feels faster; a larger number slows it down. It
+ * does not change scroll speed itself — the page still tracks the finger —
+ * only how much of it the hero occupies.
+ *
+ * Was 5 (one viewport-height per room, which is the obvious default and
+ * the reason nobody questions it). 4 is ~20 % quicker through the house
+ * without making any single room flash past. Below about 3 the transitions
+ * start to feel snatched, because each Kling clip only gets ~0.6 of a
+ * screen to play.
+ */
+const SCROLL_LENGTH_VH = 4;
+
 type Scene = {
   id: string;
   eyebrow: string;
@@ -265,7 +282,7 @@ export default function HeroScrollMobile() {
       ScrollTrigger.create({
         trigger: container,
         start: 'top top',
-        end: `+=${SCENES.length * 100}%`,
+        end: `+=${SCROLL_LENGTH_VH * 100}%`,
         // 0.6 on desktop is driven by Lenis, which already smooths the
         // wheel. Touch has no such smoothing — a finger flick arrives as a
         // burst of large deltas, and at 0.6 the canvas snaps between frames

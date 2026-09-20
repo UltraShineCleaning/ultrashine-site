@@ -5,6 +5,9 @@ import { SpeedInsights } from '@vercel/speed-insights/next';
 import './globals.css';
 import SmoothScrollProvider from './_components/SmoothScrollProvider';
 import JsonLd from './_components/JsonLd';
+// The Google rating + review count live in ONE place. The JSON-LD below reads
+// them from there instead of carrying its own copy, which had drifted.
+import { RATING as GOOGLE_RATING, COUNT as GOOGLE_REVIEW_COUNT } from './_lib/google-reviews';
 import StickyQuoteCta from './_components/StickyQuoteCta';
 
 // =====================================================================
@@ -139,10 +142,15 @@ const SITE_SCHEMA = [
       },
     ],
     areaServed: SERVICE_AREA,
+    // Read from the SOLE source in _lib/google-reviews.ts rather than carrying a
+    // second copy. The old hardcoded pair was '5.0' with a count of '25' — the
+    // rating from Google, the count from HomeAdvisor. Blended, it described a
+    // dataset that exists on neither platform, and Google's structured-data
+    // policy requires aggregate ratings to be real and verifiable.
     aggregateRating: {
       '@type': 'AggregateRating',
-      ratingValue: '5.0',
-      reviewCount: '25',
+      ratingValue: String(GOOGLE_RATING),
+      reviewCount: String(GOOGLE_REVIEW_COUNT),
       bestRating: '5',
       worstRating: '1',
     },
@@ -178,9 +186,19 @@ const SITE_SCHEMA = [
         publisher: { '@type': 'Organization', name: 'HomeAdvisor' },
         datePublished: '2024-04-08',
       },
+      // REMOVED 2026-09-20: a third entity credited to "Boca Raton Homeowner"
+      // with publisher Google and the text "Ultra Shine has been cleaning our
+      // Boca Raton home for over a year..." — that review does not exist. It
+      // appears nowhere in the Google profile mirror in _lib/google-reviews.ts
+      // and nowhere on the live listing. Fabricated review markup attributed to
+      // Google is a structured-data policy violation and risks a manual action
+      // that would strip rich results from the whole site.
+      //
+      // Replaced with two REAL Google reviews, quoted verbatim from the mirror,
+      // under the reviewers' real names as they appear on the profile.
       {
         '@type': 'Review',
-        author: { '@type': 'Person', name: 'Boca Raton Homeowner' },
+        author: { '@type': 'Person', name: 'Connor Rowland' },
         reviewRating: {
           '@type': 'Rating',
           ratingValue: '5',
@@ -188,9 +206,23 @@ const SITE_SCHEMA = [
           worstRating: '1',
         },
         reviewBody:
-          'Ultra Shine has been cleaning our Boca Raton home for over a year. The team is consistent, thorough, and trustworthy. Highly recommend.',
+          "Francine and her team have been cleaning our home for quite some time now. They're consistent in their product and we will continue to use them. We are very happy with their service.",
         publisher: { '@type': 'Organization', name: 'Google' },
-        datePublished: '2025-01-15',
+        datePublished: '2026-08-17',
+      },
+      {
+        '@type': 'Review',
+        author: { '@type': 'Person', name: 'Pedro Alves' },
+        reviewRating: {
+          '@type': 'Rating',
+          ratingValue: '5',
+          bestRating: '5',
+          worstRating: '1',
+        },
+        reviewBody:
+          'Honestly, I don’t usually leave reviews, but this one is deserved. The house looked amazing after — super clean, organized, and you can tell she really cares about the details.',
+        publisher: { '@type': 'Organization', name: 'Google' },
+        datePublished: '2026-05-31',
       },
     ],
     sameAs: [

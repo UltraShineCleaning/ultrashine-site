@@ -43,9 +43,17 @@ export type GoogleReviewsPayload = {
 /** Public Google Maps link for the business — used for "Read more on Google" buttons */
 const GOOGLE_PROFILE_URL = 'https://maps.app.goo.gl/DrJtdje7XW1g8fDk9';
 
-/** Aggregate rating and count — update when new reviews come in */
-const RATING = 5.0;
-const COUNT = 18;
+/**
+ * Aggregate rating and count — update when new reviews come in.
+ *
+ * EXPORTED because app/layout.tsx's CleaningService JSON-LD needs the same two
+ * numbers. It used to hardcode its own copy, and the copy was wrong: it paired
+ * Google's 5.0 rating with HomeAdvisor's count of 25, describing a dataset that
+ * does not exist on either platform. Two sources for one fact is how that
+ * happens, so there is now one source. Update here, both places follow.
+ */
+export const RATING = 5.0;
+export const COUNT = 18;
 
 /** Approximate unix seconds for "3 months ago" as of 2026-08-31 */
 const MONTHS_3_AGO = Math.floor(new Date('2026-05-31T00:00:00Z').getTime() / 1000);

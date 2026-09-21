@@ -53,7 +53,12 @@ const GOOGLE_PROFILE_URL = 'https://maps.app.goo.gl/DrJtdje7XW1g8fDk9';
  * happens, so there is now one source. Update here, both places follow.
  */
 export const RATING = 5.0;
-export const COUNT = 18;
+// 22 verified on the live Google listing 2026-09-21 (was 18 at the 2026-08-31
+// pull). COUNT is the AGGREGATE shown in the rating badge and the JSON-LD; the
+// REVIEWS array below is a sample, so the two do not have to match in length.
+// Four reviews have arrived since the last pull and are not mirrored yet —
+// Ruth Zacharias is one of them. Add them when their text is to hand.
+export const COUNT = 22;
 
 /** Approximate unix seconds for "3 months ago" as of 2026-08-31 */
 const MONTHS_3_AGO = Math.floor(new Date('2026-05-31T00:00:00Z').getTime() / 1000);

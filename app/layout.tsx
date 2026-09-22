@@ -132,13 +132,28 @@ const SITE_SCHEMA = [
       latitude: 26.3683,
       longitude: -80.1289,
     },
-    // Mon-Sat 7am-5pm, Sunday closed. Schema.org uses ISO weekday names.
+    // Mon-Fri 7am-5pm, Sat 8am-12pm, Sunday closed. Schema.org uses ISO weekday
+    // names.
+    //
+    // CORRECTED 2026-09-22: this used to list Saturday in the Mon-Fri block at
+    // 07:00-17:00, while the Google Business Profile says Saturday 8 AM to 12 PM.
+    // Google cross-checks structured data against the Business Profile, so the
+    // two disagreeing is a trust signal against us — and worse, a customer could
+    // read the site and turn up expecting Saturday afternoon service. The
+    // Business Profile is the source of truth for hours; this now matches it.
+    // If the real hours change, change them in BOTH places on the same day.
     openingHoursSpecification: [
       {
         '@type': 'OpeningHoursSpecification',
-        dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+        dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
         opens: '07:00',
         closes: '17:00',
+      },
+      {
+        '@type': 'OpeningHoursSpecification',
+        dayOfWeek: 'Saturday',
+        opens: '08:00',
+        closes: '12:00',
       },
     ],
     areaServed: SERVICE_AREA,

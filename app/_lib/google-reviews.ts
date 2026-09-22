@@ -64,6 +64,12 @@ export const COUNT = 22;
 const MONTHS_3_AGO = Math.floor(new Date('2026-05-31T00:00:00Z').getTime() / 1000);
 /** Approximate unix seconds for Connor Rowland's "Edited 2 weeks ago" */
 const WEEKS_2_AGO = Math.floor(new Date('2026-08-17T00:00:00Z').getTime() / 1000);
+/** Michele Cavalieri — "a week ago" as read on the listing 2026-09-21 */
+const WEEK_1_AGO = Math.floor(new Date('2026-09-14T00:00:00Z').getTime() / 1000);
+/** Maria Torbica — "5 days ago" as read on the listing 2026-09-21 */
+const DAYS_5_AGO = Math.floor(new Date('2026-09-16T00:00:00Z').getTime() / 1000);
+/** Cindy Finley — posted 2026-09-21, read off the owner reply screen */
+const TODAY_2026_09_21 = Math.floor(new Date('2026-09-21T00:00:00Z').getTime() / 1000);
 
 /**
  * All Google reviews, in the order they appear on the profile. All 5-star.
@@ -75,6 +81,31 @@ const WEEKS_2_AGO = Math.floor(new Date('2026-08-17T00:00:00Z').getTime() / 1000
  * account display names.
  */
 const REVIEWS: GoogleReview[] = [
+  // Read verbatim off the live Google listing 2026-09-21. Ruth Zacharias (3
+  // weeks ago) is the one other review from this batch that is NOT mirrored —
+  // her text is truncated on the public listing and mirroring half a sentence
+  // would put words in a customer's mouth.
+  {
+    author_name: 'Cindy Finley',
+    rating: 5,
+    relative_time_description: 'today',
+    text: "Ultra Shine Cleaning is the BEST cleaning service that I've had. They go over and beyond. If you need anything extra done...no problem. They are always on time.",
+    time: TODAY_2026_09_21,
+  },
+  {
+    author_name: 'Maria Torbica',
+    rating: 5,
+    relative_time_description: '5 days ago',
+    text: 'The house has never looked better and they are so detailed and clean it dust free and spotless !!!',
+    time: DAYS_5_AGO,
+  },
+  {
+    author_name: 'Michele Cavalieri',
+    rating: 5,
+    relative_time_description: 'a week ago',
+    text: 'They have been cleaning my house for over a year and they have been very thorough and dependable. I would highly recommend them to a friend .',
+    time: WEEK_1_AGO,
+  },
   {
     author_name: 'Connor Rowland',
     rating: 5,

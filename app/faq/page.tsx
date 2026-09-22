@@ -76,6 +76,33 @@ const CATEGORIES: FaqCategory[] = [
         q: 'Can I customize what gets cleaned?',
         a: "Of course. Tell us in advance what you want extra attention on or what to skip. Some clients book 'targeted deep' for just kitchen + bathrooms. Some want laundry folded or beds made. Tell us — we'll customize.",
       },
+      // The three below exist because these are real questions people type into
+      // Google and the site answered none of them. "Maid service", "house
+      // cleaners", "apartment cleaning" and "condo cleaning" appeared ZERO times
+      // across the whole site, while competitors in Boca rank on all four.
+      // Answering them here rather than rebranding around them is deliberate:
+      // this page carries FAQPage schema, so the answers can surface directly in
+      // Google, and the brand stays where it is instead of chasing a downmarket
+      // term into the hero copy.
+      {
+        q: 'Are you a maid service or a cleaning service?',
+        a: "Both words describe the same work, and people search for both. Traditionally a maid service meant recurring housekeeping and a cleaning company meant one-off jobs. We do both: recurring house cleaning on a weekly, bi-weekly or monthly schedule, plus one-time deep cleans, move-outs, offices and post-construction. Call it whichever you like — the standard is the same.",
+      },
+      {
+        q: 'Do you clean apartments and condos, or only houses?',
+        a: "Apartments and condos are a large part of what we do, which makes sense in South Florida. High-rise units, seasonal condos, and rentals between tenants are all regular work for us. We know how building access, service elevators and management sign-in work, and we can coordinate with your front desk or property manager if that's easier than meeting us yourself.",
+      },
+      {
+        q: 'Do you clean vacation rentals and Airbnbs between guests?',
+        // Every claim here is one the site already makes elsewhere: quick-turn
+        // rental cleanings on tight deadlines and recurring changeover bookings
+        // (services/move-in-out), same-day cleans for short-notice guest
+        // arrivals (Pompano Beach city data), beds made IF fresh linens are left
+        // out (regular-cleaning checklist — we do not launder linens), and the
+        // hotel-grade standard (about page). An earlier draft of this answer
+        // promised a photo check and linen changes. We offer neither.
+        a: "Yes, and most owners end up booking us for every changeover rather than one at a time. We work the tight window between checkout and check-in, including same-day when a booking lands on short notice. Kitchen and bathrooms get reset to the standard you'd want a paying guest to walk into, and we'll make the beds if you leave fresh linens out. Send us your booking calendar and we'll work to it.",
+      },
     ],
   },
   {

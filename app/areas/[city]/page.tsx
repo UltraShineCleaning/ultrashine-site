@@ -106,8 +106,11 @@ export default function CityPage({ params }: { params: Params }) {
           <p className={styles.heroEyebrow}>
             {city.county.toUpperCase()} COUNTY · NOW SERVING
           </p>
+          {/* "House cleaning service in X" is the phrase people actually type.
+              "Cleaning service in X" was missing the single most-searched word
+              in this category, on all 13 city pages at once. */}
           <h1 className={styles.heroHeadline}>
-            Cleaning service in <em>{city.name}</em>, FL.
+            House cleaning service in <em>{city.name}</em>, FL.
           </h1>
           <p className={styles.heroSub}>{city.vibe}</p>
         </div>

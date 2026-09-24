@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
+import { isAdmin } from '../../../_lib/adminAuth';
 
 /**
  * GET /api/jobber/callback?code=...&state=...
@@ -15,15 +16,12 @@ import { cookies } from 'next/headers';
  * access_token each time.
  */
 
-const COOKIE_NAME = 'us_admin';
 const STATE_COOKIE = 'us_jobber_oauth_state';
 const JOBBER_TOKEN_URL = 'https://api.getjobber.com/api/oauth/token';
 
 export async function GET(req: Request) {
   // Admin auth check
-  const cookie = cookies().get(COOKIE_NAME)?.value;
-  const password = process.env.ADMIN_PASSWORD;
-  if (!password || cookie !== password) {
+  if (!isAdmin()) {
     return NextResponse.redirect(
       new URL('/admin/login', 'https://ultrashinecleaningfl.com'),
     );

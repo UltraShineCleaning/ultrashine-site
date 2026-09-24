@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { Resend } from 'resend';
+import { isAdmin } from '../../../_lib/adminAuth';
 
 /**
  * POST /api/admin/send-review-request
@@ -19,7 +20,6 @@ import { Resend } from 'resend';
  * Env:  RESEND_API_KEY (already configured in Vercel)
  */
 
-const COOKIE_NAME = 'us_admin';
 const FROM_EMAIL = 'Ultra Shine Cleaning <onboarding@resend.dev>';
 const REVIEW_URL = 'https://ultrashinecleaningfl.com/leave-a-review';
 
@@ -107,9 +107,7 @@ function renderHtml(name: string, service?: string): string {
 
 export async function POST(req: Request) {
   // Auth check — same cookie pattern as /admin pages
-  const cookie = cookies().get(COOKIE_NAME)?.value;
-  const expected = process.env.ADMIN_PASSWORD;
-  if (!expected || cookie !== expected) {
+  if (!isAdmin()) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 

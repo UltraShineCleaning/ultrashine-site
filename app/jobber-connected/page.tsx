@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import styles from './page.module.css';
 import CopyButton from './CopyButton';
+import { isAdmin } from '../_lib/adminAuth';
 
 /**
  * /jobber-connected — Server-rendered success page after the OAuth callback.
@@ -17,7 +18,6 @@ import CopyButton from './CopyButton';
  * fully wired and can pull live Jobber data on every /admin page load.
  */
 
-const COOKIE_NAME = 'us_admin';
 
 export const dynamic = 'force-dynamic';
 
@@ -27,9 +27,7 @@ export default function JobberConnectedPage({
   searchParams: { refresh_token?: string; error?: string; expires_in?: string; auto_saved?: string };
 }) {
   // Admin gate
-  const cookie = cookies().get(COOKIE_NAME)?.value;
-  const password = process.env.ADMIN_PASSWORD;
-  if (!password || cookie !== password) redirect('/admin/login');
+  if (!isAdmin()) redirect('/admin/login');
 
   const error = searchParams.error;
   const refreshToken = searchParams.refresh_token;

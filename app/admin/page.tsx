@@ -10,6 +10,7 @@ import AdminShell from './_components/AdminShell';
 import ClientsTab from './_components/ClientsTab';
 import MoneyTab from './_components/MoneyTab';
 import { getJobberClients, getJobberMoney } from '../_lib/jobberClient';
+import { isAdmin } from '../_lib/adminAuth';
 
 export const metadata: Metadata = {
   title: 'Dashboard · Ultra Shine Cleaning',
@@ -20,7 +21,6 @@ export const metadata: Metadata = {
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
-const COOKIE_NAME = 'us_admin';
 const VERCEL_PROJECT = 'https://vercel.com/contact-8079s-projects/ultrashine-site';
 
 type LeadKind = 'quote' | 'application' | 'other';
@@ -117,9 +117,7 @@ export default async function AdminDashboard({
   searchParams?: { t?: string; refresh?: string };
 }) {
   // Cookie gate
-  const cookie = cookies().get(COOKIE_NAME)?.value;
-  const password = process.env.ADMIN_PASSWORD;
-  if (!password || cookie !== password) redirect('/admin/login');
+  if (!isAdmin()) redirect('/admin/login');
 
   // The "↻ Refresh now" button on the Jobber tab links to /admin?t=<timestamp>
   // — when that param is present we bypass the 60s/5min server cache and

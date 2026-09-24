@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
-
-const COOKIE_NAME = 'us_admin';
+import { ADMIN_COOKIE } from '../../../_lib/adminAuth';
 
 /**
  * POST /api/admin/logout
@@ -12,7 +11,7 @@ export async function POST() {
     303
   );
   res.cookies.set({
-    name: COOKIE_NAME,
+    name: ADMIN_COOKIE,
     value: '',
     httpOnly: true,
     secure: true,

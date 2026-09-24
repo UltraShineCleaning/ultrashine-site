@@ -50,8 +50,12 @@ const data: ServiceData = {
       'Floor finish (engineered hardwood, LVP, tile)',
       'Light fixtures + ceiling fans + bulbs',
       'Sticker + tape residue everywhere',
-      'Construction debris removal (small)',
-      'Move-in ready guarantee',
+      // Replaced 2026-09-24. "Construction debris removal (small)" is covered in
+      // the FAQ, and the guarantee applies site-wide. These two are where dust
+      // actually hides on a new build — and what separates a real final clean
+      // from a wipe-down.
+      'Door tops, frames + crown molding',
+      'Stairs, treads, balusters + handrail',
     ],
   },
   scenarios: [
@@ -97,6 +101,14 @@ const data: ServiceData = {
       a: "Deep cleans handle household dust + buildup. Post-construction handles drywall dust (which is much finer + harder to remove), paint specks, sticker residue, grout haze, and protective film on appliances. We vacuum every surface and use specific products that don't damage new finishes.",
     },
     {
+      q: 'Where does construction dust actually hide?',
+      a: "Everywhere air moves and everywhere it settles. The places a rushed clean skips: the tops of door frames and the top edge of every door, crown molding and the tops of upper cabinets, recessed light trims, ceiling fan blades, every AC vent and return grille, window and sliding-door tracks, inside every drawer and cabinet box, stair treads, balusters and the handrail, baseboard tops and shoe molding, outlet and switch plates, closet shelves and rods, shower-door channels, and behind and under the appliances. Drywall dust is fine enough to hang in the air and keep settling for days after the last trade leaves, and the AC pulls it through the returns and blows it back out. That's why we work top to bottom, and why a touch-up the day before move-in is worth it.",
+    },
+    {
+      q: 'Why does it cost more than a deep clean?',
+      a: "Because it's a different amount of work. A deep clean removes buildup from a home people live in. After construction, every surface in the house carries a film of fine dust, including the inside of cabinets, closets and drawers nobody has opened yet, plus stickers, protective film, paint specks and grout haze on brand-new finishes that scratch if they're cleaned the wrong way. On a large new build it's typically two to three times the hours of a deep clean. Our price follows your square footage, floors and bathrooms, so you pay for the house you actually have, not a flat rate built around an average one.",
+    },
+    {
       q: 'How long does it take?',
       a: "Every site is different — square footage, dust severity, sticker quantity, finish materials, debris volume all change the timing. Post-construction is the most variable of all our services. We give you a precise estimate when we walk through your space.",
     },
@@ -118,7 +130,6 @@ const data: ServiceData = {
     },
   ],
   ctaKeyword: 'POST',
-  estimatorPreview: { low: 420, high: 680 },
 };
 
 export default function PostConstructionPage() {

@@ -3,6 +3,20 @@ import Link from 'next/link';
 import { motion, useScroll, useTransform, useReducedMotion } from 'framer-motion';
 import { useRef, useState } from 'react';
 import { AnimatePresence } from 'framer-motion';
+import {
+  computeEstimate,
+  exampleConditionLine,
+  exampleInput,
+  type Service as EstimateService,
+} from '../../_lib/estimate';
+
+/** Service-page slug → estimator service. Commercial has no estimator. */
+const ESTIMATE_SERVICE_BY_SLUG: Record<string, EstimateService> = {
+  'regular-cleaning': 'regular',
+  'deep-cleaning': 'deep',
+  'move-in-out': 'moveout',
+  'post-construction': 'postconstruction',
+};
 import SiteHeader from '../../_components/SiteHeader';
 import SiteFooter from '../../_components/SiteFooter';
 import MotionSection from '../../_components/MotionSection';
@@ -45,7 +59,6 @@ export type ServiceData = {
    * pets / one-time) — otherwise the preview promises a number the tool
    * then contradicts. Recompute if the estimator's rate table changes.
    */
-  estimatorPreview?: { low: number; high: number };
   /**
    * Set false to hide the estimator callout. Used for Commercial, where the
    * estimator's questions (bedrooms, pets) don't apply to offices/retail.
@@ -273,7 +286,7 @@ export default function ServicePage({ data }: { data: ServiceData }) {
               What would <em>your</em> {data.name.toLowerCase()} run?
             </h2>
             <p className={service.estimatorCalloutBody}>
-              Answer 6 quick questions about your home and get a ballpark
+              Answer a few quick questions about your home and get a ballpark
               price range plus how long we&apos;d be on site. No email, no
               sign-up, no waiting.
             </p>
@@ -289,16 +302,18 @@ export default function ServicePage({ data }: { data: ServiceData }) {
               <div className={service.previewLabel}>EXAMPLE</div>
               <div className={service.previewLine}>3 Bedrooms · 2 Bathrooms</div>
               <div className={service.previewLine}>{data.name}</div>
-              <div className={service.previewLine}>Last cleaned months ago</div>
+              <div className={service.previewLine}>
+                {exampleConditionLine(ESTIMATE_SERVICE_BY_SLUG[data.slug] ?? 'regular')}
+              </div>
               <div className={service.previewResult}>
                 <span className={service.previewResultCurrency}>$</span>
                 <span className={service.previewResultNum}>
-                  {data.estimatorPreview?.low ?? 240}
+                  {computeEstimate(exampleInput(ESTIMATE_SERVICE_BY_SLUG[data.slug] ?? 'regular')).priceLow}
                 </span>
                 <span className={service.previewResultSep}>–</span>
                 <span className={service.previewResultCurrency}>$</span>
                 <span className={service.previewResultNum}>
-                  {data.estimatorPreview?.high ?? 340}
+                  {computeEstimate(exampleInput(ESTIMATE_SERVICE_BY_SLUG[data.slug] ?? 'regular')).priceHigh}
                 </span>
               </div>
               <div className={service.previewSub}>

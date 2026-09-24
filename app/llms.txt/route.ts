@@ -106,7 +106,7 @@ ${cityLines}
 
 - [Frequently asked questions](${BASE}/faq): 27 answers covering cost, scheduling, who enters your home, supplies, pets, gated communities, apartments and condos, and vacation rental turnovers.
 - [Why we don't list flat prices](${BASE}/pricing-philosophy): why a 2,000 sq ft Boca condo and a 4,500 sq ft Parkland home cannot honestly share one published rate.
-- [Cleaning cost calculator](${BASE}/cleaning-time-estimator): six questions, returns a ballpark price range and time estimate. No email required.
+- [Cleaning cost calculator](${BASE}/cleaning-time-estimator): a few quick questions including square footage and floors, returns a ballpark price range and time estimate. No email required.
 
 ## Guides
 

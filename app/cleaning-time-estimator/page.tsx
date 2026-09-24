@@ -7,90 +7,31 @@ import SiteFooter from '../_components/SiteFooter';
 import styles from './page.module.css';
 
 /**
- * /cleaning-time-estimator — Interactive 5-question estimator that returns
- * a TIME RANGE (not a price). Respects Tiago's "no flat pricing" rule
- * while still giving visitors a useful gauge before they request a quote.
+ * /cleaning-time-estimator — interactive ballpark calculator.
  *
- * Calculation:
- *   BASE hours = lookup by home size
- *   + bathroom adjustment (each over 2 adds 0.5h)
- *   + last-cleaned adjustment (recent/months/years/new construction)
- *   + pet adjustment (none/1-2/3+)
- *   × service multiplier (regular/deep/move-out/post-construction)
- *   range = ±15% on the result
- *   cleaners = 2 if total > 5h else 1
+ * The FORMULA lives in app/_lib/estimate.ts, not here. That file is also
+ * read by the "EXAMPLE" price card on /services and every service page, so
+ * the calculator and the cards can never show different numbers for the same
+ * home. Change pricing there, never here.
  *
- * Numbers are calibrated from industry-typical figures for South FL
- * homes. Honest disclaimer below the result reminds users this is a
- * rough estimate — actual quote happens after a walkthrough.
+ * Honest disclaimer below the result reminds visitors this is a ballpark —
+ * the actual quote happens after a walkthrough.
  */
 
-type HomeSize = 'studio' | '2br' | '3br' | '4br' | '5br_plus';
-type Service = 'regular' | 'deep' | 'moveout' | 'postconstruction';
-type LastCleaned = 'recent' | 'months' | 'years' | 'construction';
-type Pets = 'none' | 'few' | 'many';
-type Frequency = 'one' | 'monthly' | 'biweekly' | 'weekly';
-
-const HOME_BASE_HOURS: Record<HomeSize, number> = {
-  studio: 2,
-  '2br': 2.75,
-  '3br': 3.75,
-  '4br': 4.75,
-  '5br_plus': 5.75,
-};
-const SERVICE_MULTIPLIER: Record<Service, number> = {
-  regular: 1.0,
-  deep: 1.5,
-  moveout: 1.7,
-  postconstruction: 2.0,
-};
-const LAST_CLEANED_HOURS: Record<LastCleaned, number> = {
-  recent: 0,
-  months: 0.75,
-  years: 1.5,
-  construction: 1.0,
-};
-const PET_HOURS: Record<Pets, number> = {
-  none: 0,
-  few: 0.4,
-  many: 0.9,
-};
-
-const SERVICE_LABEL: Record<Service, string> = {
-  regular: 'Regular Cleaning',
-  deep: 'Deep Cleaning',
-  moveout: 'Move-In / Move-Out',
-  postconstruction: 'Post-Construction',
-};
-
-/* Hourly rate per cleaner. Premium South FL positioning (Boca/Palm Beach).
-   Range varies by service complexity. */
-const HOURLY_RATE_RANGE: Record<Service, [number, number]> = {
-  regular: [45, 55],
-  deep: [50, 60],
-  moveout: [50, 60],
-  postconstruction: [55, 65],
-};
-
-/* Frequency adjustment: recurring cleanings of the SAME home take less time
-   per visit because the home stays maintained between visits. Only applies
-   to regular cleaning (deep/moveout/postconstruction are one-time by nature). */
-const FREQUENCY_MULTIPLIER: Record<Frequency, number> = {
-  one: 1.0,        // one-time / no recurrence
-  monthly: 0.92,   // 30 days between visits → light maintenance discount
-  biweekly: 0.85,  // 14 days → noticeably easier
-  weekly: 0.80,    // 7 days → cleanest baseline, biggest discount
-};
-
-const FREQUENCY_LABEL: Record<Frequency, string> = {
-  one: 'One-Time',
-  monthly: 'Monthly',
-  biweekly: 'Bi-Weekly',
-  weekly: 'Weekly',
-};
-
-/* Ultra Shine ALWAYS sends a pair — 2 cleaners on every job, always. */
-const ALWAYS_CLEANERS = 2;
+import {
+  computeEstimate,
+  DEFAULT_SQFT_FOR_HOME,
+  FREQUENCY_LABEL,
+  SERVICE_LABEL,
+  SQFT_BAND_LABEL,
+  type Floors,
+  type Frequency,
+  type HomeSize,
+  type LastCleaned,
+  type Pets,
+  type Service,
+  type SqftBand,
+} from '../_lib/estimate';
 
 /**
  * Maps a `?service=` URL param to the internal Service key. Lets the five
@@ -121,6 +62,12 @@ function serviceFromParam(raw: string | null): Service {
 
 export default function CleaningTimeEstimatorPage() {
   const [homeSize, setHomeSize] = useState<HomeSize>('3br');
+  // Square footage follows the bedroom pick until the visitor chooses a band
+  // themselves — then their choice sticks. Most people know bedrooms before
+  // they know square feet, so this gives a sensible answer with zero effort.
+  const [sqft, setSqft] = useState<SqftBand>(DEFAULT_SQFT_FOR_HOME['3br']);
+  const [sqftTouched, setSqftTouched] = useState(false);
+  const [floors, setFloors] = useState<Floors>(1);
   const [bathrooms, setBathrooms] = useState(2);
   const [service, setService] = useState<Service>('regular');
   const [lastCleaned, setLastCleaned] = useState<LastCleaned>('recent');
@@ -136,36 +83,26 @@ export default function CleaningTimeEstimatorPage() {
     if (fromParam) setService(serviceFromParam(fromParam));
   }, []);
 
-  const estimate = useMemo(() => {
-    const base = HOME_BASE_HOURS[homeSize];
-    const bathroomAdj = Math.max(0, bathrooms - 2) * 0.5;
-    const lastCleanedAdj = LAST_CLEANED_HOURS[lastCleaned];
-    const petAdj = PET_HOURS[pets];
-    const serviceMult = SERVICE_MULTIPLIER[service];
+  // Keep square footage in step with bedrooms until the visitor picks it.
+  function pickHomeSize(value: HomeSize) {
+    setHomeSize(value);
+    if (!sqftTouched) setSqft(DEFAULT_SQFT_FOR_HOME[value]);
+  }
 
-    // Frequency only discounts the per-visit time for REGULAR cleaning.
-    // Deep/moveout/post-construction are inherently one-time scopes.
-    const frequencyMult =
-      service === 'regular' ? FREQUENCY_MULTIPLIER[frequency] : 1.0;
-
-    const totalHours =
-      (base + bathroomAdj + lastCleanedAdj + petAdj) * serviceMult * frequencyMult;
-    const low = Math.max(1.5, Math.round(totalHours * 0.85 * 10) / 10);
-    const high = Math.round(totalHours * 1.15 * 10) / 10;
-
-    // Ultra Shine sends a pair to every job — always.
-    const cleaners = ALWAYS_CLEANERS;
-    const wallLow = Math.round((low / cleaners) * 10) / 10;
-    const wallHigh = Math.round((high / cleaners) * 10) / 10;
-
-    // Price: total person-hours × per-cleaner hourly rate range.
-    // Round to nearest $10 so the output reads clean.
-    const [rateLow, rateHigh] = HOURLY_RATE_RANGE[service];
-    const priceLow = Math.round((low * rateLow) / 10) * 10;
-    const priceHigh = Math.round((high * rateHigh) / 10) * 10;
-
-    return { low, high, cleaners, wallLow, wallHigh, priceLow, priceHigh };
-  }, [homeSize, bathrooms, service, lastCleaned, pets, frequency]);
+  const estimate = useMemo(
+    () =>
+      computeEstimate({
+        homeSize,
+        sqft,
+        floors,
+        bathrooms,
+        service,
+        lastCleaned,
+        pets,
+        frequency,
+      }),
+    [homeSize, sqft, floors, bathrooms, service, lastCleaned, pets, frequency],
+  );
 
   // Build a /quote URL that pre-fills the captured estimate as the
   // "notes" field so when Tiago opens the lead, the customer's whole
@@ -191,7 +128,7 @@ export default function CleaningTimeEstimatorPage() {
       many: '3+ pets',
     };
     const summary = [
-      `Estimator: ${homeLabel[homeSize]}, ${bathrooms} bath${bathrooms > 1 ? 's' : ''}, ${SERVICE_LABEL[service]} (${FREQUENCY_LABEL[frequency]}), last cleaned ${lastLabel[lastCleaned]}, ${petsLabel[pets]}.`,
+      `Estimator: ${homeLabel[homeSize]}, ${SQFT_BAND_LABEL[sqft]} sq ft, ${floors === 3 ? '3+' : floors} floor${floors > 1 ? 's' : ''}, ${bathrooms} bath${bathrooms > 1 ? 's' : ''}, ${SERVICE_LABEL[service]} (${FREQUENCY_LABEL[frequency]}), last cleaned ${lastLabel[lastCleaned]}, ${petsLabel[pets]}.`,
       `Ballpark: ${estimate.wallLow}-${estimate.wallHigh} hrs with ${estimate.cleaners} cleaners on site, $${estimate.priceLow}-$${estimate.priceHigh}.`,
       `Send precise quote within the hour.`,
     ].join(' ');
@@ -201,7 +138,7 @@ export default function CleaningTimeEstimatorPage() {
       notes: summary,
     });
     return `/quote?${params.toString()}`;
-  }, [homeSize, bathrooms, service, lastCleaned, pets, frequency, estimate]);
+  }, [homeSize, sqft, floors, bathrooms, service, lastCleaned, pets, frequency, estimate]);
 
   return (
     <main>
@@ -218,7 +155,9 @@ export default function CleaningTimeEstimatorPage() {
             <span> / </span>
             <span style={{ opacity: 0.8 }}>Time Estimator</span>
           </p>
-          <p className={styles.eyebrow}>QUICK ESTIMATOR · 6 QUESTIONS · NO SIGN-UP</p>
+          {/* Deliberately no question COUNT in copy anywhere — it said "6"
+              in five places and went stale the moment two were added. */}
+          <p className={styles.eyebrow}>QUICK ESTIMATOR · UNDER A MINUTE · NO SIGN-UP</p>
           <h1 className={`fraunces ${styles.headline}`}>
             How long will my cleaning <em>take</em>?
           </h1>
@@ -255,7 +194,7 @@ export default function CleaningTimeEstimatorPage() {
                     key={value}
                     type="button"
                     className={`${styles.optBtn} ${homeSize === value ? styles.optBtnActive : ''}`}
-                    onClick={() => setHomeSize(value)}
+                    onClick={() => pickHomeSize(value)}
                   >
                     {label}
                   </button>
@@ -263,10 +202,59 @@ export default function CleaningTimeEstimatorPage() {
               </div>
             </div>
 
-            {/* Q2 — Bathrooms */}
+            {/* Q2 — Square footage. Added 2026-09-24: without it, every 5+ bed
+                home priced the same, so large homes were badly under-quoted. */}
             <div className={styles.field}>
               <div className={styles.fieldLabel}>
                 <span className={styles.fieldNum}>02</span>
+                <span>Roughly how many square feet?</span>
+              </div>
+              <div className={styles.options}>
+                {(Object.keys(SQFT_BAND_LABEL) as SqftBand[]).map((band) => (
+                  <button
+                    key={band}
+                    type="button"
+                    className={`${styles.optBtn} ${sqft === band ? styles.optBtnActive : ''}`}
+                    onClick={() => {
+                      setSqft(band);
+                      setSqftTouched(true);
+                    }}
+                  >
+                    {SQFT_BAND_LABEL[band]}
+                  </button>
+                ))}
+              </div>
+              {!sqftTouched && (
+                <p className={styles.fieldNote}>
+                  Pre-filled from your bedrooms. Tap your real size for a tighter number.
+                </p>
+              )}
+            </div>
+
+            {/* Q3 — Floors. Stairs, rails and a second set of everything. */}
+            <div className={styles.field}>
+              <div className={styles.fieldLabel}>
+                <span className={styles.fieldNum}>03</span>
+                <span>How many floors?</span>
+              </div>
+              <div className={styles.options}>
+                {([1, 2, 3] as Floors[]).map((n) => (
+                  <button
+                    key={n}
+                    type="button"
+                    className={`${styles.optBtn} ${floors === n ? styles.optBtnActive : ''}`}
+                    onClick={() => setFloors(n)}
+                  >
+                    {n === 3 ? '3+' : n}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Q4 — Bathrooms */}
+            <div className={styles.field}>
+              <div className={styles.fieldLabel}>
+                <span className={styles.fieldNum}>04</span>
                 <span>How many bathrooms?</span>
               </div>
               <div className={styles.options}>
@@ -283,10 +271,10 @@ export default function CleaningTimeEstimatorPage() {
               </div>
             </div>
 
-            {/* Q3 — Service */}
+            {/* Q5 — Service */}
             <div className={styles.field}>
               <div className={styles.fieldLabel}>
-                <span className={styles.fieldNum}>03</span>
+                <span className={styles.fieldNum}>05</span>
                 <span>Which service?</span>
               </div>
               <div className={styles.options}>
@@ -303,10 +291,10 @@ export default function CleaningTimeEstimatorPage() {
               </div>
             </div>
 
-            {/* Q4 — Last cleaned */}
+            {/* Q6 — Last cleaned */}
             <div className={styles.field}>
               <div className={styles.fieldLabel}>
-                <span className={styles.fieldNum}>04</span>
+                <span className={styles.fieldNum}>06</span>
                 <span>When was your last cleaning?</span>
               </div>
               <div className={styles.options}>
@@ -330,10 +318,10 @@ export default function CleaningTimeEstimatorPage() {
               </div>
             </div>
 
-            {/* Q5 — Pets */}
+            {/* Q7 — Pets */}
             <div className={styles.field}>
               <div className={styles.fieldLabel}>
-                <span className={styles.fieldNum}>05</span>
+                <span className={styles.fieldNum}>07</span>
                 <span>Pets in the home?</span>
               </div>
               <div className={styles.options}>
@@ -356,10 +344,10 @@ export default function CleaningTimeEstimatorPage() {
               </div>
             </div>
 
-            {/* Q6 — Frequency */}
+            {/* Q8 — Frequency */}
             <div className={styles.field}>
               <div className={styles.fieldLabel}>
-                <span className={styles.fieldNum}>06</span>
+                <span className={styles.fieldNum}>08</span>
                 <span>How often do you want us?</span>
               </div>
               <div className={styles.options}>
@@ -470,7 +458,8 @@ export default function CleaningTimeEstimatorPage() {
               <h3 className={styles.factorTitle}>Floor type + sqft</h3>
               <p className={styles.factorBody}>
                 Tile + grout takes longer than hardwood. Carpet vacuum vs deep
-                shampoo is a different scope. Specific sqft refines the estimate.
+                shampoo is a different scope. Your square footage sets the baseline;
+                floors and finishes refine it.
               </p>
             </div>
             <div className={styles.factorCard}>

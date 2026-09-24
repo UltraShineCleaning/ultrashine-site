@@ -118,7 +118,6 @@ const data: ServiceData = {
     },
   ],
   ctaKeyword: 'MOVE',
-  estimatorPreview: { low: 320, high: 530 },
 };
 
 export default function MoveInOutPage() {

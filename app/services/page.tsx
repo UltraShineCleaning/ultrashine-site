@@ -3,6 +3,12 @@ import SiteHeader from '../_components/SiteHeader';
 import SiteFooter from '../_components/SiteFooter';
 import JsonLd from '../_components/JsonLd';
 import styles from './page.module.css';
+import { computeEstimate, exampleConditionLine, exampleInput } from '../_lib/estimate';
+
+/** The deep-clean example card below reads the SAME formula as the
+ *  calculator. It used to be typed in by hand and had drifted ($280 vs the
+ *  calculator's $290). */
+const DEEP_EXAMPLE = computeEstimate(exampleInput('deep'));
 
 /**
  * /services — Hub page indexing all five services.
@@ -347,7 +353,7 @@ export default function ServicesIndexPage() {
               What will <em>your</em> cleaning cost?
             </h2>
             <p className={styles.estimatorCalloutBody}>
-              6 quick questions &mdash; we&apos;ll give you a ballpark price
+              A few quick questions &mdash; we&apos;ll give you a ballpark price
               range plus how long we&apos;d be on site. No email, no sign-up,
               no waiting.
             </p>
@@ -360,13 +366,13 @@ export default function ServicesIndexPage() {
               <div className={styles.previewLabel}>EXAMPLE</div>
               <div className={styles.previewLine}>3 Bedrooms · 2 Bathrooms</div>
               <div className={styles.previewLine}>Deep Cleaning</div>
-              <div className={styles.previewLine}>Last cleaned months ago</div>
+              <div className={styles.previewLine}>{exampleConditionLine('deep')}</div>
               <div className={styles.previewResult}>
                 <span className={styles.previewResultUnit}>$</span>
-                <span className={styles.previewResultNum}>280</span>
+                <span className={styles.previewResultNum}>{DEEP_EXAMPLE.priceLow}</span>
                 <span className={styles.previewResultUnit}>–</span>
                 <span className={styles.previewResultUnit}>$</span>
-                <span className={styles.previewResultNum}>470</span>
+                <span className={styles.previewResultNum}>{DEEP_EXAMPLE.priceHigh}</span>
               </div>
               <div className={styles.previewSub}>with 2 cleaners on site</div>
             </div>

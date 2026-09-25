@@ -87,7 +87,7 @@ const data: ServiceData = {
       'After-hours / night service',
       'COI on file (named insured)',
       'OSHA-aware protocols available',
-      'Net-30 invoicing for businesses',
+      'Flat per-visit rate, locked in',
       'Property mgmt coordination',
     ],
   },
@@ -114,7 +114,7 @@ const data: ServiceData = {
     },
     {
       q: 'How do we get billed?',
-      a: "Net-30 invoicing for established commercial accounts (after first visit). New accounts pay first visit by card, then move to net-30. We send digital invoices monthly via QuickBooks.",
+      a: "After every visit we send a digital invoice, and payment is due when the job is done. You can pay by credit/debit card through the invoice link, Zelle, or Venmo. We don't accept cash or checks.",
     },
   ],
   ctaKeyword: 'OFFICE',

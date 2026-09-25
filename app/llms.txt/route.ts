@@ -56,7 +56,7 @@ const SERVICES: { slug: string; name: string; desc: string }[] = [
   {
     slug: 'commercial',
     name: 'Commercial + Office Cleaning',
-    desc: 'After-hours offices, medical and dental suites, salons and boutique retail. COI on file, net-30 invoicing.',
+    desc: 'After-hours offices, medical and dental suites, salons and boutique retail. COI on file, flat per-visit rate, paid after each visit.',
   },
   {
     slug: 'post-construction',

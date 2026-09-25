@@ -66,7 +66,7 @@ const CATEGORIES: FaqCategory[] = [
       },
       {
         q: 'Do you clean commercial spaces?',
-        a: "Yes — offices, medical suites, salons, boutique retail. We do after-hours service so your team never sees us, COI on file, and net-30 invoicing for established accounts.",
+        a: "Yes — offices, medical suites, salons, boutique retail. We do after-hours service so your team never sees us, COI on file, and a flat per-visit rate you can count on.",
       },
       {
         q: 'Do you do post-construction cleanup?',

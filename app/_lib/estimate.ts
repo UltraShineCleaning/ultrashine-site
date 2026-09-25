@@ -4,6 +4,7 @@
  * Used by:
  *   - /cleaning-time-estimator (the interactive calculator)
  *   - the "EXAMPLE" price card on /services and on every service page
+ *   - the live ballpark on /quote and the lead email (via quoteBallpark.ts)
  *
  * Until 2026-09-24 those example cards carried hand-typed copies of the
  * calculator's output. They had already drifted (deep cleaning's card said
@@ -64,7 +65,15 @@ export type EstimateInput = {
   lastCleaned: LastCleaned;
   pets: Pets;
   frequency: Frequency;
+  /** Exact square footage, when the visitor typed a number (the /quote form)
+   *  instead of picking a band (the estimator). Wins over `sqft` when valid. */
+  sqftExact?: number;
 };
+
+/** Smallest / largest typed square footage we'll price. Outside this it's a
+ *  typo (240 for 2,400; 24,000 for 2,400) and we fall back to the band. */
+export const SQFT_EXACT_MIN = 300;
+export const SQFT_EXACT_MAX = 15000;
 
 export type Estimate = {
   low: number; // person-hours
@@ -192,8 +201,13 @@ export const ALWAYS_CLEANERS = 2;
 /* ---------------- the formula ---------------- */
 
 export function computeEstimate(input: EstimateInput): Estimate {
-  const { homeSize, sqft, floors, bathrooms, service, lastCleaned, pets, frequency } = input;
-  const sqftValue = SQFT_BAND_VALUE[sqft];
+  const { homeSize, sqft, floors, bathrooms, service, lastCleaned, pets, frequency, sqftExact } = input;
+  const exactOk =
+    typeof sqftExact === 'number' &&
+    Number.isFinite(sqftExact) &&
+    sqftExact >= SQFT_EXACT_MIN &&
+    sqftExact <= SQFT_EXACT_MAX;
+  const sqftValue = exactOk ? sqftExact : SQFT_BAND_VALUE[sqft];
   const extraFloors = Math.max(0, floors - 1);
 
   let totalHours: number;

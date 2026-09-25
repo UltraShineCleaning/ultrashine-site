@@ -5,11 +5,19 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import styles from './page.module.css';
+import {
+  QUOTE_ADD_ONS,
+  addOnIncluded,
+  computeQuoteBallpark,
+  formatRange,
+  type QuoteAddOnKey,
+  type QuoteServiceKey,
+} from '../_lib/quoteBallpark';
 
 /* ----- Form data shapes ----- */
-type ServiceKey = 'regular' | 'deep' | 'move' | 'post' | 'commercial';
+type ServiceKey = QuoteServiceKey;
 type FreqKey = 'one' | 'monthly' | 'biweekly' | 'weekly';
-type AddOnKey = 'oven' | 'fridge' | 'windows' | 'cabinets' | 'laundry' | 'pet';
+type AddOnKey = QuoteAddOnKey;
 
 const SERVICES: { key: ServiceKey; name: string; desc: string }[] = [
   { key: 'regular', name: 'Regular Cleaning', desc: 'Recurring weekly, bi-weekly, or monthly' },
@@ -26,14 +34,8 @@ const FREQS: { key: FreqKey; label: string; sub: string }[] = [
   { key: 'weekly', label: 'Weekly', sub: 'kids + pets' },
 ];
 
-const ADD_ONS: { key: AddOnKey; name: string; label: string; note?: string }[] = [
-  { key: 'oven', name: 'Inside Oven', label: '+$40–$60' },
-  { key: 'fridge', name: 'Inside Fridge', label: '+$40–$100' },
-  { key: 'windows', name: 'Inside Windows', label: '+$5–$10 / window' },
-  { key: 'cabinets', name: 'Inside Cabinets', label: '+$5–$10 / cabinet' },
-  { key: 'laundry', name: 'Laundry Fold', label: '+$35 up' },
-  { key: 'pet', name: 'Pet-Safe Products', label: 'Free' },
-];
+// One table, shared with the lead email — see app/_lib/quoteBallpark.ts
+const ADD_ONS = QUOTE_ADD_ONS;
 
 export default function QuotePage() {
   /* ----- State ----- */
@@ -42,6 +44,7 @@ export default function QuotePage() {
   const [bedrooms, setBedrooms] = useState(3);
   const [bathrooms, setBathrooms] = useState(2);
   const [sqft, setSqft] = useState(2400);
+  const [floors, setFloors] = useState(1);
   const [street, setStreet] = useState('');
   const [city, setCity] = useState('Boca Raton');
   const [zip, setZip] = useState('33428');
@@ -109,6 +112,31 @@ export default function QuotePage() {
     return dots;
   }, [bedrooms, bathrooms, sqft, first, phone]);
 
+  /* ----- Live ballpark — same formula as the estimator and the lead email ----- */
+  const ballpark = useMemo(
+    () =>
+      computeQuoteBallpark({
+        service,
+        frequency: freq,
+        bedrooms,
+        bathrooms,
+        sqft,
+        floors,
+        addOns: Array.from(addOns),
+      }),
+    [service, freq, bedrooms, bathrooms, sqft, floors, addOns],
+  );
+
+  const ballparkSummary = [
+    SERVICES.find((s) => s.key === service)?.name,
+    FREQS.find((f) => f.key === freq)?.label,
+    `${bedrooms} bd · ${bathrooms} ba`,
+    sqft ? `${sqft.toLocaleString()} sq ft` : null,
+    floors > 1 ? `${floors} floors` : null,
+  ]
+    .filter(Boolean)
+    .join(' · ');
+
   const canSubmit =
     !!first.trim() && !!phone.trim() && !!street.trim() && !!city.trim() && !submitting;
 
@@ -123,9 +151,14 @@ export default function QuotePage() {
       const payload = {
         service: SERVICES.find((s) => s.key === service)?.name,
         frequency: FREQS.find((f) => f.key === freq)?.label,
+        // Keys let the server recompute the exact ballpark the customer saw.
+        serviceKey: service,
+        frequencyKey: freq,
+        addOnKeys: Array.from(addOns),
         bedrooms,
         bathrooms,
         sqft,
+        floors,
         street,
         city,
         zip,
@@ -213,6 +246,24 @@ export default function QuotePage() {
               <Link href="/cleaning-time-estimator">Try the 60-second estimator →</Link>
             </p>
           </motion.div>
+
+          {/* Live ballpark — follows the visitor down the page (desktop) and
+              moves as they pick. Hidden on phones, where the same number sits
+              right above the submit button. */}
+          {!submitted && (
+            <div className={styles.liveCard} aria-live="polite">
+              <div className={styles.liveLabel}>Your ballpark · updates as you pick</div>
+              <div className={styles.livePrice}>
+                {ballpark ? formatRange(ballpark) : 'Custom quote'}
+              </div>
+              <div className={styles.liveMeta}>{ballparkSummary}</div>
+              <div className={styles.liveFine}>
+                {ballpark
+                  ? 'Confirmed after a quick walkthrough of your home.'
+                  : 'Commercial is priced after we see the space.'}
+              </div>
+            </div>
+          )}
 
           <div className={styles.statStrip}>
             <div className={styles.statCell}>
@@ -452,7 +503,7 @@ export default function QuotePage() {
                     <span className={styles.title}>Home Size</span>
                   </div>
                 </div>
-                <div className={`${styles.inputRow} ${styles.inputRowThree}`}>
+                <div className={`${styles.inputRow} ${styles.inputRowFour}`}>
                   <div>
                     <span className={styles.inputLabel}>Bedrooms</span>
                     <div className={styles.stepper}>
@@ -507,6 +558,28 @@ export default function QuotePage() {
                         setSqft(isNaN(n) ? 0 : n);
                       }}
                     />
+                  </div>
+                  <div>
+                    <span className={styles.inputLabel}>Floors</span>
+                    <div className={styles.stepper}>
+                      <button
+                        type="button"
+                        className={styles.stepBtn}
+                        onClick={() => setFloors((f) => Math.max(1, f - 1))}
+                        disabled={floors <= 1}
+                      >
+                        −
+                      </button>
+                      <span className={styles.stepperNum}>{floors === 3 ? '3+' : floors}</span>
+                      <button
+                        type="button"
+                        className={styles.stepBtn}
+                        onClick={() => setFloors((f) => Math.min(3, f + 1))}
+                        disabled={floors >= 3}
+                      >
+                        +
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -581,7 +654,9 @@ export default function QuotePage() {
                           <div className={styles.addonCheck}>{sel ? '✓' : ''}</div>
                           <div className={styles.addonName}>{a.name}</div>
                         </div>
-                        <div className={styles.addonPrice}>{a.label}</div>
+                        <div className={styles.addonPrice}>
+                          {addOnIncluded(a, service) ? 'Included' : a.label}
+                        </div>
                       </button>
                     );
                   })}
@@ -680,18 +755,48 @@ export default function QuotePage() {
                 </div>
               </div>
 
-              {/* Custom-Quote Promise (no pricing — every home is different) */}
-              <div className={styles.estimatePanel}>
-                <div className={styles.estLabel}>What happens next</div>
-                <div className={styles.promiseHead}>
-                  Every home is <em>different.</em>
-                </div>
-                <div className={styles.estNote}>
-                  Once you submit, Tiago or Francine will reach out within the hour to
-                  arrange a quick in-person walkthrough — usually the same week. We
-                  see your space, ask the right questions, and only then give you a
-                  precise quote. No guesses, no inflated estimates, no pressure.
-                </div>
+              {/* Live ballpark + what happens next. The range comes from the
+                  same formula as the estimator, and the lead email shows Tiago
+                  the exact range the customer saw here. Commercial keeps the
+                  walkthrough-only copy. */}
+              <div className={styles.estimatePanel} aria-live="polite">
+                {ballpark ? (
+                  <>
+                    <div className={styles.estLabel}>Your ballpark</div>
+                    <div className={styles.ballparkPrice}>{formatRange(ballpark)}</div>
+                    <div className={styles.ballparkMeta}>{ballparkSummary}</div>
+                    {(ballpark.included.length > 0 || ballpark.perItem.length > 0) && (
+                      <div className={styles.ballparkAddons}>
+                        {ballpark.included.length > 0 && (
+                          <span>{ballpark.included.join(' + ')} already included.</span>
+                        )}
+                        {ballpark.perItem.length > 0 && (
+                          <span>
+                            {' '}
+                            {ballpark.perItem.join(' + ')} priced by count at the walkthrough.
+                          </span>
+                        )}
+                      </div>
+                    )}
+                    <div className={styles.estNote}>
+                      Once you submit, Tiago or Francine will reach out within the hour to
+                      set up a quick walkthrough, usually the same week. Your exact price
+                      is confirmed then, and you see it before anything is booked.
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className={styles.estLabel}>What happens next</div>
+                    <div className={styles.promiseHead}>
+                      Every space is <em>different.</em>
+                    </div>
+                    <div className={styles.estNote}>
+                      Commercial cleaning is priced after we see the space. Once you
+                      submit, Tiago or Francine will reach out within the hour to set up
+                      a walkthrough, and send you a precise quote after it. No pressure.
+                    </div>
+                  </>
+                )}
                 <div className={styles.promiseChips}>
                   <span className={styles.promiseChip}>✦ Reply within 1 hour</span>
                   <span className={styles.promiseChip}>✦ Free walkthrough</span>

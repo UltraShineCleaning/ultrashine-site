@@ -1,5 +1,16 @@
 import { NextResponse } from 'next/server';
 import { Resend } from 'resend';
+import {
+  QUOTE_ADD_ONS,
+  QUOTE_FREQ_KEYS,
+  QUOTE_SERVICE_KEYS,
+  addOnIncluded,
+  computeQuoteBallpark,
+  formatRange,
+  type QuoteAddOnKey,
+  type QuoteServiceKey,
+} from '../../_lib/quoteBallpark';
+import type { Frequency } from '../../_lib/estimate';
 
 /**
  * POST /api/quote
@@ -19,22 +30,26 @@ const TO_EMAIL = 'contact@ultrashinecleaningfl.com';
 const FROM_EMAIL =
   process.env.QUOTE_FROM_EMAIL?.trim() || 'Ultra Shine Quote Bot <onboarding@resend.dev>';
 
-// Keep this in sync with /quote ADD_ONS labels — used for the email totals
-const ADDON_PRICES: Record<string, { display: string; lowEstimate: number; highEstimate: number }> = {
-  'Inside Oven':       { display: '$40–$60',            lowEstimate: 40,  highEstimate: 60 },
-  'Inside Fridge':     { display: '$40–$100',           lowEstimate: 40,  highEstimate: 100 },
-  'Inside Windows':    { display: '$5–$10 / window',    lowEstimate: 0,   highEstimate: 0 }, // depends on window count
-  'Inside Cabinets':   { display: '$5–$10 / cabinet',   lowEstimate: 0,   highEstimate: 0 }, // depends on cabinet count
-  'Laundry Fold':      { display: '$35 up',             lowEstimate: 35,  highEstimate: 70 },
-  'Pet-Safe Products': { display: 'Free',               lowEstimate: 0,   highEstimate: 0 },
-};
+// The add-on table is shared with the /quote page — one source, so the email
+// can never price an add-on differently from what the customer was shown.
+const ADDON_PRICES: Record<string, { display: string; lowEstimate: number; highEstimate: number }> =
+  Object.fromEntries(
+    QUOTE_ADD_ONS.map((a) => [
+      a.name,
+      { display: a.label.replace(/^\+/, ''), lowEstimate: a.low, highEstimate: a.high },
+    ]),
+  );
 
 type QuotePayload = {
   service?: string;
   frequency?: string;
+  serviceKey?: string;
+  frequencyKey?: string;
+  addOnKeys?: string[];
   bedrooms?: number;
   bathrooms?: number;
   sqft?: number;
+  floors?: number;
   street?: string;
   city?: string;
   zip?: string;
@@ -62,10 +77,55 @@ function formatPhone(raw?: string): string {
   return raw || '—';
 }
 
-function calcAddOnTotals(addOns: string[]): { lines: { name: string; price: string }[]; min: number; max: number; hasVariable: boolean } {
+/** Validated service key, or null for old clients that didn't send one. */
+function serviceKeyOf(p: QuotePayload): QuoteServiceKey | null {
+  return QUOTE_SERVICE_KEYS.includes(p.serviceKey as QuoteServiceKey)
+    ? (p.serviceKey as QuoteServiceKey)
+    : null;
+}
+
+/** Name of an add-on the chosen service already includes. */
+function isIncludedName(name: string, service: QuoteServiceKey | null): boolean {
+  if (!service) return false;
+  const a = QUOTE_ADD_ONS.find((x) => x.name === name);
+  return !!a && addOnIncluded(a, service);
+}
+
+/**
+ * The ballpark the customer saw on /quote — RECOMPUTED here from their
+ * choices with the same function the page uses. A price sent by the browser
+ * is never trusted. Null for Commercial, or if the page was an old version
+ * that didn't send the keys.
+ */
+function ballparkFor(p: QuotePayload): string | null {
+  const service = serviceKeyOf(p);
+  if (!service) return null;
+  const frequency = QUOTE_FREQ_KEYS.includes(p.frequencyKey as Frequency)
+    ? (p.frequencyKey as Frequency)
+    : 'one';
+  const validKeys = new Set(QUOTE_ADD_ONS.map((a) => a.key));
+  const addOns = (Array.isArray(p.addOnKeys) ? p.addOnKeys : []).filter(
+    (k): k is QuoteAddOnKey => validKeys.has(k as QuoteAddOnKey),
+  );
+  const b = computeQuoteBallpark({
+    service,
+    frequency,
+    bedrooms: Number(p.bedrooms),
+    bathrooms: Number(p.bathrooms),
+    sqft: Number(p.sqft),
+    floors: Number(p.floors) || 1,
+    addOns,
+  });
+  return b ? formatRange(b) : null;
+}
+
+function calcAddOnTotals(
+  addOns: string[],
+  service: QuoteServiceKey | null,
+): { lines: { name: string; price: string }[]; min: number; max: number; hasVariable: boolean } {
   const lines = addOns.map((name) => ({
     name,
-    price: ADDON_PRICES[name]?.display ?? '—',
+    price: isIncludedName(name, service) ? 'Included' : ADDON_PRICES[name]?.display ?? '—',
   }));
   let min = 0;
   let max = 0;
@@ -73,6 +133,7 @@ function calcAddOnTotals(addOns: string[]): { lines: { name: string; price: stri
   for (const name of addOns) {
     const p = ADDON_PRICES[name];
     if (!p) continue;
+    if (isIncludedName(name, service)) continue;
     if (p.lowEstimate === 0 && p.highEstimate === 0 && p.display !== 'Free') hasVariable = true;
     min += p.lowEstimate;
     max += p.highEstimate;
@@ -86,7 +147,8 @@ function renderHtml(p: QuotePayload): string {
   const phoneDigits = digitsOnly(c.phone);
   const phoneDisplay = formatPhone(c.phone);
   const addOnsList = p.addOns ?? [];
-  const { lines, min, max, hasVariable } = calcAddOnTotals(addOnsList);
+  const { lines, min, max, hasVariable } = calcAddOnTotals(addOnsList, serviceKeyOf(p));
+  const ballpark = ballparkFor(p);
   const notes = p.notes?.trim() || '—';
   const submitted = p.submittedAt
     ? new Date(p.submittedAt).toLocaleString('en-US', { timeZone: 'America/New_York', timeZoneName: 'short' })
@@ -174,6 +236,13 @@ function renderHtml(p: QuotePayload): string {
         <strong>Frequency:</strong> ${p.frequency || '—'}
       </td></tr>
 
+      <!-- BALLPARK THE CUSTOMER SAW -->
+      <tr><td style="padding:14px 22px;background:#002C98;color:#FFFFFF;font-size:11px;letter-spacing:0.28em;text-transform:uppercase;font-weight:600;">Ballpark shown to customer</td></tr>
+      <tr><td style="padding:18px 22px;border-bottom:1px solid rgba(28, 97, 240,0.08);">
+        <div style="font-size:26px;font-weight:700;color:#002C98;font-family:'Courier New',monospace;">${ballpark ?? 'None — commercial, quoted after walkthrough'}</div>
+        ${ballpark ? `<div style="font-size:12px;color:#1C61F0;opacity:0.75;margin-top:4px;">Same formula as the estimator. Includes selected add-ons; per-window / per-cabinet items not included. Confirm at walkthrough.</div>` : ''}
+      </td></tr>
+
       <!-- ADD-ONS WITH PRICES -->
       <tr><td style="padding:14px 22px;background:#002C98;color:#FFFFFF;font-size:11px;letter-spacing:0.28em;text-transform:uppercase;font-weight:600;">
         Add-Ons${addOnsList.length ? ` (${addOnsList.length})` : ''}
@@ -187,7 +256,7 @@ function renderHtml(p: QuotePayload): string {
       <tr><td style="padding:18px 22px;font-size:14px;line-height:1.8;border-bottom:1px solid rgba(28, 97, 240,0.08);">
         <strong>${p.bedrooms ?? '—'}</strong> bed &nbsp;·&nbsp;
         <strong>${p.bathrooms ?? '—'}</strong> bath &nbsp;·&nbsp;
-        <strong>${p.sqft?.toLocaleString() ?? '—'}</strong> sq ft<br/>
+        <strong>${p.sqft?.toLocaleString() ?? '—'}</strong> sq ft${p.floors ? ` &nbsp;·&nbsp; <strong>${p.floors >= 3 ? '3+' : p.floors}</strong> floor${p.floors > 1 ? 's' : ''}` : ''}<br/>
         ${p.street ? `<a href="https://maps.google.com/?q=${encodeURIComponent([p.street, p.city, p.zip ? `FL ${p.zip}` : ''].filter(Boolean).join(', '))}" style="color:#002C98;font-weight:600;text-decoration:none;border-bottom:1px solid rgba(28,97,240,0.35);">${p.street}</a><br/>` : ''}${p.city || '—'}${p.zip ? `, FL ${p.zip}` : ''}
       </td></tr>
 
@@ -215,7 +284,8 @@ function renderText(p: QuotePayload): string {
   const c = p.contact ?? {};
   const fullName = [c.first, c.last].filter(Boolean).join(' ') || '—';
   const addOns = p.addOns ?? [];
-  const { min, max, hasVariable } = calcAddOnTotals(addOns);
+  const { lines, min, max, hasVariable } = calcAddOnTotals(addOns, serviceKeyOf(p));
+  const ballpark = ballparkFor(p);
   const addOnTotal = addOns.length
     ? min === 0 && max === 0
       ? 'Depends on count'
@@ -231,14 +301,15 @@ function renderText(p: QuotePayload): string {
     '',
     `Service:   ${p.service || '—'}`,
     `Frequency: ${p.frequency || '—'}`,
+    `Ballpark:  ${ballpark ?? '— (commercial / walkthrough)'}   ← what the customer saw`,
     '',
     `Add-Ons (${addOns.length}):`,
     ...(addOns.length
-      ? addOns.map((name) => `  · ${name.padEnd(20)} ${ADDON_PRICES[name]?.display ?? '—'}`)
+      ? lines.map((l) => `  · ${l.name.padEnd(20)} ${l.price}`)
       : ['  None']),
     `  Subtotal: ${addOnTotal}`,
     '',
-    `Home:      ${p.bedrooms ?? '—'} BR / ${p.bathrooms ?? '—'} BA / ${p.sqft?.toLocaleString() ?? '—'} sqft`,
+    `Home:      ${p.bedrooms ?? '—'} BR / ${p.bathrooms ?? '—'} BA / ${p.sqft?.toLocaleString() ?? '—'} sqft / ${p.floors ?? 1} floor(s)`,
     `Address:   ${p.street || '—'}`,
     `Location:  ${p.city || '—'}${p.zip ? `, FL ${p.zip}` : ''}`,
     '',

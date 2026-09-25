@@ -40,7 +40,7 @@ export function reviewEmailHtml(name: string, service?: string): string {
         <table role="presentation" cellpadding="0" cellspacing="0" width="600" style="max-width:600px;background:#FFFFFF;border-radius:14px;box-shadow:0 4px 16px rgba(0,44,152,0.06);overflow:hidden;">
           <tr>
             <td style="background:linear-gradient(135deg,#002C98 0%,#1C61F0 100%);padding:36px 32px;text-align:center;">
-              <div style="font-size:11px;letter-spacing:0.32em;color:#5E8FFF;font-weight:500;text-transform:uppercase;margin-bottom:10px;">FROM TIAGO + FRANCINE</div>
+              <div style="font-size:11px;letter-spacing:0.32em;color:#5E8FFF;font-weight:500;text-transform:uppercase;margin-bottom:10px;">FROM THE ULTRA SHINE TEAM</div>
               <div style="font-size:28px;font-weight:800;color:#FFFFFF;letter-spacing:-0.02em;line-height:1.1;">Thank you, ${firstName}.</div>
             </td>
           </tr>
@@ -76,7 +76,7 @@ export function reviewEmailHtml(name: string, service?: string): string {
             <td style="padding:24px 36px 36px;border-top:1px solid #EAF1FF;">
               <p style="margin:0;font-size:15px;line-height:1.6;">
                 With gratitude,<br/>
-                <strong style="color:#002C98;">Tiago + Francine Rena</strong><br/>
+                <strong style="color:#002C98;">The Ultra Shine Cleaning team</strong><br/>
                 <span style="color:#5A5F6B;font-size:13px;">Ultra Shine Cleaning &middot; Boca Raton, FL</span>
               </p>
             </td>
@@ -106,6 +106,6 @@ export function reviewEmailText(name: string, service?: string): string {
     "If something wasn't perfect, please tell us first — reply here or text (561) 583-6694.",
     '',
     'With gratitude,',
-    'Tiago + Francine Rena · Ultra Shine Cleaning',
+    'The Ultra Shine Cleaning team',
   ].join('\n');
 }

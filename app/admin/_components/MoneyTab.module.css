@@ -1,8 +1,8 @@
 /* ============================================================
    Money tab — invoices, payments, revenue.
    Matches the existing admin palette exactly:
-     #111827 primary text · #6b7280 muted · #e5e7eb borders
-     #f9fafb subtle fill · Poppins throughout
+     #f4f4f5 primary text · #8b8d98 muted · #25262d borders
+     #050506 subtle fill · Poppins throughout
    ============================================================ */
 
 .wrap {
@@ -17,36 +17,36 @@
   margin-bottom: 8px;
 }
 .kpi {
-  background: #ffffff;
-  border: 1px solid #e5e7eb;
+  background: #0d0e11;
+  border: 1px solid #25262d;
   border-radius: 12px;
   padding: 18px 20px 16px;
 }
 .kpiAlert {
-  border-color: #fecaca;
-  background: linear-gradient(180deg, #fef2f2 0%, #ffffff 60%);
+  border-color: rgba(248,113,113,0.32);
+  background: linear-gradient(180deg, rgba(248,113,113,0.10) 0%, #0d0e11 60%);
 }
 .kpiLabel {
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: #6b7280;
+  color: #8b8d98;
   margin-bottom: 8px;
 }
 .kpiValue {
   font-size: 28px;
   font-weight: 700;
   letter-spacing: -0.02em;
-  color: #111827;
+  color: #f4f4f5;
   line-height: 1.05;
 }
 .kpiValueAlert {
-  color: #B91C1C;
+  color: #f87171;
 }
 .kpiSub {
   font-size: 12px;
-  color: #6b7280;
+  color: #8b8d98;
   margin-top: 6px;
   line-height: 1.4;
 }
@@ -58,9 +58,9 @@
   font-weight: 600;
   margin-top: 6px;
 }
-.deltaUp { color: #047857; }
-.deltaDown { color: #B91C1C; }
-.deltaFlat { color: #6b7280; }
+.deltaUp { color: #34d399; }
+.deltaDown { color: #f87171; }
+.deltaFlat { color: #8b8d98; }
 
 /* ---- Section label (mirrors admin page.module.css) ---- */
 .sectionLabel {
@@ -68,7 +68,7 @@
   font-size: 10px;
   letter-spacing: 0.28em;
   text-transform: uppercase;
-  color: #6b7280;
+  color: #8b8d98;
   margin: 32px 0 14px;
   display: inline-flex;
   align-items: center;
@@ -79,7 +79,7 @@
   display: inline-block;
   width: 26px;
   height: 1px;
-  background: #9ca3af;
+  background: #6b6d78;
 }
 
 /* ---- Outstanding invoice list ---- */
@@ -93,28 +93,28 @@
   grid-template-columns: 1fr auto auto;
   gap: 16px;
   align-items: center;
-  background: #ffffff;
-  border: 1px solid #e5e7eb;
+  background: #0d0e11;
+  border: 1px solid #25262d;
   border-radius: 10px;
   padding: 14px 18px;
 }
 .invoiceRowOverdue {
-  border-left: 3px solid #B91C1C;
+  border-left: 3px solid #f87171;
 }
 .invoiceClient {
   font-size: 14px;
   font-weight: 600;
-  color: #111827;
+  color: #f4f4f5;
   margin-bottom: 3px;
 }
 .invoiceMeta {
   font-size: 12px;
-  color: #6b7280;
+  color: #8b8d98;
 }
 .invoiceAmount {
   font-size: 16px;
   font-weight: 700;
-  color: #111827;
+  color: #f4f4f5;
   text-align: right;
   white-space: nowrap;
 }
@@ -128,10 +128,10 @@
   min-width: 92px;
   text-align: center;
 }
-.ageCurrent { background: #f3f4f6; color: #6b7280; }
-.ageSoon    { background: #fef3c7; color: #92400e; }
-.ageLate    { background: #fee2e2; color: #B91C1C; }
-.ageVeryLate{ background: #B91C1C; color: #ffffff; }
+.ageCurrent { background: #1b1c22; color: #8b8d98; }
+.ageSoon    { background: rgba(251,191,36,0.12); color: #fbbf24; }
+.ageLate    { background: rgba(248,113,113,0.12); color: #f87171; }
+.ageVeryLate{ background: #f87171; color: #0d0e11; }
 
 /* ---- Two-column lower area ---- */
 .twoCol {
@@ -143,8 +143,8 @@
 
 /* ---- Sparkline bars (no chart lib needed for this one) ---- */
 .barChart {
-  background: #ffffff;
-  border: 1px solid #e5e7eb;
+  background: #0d0e11;
+  border: 1px solid #25262d;
   border-radius: 12px;
   padding: 20px 22px 16px;
 }
@@ -174,19 +174,19 @@
 .barCol:hover .bar { opacity: 0.75; }
 .barLabel {
   font-size: 10px;
-  color: #9ca3af;
+  color: #6b6d78;
   white-space: nowrap;
 }
 .barValue {
   font-size: 10px;
   font-weight: 700;
-  color: #6b7280;
+  color: #8b8d98;
 }
 
 /* ---- Top clients ---- */
 .clientList {
-  background: #ffffff;
-  border: 1px solid #e5e7eb;
+  background: #0d0e11;
+  border: 1px solid #25262d;
   border-radius: 12px;
   padding: 8px 0;
 }
@@ -196,51 +196,51 @@
   gap: 12px;
   align-items: center;
   padding: 11px 20px;
-  border-bottom: 1px solid #f3f4f6;
+  border-bottom: 1px solid #1b1c22;
 }
 .clientRow:last-child { border-bottom: none; }
 .clientRank {
   font-size: 11px;
   font-weight: 700;
-  color: #9ca3af;
+  color: #6b6d78;
 }
 .clientName {
   font-size: 13px;
   font-weight: 600;
-  color: #111827;
+  color: #f4f4f5;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 .clientJobs {
   font-size: 11px;
-  color: #9ca3af;
+  color: #6b6d78;
   font-weight: 400;
 }
 .clientTotal {
   font-size: 13px;
   font-weight: 700;
-  color: #111827;
+  color: #f4f4f5;
   white-space: nowrap;
 }
 
 /* ---- States ---- */
 .empty {
-  background: #f9fafb;
-  border: 1px dashed #d1d5db;
+  background: #050506;
+  border: 1px dashed #34353d;
   border-radius: 12px;
   padding: 28px;
   text-align: center;
   font-size: 14px;
-  color: #6b7280;
+  color: #8b8d98;
 }
 .error {
-  background: #fef2f2;
-  border: 1px solid #fecaca;
+  background: rgba(248,113,113,0.10);
+  border: 1px solid rgba(248,113,113,0.32);
   border-radius: 12px;
   padding: 18px 20px;
   font-size: 13px;
-  color: #B91C1C;
+  color: #f87171;
   line-height: 1.6;
   margin-bottom: 20px;
 }
@@ -253,9 +253,9 @@
   margin-top: 12px;
   font-size: 11px;
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  color: #6b7280;
-  background: #f9fafb;
-  border: 1px solid #e5e7eb;
+  color: #8b8d98;
+  background: #050506;
+  border: 1px solid #25262d;
   border-radius: 8px;
   padding: 12px 14px;
   overflow-x: auto;

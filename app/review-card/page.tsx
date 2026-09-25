@@ -56,7 +56,7 @@ function ReviewCardSingle() {
 
       {/* Sign-off */}
       <div className={styles.signoff}>
-        <p className={styles.signoffName}>— Tiago + Francine Rena</p>
+        <p className={styles.signoffName}>— The Ultra Shine Cleaning team</p>
         <p className={styles.signoffPhone}>(561) 583-6694</p>
       </div>
     </div>

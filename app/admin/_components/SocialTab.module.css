@@ -9,7 +9,7 @@
   --ai: linear-gradient(135deg,#8b5cf6 0%,#4d7cff 100%);
   --ig: linear-gradient(45deg,#f58529,#dd2a7b 45%,#8134af 75%,#515bd4); --fb: #1877f2;
   --r: 22px;
-  background: var(--bg); color: var(--text); border-radius: 28px; padding: 16px;
+  background: transparent; color: var(--text); padding: 0;
   font-family: Inter, system-ui, -apple-system, 'Segoe UI', sans-serif; font-size: 13.5px;
   -webkit-font-smoothing: antialiased; position: relative;
 }
@@ -114,6 +114,38 @@
 .plats i { width: 14px; height: 14px; border-radius: 50%; display: block; }
 .add { margin-top: auto; border: 1px dashed var(--line2) !important; border-radius: 14px !important; padding: 10px !important; color: var(--soft); font-size: 12px; width: 100%; }
 .add:hover { color: var(--text); border-color: var(--muted) !important; }
+
+/* month calendar */
+.legend { display: flex; gap: 14px; font-size: 12px; color: var(--muted); margin-left: auto; flex-wrap: wrap; }
+.legend i { display: inline-block; width: 7px; height: 7px; border-radius: 50%; margin-right: 6px; vertical-align: 1px; }
+.month { display: grid; grid-template-columns: repeat(7, minmax(0,1fr)); gap: 8px; }
+.dow { font-size: 11px; color: var(--soft); text-transform: uppercase; letter-spacing: .08em; padding: 0 6px 2px; }
+.mCell { background: var(--panel) !important; border: 1px solid var(--line) !important; border-radius: 18px !important; min-height: 118px; padding: 9px !important; display: flex; flex-direction: column; gap: 7px; text-align: left; transition: border-color .15s, background .15s; min-width: 0; }
+.mCell:hover { border-color: var(--line2) !important; background: var(--panel2) !important; }
+.mOut { opacity: .38; }
+.mToday { border-color: rgba(255,255,255,.3) !important; }
+.mToday .mNum { background: #fff; color: #000; }
+.mSel { border-color: var(--accent) !important; }
+.mDrop { border-color: var(--accent) !important; background: rgba(77,124,255,.08) !important; }
+.mCell { cursor: pointer; }
+.mNum { align-self: flex-start; font-size: 12px; font-weight: 600; border-radius: 999px; padding: 1px 7px; }
+.mThumbs { display: flex; gap: 4px; flex-wrap: wrap; align-items: center; }
+.mThumb { width: 30px; height: 36px; border-radius: 8px; background: var(--panel3) center/cover; border: 2px solid; flex-shrink: 0; cursor: grab; }
+.mMore { font-size: 11px; color: var(--muted); padding-left: 2px; }
+.mDots { display: none; gap: 3px; flex-wrap: wrap; margin-top: auto; }
+.mDots i { width: 6px; height: 6px; border-radius: 50%; display: block; }
+.dayRow { display: flex; gap: 12px; align-items: stretch; width: 100%; text-align: left; background: var(--panel2) !important; border: 1px solid var(--line) !important; border-radius: 16px !important; padding: 8px !important; }
+.dayRow:hover { border-color: var(--line2) !important; }
+.dayImg { width: 72px; min-height: 90px; border-radius: 12px; background: var(--panel3) center/cover; position: relative; flex-shrink: 0; }
+
+/* connected accounts */
+.conns { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 10px; }
+.conn { display: flex; align-items: center; gap: 12px; background: var(--panel2); border: 1px solid var(--line); border-radius: 16px; padding: 12px 14px; min-width: 0; }
+.connIco { width: 38px; height: 38px; border-radius: 12px; display: grid; place-items: center; color: #fff; flex-shrink: 0; }
+.connIco svg { width: 20px; height: 20px; }
+.connT { flex: 1; min-width: 0; }
+.connT b { display: block; font-size: 13.5px; font-weight: 600; }
+.connT span { display: block; font-size: 12px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
 /* drawer + modal */
 .scrim { position: fixed; inset: 0; background: rgba(0,0,0,.55); backdrop-filter: blur(3px); z-index: 90; }
@@ -225,6 +257,7 @@ textarea.field { min-height: 120px; resize: vertical; }
   .inbox { grid-template-columns: 250px minmax(0,1fr); }
   .ctxCol { display: none; }
   .week { grid-template-columns: repeat(4, minmax(0,1fr)); }
+  .mThumb { width: 24px; height: 30px; }
 }
 @media (max-width: 760px) {
   .root { padding: 10px; border-radius: 22px; }
@@ -241,4 +274,11 @@ textarea.field { min-height: 120px; resize: vertical; }
   .opts { grid-template-columns: minmax(0,1fr); }
   .inbox { grid-template-columns: minmax(0,1fr); }
   .autos { grid-template-columns: minmax(0,1fr); }
+  .month { gap: 4px; }
+  .mCell { min-height: 58px; padding: 6px !important; border-radius: 12px !important; gap: 4px; }
+  .mThumbs, .legend { display: none; }
+  .mDots { display: flex; }
+  .dow { font-size: 9.5px; padding: 0 2px; text-align: center; }
+  .mNum { font-size: 11px; padding: 0 5px; }
+  .conns { grid-template-columns: minmax(0,1fr); }
 }

@@ -49,12 +49,12 @@ export default async function JobberDashboard({ force = false }: { force?: boole
           changed. The exact reason Jobber returned:
         </p>
         <pre style={{
-          background: '#fff',
-          border: '1px solid #fde68a',
+          background: '#0d0e11',
+          border: '1px solid rgba(251,191,36,0.32)',
           borderRadius: 8,
           padding: '10px 14px',
           fontSize: 11,
-          color: '#92400e',
+          color: '#fbbf24',
           whiteSpace: 'pre-wrap',
           wordBreak: 'break-word',
           margin: '0 0 14px',
@@ -106,13 +106,13 @@ export default async function JobberDashboard({ force = false }: { force?: boole
             </span>
           )}
           {kvEnabled && (
-            <span style={{ marginLeft: 8, padding: '2px 8px', background: '#dcfce7', color: '#166534', borderRadius: 999, fontSize: 10, fontWeight: 700, letterSpacing: '0.04em' }}>
+            <span style={{ marginLeft: 8, padding: '2px 8px', background: 'rgba(52,211,153,0.12)', color: '#34d399', borderRadius: 999, fontSize: 10, fontWeight: 700, letterSpacing: '0.04em' }}>
               KV PERSISTED
             </span>
           )}
           {/* Diagnostic: how many visits did Jobber return? Lets us see
               if "empty calendar" = "Jobber returned 0" vs other bug */}
-          <span style={{ marginLeft: 8, padding: '2px 8px', background: '#f3f4f6', color: '#6b7280', borderRadius: 999, fontSize: 10, fontWeight: 600, letterSpacing: '0.02em' }}>
+          <span style={{ marginLeft: 8, padding: '2px 8px', background: '#1b1c22', color: '#8b8d98', borderRadius: 999, fontSize: 10, fontWeight: 600, letterSpacing: '0.02em' }}>
             {m.allVisits.length} visits fetched
           </span>
         </span>
@@ -122,9 +122,9 @@ export default async function JobberDashboard({ force = false }: { force?: boole
             marginLeft: 'auto',
             padding: '6px 12px',
             borderRadius: 999,
-            background: '#ffffff',
-            color: '#374151',
-            border: '1px solid #d1d5db',
+            background: '#0d0e11',
+            color: '#d4d4d8',
+            border: '1px solid #34353d',
             textDecoration: 'none',
             fontSize: 11,
             fontWeight: 600,
@@ -139,18 +139,18 @@ export default async function JobberDashboard({ force = false }: { force?: boole
           can debug empty-calendar in one screenshot instead of guessing. */}
       {m.visitDebug && (
         <details style={{
-          background: '#f9fafb',
-          border: '1px solid #e5e7eb',
+          background: '#050506',
+          border: '1px solid #25262d',
           borderRadius: 10,
           padding: '12px 16px',
           fontSize: 12,
           fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
-          color: '#374151',
+          color: '#d4d4d8',
         }} open>
           <summary style={{
             cursor: 'pointer',
             fontWeight: 700,
-            color: '#111827',
+            color: '#f4f4f5',
             fontFamily: 'var(--font-poppins), sans-serif',
             fontSize: 11,
             letterSpacing: '0.16em',
@@ -165,7 +165,7 @@ export default async function JobberDashboard({ force = false }: { force?: boole
             <div><strong>Earliest startAt:</strong> {m.visitDebug.earliestStartAt ?? '(none)'}</div>
             <div><strong>Latest startAt:</strong> {m.visitDebug.latestStartAt ?? '(none)'}</div>
             <div><strong>Future visits (after today):</strong> {m.visitDebug.futureCount}</div>
-            <div style={{ marginTop: 8, color: '#9ca3af' }}>
+            <div style={{ marginTop: 8, color: '#6b6d78' }}>
               <strong>Date filter sent to Jobber:</strong><br />
               start = {m.visitDebug.dateRangeRequested.start}<br />
               end&nbsp;&nbsp; = {m.visitDebug.dateRangeRequested.end}
@@ -181,11 +181,11 @@ export default async function JobberDashboard({ force = false }: { force?: boole
           <p className={styles.errorBody}>
             Jobber rotates refresh tokens on every refresh. To survive Vercel cold starts and never need a manual reconnect again, enable Vercel KV:
           </p>
-          <ol style={{ fontSize: 13, lineHeight: 1.6, color: '#374151', paddingLeft: 20, marginBottom: 14 }}>
+          <ol style={{ fontSize: 13, lineHeight: 1.6, color: '#d4d4d8', paddingLeft: 20, marginBottom: 14 }}>
             <li>Open <a href="https://vercel.com/contact-8079s-projects/ultrashine-site/stores" target="_blank" rel="noopener noreferrer" style={{ color: '#1e40af', fontWeight: 600 }}>Vercel Storage</a></li>
             <li>Click <strong>Create Database</strong> → <strong>KV (Redis)</strong></li>
-            <li>Name it <code style={{ background: '#fff', padding: '1px 6px', borderRadius: 4 }}>ultrashine-jobber-tokens</code></li>
-            <li>Connect it to this project (auto-injects <code style={{ background: '#fff', padding: '1px 6px', borderRadius: 4 }}>KV_REST_API_URL</code> + <code style={{ background: '#fff', padding: '1px 6px', borderRadius: 4 }}>KV_REST_API_TOKEN</code>)</li>
+            <li>Name it <code style={{ background: '#0d0e11', padding: '1px 6px', borderRadius: 4 }}>ultrashine-jobber-tokens</code></li>
+            <li>Connect it to this project (auto-injects <code style={{ background: '#0d0e11', padding: '1px 6px', borderRadius: 4 }}>KV_REST_API_URL</code> + <code style={{ background: '#0d0e11', padding: '1px 6px', borderRadius: 4 }}>KV_REST_API_TOKEN</code>)</li>
             <li>Push an empty commit to redeploy. Then reconnect Jobber once. From then on, it stays connected forever.</li>
           </ol>
         </div>
@@ -202,12 +202,12 @@ export default async function JobberDashboard({ force = false }: { force?: boole
             Stats below may show partial / zero values. The exact errors:
           </p>
           <pre style={{
-            background: '#fff',
-            border: '1px solid #fde68a',
+            background: '#0d0e11',
+            border: '1px solid rgba(251,191,36,0.32)',
             borderRadius: 8,
             padding: '10px 14px',
             fontSize: 11,
-            color: '#92400e',
+            color: '#fbbf24',
             whiteSpace: 'pre-wrap',
             wordBreak: 'break-word',
             margin: 0,

@@ -123,7 +123,7 @@ export default function MoneyTab({ money: m }: { money: JobberMoney }) {
           <div className={styles.kpiLabel}>Collected this week</div>
           <div className={styles.kpiValue}>{money(m.paidThisWeek)}</div>
           <div className={`${styles.delta} ${weekDelta.cls}`}>
-            {weekDelta.text} <span style={{ color: '#9ca3af', fontWeight: 400 }}>vs last week</span>
+            {weekDelta.text} <span style={{ color: '#6b6d78', fontWeight: 400 }}>vs last week</span>
           </div>
         </div>
 
@@ -131,7 +131,7 @@ export default function MoneyTab({ money: m }: { money: JobberMoney }) {
           <div className={styles.kpiLabel}>Collected this month</div>
           <div className={styles.kpiValue}>{money(m.paidThisMonth)}</div>
           <div className={`${styles.delta} ${monthDelta.cls}`}>
-            {monthDelta.text} <span style={{ color: '#9ca3af', fontWeight: 400 }}>vs last month</span>
+            {monthDelta.text} <span style={{ color: '#6b6d78', fontWeight: 400 }}>vs last month</span>
           </div>
         </div>
 

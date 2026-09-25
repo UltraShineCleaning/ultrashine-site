@@ -4,8 +4,8 @@
    ========================================================== */
 
 .wrap {
-  background: #ffffff;
-  border: 1px solid #e5e7eb;
+  background: #0d0e11;
+  border: 1px solid #25262d;
   border-radius: 12px;
   padding: 22px 24px;
   margin-bottom: 24px;
@@ -32,7 +32,7 @@
   font-size: 10px;
   letter-spacing: 0.24em;
   text-transform: uppercase;
-  color: #6b7280;
+  color: #8b8d98;
   margin-bottom: 4px;
 }
 .monthTitle {
@@ -40,13 +40,13 @@
   font-weight: 700;
   font-size: 22px;
   letter-spacing: -0.015em;
-  color: #111827;
+  color: #f4f4f5;
   margin: 0 0 4px;
 }
 .subSummary {
   font-family: var(--font-poppins), sans-serif;
   font-size: 12px;
-  color: #6b7280;
+  color: #8b8d98;
 }
 
 .controls {
@@ -58,9 +58,9 @@
   width: 36px;
   height: 36px;
   border-radius: 8px;
-  background: #f3f4f6;
-  border: 1px solid #e5e7eb;
-  color: #374151;
+  background: #1b1c22;
+  border: 1px solid #25262d;
+  color: #d4d4d8;
   font-size: 20px;
   font-weight: 700;
   cursor: pointer;
@@ -69,17 +69,17 @@
   transition: background 0.15s, border-color 0.15s, color 0.15s;
 }
 .navBtn:hover {
-  background: #111827;
-  color: #ffffff;
-  border-color: #111827;
+  background: #f4f4f5;
+  color: #0d0e11;
+  border-color: #f4f4f5;
 }
 .todayBtn {
   height: 36px;
   padding: 0 14px;
   border-radius: 8px;
-  background: #ffffff;
-  border: 1px solid #e5e7eb;
-  color: #374151;
+  background: #0d0e11;
+  border: 1px solid #25262d;
+  color: #d4d4d8;
   font-family: var(--font-poppins), sans-serif;
   font-size: 12px;
   font-weight: 600;
@@ -88,9 +88,9 @@
   transition: background 0.15s, border-color 0.15s, color 0.15s;
 }
 .todayBtn:hover {
-  background: #111827;
-  color: #ffffff;
-  border-color: #111827;
+  background: #f4f4f5;
+  color: #0d0e11;
+  border-color: #f4f4f5;
 }
 
 /* ===== DAY-OF-WEEK ROW ===== */
@@ -106,7 +106,7 @@
   font-size: 10px;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: #9ca3af;
+  color: #6b6d78;
   text-align: center;
   padding: 6px 0;
 }
@@ -129,8 +129,8 @@
 }
 
 .cell {
-  background: #f9fafb;
-  border: 1px solid #e5e7eb;
+  background: #050506;
+  border: 1px solid #25262d;
   border-radius: 8px;
   padding: 6px 6px 6px;
   text-align: left;
@@ -145,44 +145,44 @@
   transition: background 0.15s, border-color 0.15s, transform 0.1s;
 }
 .cell:hover {
-  background: #f3f4f6;
-  border-color: #6b7280;
-  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
+  background: #1b1c22;
+  border-color: #8b8d98;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.35);
 }
 /* Empty day cells (no visits) — keep the day number visible on hover.
    Without this, hover changes background to white which makes the
    already-light day number text invisible. */
 .cell:hover .cellDay {
-  color: #111827;
+  color: #f4f4f5;
   font-weight: 700;
 }
 .cellOutside {
   opacity: 0.4;
 }
 .cellPast .cellDay {
-  color: #9ca3af;
+  color: #6b6d78;
 }
 .cellHasVisits {
-  background: #ffffff;
+  background: #0d0e11;
 }
 .cellHasVisits .cellDay {
-  color: #111827;
+  color: #f4f4f5;
   font-weight: 700;
 }
 .cellToday {
-  border-color: #111827;
+  border-color: #f4f4f5;
   border-width: 2px;
   padding: 5px 5px 5px;
 }
 .cellSelected {
-  background: #111827;
-  border-color: #111827;
+  background: #f4f4f5;
+  border-color: #f4f4f5;
 }
 .cellSelected .cellDay {
-  color: #ffffff;
+  color: #0d0e11;
 }
 .cellSelected .cellCount {
-  color: #d1d5db;
+  color: #34353d;
 }
 .cellSelected .visitBar {
   background: rgba(255, 255, 255, 0.12);
@@ -190,17 +190,17 @@
 }
 .cellSelected .visitTime,
 .cellSelected .visitName {
-  color: #ffffff;
+  color: #0d0e11;
 }
 .cellSelected .visitBarPast {
   background: rgba(255, 255, 255, 0.05);
 }
 .cellSelected .visitBarPast .visitTime,
 .cellSelected .visitBarPast .visitName {
-  color: #9ca3af;
+  color: #6b6d78;
 }
 .cellSelected .visitOverflow {
-  color: #d1d5db;
+  color: #34353d;
 }
 
 .cellTop {
@@ -212,7 +212,7 @@
 .cellDay {
   font-size: 13px;
   font-weight: 700;
-  color: #374151;
+  color: #d4d4d8;
   line-height: 1;
 }
 .cellCount {
@@ -220,7 +220,7 @@
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: #6b7280;
+  color: #8b8d98;
 }
 
 /* ===== VISIT BARS — the Jobber-style chip per visit ===== */
@@ -235,8 +235,8 @@
   display: flex;
   align-items: baseline;
   gap: 5px;
-  background: #dcfce7; /* soft green — matches Jobber's upcoming-visit color */
-  border: 1px solid #bbf7d0;
+  background: rgba(52,211,153,0.12); /* soft green — matches Jobber's upcoming-visit color */
+  border: 1px solid rgba(52,211,153,0.30);
   border-radius: 4px;
   padding: 3px 6px;
   font-size: 10px;
@@ -248,28 +248,28 @@
   transition: background 0.12s, border-color 0.12s, transform 0.08s;
 }
 .visitBar:hover {
-  background: #bbf7d0;
+  background: rgba(52,211,153,0.30);
   border-color: #86efac;
   transform: translateY(-0.5px);
 }
 .visitBarPast {
-  background: #f3f4f6;
-  border-color: #e5e7eb;
+  background: #1b1c22;
+  border-color: #25262d;
   text-decoration: line-through;
-  text-decoration-color: #9ca3af;
+  text-decoration-color: #6b6d78;
   opacity: 0.75;
 }
 .visitBarPast:hover {
-  background: #e5e7eb;
-  border-color: #d1d5db;
+  background: #25262d;
+  border-color: #34353d;
 }
 .visitTime {
   font-weight: 700;
-  color: #166534;
+  color: #34d399;
   flex-shrink: 0;
 }
 .visitBarPast .visitTime {
-  color: #6b7280;
+  color: #8b8d98;
 }
 .visitName {
   color: #15803d;
@@ -281,12 +281,12 @@
   flex: 1 1 0;
 }
 .visitBarPast .visitName {
-  color: #6b7280;
+  color: #8b8d98;
 }
 .visitOverflow {
   font-size: 9px;
   font-weight: 600;
-  color: #9ca3af;
+  color: #6b6d78;
   letter-spacing: 0.02em;
   padding: 2px 6px;
   margin-top: 1px;
@@ -296,7 +296,7 @@
 .detailPanel {
   margin-top: 18px;
   padding-top: 18px;
-  border-top: 1px solid #e5e7eb;
+  border-top: 1px solid #25262d;
 }
 .detailHeader {
   display: flex;
@@ -311,7 +311,7 @@
   font-weight: 700;
   font-size: 10px;
   letter-spacing: 0.24em;
-  color: #6b7280;
+  color: #8b8d98;
   margin-bottom: 4px;
 }
 .detailTitle {
@@ -319,24 +319,24 @@
   font-weight: 700;
   font-size: 18px;
   letter-spacing: -0.015em;
-  color: #111827;
+  color: #f4f4f5;
   margin: 0;
 }
 .detailCount {
   font-family: var(--font-poppins), sans-serif;
   font-size: 12px;
-  color: #6b7280;
+  color: #8b8d98;
   font-weight: 600;
 }
 
 .detailEmpty {
-  background: #f9fafb;
-  border: 1px dashed #d1d5db;
+  background: #050506;
+  border: 1px dashed #34353d;
   border-radius: 10px;
   padding: 16px 18px;
   font-family: var(--font-poppins), sans-serif;
   font-size: 13px;
-  color: #6b7280;
+  color: #8b8d98;
 }
 
 .detailList {
@@ -350,28 +350,28 @@
   grid-template-columns: 70px 1fr auto;
   gap: 14px;
   padding: 14px 16px;
-  background: #f9fafb;
+  background: #050506;
   border: 1px solid transparent;
   border-radius: 10px;
   align-items: start;
   transition: background 0.15s, border-color 0.15s;
 }
 .visit:hover {
-  background: #ffffff;
-  border-color: #e5e7eb;
+  background: #0d0e11;
+  border-color: #25262d;
 }
 .visitCompleted .visitClient,
 .visitCompleted .visitDetailTitle,
 .visitCompleted .visitAddr {
   text-decoration: line-through;
-  text-decoration-color: #9ca3af;
+  text-decoration-color: #6b6d78;
   opacity: 0.7;
 }
 .detailTime {
   font-family: var(--font-poppins), sans-serif;
   font-weight: 700;
   font-size: 13px;
-  color: #111827;
+  color: #f4f4f5;
   letter-spacing: 0.01em;
   white-space: nowrap;
 }
@@ -385,17 +385,17 @@
   font-family: var(--font-poppins), sans-serif;
   font-weight: 700;
   font-size: 14px;
-  color: #111827;
+  color: #f4f4f5;
 }
 .visitDetailTitle {
   font-family: var(--font-poppins), sans-serif;
   font-size: 12px;
-  color: #6b7280;
+  color: #8b8d98;
 }
 .visitAddr {
   font-family: var(--font-poppins), sans-serif;
   font-size: 11px;
-  color: #9ca3af;
+  color: #6b6d78;
   margin-top: 2px;
 }
 
@@ -415,7 +415,7 @@
   font-weight: 700;
   font-size: 9px;
   letter-spacing: 0.22em;
-  color: #6b7280;
+  color: #8b8d98;
 }
 .teamMembers {
   display: flex;
@@ -426,22 +426,22 @@
 .teamChip {
   display: inline-flex;
   align-items: center;
-  background: #ffffff;
-  border: 1px solid #d1d5db;
+  background: #0d0e11;
+  border: 1px solid #34353d;
   border-radius: 999px;
   padding: 3px 10px;
   font-family: var(--font-poppins), sans-serif;
   font-size: 11px;
   font-weight: 600;
-  color: #374151;
+  color: #d4d4d8;
   white-space: nowrap;
 }
 .teamUnassigned {
   display: inline-flex;
   align-items: center;
-  background: #fef2f2;
-  border: 1px solid #fecaca;
-  color: #b91c1c;
+  background: rgba(248,113,113,0.10);
+  border: 1px solid rgba(248,113,113,0.32);
+  color: #f87171;
   border-radius: 999px;
   padding: 3px 10px;
   font-family: var(--font-poppins), sans-serif;
@@ -457,7 +457,7 @@
 .popoverBackdrop {
   position: fixed;
   inset: 0;
-  background: rgba(15, 23, 42, 0.55);
+  background: rgba(0,0,0,0.35);
   display: grid;
   place-items: center;
   padding: 20px;
@@ -470,12 +470,12 @@
 }
 .popoverCard {
   position: relative;
-  background: #ffffff;
+  background: #0d0e11;
   border-radius: 16px;
   width: 100%;
   max-width: 460px;
   padding: 28px 28px 22px;
-  box-shadow: 0 24px 64px rgba(15, 23, 42, 0.25), 0 8px 16px rgba(15, 23, 42, 0.12);
+  box-shadow: 0 24px 64px rgba(0,0,0,0.35), 0 8px 16px rgba(0,0,0,0.35);
   font-family: var(--font-poppins), sans-serif;
   animation: popoverSlideIn 0.18s ease-out;
 }
@@ -490,9 +490,9 @@
   width: 30px;
   height: 30px;
   border-radius: 50%;
-  background: #f3f4f6;
+  background: #1b1c22;
   border: 0;
-  color: #6b7280;
+  color: #8b8d98;
   font-size: 20px;
   line-height: 1;
   cursor: pointer;
@@ -501,8 +501,8 @@
   transition: background 0.12s, color 0.12s;
 }
 .popoverClose:hover {
-  background: #111827;
-  color: #ffffff;
+  background: #f4f4f5;
+  color: #0d0e11;
 }
 .popoverHeader {
   margin-bottom: 22px;
@@ -511,7 +511,7 @@
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.24em;
-  color: #6b7280;
+  color: #8b8d98;
   text-transform: uppercase;
   margin-bottom: 6px;
 }
@@ -519,13 +519,13 @@
   font-size: 22px;
   font-weight: 700;
   letter-spacing: -0.015em;
-  color: #111827;
+  color: #f4f4f5;
   margin: 0;
   line-height: 1.15;
 }
 .popoverSubtitle {
   font-size: 13px;
-  color: #6b7280;
+  color: #8b8d98;
   margin-top: 4px;
 }
 .popoverGrid {
@@ -538,12 +538,12 @@
   font-size: 9px;
   font-weight: 700;
   letter-spacing: 0.22em;
-  color: #6b7280;
+  color: #8b8d98;
   margin-bottom: 4px;
 }
 .popoverValue {
   font-size: 13px;
-  color: #111827;
+  color: #f4f4f5;
   line-height: 1.5;
 }
 .popoverActions {
@@ -551,15 +551,15 @@
   justify-content: flex-end;
   gap: 8px;
   padding-top: 14px;
-  border-top: 1px solid #e5e7eb;
+  border-top: 1px solid #25262d;
 }
 .popoverPrimary {
   display: inline-flex;
   align-items: center;
   padding: 10px 18px;
   border-radius: 999px;
-  background: #111827;
-  color: #ffffff;
+  background: #f4f4f5;
+  color: #0d0e11;
   text-decoration: none;
   font-size: 12px;
   font-weight: 600;
@@ -567,7 +567,7 @@
   transition: background 0.12s;
 }
 .popoverPrimary:hover {
-  background: #374151;
+  background: #d4d4d8;
 }
 
 @media (max-width: 720px) {

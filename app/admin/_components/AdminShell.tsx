@@ -188,10 +188,14 @@ export default function AdminShell({
           <p className={styles.pageEyebrow}>{activeMeta.label.toUpperCase()}</p>
           <h1 className={styles.pageTitle}>
             {active === 'overview'
-              ? <>Welcome back, <em>Tiago</em>.</>
+              ? <>Welcome <em>back</em>.</>
               : activeMeta.label}
           </h1>
           <p className={styles.pageSub}>{activeMeta.description}</p>
+          {/* Phones: the sidebar is a bottom tab bar, so sign-out lives here */}
+          <form action="/api/admin/logout" method="post" className={styles.mobileOut}>
+            <button type="submit">Sign out</button>
+          </form>
         </header>
 
         {/* Active tab panel. We render ALL panels but hide non-active ones

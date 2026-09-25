@@ -386,16 +386,16 @@ export default function JobberCalendar({ allVisits }: Props) {
                 <div className={styles.popoverLabel}>STATUS</div>
                 <div className={styles.popoverValue}>
                   {popoverVisit.completed ? (
-                    <span style={{ color: '#166534' }}>✓ Completed</span>
+                    <span style={{ color: '#34d399' }}>✓ Completed</span>
                   ) : (
-                    <span style={{ color: '#374151' }}>● Scheduled</span>
+                    <span style={{ color: '#d4d4d8' }}>● Scheduled</span>
                   )}
                 </div>
               </div>
               <div style={{ gridColumn: '1 / -1' }}>
                 <div className={styles.popoverLabel}>LOCATION</div>
                 <div className={styles.popoverValue}>
-                  {popoverVisit.address ?? <em style={{ color: '#9ca3af' }}>No address on file</em>}
+                  {popoverVisit.address ?? <em style={{ color: '#6b6d78' }}>No address on file</em>}
                 </div>
               </div>
               <div style={{ gridColumn: '1 / -1' }}>

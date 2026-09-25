@@ -87,9 +87,9 @@ export default function ClientsTab({ clients, error }: Props) {
       <div className={styles.errorBox}>
         <div className={styles.errorTitle}>Couldn&apos;t load clients</div>
         <p>{error}</p>
-        <p style={{ marginTop: 8, fontSize: 12, color: '#9ca3af' }}>
+        <p style={{ marginTop: 8, fontSize: 12, color: '#6b6d78' }}>
           This usually means the Jobber connection broke. Check the
-          <a href="#jobber" style={{ marginLeft: 4, color: '#374151', fontWeight: 600 }}>Jobber tab</a> for details.
+          <a href="#jobber" style={{ marginLeft: 4, color: '#d4d4d8', fontWeight: 600 }}>Jobber tab</a> for details.
         </p>
       </div>
     );
@@ -265,7 +265,7 @@ export default function ClientsTab({ clients, error }: Props) {
                               )}
                             </>
                           ) : (
-                            <em style={{ color: '#9ca3af' }}>No address on file</em>
+                            <em style={{ color: '#6b6d78' }}>No address on file</em>
                           )}
                         </div>
                       </div>
@@ -284,7 +284,7 @@ export default function ClientsTab({ clients, error }: Props) {
                             </a>
                           )}
                           {!c.email && !c.phone && (
-                            <em style={{ color: '#9ca3af' }}>No contact info</em>
+                            <em style={{ color: '#6b6d78' }}>No contact info</em>
                           )}
                         </div>
                       </div>

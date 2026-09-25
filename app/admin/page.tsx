@@ -173,7 +173,7 @@ export default async function AdminDashboard({
         <div className={styles.leadName}>
           {lead.name}
           {lead.city && lead.kind !== 'social' && (
-            <span style={{ color: '#6b7280', fontWeight: 400, fontStyle: 'italic', marginLeft: 8, fontSize: 13 }}>
+            <span style={{ color: '#8b8d98', fontWeight: 400, fontStyle: 'italic', marginLeft: 8, fontSize: 13 }}>
               · {lead.city}
             </span>
           )}
@@ -344,8 +344,8 @@ export default async function AdminDashboard({
 
       <p className={styles.sectionLabel}>Daily automation</p>
       <div style={{
-        background: '#ffffff',
-        border: '1px solid #e5e7eb',
+        background: '#0d0e11',
+        border: '1px solid #25262d',
         borderRadius: 12,
         padding: '16px 20px',
         display: 'flex',
@@ -357,15 +357,15 @@ export default async function AdminDashboard({
           width: 10,
           height: 10,
           borderRadius: '50%',
-          background: '#1B7F3A',
+          background: '#34d399',
           boxShadow: '0 0 0 4px rgba(27, 127, 58, 0.15)',
           flexShrink: 0,
         }} />
         <div style={{ flex: 1 }}>
-          <div style={{ fontFamily: 'var(--font-poppins), sans-serif', fontWeight: 700, fontSize: 14, color: '#111827' }}>
+          <div style={{ fontFamily: 'var(--font-poppins), sans-serif', fontWeight: 700, fontSize: 14, color: '#f4f4f5' }}>
             Morning digest: ON
           </div>
-          <div style={{ fontFamily: 'var(--font-poppins), sans-serif', fontSize: 12, color: '#6b7280', marginTop: 2 }}>
+          <div style={{ fontFamily: 'var(--font-poppins), sans-serif', fontSize: 12, color: '#8b8d98', marginTop: 2 }}>
             Emailed every morning at 7am ET to contact@ultrashinecleaningfl.com — yesterday&apos;s leads, today&apos;s Jobber jobs, this week&apos;s revenue, unpaid invoices.
           </div>
         </div>
@@ -376,8 +376,8 @@ export default async function AdminDashboard({
           style={{
             padding: '8px 14px',
             borderRadius: 999,
-            background: '#111827',
-            color: '#ffffff',
+            background: '#f4f4f5',
+            color: '#0d0e11',
             textDecoration: 'none',
             fontFamily: 'var(--font-poppins), sans-serif',
             fontSize: 11,
@@ -426,13 +426,13 @@ export default async function AdminDashboard({
 
   const insightsPanel = (
     <div className={styles.emptyState} style={{ padding: 36, textAlign: 'left' }}>
-      <h2 style={{ fontFamily: 'var(--font-poppins), sans-serif', fontWeight: 700, fontSize: 22, color: '#111827', marginBottom: 12 }}>
+      <h2 style={{ fontFamily: 'var(--font-poppins), sans-serif', fontWeight: 700, fontSize: 22, color: '#f4f4f5', marginBottom: 12 }}>
         Insights — coming next
       </h2>
-      <p style={{ fontSize: 14, color: '#374151', lineHeight: 1.6, marginBottom: 18, maxWidth: 640 }}>
+      <p style={{ fontSize: 14, color: '#d4d4d8', lineHeight: 1.6, marginBottom: 18, maxWidth: 640 }}>
         Growth metrics, revenue trends, top clients, and (once we wire up Meta) social media performance per post.
       </p>
-      <ul style={{ fontSize: 13, color: '#6b7280', lineHeight: 1.8, paddingLeft: 20, marginBottom: 22, maxWidth: 640 }}>
+      <ul style={{ fontSize: 13, color: '#8b8d98', lineHeight: 1.8, paddingLeft: 20, marginBottom: 22, maxWidth: 640 }}>
         <li>8-week + 12-month revenue line chart</li>
         <li>Lead-to-quote-to-booked-job funnel rates</li>
         <li>Top 10 clients by lifetime spend</li>
@@ -471,7 +471,7 @@ export default async function AdminDashboard({
           <div className={styles.statLabel}>Google · {GOOGLE_REVIEW_COUNT} reviews</div>
           <div className={styles.statValue}>{GOOGLE_RATING.toFixed(1)} ★</div>
           <div className={styles.statSub}>
-            <a href="https://search.google.com/local/reviews" target="_blank" rel="noopener noreferrer" style={{ color: '#374151', fontWeight: 600 }}>
+            <a href="https://search.google.com/local/reviews" target="_blank" rel="noopener noreferrer" style={{ color: '#d4d4d8', fontWeight: 600 }}>
               Manage on Google →
             </a>
           </div>
@@ -480,7 +480,7 @@ export default async function AdminDashboard({
           <div className={styles.statLabel}>HomeAdvisor · 25 reviews</div>
           <div className={styles.statValue}>4.9 ★</div>
           <div className={styles.statSub}>
-            <a href="https://www.homeadvisor.com/rated.UltraShineCleaning.68124585.html" target="_blank" rel="noopener noreferrer" style={{ color: '#374151', fontWeight: 600 }}>
+            <a href="https://www.homeadvisor.com/rated.UltraShineCleaning.68124585.html" target="_blank" rel="noopener noreferrer" style={{ color: '#d4d4d8', fontWeight: 600 }}>
               Open profile →
             </a>
           </div>

@@ -41,7 +41,7 @@ export default function LeaveAReviewPage() {
         <div className={styles.heroOverlay} />
 
         <div className={styles.heroContent}>
-          <p className={styles.eyebrow}>THANK YOU · FROM TIAGO + FRANCINE</p>
+          <p className={styles.eyebrow}>THANK YOU · FROM THE ULTRA SHINE TEAM</p>
 
           <h1 className={`fraunces ${styles.headline}`}>
             Mind sharing your <em>experience</em>?
@@ -115,7 +115,7 @@ export default function LeaveAReviewPage() {
           <p className={styles.feedbackBody}>
             If your clean didn&apos;t hit the standard, we want to know before
             it shows up in a review. Our 100% satisfaction guarantee means we
-            come back free until you&apos;re happy. Text or call Tiago directly:
+            come back free until you&apos;re happy. Text or call us directly:
           </p>
 
           <a href="tel:5615836694" className={styles.feedbackPhone}>

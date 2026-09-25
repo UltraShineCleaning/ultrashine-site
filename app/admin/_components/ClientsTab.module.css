@@ -22,7 +22,7 @@
   font-size: 9px;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: #6b7280;
+  color: #8b8d98;
   margin-right: 6px;
   flex-shrink: 0;
 }
@@ -32,42 +32,42 @@
   gap: 6px;
   padding: 6px 12px;
   border-radius: 999px;
-  background: #ffffff;
-  border: 1px solid #e5e7eb;
+  background: #0d0e11;
+  border: 1px solid #25262d;
   font-family: var(--font-poppins), sans-serif;
   font-weight: 500;
   font-size: 12px;
-  color: #374151;
+  color: #d4d4d8;
   cursor: pointer;
   transition: background 0.12s, border-color 0.12s, color 0.12s, transform 0.1s;
   white-space: nowrap;
 }
 .filterChip:hover {
-  border-color: #9ca3af;
-  background: #f9fafb;
+  border-color: #6b6d78;
+  background: #050506;
 }
 .filterChip:active {
   transform: scale(0.98);
 }
 .filterChipActive,
 .filterChipActive:hover {
-  background: #111827;
-  color: #ffffff;
-  border-color: #111827;
+  background: #f4f4f5;
+  color: #0d0e11;
+  border-color: #f4f4f5;
 }
 .chipCount {
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.02em;
-  background: #f3f4f6;
-  color: #6b7280;
+  background: #1b1c22;
+  color: #8b8d98;
   padding: 1px 6px;
   border-radius: 999px;
   line-height: 1.4;
 }
 .filterChipActive .chipCount {
   background: rgba(255, 255, 255, 0.18);
-  color: #f9fafb;
+  color: #050506;
 }
 
 /* ===== TOOLBAR (search + count) ===== */
@@ -75,8 +75,8 @@
   display: flex;
   align-items: center;
   gap: 16px;
-  background: #ffffff;
-  border: 1px solid #e5e7eb;
+  background: #0d0e11;
+  border: 1px solid #25262d;
   border-radius: 12px;
   padding: 12px 16px;
 }
@@ -89,28 +89,28 @@
 .searchIcon {
   position: absolute;
   left: 12px;
-  color: #9ca3af;
+  color: #6b6d78;
   font-size: 16px;
   pointer-events: none;
 }
 .searchInput {
   width: 100%;
   padding: 10px 36px 10px 36px;
-  background: #f9fafb;
-  border: 1px solid #e5e7eb;
+  background: #050506;
+  border: 1px solid #25262d;
   border-radius: 10px;
   font-family: var(--font-poppins), sans-serif;
   font-size: 14px;
-  color: #111827;
+  color: #f4f4f5;
   outline: none;
   transition: border-color 0.15s, background 0.15s;
 }
 .searchInput:focus {
-  background: #ffffff;
-  border-color: #9ca3af;
+  background: #0d0e11;
+  border-color: #6b6d78;
 }
 .searchInput::placeholder {
-  color: #9ca3af;
+  color: #6b6d78;
 }
 .clearBtn {
   position: absolute;
@@ -118,9 +118,9 @@
   width: 24px;
   height: 24px;
   border-radius: 50%;
-  background: #e5e7eb;
+  background: #25262d;
   border: 0;
-  color: #6b7280;
+  color: #8b8d98;
   font-size: 16px;
   line-height: 1;
   cursor: pointer;
@@ -129,34 +129,34 @@
   transition: background 0.15s;
 }
 .clearBtn:hover {
-  background: #d1d5db;
-  color: #111827;
+  background: #34353d;
+  color: #f4f4f5;
 }
 .count {
   font-family: var(--font-poppins), sans-serif;
   font-size: 13px;
-  color: #6b7280;
+  color: #8b8d98;
   white-space: nowrap;
 }
 .count strong {
   font-weight: 700;
-  color: #111827;
+  color: #f4f4f5;
 }
 
 /* ===== EMPTY STATE ===== */
 .emptyState {
-  background: #f9fafb;
-  border: 1px dashed #d1d5db;
+  background: #050506;
+  border: 1px dashed #34353d;
   border-radius: 12px;
   padding: 36px 28px;
   text-align: center;
   font-family: var(--font-poppins), sans-serif;
-  color: #6b7280;
+  color: #8b8d98;
 }
 .emptyState strong {
   display: block;
   font-size: 16px;
-  color: #111827;
+  color: #f4f4f5;
   margin-bottom: 6px;
   font-weight: 700;
 }
@@ -167,8 +167,8 @@
 
 /* ===== ERROR ===== */
 .errorBox {
-  background: #fef2f2;
-  border: 1px solid #fecaca;
+  background: rgba(248,113,113,0.10);
+  border: 1px solid rgba(248,113,113,0.32);
   border-radius: 12px;
   padding: 18px 22px;
   font-family: var(--font-poppins), sans-serif;
@@ -176,13 +176,13 @@
 .errorTitle {
   font-weight: 700;
   font-size: 15px;
-  color: #b91c1c;
+  color: #f87171;
   margin-bottom: 4px;
 }
 .errorBox p {
   margin: 0;
   font-size: 13px;
-  color: #6b7280;
+  color: #8b8d98;
 }
 
 /* ===== LIST ===== */
@@ -193,21 +193,21 @@
 }
 
 .row {
-  background: #ffffff;
-  border: 1px solid #e5e7eb;
+  background: #0d0e11;
+  border: 1px solid #25262d;
   border-radius: 12px;
   padding: 14px 18px;
   cursor: pointer;
   transition: border-color 0.15s, box-shadow 0.15s, background 0.15s, transform 0.15s;
 }
 .row:hover {
-  border-color: #d1d5db;
-  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04);
+  border-color: #34353d;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.35);
   transform: translateY(-1px);
 }
 .rowExpanded {
-  border-color: #111827;
-  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+  border-color: #f4f4f5;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.35);
 }
 .rowExpanded:hover {
   transform: translateY(-1px);
@@ -226,7 +226,7 @@
   font-family: var(--font-poppins), sans-serif;
   font-weight: 700;
   font-size: 15px;
-  color: #111827;
+  color: #f4f4f5;
   letter-spacing: -0.005em;
   display: flex;
   align-items: center;
@@ -236,16 +236,16 @@
   font-size: 9px;
   font-weight: 700;
   letter-spacing: 0.16em;
-  color: #6b7280;
-  background: #f3f4f6;
-  border: 1px solid #e5e7eb;
+  color: #8b8d98;
+  background: #1b1c22;
+  border: 1px solid #25262d;
   padding: 2px 6px;
   border-radius: 4px;
 }
 .rowMeta {
   font-family: var(--font-poppins), sans-serif;
   font-size: 12px;
-  color: #6b7280;
+  color: #8b8d98;
   margin-top: 3px;
   display: flex;
   flex-wrap: wrap;
@@ -253,32 +253,32 @@
   align-items: center;
 }
 .metaLink {
-  color: #374151;
+  color: #d4d4d8;
   text-decoration: none;
   font-weight: 500;
 }
 .metaLink:hover {
-  color: #111827;
+  color: #f4f4f5;
   text-decoration: underline;
 }
 .dot {
-  color: #d1d5db;
+  color: #34353d;
 }
 .rowChevron {
-  color: #9ca3af;
+  color: #6b6d78;
   font-size: 16px;
   font-weight: 700;
   flex-shrink: 0;
 }
 .rowExpanded .rowChevron {
-  color: #111827;
+  color: #f4f4f5;
 }
 
 /* ===== EXPANDED PANEL ===== */
 .rowExpand {
   margin-top: 14px;
   padding-top: 14px;
-  border-top: 1px solid #e5e7eb;
+  border-top: 1px solid #25262d;
 }
 .expandGrid {
   display: grid;
@@ -291,13 +291,13 @@
   font-weight: 700;
   font-size: 9px;
   letter-spacing: 0.22em;
-  color: #6b7280;
+  color: #8b8d98;
   margin-bottom: 4px;
 }
 .expandValue {
   font-family: var(--font-poppins), sans-serif;
   font-size: 13px;
-  color: #111827;
+  color: #f4f4f5;
   line-height: 1.55;
 }
 .expandActions {
@@ -310,8 +310,8 @@
   align-items: center;
   padding: 8px 14px;
   border-radius: 999px;
-  background: #111827;
-  color: #ffffff;
+  background: #f4f4f5;
+  color: #0d0e11;
   text-decoration: none;
   font-family: var(--font-poppins), sans-serif;
   font-size: 12px;
@@ -320,7 +320,7 @@
   transition: background 0.15s;
 }
 .expandBtn:hover {
-  background: #374151;
+  background: #d4d4d8;
 }
 
 @media (max-width: 720px) {

@@ -45,6 +45,7 @@ type Insights = {
 
 const KIND: Record<PostKind, string> = { POST: 'Post', CAROUSEL: 'Carousel', REEL: 'Reel', STORY: 'Story' };
 const STATUS_LABEL: Record<PostStatus, string> = { draft: 'Draft', scheduled: 'Scheduled', publishing: 'Publishing…', published: 'Published', failed: 'Failed' };
+const STATUS_COLOR: Record<PostStatus, string> = { draft: '#fbbf24', scheduled: '#8aa8ff', publishing: '#c4b5fd', published: '#34d399', failed: '#f87171' };
 const DAY = 86_400_000;
 const SLOT_HOURS = [9, 12, 18];
 
@@ -523,6 +524,41 @@ function Overview(props: {
         </div>
       )}
 
+      <div className={cx(s.card, s.s12)}>
+        <div className={s.ch}><h3>Connected accounts</h3>{status?.connected && <span className={s.small + ' ' + s.mut}>since {fmtDay(status.connected.since)}</span>}</div>
+        <div className={s.conns}>
+          <div className={s.conn}>
+            <span className={s.connIco} style={{ background: 'var(--ig)' }}>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="18" height="18" rx="5" /><circle cx="12" cy="12" r="4" /><circle cx="17.5" cy="6.5" r="1" fill="currentColor" /></svg>
+            </span>
+            <span className={s.connT}>
+              <b>Instagram</b>
+              <span>{status?.connected?.instagram ? `@${status.connected.instagram} · connected` : status?.connected ? 'No Instagram business account on the Page yet' : 'Not connected'}</span>
+            </span>
+            <span className={cx(s.dot, !status?.connected?.instagram && s.dotOff)} />
+          </div>
+          <div className={s.conn}>
+            <span className={s.connIco} style={{ background: 'var(--fb)' }}>
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M13.5 21v-7.5h2.5l.4-3h-2.9V8.6c0-.9.3-1.5 1.5-1.5h1.6V4.4c-.3 0-1.2-.1-2.3-.1-2.3 0-3.8 1.4-3.8 3.9v2.3H8v3h2.5V21z" /></svg>
+            </span>
+            <span className={s.connT}>
+              <b>Facebook Page</b>
+              <span>{status?.connected ? `${status.connected.page} · connected` : 'Not connected'}</span>
+            </span>
+            <span className={cx(s.dot, !status?.connected && s.dotOff)} />
+          </div>
+        </div>
+        <div className={s.row} style={{ marginTop: 12 }}>
+          {status?.metaApp ? (
+            <a className={cx(s.btn, status.connected ? '' : s.primary)} href="/api/social/meta/connect">{status.connected ? 'Reconnect' : 'Connect Instagram + Facebook'}</a>
+          ) : (
+            <button type="button" className={s.btn} disabled title="Finish the Meta app step first">Connect Instagram + Facebook</button>
+          )}
+          {status?.connected && <button type="button" className={cx(s.btn, s.ghost)} onClick={props.onDisconnect}>Disconnect</button>}
+          {!status?.metaApp && <span className={s.small + ' ' + s.mut}>Opens once the Meta app keys are added in Vercel — that&apos;s the next setup step.</span>}
+        </div>
+      </div>
+
       <div className={cx(s.card, s.s5)}>
         <div className={s.ch}><h3>Next up</h3>{next && <Chip status="scheduled" />}</div>
         {next ? (
@@ -633,94 +669,133 @@ function Overview(props: {
         <div className={s.ch}><h3>Followers</h3><span className={s.small + ' ' + s.mut}>→</span></div>
         <div className={s.big}>{insights?.followers ?? '—'}</div>
         <div className={s.small + ' ' + s.mut} style={{ marginTop: 6 }}>{insights?.at ? `updated ${fmtAgo(insights.at)} ago` : 'fills in once connected'}</div>
-        {status?.connected && (
-          <button type="button" className={cx(s.btn, s.sm, s.ghost)} style={{ marginTop: 10, paddingLeft: 0 }} onClick={(e) => { e.stopPropagation(); props.onDisconnect(); }}>Disconnect</button>
-        )}
       </div>
     </div>
   );
 }
 
-/* ================================ CALENDAR ================================ */
+/* ================================ CALENDAR (month) ================================ */
+
+function monthStartOf(ms: number) {
+  const p = etParts(ms);
+  return etToMs(p.y, p.m, 1, 0, 0);
+}
 
 function Calendar(props: { posts: SocialPost[]; onOpen: (id: string) => void; onAdd: (day: number) => void; onMove: (p: SocialPost, dayMs: number) => void }) {
-  const [ws, setWs] = useState(() => weekStart(Date.now()));
+  const [ms, setMs] = useState(() => monthStartOf(Date.now()));
   const [over, setOver] = useState<number | null>(null);
+  const [openDay, setOpenDay] = useState<number | null>(null);
   const today = dayStart(Date.now());
-  const days = Array.from({ length: 7 }, (_, i) => dayStart(addDays(ws + 12 * 3600_000, i)));
-  const end = addDays(ws, 6);
+  const mp = etParts(ms);
+  const gridStart = weekStart(ms + 12 * 3600_000);
+  const daysInMonth = new Date(Date.UTC(mp.y, mp.m, 0)).getUTCDate();
+  const weeks = Math.ceil((etParts(ms).dow + daysInMonth) / 7);
+  const cells = Array.from({ length: weeks * 7 }, (_, i) => dayStart(addDays(gridStart + 12 * 3600_000, i)));
+  const postsOn = (d: number) =>
+    props.posts.filter((p) => p.scheduledAt && p.scheduledAt >= d && p.scheduledAt < d + DAY).sort((a, b) => (a.scheduledAt ?? 0) - (b.scheduledAt ?? 0));
+  const monthName = new Date(ms + 12 * 3600_000).toLocaleDateString('en-US', { timeZone: 'America/New_York', month: 'long', year: 'numeric' });
+  const shift = (n: number) => setMs(monthStartOf(etToMs(mp.y, mp.m + n, 15, 12)));
+  const dayList = openDay !== null ? postsOn(openDay) : [];
+
   return (
     <>
       <div className={s.weekHead}>
-        <button type="button" className={cx(s.btn, s.sm)} onClick={() => setWs(weekStart(addDays(ws, -7)))}>‹</button>
-        <b style={{ fontSize: 15 }}>{fmtDay(ws).split(', ')[1]} – {fmtDay(end).split(', ')[1]}</b>
-        <button type="button" className={cx(s.btn, s.sm)} onClick={() => setWs(weekStart(addDays(ws, 8)))}>›</button>
-        <button type="button" className={cx(s.btn, s.sm)} onClick={() => setWs(weekStart(Date.now()))}>Today</button>
-        <span className={s.small + ' ' + s.soft} style={{ marginLeft: 'auto' }}>Drag a draft or scheduled post to another day to move it</span>
+        <button type="button" className={cx(s.btn, s.sm)} onClick={() => shift(-1)} aria-label="Previous month">‹</button>
+        <b style={{ fontSize: 15, minWidth: 150, textAlign: 'center' }}>{monthName}</b>
+        <button type="button" className={cx(s.btn, s.sm)} onClick={() => shift(1)} aria-label="Next month">›</button>
+        <button type="button" className={cx(s.btn, s.sm)} onClick={() => setMs(monthStartOf(Date.now()))}>Today</button>
+        <span className={s.legend}>
+          <span><i style={{ background: 'var(--amber)' }} />Draft</span>
+          <span><i style={{ background: '#8aa8ff' }} />Scheduled</span>
+          <span><i style={{ background: 'var(--green)' }} />Published</span>
+          <span><i style={{ background: 'var(--red)' }} />Failed</span>
+        </span>
       </div>
-      <div className={s.week}>
-        {days.map((d) => {
-          const list = props.posts
-            .filter((p) => p.scheduledAt && p.scheduledAt >= d && p.scheduledAt < d + DAY)
-            .sort((a, b) => (a.scheduledAt ?? 0) - (b.scheduledAt ?? 0));
-          const pd = etParts(d);
+      <div className={s.month}>
+        {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((d) => <div key={d} className={s.dow}>{d}</div>)}
+        {cells.map((d) => {
+          const list = postsOn(d);
+          const p = etParts(d);
+          const inMonth = p.m === mp.m;
           return (
             <div
+              role="button"
+              tabIndex={0}
               key={d}
-              className={cx(s.day, d === today && s.today, over === d && s.drop)}
+              aria-label={`${fmtDay(d)}, ${list.length} item${list.length === 1 ? '' : 's'}`}
+              className={cx(s.mCell, !inMonth && s.mOut, d === today && s.mToday, over === d && s.mDrop, openDay === d && s.mSel)}
+              onClick={() => setOpenDay(d)}
+              onKeyDown={(e) => e.key === 'Enter' && setOpenDay(d)}
               onDragOver={(e) => { e.preventDefault(); setOver(d); }}
               onDragLeave={() => setOver(null)}
               onDrop={(e) => {
                 e.preventDefault();
                 setOver(null);
-                const p = props.posts.find((x) => x.id === e.dataTransfer.getData('text/plain'));
-                if (p) props.onMove(p, d);
+                const post = props.posts.find((x) => x.id === e.dataTransfer.getData('text/plain'));
+                if (post) props.onMove(post, d);
               }}
             >
-              <div className={s.dayH}>
-                <b>{['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][pd.dow]}</b>
-                <span className={cx(s.small, d === today ? s.td : s.mut)}>{pd.d}</span>
-              </div>
-              {list.map((p) => {
-                const movable = p.status === 'draft' || p.status === 'scheduled';
-                return (
-                  <button
-                    type="button"
-                    key={p.id}
-                    className={s.slot}
-                    draggable={movable}
-                    onDragStart={(e) => e.dataTransfer.setData('text/plain', p.id)}
-                    onClick={() => props.onOpen(p.id)}
-                    style={p.status === 'failed' ? { borderColor: 'rgba(248,113,113,.45)' } : p.status === 'draft' ? { borderColor: 'rgba(251,191,36,.3)' } : undefined}
-                  >
-                    <div className={s.slotM} style={thumbOf(p) ? { backgroundImage: `url(${thumbOf(p)})` } : undefined}>
-                      <span className={s.tag}>{KIND[p.kind].toUpperCase()}</span>
-                    </div>
-                    <div className={s.slotB}>
-                      <div className={s.slotT}>{fmtTime(p.scheduledAt!)}<Plats p={p.platforms} /></div>
-                      <Chip status={p.status} />
-                      <div className={s.cp}>{p.kind === 'STORY' ? 'Story' : p.caption || '(no caption)'}</div>
-                    </div>
-                  </button>
-                );
-              })}
-              {d >= today && <button type="button" className={s.add} onClick={() => props.onAdd(d)}>+ Add</button>}
+              <span className={s.mNum}>{p.d}</span>
+              <span className={s.mThumbs}>
+                {list.slice(0, 3).map((x) => (
+                  <span
+                    key={x.id}
+                    className={s.mThumb}
+                    draggable={x.status === 'draft' || x.status === 'scheduled'}
+                    onDragStart={(e) => { e.stopPropagation(); e.dataTransfer.setData('text/plain', x.id); }}
+                    style={{ backgroundImage: thumbOf(x) ? `url(${thumbOf(x)})` : undefined, borderColor: STATUS_COLOR[x.status] }}
+                    title={`${fmtTime(x.scheduledAt!)} · ${KIND[x.kind]} · ${STATUS_LABEL[x.status]}`}
+                  />
+                ))}
+                {list.length > 3 && <span className={s.mMore}>+{list.length - 3}</span>}
+              </span>
+              {list.length > 0 && (
+                <span className={s.mDots}>
+                  {list.map((x) => <i key={x.id} style={{ background: STATUS_COLOR[x.status] }} />)}
+                </span>
+              )}
             </div>
           );
         })}
       </div>
-      {props.posts.some((p) => p.status === 'draft' && !p.scheduledAt) && (
-        <div className={s.card} style={{ marginTop: 12 }}>
-          <div className={s.ch}><h3>Drafts without a time</h3></div>
-          <div className={s.list}>
-            {props.posts.filter((p) => p.status === 'draft' && !p.scheduledAt).map((p) => (
-              <button type="button" key={p.id} className={s.okRow} onClick={() => props.onOpen(p.id)}>
-                <div className={s.okThumb} style={thumbOf(p) ? { backgroundImage: `url(${thumbOf(p)})` } : undefined} />
-                <div className={s.okText}><b>{KIND[p.kind]}</b><span>{p.caption || '(no caption)'}</span></div>
-              </button>
-            ))}
-          </div>
-        </div>
+      <div className={s.small + ' ' + s.soft} style={{ margin: '10px 6px 0' }}>Tap a day to see everything on it. Drag a thumbnail onto another day to move it.</div>
+
+      {openDay !== null && (
+        <>
+          <div className={s.scrim} onClick={() => setOpenDay(null)} />
+          <aside className={s.drawer}>
+            <div className={s.dH}>
+              <b style={{ fontSize: 14 }}>{fmtDay(openDay)}</b>
+              <span className={s.small + ' ' + s.mut}>{dayList.length} item{dayList.length === 1 ? '' : 's'}</span>
+              <button type="button" className={cx(s.btn, s.sm, s.ghost)} style={{ marginLeft: 'auto' }} onClick={() => setOpenDay(null)}>✕</button>
+            </div>
+            <div className={s.dB}>
+              {dayList.map((x) => (
+                <button type="button" key={x.id} className={s.dayRow} onClick={() => { setOpenDay(null); props.onOpen(x.id); }}>
+                  <span className={s.dayImg} style={thumbOf(x) ? { backgroundImage: `url(${thumbOf(x)})` } : undefined}>
+                    <span className={s.tag}>{KIND[x.kind].toUpperCase()}</span>
+                  </span>
+                  <span style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: 6 }}>
+                    <span className={s.row} style={{ justifyContent: 'space-between' }}>
+                      <b>{fmtTime(x.scheduledAt!)}</b>
+                      <Plats p={x.platforms} />
+                    </span>
+                    <Chip status={x.status} />
+                    <span className={s.cp}>{x.kind === 'STORY' ? 'Story · shows for 24 hours' : x.caption || '(no caption)'}</span>
+                  </span>
+                </button>
+              ))}
+              {!dayList.length && <div className={s.empty}>Nothing on this day yet.</div>}
+            </div>
+            <div className={s.dF}>
+              {openDay >= today ? (
+                <button type="button" className={cx(s.btn, s.primary, s.push)} onClick={() => { const d = openDay; setOpenDay(null); props.onAdd(d); }}>+ Add to this day</button>
+              ) : (
+                <span className={s.small + ' ' + s.mut}>This day has passed.</span>
+              )}
+            </div>
+          </aside>
+        </>
       )}
     </>
   );

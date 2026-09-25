@@ -6,5 +6,5 @@ export function denyUnlessAdmin(): NextResponse | null {
   return isAdmin() ? null : NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 }
 
-/** Until Tiago and Francine have separate logins, approvals are recorded as the shared admin. */
-export const ACTOR = 'Tiago or Francine';
+/** Until each person has their own login, approvals are recorded as the shared admin login. */
+export const ACTOR = 'Admin';

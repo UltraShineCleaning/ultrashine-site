@@ -786,7 +786,7 @@ export default function QuotePage() {
                       </div>
                     )}
                     <div className={styles.estNote}>
-                      Once you submit, Tiago or Francine will reach out within the hour to
+                      Once you submit, our team will reach out within the hour to
                       set up a quick walkthrough, usually the same week. Your exact price
                       is confirmed then, and you see it before anything is booked.
                     </div>
@@ -799,7 +799,7 @@ export default function QuotePage() {
                     </div>
                     <div className={styles.estNote}>
                       Commercial cleaning is priced after we see the space. Once you
-                      submit, Tiago or Francine will reach out within the hour to set up
+                      submit, our team will reach out within the hour to set up
                       a walkthrough, and send you a precise quote after it. No pressure.
                     </div>
                   </>

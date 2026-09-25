@@ -43,7 +43,7 @@ export default function AdminLogin() {
         <h1 className={styles.loginTitle}>
           Ultra Shine <em>Dashboard</em>
         </h1>
-        <p className={styles.loginSub}>Private — for Tiago + Francine only</p>
+        <p className={styles.loginSub}>Private — Ultra Shine team only</p>
 
         <form onSubmit={onSubmit}>
           <input

@@ -198,7 +198,7 @@ export default function WorkForUsPage() {
             <div className={styles.whySpark}>✦</div>
             <h3 className={styles.whyTitle}>Real owners</h3>
             <p className={styles.whyBody}>
-              You talk to Tiago + Francine directly — not a regional
+              You talk to the owners directly — not a regional
               manager three states away. Small team, family-run.
             </p>
           </div>

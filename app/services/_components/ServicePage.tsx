@@ -5,6 +5,7 @@ import { useRef, useState } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import {
   computeEstimate,
+  CREW_IS_FIXED_PAIR,
   exampleConditionLine,
   exampleInput,
   type Service as EstimateService,
@@ -287,8 +288,11 @@ export default function ServicePage({ data }: { data: ServiceData }) {
             </h2>
             <p className={service.estimatorCalloutBody}>
               Answer a few quick questions about your home and get a ballpark
-              price range plus how long we&apos;d be on site. No email, no
-              sign-up, no waiting.
+              price range
+              {CREW_IS_FIXED_PAIR[ESTIMATE_SERVICE_BY_SLUG[data.slug] ?? 'regular']
+                ? ' plus how long we’d be on site'
+                : ''}
+              . No email, no sign-up, no waiting.
             </p>
             <Link
               href={`/cleaning-time-estimator?service=${data.slug}`}
@@ -317,7 +321,9 @@ export default function ServicePage({ data }: { data: ServiceData }) {
                 </span>
               </div>
               <div className={service.previewSub}>
-                with 2 cleaners on site · your home may differ
+                {CREW_IS_FIXED_PAIR[ESTIMATE_SERVICE_BY_SLUG[data.slug] ?? 'regular']
+                  ? 'with 2 cleaners on site · your home may differ'
+                  : 'crew sized to your home · your home may differ'}
               </div>
             </div>
           </div>

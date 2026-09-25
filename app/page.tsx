@@ -278,7 +278,7 @@ export default async function HomePage() {
           <WhyCard
             icon="crew"
             title="Same Crew, Every Visit"
-            body="Two cleaners per visit, the same pair wherever scheduling allows. Background-checked and in uniform."
+            body="Two cleaners on regular visits, the same pair wherever scheduling allows. Background-checked and in uniform."
           />
           <WhyCard
             icon="guarantee"

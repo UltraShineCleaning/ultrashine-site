@@ -120,7 +120,7 @@ const CATEGORIES: FaqCategory[] = [
       },
       {
         q: 'Who exactly will be in my home?',
-        a: "A dedicated pair — and the same two whenever scheduling allows, so they learn your layout and your preferences rather than starting fresh every visit. If your regular pair is ever out, you'll know who's coming before they arrive. Everyone is background-checked before they ever hold a key, and arrives in uniform.",
+        a: "For regular cleanings, a dedicated pair — the same two whenever scheduling allows, so they learn your layout and your preferences rather than starting fresh every visit. Move-in and move-out cleans are done by two as well. For deep and post-construction cleans, we size the crew to the home. Either way, you'll know who's coming before they arrive. Everyone is background-checked before they ever hold a key, and arrives in uniform.",
       },
       {
         q: 'Will the same person clean my home every time?',

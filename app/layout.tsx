@@ -111,7 +111,7 @@ const SITE_SCHEMA = [
     name: 'Ultra Shine Cleaning',
     alternateName: 'Ultra Shine Cleaning FL',
     description:
-      'Boutique house and commercial cleaning across Palm Beach and Broward County. Background-checked team, fully insured + bonded, family-owned since 2018. Every job staffed by a pair of cleaners.',
+      'Boutique house and commercial cleaning across Palm Beach and Broward County. Background-checked team, fully insured + bonded, family-owned since 2018. Regular cleanings handled by a dedicated pair of cleaners.',
     url: 'https://ultrashinecleaningfl.com',
     telephone: '+1-561-583-6694',
     email: 'contact@ultrashinecleaningfl.com',

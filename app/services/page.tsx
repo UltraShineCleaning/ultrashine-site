@@ -354,8 +354,7 @@ export default function ServicesIndexPage() {
             </h2>
             <p className={styles.estimatorCalloutBody}>
               A few quick questions &mdash; we&apos;ll give you a ballpark price
-              range plus how long we&apos;d be on site. No email, no sign-up,
-              no waiting.
+              range for your home. No email, no sign-up, no waiting.
             </p>
             <Link href="/cleaning-time-estimator" className={styles.estimatorCalloutBtn}>
               Get My Ballpark →
@@ -374,7 +373,8 @@ export default function ServicesIndexPage() {
                 <span className={styles.previewResultUnit}>$</span>
                 <span className={styles.previewResultNum}>{DEEP_EXAMPLE.priceHigh}</span>
               </div>
-              <div className={styles.previewSub}>with 2 cleaners on site</div>
+              {/* Deep cleans aren't always a pair — crew is sized to the home. */}
+              <div className={styles.previewSub}>crew sized to your home</div>
             </div>
           </div>
         </div>

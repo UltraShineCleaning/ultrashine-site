@@ -20,6 +20,7 @@ import styles from './page.module.css';
 
 import {
   computeEstimate,
+  CREW_IS_FIXED_PAIR,
   DEFAULT_SQFT_FOR_HOME,
   FREQUENCY_LABEL,
   SERVICE_LABEL,
@@ -129,7 +130,9 @@ export default function CleaningTimeEstimatorPage() {
     };
     const summary = [
       `Estimator: ${homeLabel[homeSize]}, ${SQFT_BAND_LABEL[sqft]} sq ft, ${floors === 3 ? '3+' : floors} floor${floors > 1 ? 's' : ''}, ${bathrooms} bath${bathrooms > 1 ? 's' : ''}, ${SERVICE_LABEL[service]} (${FREQUENCY_LABEL[frequency]}), last cleaned ${lastLabel[lastCleaned]}, ${petsLabel[pets]}.`,
-      `Ballpark: ${estimate.wallLow}-${estimate.wallHigh} hrs with ${estimate.cleaners} cleaners on site, $${estimate.priceLow}-$${estimate.priceHigh}.`,
+      CREW_IS_FIXED_PAIR[service]
+        ? `Ballpark: ${estimate.wallLow}-${estimate.wallHigh} hrs with ${estimate.cleaners} cleaners on site, $${estimate.priceLow}-$${estimate.priceHigh}.`
+        : `Ballpark: $${estimate.priceLow}-$${estimate.priceHigh}, crew size set at walkthrough.`,
       `Send precise quote within the hour.`,
     ].join(' ');
     const params = new URLSearchParams({
@@ -400,20 +403,32 @@ export default function CleaningTimeEstimatorPage() {
 
               <div className={styles.resultDividerSlim} />
 
-              {/* TIME — secondary detail. Ultra Shine ALWAYS sends a pair. */}
-              <div className={styles.resultMetaRow}>
-                <div className={styles.resultMetaItem}>
-                  <span className={styles.resultMetaValue}>
-                    {estimate.wallLow}–{estimate.wallHigh}
-                    <span className={styles.resultMetaUnit}> hrs</span>
-                  </span>
-                  <span className={styles.resultMetaLabel}>on site</span>
+              {/* TIME — secondary detail. Only regular + move-in/out are a
+                  fixed pair. Deep + post-construction crews are sized to the
+                  home, so neither a crew count nor an on-site time is shown. */}
+              {CREW_IS_FIXED_PAIR[service] ? (
+                <div className={styles.resultMetaRow}>
+                  <div className={styles.resultMetaItem}>
+                    <span className={styles.resultMetaValue}>
+                      {estimate.wallLow}–{estimate.wallHigh}
+                      <span className={styles.resultMetaUnit}> hrs</span>
+                    </span>
+                    <span className={styles.resultMetaLabel}>on site</span>
+                  </div>
+                  <div className={styles.resultMetaItem}>
+                    <span className={styles.resultMetaValue}>2</span>
+                    <span className={styles.resultMetaLabel}>cleaners (always)</span>
+                  </div>
                 </div>
-                <div className={styles.resultMetaItem}>
-                  <span className={styles.resultMetaValue}>2</span>
-                  <span className={styles.resultMetaLabel}>cleaners (always)</span>
+              ) : (
+                <div className={styles.resultMetaRow}>
+                  <div className={styles.resultMetaItem}>
+                    <span className={styles.resultMetaLabel}>
+                      Crew sized to your home · set at the walkthrough
+                    </span>
+                  </div>
                 </div>
-              </div>
+              )}
 
               {/* CTA — "Get My" possessive beats "Get a" per 2026 CRO data */}
               <Link href={quoteHref} className={styles.resultCta}>

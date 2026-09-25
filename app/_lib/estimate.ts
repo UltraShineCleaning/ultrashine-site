@@ -195,8 +195,23 @@ export const FREQUENCY_LABEL: Record<Frequency, string> = {
   weekly: 'Weekly',
 };
 
-/** Ultra Shine ALWAYS sends a pair — 2 cleaners on every job. */
+/** Regular and move-in/out cleanings are ALWAYS a pair — 2 cleaners. */
 export const ALWAYS_CLEANERS = 2;
+
+/**
+ * Whether the crew is a fixed pair for this service. (Tiago, 2026-09-24.)
+ * Deep and post-construction jobs are NOT always done by two — the crew is
+ * sized to the home, so the site must not promise "2 cleaners" or an
+ * on-site time for them (on-site time = work hours ÷ crew size, and the crew
+ * size isn't known until the walkthrough). The PRICE is unaffected: it comes
+ * from total work hours, which don't depend on how many people share them.
+ */
+export const CREW_IS_FIXED_PAIR: Record<Service, boolean> = {
+  regular: true,
+  moveout: true,
+  deep: false,
+  postconstruction: false,
+};
 
 /* ---------------- the formula ---------------- */
 

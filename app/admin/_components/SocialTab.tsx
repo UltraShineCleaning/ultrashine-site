@@ -121,7 +121,8 @@ function IgPreview({ kind, media, caption }: { kind: PostKind; media: { url: str
   return (
     <div className={s.ig}>
       <div className={s.igH}>
-        <div className={s.igAv}><div>✦</div></div>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <div className={s.igAv}><div><img src="/images/logo_white_tight.png" alt="" /></div></div>
         <div>
           <b style={{ fontSize: 12.5 }}>ultrashinecleaning</b>
           <div className={s.small} style={{ color: '#a1a1aa' }}>{kind === 'STORY' ? 'story' : 'Boca Raton, Florida'}</div>
@@ -461,6 +462,7 @@ function Overview(props: {
   onDisconnect: () => void;
 }) {
   const { status, posts, drafts, failed, recentJobs, insights } = props;
+  const [howTo, setHowTo] = useState(false);
   const now = Date.now();
   const next = posts
     .filter((p) => p.status === 'scheduled' && (p.scheduledAt ?? 0) > now)
@@ -552,11 +554,25 @@ function Overview(props: {
           {status?.metaApp ? (
             <a className={cx(s.btn, status.connected ? '' : s.primary)} href="/api/social/meta/connect">{status.connected ? 'Reconnect' : 'Connect Instagram + Facebook'}</a>
           ) : (
-            <button type="button" className={s.btn} disabled title="Finish the Meta app step first">Connect Instagram + Facebook</button>
+            /* Not a dead button: until the Meta app exists there is nothing to
+               log in to, so the click opens the checklist that unlocks it. */
+            <button type="button" className={cx(s.btn, s.primary)} onClick={() => setHowTo((v) => !v)} aria-expanded={howTo}>
+              {howTo ? 'Hide steps' : 'Connect Instagram + Facebook'}
+            </button>
           )}
           {status?.connected && <button type="button" className={cx(s.btn, s.ghost)} onClick={props.onDisconnect}>Disconnect</button>}
-          {!status?.metaApp && <span className={s.small + ' ' + s.mut}>Opens once the Meta app keys are added in Vercel — that&apos;s the next setup step.</span>}
         </div>
+        {!status?.metaApp && howTo && (
+          <div className={s.howTo}>
+            <div className={s.small + ' ' + s.mut}>Connecting opens a Facebook log-in, which needs our Meta app to exist first. Four steps, once:</div>
+            <ol>
+              <li><b>Instagram → Professional account</b><span>Instagram app → Settings → Account type → switch to Business, then link it to the Ultra Shine Facebook Page.</span></li>
+              <li><b>Create the Meta app</b><span><a href="https://developers.facebook.com/apps" target="_blank" rel="noreferrer">developers.facebook.com/apps</a> → Create app → Business type.</span></li>
+              <li><b>Add the two keys in Vercel</b><span>App settings → Basic → copy App ID + App Secret into Vercel as META_APP_ID and META_APP_SECRET, then redeploy.</span></li>
+              <li><b>Come back and click Connect</b><span>This button turns into the real log-in. Log in once — it stays connected.</span></li>
+            </ol>
+          </div>
+        )}
       </div>
 
       <div className={cx(s.card, s.s5)}>

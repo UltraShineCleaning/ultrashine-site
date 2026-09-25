@@ -146,6 +146,12 @@
 .connT { flex: 1; min-width: 0; }
 .connT b { display: block; font-size: 13.5px; font-weight: 600; }
 .connT span { display: block; font-size: 12px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.howTo { margin-top: 14px; background: var(--panel2); border: 1px solid var(--line); border-radius: 16px; padding: 14px 16px; }
+.howTo ol { margin: 10px 0 0; padding: 0; list-style: none; counter-reset: st; display: grid; gap: 10px; }
+.howTo li { counter-increment: st; display: grid; grid-template-columns: 24px minmax(0,1fr); column-gap: 10px; font-size: 13px; }
+.howTo li::before { content: counter(st); grid-row: span 2; width: 22px; height: 22px; border-radius: 50%; background: #1b1c22; color: var(--text); display: grid; place-items: center; font-size: 11px; font-weight: 600; }
+.howTo li span { color: var(--muted); font-size: 12.5px; line-height: 1.45; }
+.howTo a { color: var(--text); text-decoration: underline; text-underline-offset: 2px; }
 
 /* drawer + modal */
 .scrim { position: fixed; inset: 0; background: rgba(0,0,0,.55); backdrop-filter: blur(3px); z-index: 90; }
@@ -176,7 +182,8 @@ textarea.field { min-height: 120px; resize: vertical; }
 .ig { background: #000; border: 1px solid var(--line2); border-radius: 18px; overflow: hidden; width: 100%; max-width: 320px; margin: 0 auto; }
 .igH { display: flex; align-items: center; gap: 9px; padding: 9px 11px; }
 .igAv { width: 28px; height: 28px; border-radius: 50%; padding: 2px; background: var(--ig); }
-.igAv div { width: 100%; height: 100%; border-radius: 50%; background: #000; display: grid; place-items: center; font-size: 11px; font-weight: 700; border: 2px solid #000; }
+.igAv div { width: 100%; height: 100%; border-radius: 50%; background: #0a1a3f; display: grid; place-items: center; font-size: 11px; font-weight: 700; border: 2px solid #000; overflow: hidden; }
+.igAv img { width: 78%; height: auto; display: block; }
 .igM { aspect-ratio: 4/5; background: #111 center/cover; position: relative; }
 .igReel { aspect-ratio: 9/14; }
 .igStory { aspect-ratio: 9/16; }

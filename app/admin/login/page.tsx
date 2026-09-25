@@ -39,9 +39,10 @@ export default function AdminLogin() {
   return (
     <main className={styles.loginPage}>
       <div className={styles.loginCard}>
-        <div className={styles.loginSpark}>✦</div>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/images/logo_white_tight.png" alt="Ultra Shine" className={styles.loginLogo} />
         <h1 className={styles.loginTitle}>
-          Ultra Shine <em>Dashboard</em>
+          Dashboard
         </h1>
         <p className={styles.loginSub}>Private — Ultra Shine team only</p>
 

@@ -409,17 +409,11 @@
   text-align: center;
   box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
 }
-.loginSpark {
-  width: 44px;
-  height: 44px;
-  margin: 0 auto 18px;
-  border-radius: 12px;
-  background: #ffffff;
-  color: #000000;
-  display: grid;
-  place-items: center;
-  font-size: 20px;
-  line-height: 1;
+.loginLogo {
+  width: 132px;
+  height: auto;
+  display: block;
+  margin: 0 auto 20px;
 }
 .loginTitle {
   font-family: var(--font-poppins), sans-serif;

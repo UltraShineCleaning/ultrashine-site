@@ -2,6 +2,7 @@
 
 import { useEffect, useState, type ReactNode } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import styles from './AdminShell.module.css';
 
 /**
@@ -152,11 +153,15 @@ export default function AdminShell({
       {/* ===== SIDEBAR ===== */}
       <aside className={styles.sidebar}>
         <div className={styles.brand}>
-          <div className={styles.brandMark}>✦</div>
-          <div className={styles.brandText}>
-            <strong>Ultra Shine</strong>
-            <span>Dashboard</span>
-          </div>
+          <Image
+            src="/images/logo_white_tight.png"
+            alt="Ultra Shine"
+            width={294}
+            height={149}
+            priority
+            className={styles.brandLogo}
+          />
+          <span className={styles.brandTag}>Dashboard</span>
         </div>
 
         <nav className={styles.nav}>

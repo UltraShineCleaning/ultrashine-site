@@ -48,33 +48,23 @@
   padding: 2px 8px 14px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.07);
 }
-.brandMark {
-  width: 32px;
-  height: 32px;
-  border-radius: 10px;
-  background: #ffffff;
-  display: grid;
-  place-items: center;
-  font-size: 15px;
-  font-weight: 800;
-  color: #000000;
+/* The real Ultra Shine logo (white version — the same file the public
+   site header uses), with a quiet "Dashboard" tag beside it. */
+.brandLogo {
+  width: 104px;
+  height: auto;
+  display: block;
 }
-.brandText {
-  display: flex;
-  flex-direction: column;
-  line-height: 1.15;
-}
-.brandText strong {
+.brandTag {
   font-family: var(--font-poppins), sans-serif;
+  font-size: 10px;
   font-weight: 600;
-  font-size: 14px;
-  letter-spacing: -0.01em;
-}
-.brandText span {
-  font-family: var(--font-poppins), sans-serif;
-  font-size: 11px;
-  color: #8b8d98;
-  margin-top: 2px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #5b5d68;
+  margin-left: auto;
+  align-self: flex-end;
+  padding-bottom: 4px;
 }
 
 .nav {

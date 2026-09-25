@@ -72,8 +72,8 @@ const data: ServiceData = {
       body: "Investor or flipper finishing a property for market. We do the final post-construction so the home shows immaculate to buyers + photographs flawlessly.",
     },
     {
-      title: 'Builder / GC partner',
-      body: "We work with several local GCs as their post-construction specialist. Need a recurring partner? Contact us — we're set up for repeat builder accounts.",
+      title: 'Builders + contractors',
+      body: "We work with local builders and contractors on final cleans. If you have homes coming up and want a cleaning partner you can count on, we'd be happy to work with you.",
     },
   ],
   differs: {
@@ -122,7 +122,7 @@ const data: ServiceData = {
     },
     {
       q: 'Do you work with builders + GCs?',
-      a: "Yes. Several local builders + GCs use us as their go-to post-construction partner. Net-30 invoicing, COI on file, discount for repeat work. Contact us for builder pricing.",
+      a: "Yes. We work with local builders and contractors, and we'd be happy to work with you. If you have more than one home coming up, ask us about pricing for repeat work. We can send our certificate of insurance before the first job.",
     },
     {
       q: 'Do you remove construction debris?',

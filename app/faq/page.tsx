@@ -70,7 +70,7 @@ const CATEGORIES: FaqCategory[] = [
       },
       {
         q: 'Do you do post-construction cleanup?',
-        a: "Yes — drywall dust, paint specks, sticker residue, grout haze, protective film on appliances. We bring the right tools for fine-dust cleanup and use products formulated for new finishes. Several South Florida builders use us as their go-to post-construction partner.",
+        a: "Yes — drywall dust, paint specks, sticker residue, grout haze, protective film on appliances. We bring the right tools for fine-dust cleanup and use products formulated for new finishes. We also work with local builders and contractors, and we'd be happy to work with yours.",
       },
       {
         q: 'Can I customize what gets cleaned?',

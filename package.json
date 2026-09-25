@@ -11,11 +11,13 @@
     "start": "next start",
     "lint": "next lint",
     "check:css": "node scripts/check-css.js",
-    "verify": "node scripts/check-css.js && tsc --noEmit"
+    "verify": "node scripts/check-css.js && tsc --noEmit",
+    "test:social": "npx --yes tsx scripts/tests/social-logic.test.ts"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",
     "@vercel/analytics": "^2.0.1",
+    "@vercel/blob": "^2.8.0",
     "@vercel/speed-insights": "^2.0.0",
     "framer-motion": "^12.38.0",
     "gsap": "^3.15.0",

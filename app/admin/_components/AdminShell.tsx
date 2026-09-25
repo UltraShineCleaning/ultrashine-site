@@ -27,6 +27,7 @@ type TabId =
   | 'money'
   | 'leads'
   | 'reviews'
+  | 'social'
   | 'insights';
 
 type Tab = {
@@ -76,6 +77,12 @@ const TABS: Tab[] = [
     description: 'Send review-request emails + see Google + HomeAdvisor ratings',
   },
   {
+    id: 'social',
+    label: 'Social',
+    glyph: '◈',
+    description: 'Instagram + Facebook — plan, approve and auto-post; DM inbox + automations',
+  },
+  {
     id: 'insights',
     label: 'Insights',
     glyph: '◐',
@@ -94,6 +101,7 @@ export default function AdminShell({
   money,
   leads,
   reviews,
+  social,
   insights,
 }: {
   overview: ReactNode;
@@ -102,6 +110,7 @@ export default function AdminShell({
   money: ReactNode;
   leads: ReactNode;
   reviews: ReactNode;
+  social: ReactNode;
   insights: ReactNode;
 }) {
   const [active, setActive] = useState<TabId>('overview');
@@ -134,6 +143,7 @@ export default function AdminShell({
     money,
     leads,
     reviews,
+    social,
     insights,
   };
 

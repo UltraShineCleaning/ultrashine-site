@@ -11,6 +11,7 @@ import {
   type QuoteServiceKey,
 } from '../../_lib/quoteBallpark';
 import type { Frequency } from '../../_lib/estimate';
+import { markQuoteSubmitted } from '../../_lib/social/automations';
 
 /**
  * POST /api/quote
@@ -63,6 +64,8 @@ type QuotePayload = {
   notes?: string;
   /** Marketing attribution — "Google Search" / "Instagram" / "Referral" etc. */
   heardFrom?: string;
+  /** Tracked-link token from a social DM (…/quote?ref=…). */
+  ref?: string;
   submittedAt?: string;
 };
 
@@ -324,6 +327,16 @@ export async function POST(req: Request) {
   try {
     const body = (await req.json()) as QuotePayload;
     const apiKey = process.env.RESEND_API_KEY;
+
+    // Came from a DM link? Tie it to the conversation (cancels the follow-up,
+    // marks the lead) and say so in the email. Never blocks the quote.
+    if (typeof body.ref === 'string' && body.ref) {
+      const platform = await markQuoteSubmitted(body.ref).catch(() => null);
+      if (platform) {
+        const via = platform === 'instagram' ? 'Instagram DM' : 'Facebook message';
+        body.heardFrom = body.heardFrom ? `${body.heardFrom} (tracked: ${via})` : `${via} (tracked link)`;
+      }
+    }
 
     if (!apiKey) {
       console.warn('[quote] RESEND_API_KEY not set — submission logged but no email sent:', body);

@@ -254,3 +254,7 @@ export async function fetchGoogleReviews(): Promise<GoogleReviewsPayload> {
     fetchedAt: new Date().toISOString(),
   };
 }
+
+/** Names of people who already left a Google review — the review-request
+ *  automation skips them so nobody is asked twice. */
+export const REVIEWER_NAMES: string[] = REVIEWS.map((r) => r.author_name);

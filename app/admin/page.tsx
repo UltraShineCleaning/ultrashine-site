@@ -9,7 +9,10 @@ import JobberStatusCard from './_components/JobberStatusCard';
 import AdminShell from './_components/AdminShell';
 import ClientsTab from './_components/ClientsTab';
 import MoneyTab from './_components/MoneyTab';
-import { getJobberClients, getJobberMoney } from '../_lib/jobberClient';
+import SocialTab from './_components/SocialTab';
+import ReviewRequestsCard from './_components/ReviewRequestsCard';
+import { getJobberClients, getJobberMoney, getRecentlyCompletedVisits } from '../_lib/jobberClient';
+import { COUNT as GOOGLE_REVIEW_COUNT, RATING as GOOGLE_RATING } from '../_lib/google-reviews';
 import { isAdmin } from '../_lib/adminAuth';
 
 export const metadata: Metadata = {
@@ -23,7 +26,7 @@ export const revalidate = 0;
 
 const VERCEL_PROJECT = 'https://vercel.com/contact-8079s-projects/ultrashine-site';
 
-type LeadKind = 'quote' | 'application' | 'other';
+type LeadKind = 'quote' | 'application' | 'social' | 'other';
 
 type Lead = {
   id: string;
@@ -56,6 +59,12 @@ function parseLead(email: any): Lead {
     const parts = subject.replace(/^New Quote\s*·\s*/i, '').split(/\s*·\s*/);
     name = parts[0] || 'Unknown';
     city = parts[1];
+  } else if (/^New lead on (Instagram|Facebook)/i.test(subject)) {
+    // Sent by the Social automations (app/_lib/social/automations.ts → notifyLead)
+    kind = 'social';
+    const m = subject.match(/^New lead on (Instagram|Facebook)\s*·\s*(.*)$/i);
+    name = m?.[2] || 'Someone';
+    city = m?.[1];
   } else if (/^New Cleaner Application/i.test(subject)) {
     kind = 'application';
     const parts = subject.replace(/^New Cleaner Application\s*·\s*/i, '').split(/\s*·\s*/);
@@ -114,7 +123,7 @@ async function fetchLeads(): Promise<{ leads: Lead[]; error?: string }> {
 export default async function AdminDashboard({
   searchParams,
 }: {
-  searchParams?: { t?: string; refresh?: string };
+  searchParams?: { t?: string; refresh?: string; social?: string };
 }) {
   // Cookie gate
   if (!isAdmin()) redirect('/admin/login');
@@ -125,10 +134,11 @@ export default async function AdminDashboard({
   const force = !!(searchParams?.t || searchParams?.refresh);
 
   // Live data from Resend + Jobber (clients + money) in parallel
-  const [{ leads, error }, jobberClientsRes, moneyRes] = await Promise.all([
+  const [{ leads, error }, jobberClientsRes, moneyRes, recentVisits] = await Promise.all([
     fetchLeads(),
     getJobberClients({ force }),
     getJobberMoney({ force }),
+    getRecentlyCompletedVisits(7).catch(() => ({ visits: [] })),
   ]);
 
   const quoteLeads = leads.filter((l) => l.kind === 'quote');
@@ -158,11 +168,11 @@ export default async function AdminDashboard({
     <div className={styles.leadCard}>
       <div className={styles.leadInfo}>
         <div className={styles.leadType}>
-          {lead.kind === 'quote' ? '✦ QUOTE REQUEST' : '✦ CLEANER APPLICATION'}
+          {lead.kind === 'quote' ? '✦ QUOTE REQUEST' : lead.kind === 'social' ? `✦ ${(lead.city ?? 'SOCIAL').toUpperCase()} LEAD` : '✦ CLEANER APPLICATION'}
         </div>
         <div className={styles.leadName}>
           {lead.name}
-          {lead.city && (
+          {lead.city && lead.kind !== 'social' && (
             <span style={{ color: '#6b7280', fontWeight: 400, fontStyle: 'italic', marginLeft: 8, fontSize: 13 }}>
               · {lead.city}
             </span>
@@ -185,6 +195,11 @@ export default async function AdminDashboard({
         </div>
       </div>
       <div className={styles.leadActions}>
+        {lead.kind === 'social' && (
+          <Link href="/admin#social" className={styles.actBtnReview} title="Open the conversation in Social → Inbox">
+            ✉ Inbox →
+          </Link>
+        )}
         {lead.kind === 'quote' && (
           <Link
             href={`/admin#reviews`}
@@ -453,8 +468,8 @@ export default async function AdminDashboard({
     <>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14, marginBottom: 24 }}>
         <div className={styles.statCard}>
-          <div className={styles.statLabel}>Google · 18 reviews</div>
-          <div className={styles.statValue}>5.0 ★</div>
+          <div className={styles.statLabel}>Google · {GOOGLE_REVIEW_COUNT} reviews</div>
+          <div className={styles.statValue}>{GOOGLE_RATING.toFixed(1)} ★</div>
           <div className={styles.statSub}>
             <a href="https://search.google.com/local/reviews" target="_blank" rel="noopener noreferrer" style={{ color: '#374151', fontWeight: 600 }}>
               Manage on Google →
@@ -474,6 +489,8 @@ export default async function AdminDashboard({
 
       <SendReviewRequestCard />
 
+      <ReviewRequestsCard />
+
       <p className={styles.sectionLabel} style={{ marginTop: 28 }}>Print materials</p>
       <div className={styles.quickActions}>
         <Link href="/review-card" target="_blank" className={styles.quickAction}>
@@ -486,6 +503,18 @@ export default async function AdminDashboard({
     </>
   );
 
+  // Social tab — the dark Instagram/Facebook workspace. Recent finished jobs
+  // feed its "From your jobs" card; ?social=… carries the result of the Meta
+  // connect flow back as a toast.
+  const socialPanel = (
+    <SocialTab
+      flash={searchParams?.social}
+      recentJobs={recentVisits.visits
+        .sort((a, b) => b.completedAt - a.completedAt)
+        .map((v) => ({ title: v.title, city: v.city, completedAt: v.completedAt, clientName: v.clientName }))}
+    />
+  );
+
   return (
     <AdminShell
       overview={overviewPanel}
@@ -494,6 +523,7 @@ export default async function AdminDashboard({
       money={moneyPanel}
       leads={leadsPanel}
       reviews={reviewsPanel}
+      social={socialPanel}
       insights={insightsPanel}
     />
   );

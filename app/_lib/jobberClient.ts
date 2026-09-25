@@ -1193,3 +1193,87 @@ export async function getJobberMoney(
   setCached(cacheKey, result);
   return result;
 }
+
+// ============================================================
+// Completed visits — feeds the automatic Google review request.
+// Same scheduledItems query shape as the calendar (confirmed working),
+// plus completedAt (named by Jobber's own "did you mean" hint) and the
+// client's emails (same field the Clients tab already reads).
+// ============================================================
+
+export type CompletedVisit = {
+  visitId: string;
+  title: string;
+  completedAt: number;
+  clientId: string;
+  clientName: string;
+  email: string | null;
+  city: string | null;
+};
+
+export async function getRecentlyCompletedVisits(days = 3): Promise<{ visits: CompletedVisit[]; error?: string }> {
+  if (!isJobberConfigured()) return { visits: [], error: 'Jobber is not connected' };
+  const end = new Date();
+  const start = new Date(end.getTime() - days * 86_400_000);
+  const res = await jobberQuery<{
+    scheduledItems: {
+      nodes: Array<{
+        id: string;
+        title?: string | null;
+        __typename?: string;
+        endAt?: string | null;
+        isComplete?: boolean | null;
+        completedAt?: string | null;
+        job?: {
+          title?: string | null;
+          client?: {
+            id: string;
+            name?: string | null;
+            emails?: Array<{ primary?: boolean | null; address?: string | null }> | null;
+            billingAddress?: { city?: string | null } | null;
+          } | null;
+        } | null;
+      }>;
+    };
+  }>(
+    `query CompletedVisits($start: ISO8601DateTime!, $end: ISO8601DateTime!) {
+      scheduledItems(filter: { occursWithin: { startAt: $start, endAt: $end } }, first: 100) {
+        nodes {
+          id
+          title
+          __typename
+          ... on Visit {
+            endAt
+            isComplete
+            completedAt
+            job {
+              title
+              client { id name emails { primary address } billingAddress { city } }
+            }
+          }
+        }
+      }
+    }`,
+    { start: start.toISOString(), end: end.toISOString() },
+  );
+  if (!res) return { visits: [], error: getLastTokenError() ?? 'No Jobber access (token issue)' };
+  if (res.errors?.length) return { visits: [], error: res.errors.map((e) => e.message).join(' · ') };
+  const visits: CompletedVisit[] = [];
+  for (const n of res.data?.scheduledItems?.nodes ?? []) {
+    if (n.__typename && n.__typename !== 'Visit') continue;
+    if (!n.isComplete || !n.job?.client) continue;
+    const cl = n.job.client;
+    const email = (cl.emails?.find((e) => e.primary) ?? cl.emails?.[0])?.address ?? null;
+    const when = n.completedAt || n.endAt;
+    visits.push({
+      visitId: n.id,
+      title: n.job.title || n.title || 'cleaning',
+      completedAt: when ? new Date(when).getTime() : Date.now(),
+      clientId: cl.id,
+      clientName: cl.name ?? 'there',
+      email,
+      city: cl.billingAddress?.city ?? null,
+    });
+  }
+  return { visits };
+}

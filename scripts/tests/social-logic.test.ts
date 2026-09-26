@@ -185,7 +185,7 @@ let fbFail: number | null = null;
   ok(st('v5')?.status === 'skipped', 'no email → skipped');
   ok(!st('v6'), 'finished < 3h ago → waits for tomorrow');
   const em = calls.filter((c) => c.url.includes('api.resend.com')).at(-1)!;
-  ok(em.body.includes('qrserver.com') && em.body.includes('lrd=0x21c11105853a24d1:0x2ecf48759762b5e3,3'), 'email has the write-a-review link + QR code');
+  ok(em.body.includes('qrserver.com') && em.body.includes('search.google.com/local/writereview?placeid=ChIJ0SQ6hQURwSER47Vil3VIzy4'), 'email has the write-a-review link + QR code');
   r = await rr.sweepCompletedVisits(now, [V('v2', 'Mary Jones', 'mary@x.com', 20)]);
   ok(r.checked === 0, 'running again never re-sends');
 

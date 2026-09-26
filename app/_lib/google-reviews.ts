@@ -45,21 +45,20 @@ const GOOGLE_PROFILE_URL = 'https://maps.app.goo.gl/DrJtdje7XW1g8fDk9';
 
 /**
  * THE one "leave a review" link — every review button, QR code and email uses
- * this. It opens Google's WRITE-A-REVIEW box directly (stars + text), not the
- * Maps listing where the customer has to find the button.
+ * this. It is Google's own write-a-review link: on a phone it opens the review
+ * sheet (stars + "Tell others about your experience" + Post) straight away,
+ * in the Google Maps app when installed; on a computer it opens the same box.
+ * No search page, no listing to hunt through.
  *
- * How it works: `#lrd=<listing id>,3,,,` on a Google search tells Google to
- * open the review box for that listing (1 = read reviews, 3 = write one). The
- * listing id 0x21c11105853a24d1:0x2ecf48759762b5e3 is what our Maps share link
- * (maps.app.goo.gl/EGeuJViEFazQQe579) resolves to. Checked 2026-09-26: the
- * link opens the "write a review" box (signed-out it first asks to sign in).
+ * Place ID ChIJ0SQ6hQURwSER47Vil3VIzy4 was read off our live Maps listing on
+ * 2026-09-26 (the listing maps.app.goo.gl/EGeuJViEFazQQe579 opens). It encodes
+ * the same listing id 0x21c11105853a24d1:0x2ecf48759762b5e3, byte for byte.
  *
- * If you later copy Google's own link from the Business Profile ("Ask for
- * reviews" → g.page/r/…/review), paste it here — one change updates every
- * button, QR and email.
+ * If Google's Business Profile "Ask for reviews" link (g.page/r/…/review) is
+ * ever copied, it can replace this — one change updates every button, QR and email.
  */
-export const GOOGLE_WRITE_REVIEW_URL =
-  'https://www.google.com/search?q=Ultra+Shine+Cleaning#lrd=0x21c11105853a24d1:0x2ecf48759762b5e3,3,,,';
+export const GOOGLE_PLACE_ID = 'ChIJ0SQ6hQURwSER47Vil3VIzy4';
+export const GOOGLE_WRITE_REVIEW_URL = `https://search.google.com/local/writereview?placeid=${GOOGLE_PLACE_ID}`;
 
 /**
  * Aggregate rating and count — update when new reviews come in.

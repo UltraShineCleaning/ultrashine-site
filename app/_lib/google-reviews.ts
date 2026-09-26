@@ -44,21 +44,35 @@ export type GoogleReviewsPayload = {
 const GOOGLE_PROFILE_URL = 'https://maps.app.goo.gl/DrJtdje7XW1g8fDk9';
 
 /**
- * THE one "leave a review" link — every review button, QR code and email uses
- * this. It is Google's own write-a-review link: on a phone it opens the review
- * sheet (stars + "Tell others about your experience" + Post) straight away,
- * in the Google Maps app when installed; on a computer it opens the same box.
- * No search page, no listing to hunt through.
+ * Google's two official "write a review" links for OUR listing. Both open the
+ * review sheet (stars + "Tell others about your experience" + Post).
  *
- * Place ID ChIJ0SQ6hQURwSER47Vil3VIzy4 was read off our live Maps listing on
- * 2026-09-26 (the listing maps.app.goo.gl/EGeuJViEFazQQe579 opens). It encodes
- * the same listing id 0x21c11105853a24d1:0x2ecf48759762b5e3, byte for byte.
+ * Listing ids, read off our live Maps listing 2026-09-26 (the one
+ * maps.app.goo.gl/EGeuJViEFazQQe579 opens):
+ *   Place ID  ChIJ0SQ6hQURwSER47Vil3VIzy4
+ *   CID       3372994315811993059  (0x2ecf48759762b5e3)
  *
- * If Google's Business Profile "Ask for reviews" link (g.page/r/…/review) is
- * ever copied, it can replace this — one change updates every button, QR and email.
+ *  - writereview?placeid=…  — the Places-API form of the link.
+ *  - g.page/r/<code>/review — the form Google hands out itself in Business
+ *    Profile → "Ask for reviews"; <code> is the CID packed the way Google packs
+ *    it (CeO1Ypd1SM8uEAE). This is the one that opens straight into the review
+ *    box on iPhones too.
+ *
+ * Google requires the customer to be signed in to a Google account to post —
+ * someone who isn't gets a sign-in screen first, then lands in the box. No
+ * link can skip that; it's Google's rule.
  */
 export const GOOGLE_PLACE_ID = 'ChIJ0SQ6hQURwSER47Vil3VIzy4';
-export const GOOGLE_WRITE_REVIEW_URL = `https://search.google.com/local/writereview?placeid=${GOOGLE_PLACE_ID}`;
+export const GOOGLE_REVIEW_FORM_URL = `https://search.google.com/local/writereview?placeid=${GOOGLE_PLACE_ID}`;
+export const GOOGLE_REVIEW_FORM_URL_IOS = 'https://g.page/r/CeO1Ypd1SM8uEAE/review';
+
+/**
+ * THE one "leave a review" link every button, QR code, email and DM uses: our
+ * own short link. /r (app/r/route.ts) sends each phone to the right Google
+ * link above. Because printed cards and QR codes point HERE, the destination
+ * can be changed later without reprinting anything.
+ */
+export const GOOGLE_WRITE_REVIEW_URL = 'https://www.ultrashinecleaningfl.com/r';
 
 /**
  * Aggregate rating and count — update when new reviews come in.

@@ -27,7 +27,7 @@ const reqKey = (id: string) => `review:req:${id}`;
 const askedKey = (clientId: string) => `review:asked:${clientId}`;
 
 const norm = (s: string) => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z ]/g, '').trim();
-function alreadyReviewed(name: string): boolean {
+export function alreadyReviewed(name: string): boolean {
   const n = norm(name);
   if (!n) return false;
   const [first, ...rest] = n.split(/\s+/);

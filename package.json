@@ -12,7 +12,8 @@
     "lint": "next lint",
     "check:css": "node scripts/check-css.js",
     "verify": "node scripts/check-css.js && tsc --noEmit",
-    "test:social": "npx --yes tsx scripts/tests/social-logic.test.ts"
+    "test:social": "npx --yes tsx scripts/tests/social-logic.test.ts",
+    "test:insights": "npx --yes tsx scripts/tests/insights-logic.test.ts"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",

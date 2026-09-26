@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import { isAdmin } from '../../../_lib/adminAuth';
 import { sweepCompletedVisits } from '../../../_lib/reviewRequests';
 import { refreshInsights } from '../../../_lib/social/insights';
+import { snapshotReviewCount } from '../../../_lib/insights/build';
+import { syncVercelDays, vercelConfigured } from '../../../_lib/insights/vercel';
 import { cleanupOldMedia, publishOverdue } from '../../../_lib/social/publisher';
 
 export const dynamic = 'force-dynamic';
@@ -11,7 +13,9 @@ export const maxDuration = 300;
  * Daily at ~10 AM Florida time (vercel.json). Safety net + chores:
  *  1. Publish any approved post whose time passed but didn't go out
  *  2. Send the Google review requests for jobs completed in Jobber
- *  3. Refresh Instagram numbers for the Insights view
+ *  3. Refresh Instagram + Facebook numbers for the Insights tab (saved daily,
+ *     so the history is ours), save yesterday's website numbers (Vercel's free
+ *     plan only keeps a month) and note today's Google review count
  *  4. Delete old photos from storage (they live on Instagram now)
  *
  * Runs for Vercel's cron (Bearer CRON_SECRET when set) or a signed-in admin.
@@ -36,6 +40,8 @@ export async function GET(req: Request) {
     const s = await refreshInsights();
     return s.error ? { error: s.error } : { followers: s.followers };
   });
+  await step('reviewCount', () => snapshotReviewCount());
+  await step('websiteDays', async () => (vercelConfigured() ? { saved: await syncVercelDays(31) } : { skipped: 'Vercel analytics not connected' }));
   await step('mediaCleaned', cleanupOldMedia);
   return NextResponse.json({ ok: true, ...out });
 }

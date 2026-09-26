@@ -10,6 +10,7 @@ import AdminShell from './_components/AdminShell';
 import ClientsTab from './_components/ClientsTab';
 import MoneyTab from './_components/MoneyTab';
 import SocialTab from './_components/SocialTab';
+import InsightsTab from './_components/InsightsTab';
 import ReviewRequestsCard from './_components/ReviewRequestsCard';
 import { getJobberClients, getJobberMoney, getRecentlyCompletedVisits } from '../_lib/jobberClient';
 import { COUNT as GOOGLE_REVIEW_COUNT, RATING as GOOGLE_RATING } from '../_lib/google-reviews';
@@ -294,53 +295,15 @@ export default async function AdminDashboard({
         )}
       </div>
 
-      <p className={styles.sectionLabel}>
-        Analytics + performance ·{' '}
-        <span style={{ opacity: 0.6, fontWeight: 400, textTransform: 'none', letterSpacing: 'normal' }}>
-          these open in their own dashboards
-        </span>
-      </p>
-      <div className={styles.tilesGrid}>
-        <a href={`${VERCEL_PROJECT}/analytics`} target="_blank" rel="noopener noreferrer" className={styles.tile}>
-          <div className={styles.tileIcon}>✦</div>
-          <div className={styles.tileLabel}>VERCEL · LIVE</div>
-          <div className={styles.tileTitle}>Site Analytics</div>
-          <div className={styles.tileBody}>
-            Page views, top pages, traffic sources, country + device breakdown.
-          </div>
-          <div className={styles.tileLink}>Open Vercel Analytics</div>
-        </a>
-
-        <a href={`${VERCEL_PROJECT}/speed-insights`} target="_blank" rel="noopener noreferrer" className={styles.tile}>
-          <div className={styles.tileIcon}>✦</div>
-          <div className={styles.tileLabel}>VERCEL · LIVE</div>
-          <div className={styles.tileTitle}>Page Speed</div>
-          <div className={styles.tileBody}>
-            How fast every page loads. Core Web Vitals scored by Google.
-          </div>
-          <div className={styles.tileLink}>Open Speed Insights</div>
-        </a>
-
-        <a href="https://search.google.com/search-console" target="_blank" rel="noopener noreferrer" className={styles.tile}>
-          <div className={styles.tileIcon}>✦</div>
-          <div className={styles.tileLabel}>GOOGLE · ~24-HR DELAY</div>
-          <div className={styles.tileTitle}>Search Performance</div>
-          <div className={styles.tileBody}>
-            What people search to find you on Google. Impressions, clicks, average position.
-          </div>
-          <div className={styles.tileLink}>Open Search Console</div>
-        </a>
-
-        <a href="https://resend.com/emails" target="_blank" rel="noopener noreferrer" className={styles.tile}>
-          <div className={styles.tileIcon}>✦</div>
-          <div className={styles.tileLabel}>RESEND · LIVE</div>
-          <div className={styles.tileTitle}>All Email Activity</div>
-          <div className={styles.tileBody}>
-            Full email history beyond what&apos;s shown here.
-          </div>
-          <div className={styles.tileLink}>Open Resend</div>
-        </a>
-      </div>
+      <p className={styles.sectionLabel}>Analytics</p>
+      <a href="#insights" className={styles.tile} style={{ display: 'block', marginBottom: 8, minHeight: 0 }}>
+        <div className={styles.tileLabel}>INSIGHTS · ON THIS DASHBOARD</div>
+        <div className={styles.tileTitle}>How the business is growing</div>
+        <div className={styles.tileBody}>
+          Website visitors, Google searches, Instagram + Facebook, revenue and reviews — all in the Insights tab, nothing opens in a new tab.
+        </div>
+        <div className={styles.tileLink}>Open Insights</div>
+      </a>
 
       <p className={styles.sectionLabel}>Daily automation</p>
       <div style={{
@@ -424,23 +387,7 @@ export default async function AdminDashboard({
 
   const moneyPanel = <MoneyTab money={moneyRes} />;
 
-  const insightsPanel = (
-    <div className={styles.emptyState} style={{ padding: 36, textAlign: 'left' }}>
-      <h2 style={{ fontFamily: 'var(--font-poppins), sans-serif', fontWeight: 700, fontSize: 22, color: '#f4f4f5', marginBottom: 12 }}>
-        Insights — coming next
-      </h2>
-      <p style={{ fontSize: 14, color: '#d4d4d8', lineHeight: 1.6, marginBottom: 18, maxWidth: 640 }}>
-        Growth metrics, revenue trends, top clients, and (once we wire up Meta) social media performance per post.
-      </p>
-      <ul style={{ fontSize: 13, color: '#8b8d98', lineHeight: 1.8, paddingLeft: 20, marginBottom: 22, maxWidth: 640 }}>
-        <li>8-week + 12-month revenue line chart</li>
-        <li>Lead-to-quote-to-booked-job funnel rates</li>
-        <li>Top 10 clients by lifetime spend</li>
-        <li>Average ticket size by service type</li>
-        <li>Instagram + Facebook per-post reach + engagement (after OAuth wire-up)</li>
-      </ul>
-    </div>
-  );
+  const insightsPanel = <InsightsTab />;
 
   const leadsPanel = (
     <div className={styles.leadsWrap} style={{ marginTop: 0 }}>

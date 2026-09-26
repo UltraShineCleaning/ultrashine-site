@@ -957,6 +957,8 @@ export type JobberMoney = {
   topClients: { name: string; total: number; invoiceCount: number }[];
 
   invoiceCount: number;
+  /** Every invoice fetched, slimmed — the Insights tab slices these by any date range. */
+  invoiceLite?: { issued: string | null; total: number; paid: number; balance: number; client: string; overdue: boolean; owed: boolean }[];
   errorDetail?: string;
   fieldDebug?: {
     rawNodeCount: number;
@@ -1182,6 +1184,15 @@ export async function getJobberMoney(
     monthlyRevenue,
     topClients,
     invoiceCount: res?.data?.invoices?.totalCount ?? invoices.length,
+    invoiceLite: invoices.map((i) => ({
+      issued: i.issuedDate,
+      total: i.total,
+      paid: i.paid,
+      balance: i.balance,
+      client: i.clientName,
+      owed: isOwed(i),
+      overdue: isOwed(i) && (i.daysOverdue ?? -1) > 0,
+    })),
     fieldDebug: {
       rawNodeCount: nodes.length,
       sampleKeys: nodes[0] ? Object.keys(nodes[0]) : [],

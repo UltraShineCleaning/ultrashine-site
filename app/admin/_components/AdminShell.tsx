@@ -87,7 +87,7 @@ const TABS: Tab[] = [
     id: 'insights',
     label: 'Insights',
     glyph: '◐',
-    description: 'Revenue trends, top clients, growth metrics, social analytics',
+    description: 'How people find us and how the business is growing — website, Google, Instagram + Facebook, money and reviews',
   },
 ];
 

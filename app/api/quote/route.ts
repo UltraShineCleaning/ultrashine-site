@@ -12,6 +12,7 @@ import {
 } from '../../_lib/quoteBallpark';
 import type { Frequency } from '../../_lib/estimate';
 import { markQuoteSubmitted } from '../../_lib/social/automations';
+import { logQuote } from '../../_lib/insights/quotes';
 
 /**
  * POST /api/quote
@@ -338,7 +339,19 @@ export async function POST(req: Request) {
       }
     }
 
+    // Insights keeps its own record of every request (the funnel, goals and
+    // busiest-times grid). Never blocks or fails the quote itself.
+    const record = (id: string) =>
+      logQuote({
+        id,
+        at: Date.now(),
+        city: body.city || undefined,
+        service: body.service || undefined,
+        source: body.heardFrom || undefined,
+      }).catch(() => undefined);
+
     if (!apiKey) {
+      await record(`local-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`);
       console.warn('[quote] RESEND_API_KEY not set — submission logged but no email sent:', body);
       return NextResponse.json({ ok: true, emailed: false }, { status: 200 });
     }
@@ -355,6 +368,8 @@ export async function POST(req: Request) {
       html: renderHtml(body),
       text: renderText(body),
     });
+
+    await record(data?.id ?? `q-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`);
 
     if (error) {
       console.error('[quote] Resend error:', error);

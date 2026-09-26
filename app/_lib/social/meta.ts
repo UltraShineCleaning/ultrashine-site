@@ -316,6 +316,86 @@ export async function lookupName(conn: MetaConnection, platform: 'instagram' | '
 
 /* ================= Insights ================= */
 
+/**
+ * Account-level Instagram numbers for ONE day. Metric names, `period=day`,
+ * `metric_type=total_value` and the since/until window are from the Instagram
+ * User Insights reference (read 2026-09-25):
+ * developers.facebook.com/docs/instagram-platform/api-reference/instagram-user/insights
+ * `impressions` is deprecated there, so it is not asked for. Missing metrics
+ * come back as absent, never as 0 ("the API will return an empty data set
+ * instead of 0").
+ */
+export const IG_DAY_METRICS = ['reach', 'views', 'likes', 'comments', 'saves', 'shares', 'total_interactions', 'accounts_engaged'] as const;
+export type IgDayMetric = (typeof IG_DAY_METRICS)[number];
+export type IgDay = Partial<Record<IgDayMetric, number>>;
+
+type TotalValueResp = { data?: { name: string; total_value?: { value?: number; breakdowns?: { dimension_keys?: string[]; results?: { dimension_values: string[]; value: number }[] }[] } }[] };
+
+export async function fetchIgDay(conn: MetaConnection, sinceSec: number, untilSec: number): Promise<IgDay> {
+  if (!conn.igUserId) return {};
+  const ask = async (metrics: readonly string[]) =>
+    graph<TotalValueResp>(`${conn.igUserId}/insights`, {
+      token: conn.pageToken,
+      params: { metric: metrics.join(','), period: 'day', metric_type: 'total_value', since: String(sinceSec), until: String(untilSec) },
+    });
+  const out: IgDay = {};
+  const take = (r: TotalValueResp) => {
+    for (const d of r.data ?? []) {
+      const v = d.total_value?.value;
+      if (typeof v === 'number' && (IG_DAY_METRICS as readonly string[]).includes(d.name)) out[d.name as IgDayMetric] = v;
+    }
+  };
+  try {
+    take(await ask(IG_DAY_METRICS));
+  } catch {
+    // One metric Meta doesn't like fails the whole call ("views" is marked
+    // "in development"). Ask one by one and keep whatever answers.
+    for (const m of IG_DAY_METRICS) {
+      try {
+        take(await ask([m]));
+      } catch {
+        /* this metric isn't available for this account — leave it absent */
+      }
+    }
+  }
+  return out;
+}
+
+/**
+ * Who follows us — `follower_demographics` with breakdown age / gender / city,
+ * `period=lifetime`, `timeframe=this_month`. Meta returns nothing for accounts
+ * under 100 followers; then this returns null and the UI says so.
+ */
+export async function fetchIgDemographics(conn: MetaConnection): Promise<null | Record<'age' | 'gender' | 'city', { key: string; value: number }[]>> {
+  if (!conn.igUserId) return null;
+  const one = async (breakdown: 'age' | 'gender' | 'city') => {
+    const r = await graph<TotalValueResp>(`${conn.igUserId}/insights`, {
+      token: conn.pageToken,
+      params: { metric: 'follower_demographics', period: 'lifetime', timeframe: 'this_month', metric_type: 'total_value', breakdown },
+    });
+    const b = r.data?.[0]?.total_value?.breakdowns?.[0];
+    const idx = Math.max(0, (b?.dimension_keys ?? []).indexOf(breakdown));
+    return (b?.results ?? []).map((x) => ({ key: x.dimension_values[idx] ?? x.dimension_values.at(-1) ?? '', value: x.value }));
+  };
+  try {
+    const [age, gender, city] = await Promise.all([one('age'), one('gender'), one('city')]);
+    if (!age.length && !gender.length && !city.length) return null;
+    return { age, gender, city };
+  } catch {
+    return null;
+  }
+}
+
+/** Facebook Page follower count (Page field `followers_count`). */
+export async function fetchFbFollowers(conn: MetaConnection): Promise<number | null> {
+  try {
+    const r = await graph<{ followers_count?: number }>(conn.pageId, { token: conn.pageToken, params: { fields: 'followers_count' } });
+    return typeof r.followers_count === 'number' ? r.followers_count : null;
+  } catch {
+    return null;
+  }
+}
+
 export type IgMediaStat = { id: string; caption?: string; type: string; permalink?: string; thumb?: string; at: string; likes?: number; comments?: number; reach?: number };
 
 export async function fetchInsights(conn: MetaConnection): Promise<{ followers: number | null; media: IgMediaStat[] }> {

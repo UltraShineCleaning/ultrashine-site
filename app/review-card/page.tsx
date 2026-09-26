@@ -1,6 +1,7 @@
 'use client';
 
 import styles from './page.module.css';
+import { GOOGLE_WRITE_REVIEW_URL } from '../_lib/google-reviews';
 
 /**
  * /review-card — Printable QR card for cleaners to leave at every job.
@@ -13,7 +14,8 @@ import styles from './page.module.css';
  * letter page in portrait orientation.
  */
 
-const GOOGLE_REVIEW_URL = 'https://maps.app.goo.gl/EGeuJViEFazQQe579';
+// Opens Google's write-a-review box directly — the one link lives in google-reviews.ts.
+const GOOGLE_REVIEW_URL = GOOGLE_WRITE_REVIEW_URL;
 const QR_URL = `https://api.qrserver.com/v1/create-qr-code/?size=600x600&margin=20&color=002C98&bgcolor=FFFFFF&data=${encodeURIComponent(
   GOOGLE_REVIEW_URL,
 )}`;

@@ -3,7 +3,7 @@ import Link from 'next/link';
 import SiteHeader from '../_components/SiteHeader';
 import SiteFooter from '../_components/SiteFooter';
 import JsonLd from '../_components/JsonLd';
-import { fetchGoogleReviews } from '../_lib/google-reviews';
+import { GOOGLE_WRITE_REVIEW_URL, fetchGoogleReviews } from '../_lib/google-reviews';
 import styles from './page.module.css';
 
 export const metadata: Metadata = {
@@ -67,7 +67,8 @@ const TESTIMONIALS = [
 // Google Maps share link to the Ultra Shine Cleaning business profile.
 // Opens the live Google profile where users can read all 18 reviews
 // + tap "Write a review" directly. Provided by Tiago, May 2026.
-const GOOGLE_REVIEW_URL = 'https://maps.app.goo.gl/EGeuJViEFazQQe579';
+// Opens Google's write-a-review box directly — the one link lives in google-reviews.ts.
+const GOOGLE_REVIEW_URL = GOOGLE_WRITE_REVIEW_URL;
 
 export default async function ReviewsPage() {
   // Live Google reviews — falls back gracefully when env vars are unset

@@ -44,6 +44,24 @@ export type GoogleReviewsPayload = {
 const GOOGLE_PROFILE_URL = 'https://maps.app.goo.gl/DrJtdje7XW1g8fDk9';
 
 /**
+ * THE one "leave a review" link — every review button, QR code and email uses
+ * this. It opens Google's WRITE-A-REVIEW box directly (stars + text), not the
+ * Maps listing where the customer has to find the button.
+ *
+ * How it works: `#lrd=<listing id>,3,,,` on a Google search tells Google to
+ * open the review box for that listing (1 = read reviews, 3 = write one). The
+ * listing id 0x21c11105853a24d1:0x2ecf48759762b5e3 is what our Maps share link
+ * (maps.app.goo.gl/EGeuJViEFazQQe579) resolves to. Checked 2026-09-26: the
+ * link opens the "write a review" box (signed-out it first asks to sign in).
+ *
+ * If you later copy Google's own link from the Business Profile ("Ask for
+ * reviews" → g.page/r/…/review), paste it here — one change updates every
+ * button, QR and email.
+ */
+export const GOOGLE_WRITE_REVIEW_URL =
+  'https://www.google.com/search?q=Ultra+Shine+Cleaning#lrd=0x21c11105853a24d1:0x2ecf48759762b5e3,3,,,';
+
+/**
  * Aggregate rating and count — update when new reviews come in.
  *
  * EXPORTED because app/layout.tsx's CleaningService JSON-LD needs the same two

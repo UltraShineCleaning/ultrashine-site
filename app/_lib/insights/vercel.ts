@@ -12,9 +12,12 @@
  * the website section never shows cities. Production traffic only by default.
  *
  * Env (set in Vercel by the owner, never in code):
- *   VERCEL_ANALYTICS_TOKEN   an access token (Vercel → Account Settings → Tokens)
+ *   VERCEL_ANALYTICS_TOKEN   a PROJECT-scoped access token for ultrashine-site
+ *                            (vercel.com/account/tokens; max expiry 1 year). Per
+ *                            vercel.com/docs/accounts/access-tokens, team- and
+ *                            project-scoped tokens need no teamId/slug.
  *   VERCEL_ANALYTICS_PROJECT project id or name (defaults to "ultrashine-site")
- *   VERCEL_ANALYTICS_TEAM    team slug or id the project lives under (optional)
+ *   VERCEL_ANALYTICS_TEAM    only for a Full Account token: team slug or id
  *
  * Cost: $0. Web Analytics is already on for this project (app/layout.tsx).
  * Hobby includes 50,000 events a month across all projects and keeps a
@@ -44,7 +47,7 @@ async function call(path: 'aggregate' | 'count', q: Record<string, string>): Pro
   const body = await res.json().catch(() => ({}));
   if (!res.ok) {
     const msg = body?.error?.message || `HTTP ${res.status}`;
-    if (res.status === 401 || res.status === 403) throw new Error(`Vercel refused the token (${msg}). Check VERCEL_ANALYTICS_TOKEN and VERCEL_ANALYTICS_TEAM.`);
+    if (res.status === 401 || res.status === 403) throw new Error(`Vercel refused the token (${msg}). It may have expired (they last at most a year) — make a new one at vercel.com/account/tokens and replace VERCEL_ANALYTICS_TOKEN.`);
     if (res.status === 404) throw new Error(`Vercel can't find the project (${msg}). Check VERCEL_ANALYTICS_PROJECT / VERCEL_ANALYTICS_TEAM.`);
     throw new Error(`Vercel analytics: ${msg}`);
   }

@@ -62,8 +62,8 @@ const SETUP: Record<SourceId, { title: string; icon: ReactNode; bg: string; step
     icon: '▲',
     bg: '#000',
     steps: [
-      <>Vercel → your profile picture → <b>Account Settings → Tokens</b> → Create. Name it “Ultra Shine Insights”, scope it to the team that owns ultrashine-site, pick the longest expiry offered.</>,
-      <>ultrashine-site → Settings → <b>Environment Variables</b>: add <b>VERCEL_ANALYTICS_TOKEN</b> (the token) and <b>VERCEL_ANALYTICS_TEAM</b> = contact-8079s-projects.</>,
+      <>vercel.com/account/tokens → name “Ultra Shine Insights” → <b>Scope</b>: your team → the <b>ultrashine-site</b> project → expiration <b>1 year</b> → Create. Copy it (starts with vcp_; shown once).</>,
+      <>ultrashine-site → Settings → <b>Environment Variables</b>: add <b>VERCEL_ANALYTICS_TOKEN</b> = that token. Nothing else needed.</>,
       <>Redeploy. This section fills in on the next load.</>,
     ],
   },

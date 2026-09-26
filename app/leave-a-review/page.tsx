@@ -2,6 +2,7 @@ import Link from 'next/link';
 import SiteHeader from '../_components/SiteHeader';
 import SiteFooter from '../_components/SiteFooter';
 import styles from './page.module.css';
+import { GOOGLE_WRITE_REVIEW_URL } from '../_lib/google-reviews';
 
 /**
  * /leave-a-review — Single-purpose conversion page.
@@ -21,7 +22,8 @@ import styles from './page.module.css';
  *  - Tiago can convert satisfied customers; this page removes friction
  */
 
-const GOOGLE_REVIEW_URL = 'https://maps.app.goo.gl/EGeuJViEFazQQe579';
+// Opens Google's write-a-review box directly — the one link lives in google-reviews.ts.
+const GOOGLE_REVIEW_URL = GOOGLE_WRITE_REVIEW_URL;
 
 // QR code rendered via qrserver.com — free public API, no signup, super stable.
 // We pass the Google review URL directly so scanning the QR opens Google's

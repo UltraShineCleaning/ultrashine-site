@@ -7,7 +7,10 @@
  * rather review from their phone.
  */
 
-export const GOOGLE_REVIEW_URL = 'https://maps.app.goo.gl/EGeuJViEFazQQe579';
+import { GOOGLE_WRITE_REVIEW_URL } from './google-reviews';
+
+/** Opens Google's write-a-review box directly — see google-reviews.ts. */
+export const GOOGLE_REVIEW_URL = GOOGLE_WRITE_REVIEW_URL;
 export const REVIEW_PAGE_URL = 'https://ultrashinecleaningfl.com/leave-a-review';
 export const REVIEW_QR_URL = `https://api.qrserver.com/v1/create-qr-code/?size=360x360&margin=12&color=002C98&bgcolor=FFFFFF&data=${encodeURIComponent(
   GOOGLE_REVIEW_URL,

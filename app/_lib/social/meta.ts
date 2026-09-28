@@ -25,6 +25,10 @@ export const META_SCOPES = [
   'pages_read_engagement',
   'pages_manage_posts',
   'pages_manage_engagement',
+  // Needed to subscribe the Page to webhooks (POST /{page}/subscribed_apps).
+  'pages_manage_metadata',
+  // Needed to read customers' comments on Facebook posts (the "feed" webhook).
+  'pages_read_user_content',
   'pages_messaging',
   'instagram_basic',
   'instagram_content_publish',
@@ -97,7 +101,13 @@ export function oauthUrl(redirectUri: string, state: string): string {
   u.searchParams.set('client_id', process.env.META_APP_ID || '');
   u.searchParams.set('redirect_uri', redirectUri);
   u.searchParams.set('state', state);
-  u.searchParams.set('scope', META_SCOPES.join(','));
+  // Facebook Login for Business prefers a saved "configuration" (config_id)
+  // over a scope list. If META_LOGIN_CONFIG_ID is set we use it; otherwise the
+  // scope list still works (Meta still accepts it). Either path asks for the
+  // same permissions, so switching later needs no code change.
+  const configId = process.env.META_LOGIN_CONFIG_ID;
+  if (configId) u.searchParams.set('config_id', configId);
+  else u.searchParams.set('scope', META_SCOPES.join(','));
   u.searchParams.set('response_type', 'code');
   return u.toString();
 }

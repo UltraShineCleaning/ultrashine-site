@@ -68,7 +68,7 @@ const TABS: Tab[] = [
     group: 'Run the business',
     label: 'Money',
     glyph: '$',
-    description: 'Invoices, payments, weekly revenue, outstanding balances',
+    description: 'What came in, what\'s owed, and who to nudge — straight from Jobber',
   },
   {
     id: 'leads',

@@ -28,17 +28,34 @@ export function demoHomeDeps(now = Date.now()): HomeDeps {
       visit('v6', t0 + 4 * DAY + 9 * H, 'Deep Cleaning', 'Ana S.', 'Coral Springs', []),
     ],
   };
+  const names = ['Karen Williams', 'Mark & Julie T.', 'Nina R.', 'Greg H.', 'Ana S.', 'Sandra P.'];
   const inv = (n: number, total: number, daysOverdue: number | null) => ({
-    id: `i${n}`, invoiceNumber: String(n), clientName: 'Client', status: 'awaiting_payment', issuedDate: null, dueDate: null,
+    id: `i${n}`, invoiceNumber: String(1040 + n), clientName: names[n - 1] ?? 'Client', status: 'awaiting_payment',
+    issuedDate: iso(now - ((daysOverdue ?? -8) + 12) * DAY), dueDate: iso(now - (daysOverdue ?? -8) * DAY),
     total, balance: total, paid: 0, daysOverdue,
   });
   const money: JobberMoney = {
-    outstanding: [inv(1, 280, 12), inv(2, 200, 4), inv(3, 180, null), inv(4, 120, null), inv(5, 100, null), inv(6, 100, null)],
+    outstanding: [inv(1, 280, 12), inv(2, 200, 4), inv(3, 180, -4), inv(4, 120, -6), inv(5, 100, -9), inv(6, 100, -10)],
     outstandingTotal: 980, overdueTotal: 480, overdueCount: 2,
     paidThisWeek: 1240, paidLastWeek: 1050, paidThisMonth: 4200, paidLastMonth: 3900, paidThisQuarter: 11000,
     averageInvoice: 190, avgCollectionDays: 4,
-    weeklyRevenue: [700, 820, 760, 980, 900, 1100, 1050, 1240].map((amount, i) => ({ key: `w${i}`, label: `W${i}`, amount, invoiceCount: 5 })),
-    monthlyRevenue: [], topClients: [], invoiceCount: 40,
+    weeklyRevenue: [720, 860, 790, 1010, 920, 1130, 1050, 1240].map((amount, i) => {
+      const d = new Date(now - (7 - i) * 7 * DAY);
+      return { key: d.toISOString(), label: d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }), amount, invoiceCount: 5 };
+    }),
+    monthlyRevenue: [2100, 2600, 2400, 3100, 2900, 3300, 3600, 3500, 3700, 4860, 3900, 4200].map((amount, i) => {
+      const t = new Date(now);
+      const d = new Date(Date.UTC(t.getUTCFullYear(), t.getUTCMonth() - (11 - i), 1, 12));
+      return { key: d.toISOString(), label: d.toLocaleDateString('en-US', { month: 'short', year: '2-digit' }), amount, invoiceCount: 20 + i };
+    }),
+    topClients: [
+      { name: 'Karen Williams', total: 3240, invoiceCount: 14 },
+      { name: 'Sandra P.', total: 2890, invoiceCount: 16 },
+      { name: 'Laura M.', total: 2410, invoiceCount: 9 },
+      { name: 'Greg H.', total: 1980, invoiceCount: 11 },
+      { name: 'Megan T.', total: 1720, invoiceCount: 6 },
+    ],
+    invoiceCount: 40,
   };
   const leads: Lead[] = [
     { id: 'q1', kind: 'quote', subject: '', name: 'Walter P.', city: 'Pompano Beach', at: now - H, to: '' },

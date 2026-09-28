@@ -3,6 +3,7 @@
  * No network: every source is the demo fake (app/_lib/home/demo.ts) or an
  * empty stand-in, so this checks OUR maths and wording only.
  */
+export {};
 const P = require('path').resolve(__dirname, '../../app/_lib');
 let pass = 0, fail = 0;
 const ok = (c: any, name: string) => { if (c) { pass++; } else { fail++; console.log('  ✗', name); } };

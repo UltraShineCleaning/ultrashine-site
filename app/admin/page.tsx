@@ -16,6 +16,9 @@ import ReviewRequestsCard from './_components/ReviewRequestsCard';
 import { getJobberClients, getJobberMoney, getRecentlyCompletedVisits } from '../_lib/jobberClient';
 import { COUNT as GOOGLE_REVIEW_COUNT, RATING as GOOGLE_RATING } from '../_lib/google-reviews';
 import { isAdmin } from '../_lib/adminAuth';
+import { getGoals } from '../_lib/insights/goals';
+import { demoEnabled } from '../_lib/insights/demo';
+import { demoHomeDeps } from '../_lib/home/demo';
 
 export const metadata: Metadata = {
   title: 'Dashboard · Ultra Shine Cleaning',
@@ -129,11 +132,14 @@ export default async function AdminDashboard({
   const force = !!(searchParams?.t || searchParams?.refresh);
 
   // Live data from Resend + Jobber (clients + money) in parallel
-  const [{ leads, error }, jobberClientsRes, moneyRes, recentVisits] = await Promise.all([
+  const [{ leads, error }, jobberClientsRes, moneyRes, recentVisits, goals] = await Promise.all([
     fetchLeads(),
     getJobberClients({ force }),
-    getJobberMoney({ force }),
+    // Local screenshots only (INSIGHTS_DEMO=1, never in production): sample invoices.
+    demoEnabled() ? demoHomeDeps().money!() : getJobberMoney({ force }),
     getRecentlyCompletedVisits(7).catch(() => ({ visits: [] })),
+    // Monthly revenue goal (set on Insights) draws the dashed line on Money's chart.
+    getGoals().catch(() => null),
   ]);
 
   // Full leads list for the Leads tab
@@ -219,7 +225,7 @@ export default async function AdminDashboard({
     <ClientsTab clients={jobberClientsRes.clients} error={jobberClientsRes.error} />
   );
 
-  const moneyPanel = <MoneyTab money={moneyRes} />;
+  const moneyPanel = <MoneyTab money={moneyRes} monthlyGoal={goals?.revenue || null} />;
 
   const insightsPanel = <InsightsTab />;
 

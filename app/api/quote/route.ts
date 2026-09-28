@@ -13,6 +13,7 @@ import {
 import type { Frequency } from '../../_lib/estimate';
 import { markQuoteSubmitted } from '../../_lib/social/automations';
 import { logQuote } from '../../_lib/insights/quotes';
+import { leadFromQuote, saveLead } from '../../_lib/leads/store';
 
 /**
  * POST /api/quote
@@ -350,8 +351,15 @@ export async function POST(req: Request) {
         source: body.heardFrom || undefined,
       }).catch(() => undefined);
 
+    // Admin → Leads keeps the full request (contact, home, estimate) under the
+    // same id as the Insights log. Never blocks or fails the quote itself.
+    const keepLead = (id: string, emailed: boolean) =>
+      saveLead(leadFromQuote(id, body, ballparkFor(body), emailed)).catch(() => undefined);
+
     if (!apiKey) {
-      await record(`local-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`);
+      const localId = `local-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+      await record(localId);
+      await keepLead(localId, false);
       console.warn('[quote] RESEND_API_KEY not set — submission logged but no email sent:', body);
       return NextResponse.json({ ok: true, emailed: false }, { status: 200 });
     }
@@ -369,7 +377,9 @@ export async function POST(req: Request) {
       text: renderText(body),
     });
 
-    await record(data?.id ?? `q-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`);
+    const leadId = data?.id ?? `q-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+    await record(leadId);
+    await keepLead(leadId, !error);
 
     if (error) {
       console.error('[quote] Resend error:', error);

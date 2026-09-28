@@ -15,7 +15,8 @@
     "test:social": "npx --yes tsx scripts/tests/social-logic.test.ts",
     "test:insights": "npx --yes tsx scripts/tests/insights-logic.test.ts",
     "test:home": "npx --yes tsx scripts/tests/home-logic.test.ts",
-    "test:money": "npx --yes tsx scripts/tests/money-logic.test.ts"
+    "test:money": "npx --yes tsx scripts/tests/money-logic.test.ts",
+    "test:leads": "npx --yes tsx scripts/tests/leads-logic.test.ts"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",

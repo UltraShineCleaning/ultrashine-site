@@ -75,7 +75,7 @@ const TABS: Tab[] = [
     group: 'Grow',
     label: 'Leads',
     glyph: '✉',
-    description: 'Every inbound quote request + cleaner application from the website',
+    description: 'Every quote request and message that could become a job — and where each one stands',
   },
   {
     id: 'reviews',

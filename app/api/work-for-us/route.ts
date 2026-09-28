@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { Resend } from 'resend';
+import { leadFromApplication, saveLead } from '../../_lib/leads/store';
 
 /**
  * POST /api/work-for-us
@@ -173,7 +174,11 @@ export async function POST(req: Request) {
     const body = (await req.json()) as ApplicationPayload;
     const apiKey = process.env.RESEND_API_KEY;
 
+    // Admin → Leads keeps the application. Never blocks or fails the form.
+    const keepLead = (id: string) => saveLead(leadFromApplication(id, body)).catch(() => undefined);
+
     if (!apiKey) {
+      await keepLead(`local-app-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`);
       console.warn('[work-for-us] RESEND_API_KEY not set — submission logged but no email sent:', body);
       return NextResponse.json({ ok: true, emailed: false }, { status: 200 });
     }
@@ -190,6 +195,8 @@ export async function POST(req: Request) {
       html: renderHtml(body),
       text: renderText(body),
     });
+
+    await keepLead(data?.id ?? `app-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`);
 
     if (error) {
       console.error('[work-for-us] Resend error:', error);

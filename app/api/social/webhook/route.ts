@@ -16,10 +16,12 @@ export const maxDuration = 60;
  */
 export async function GET(req: Request) {
   const u = new URL(req.url);
-  const ok =
-    u.searchParams.get('hub.mode') === 'subscribe' &&
-    !!process.env.META_WEBHOOK_VERIFY_TOKEN &&
-    u.searchParams.get('hub.verify_token') === process.env.META_WEBHOOK_VERIFY_TOKEN;
+  // Trim both sides: a token copied with `openssl rand -hex 32 | pbcopy`
+  // carries a trailing newline, and Vercel's value box keeps it while Meta's
+  // single-line field drops it — so an untrimmed compare fails on a correct token.
+  const expected = (process.env.META_WEBHOOK_VERIFY_TOKEN ?? '').trim();
+  const given = (u.searchParams.get('hub.verify_token') ?? '').trim();
+  const ok = u.searchParams.get('hub.mode') === 'subscribe' && expected.length > 0 && given === expected;
   return ok ? new Response(u.searchParams.get('hub.challenge') ?? '', { status: 200 }) : new Response('Forbidden', { status: 403 });
 }
 

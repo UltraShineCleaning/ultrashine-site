@@ -180,7 +180,7 @@ export default async function HomePage() {
             label="Deep Cleaning"
             points={[
               'Baseboards, grout, ceiling fans',
-              'Inside oven and fridge',
+              'Light fixtures and vents',
               'Quarterly reset',
             ]}
           />
@@ -189,7 +189,7 @@ export default async function HomePage() {
             image="/images/service_movein_boxes.jpg"
             label="Move-In / Move-Out"
             points={[
-              'Inside cabinets and drawers',
+              'Empty-home, wall to wall',
               'Landlord-grade detail',
               'Built to return your deposit',
             ]}

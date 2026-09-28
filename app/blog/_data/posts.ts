@@ -133,7 +133,7 @@ export const POSTS: BlogPost[] = [
     bodyHtml: `
       <p>According to the Florida Department of Business and Professional Regulation, fewer than 60% of Florida renters get their full security deposit back. The number one reason cited by landlords? <strong>"Cleaning condition."</strong> Not damage. Not unpaid rent. Cleaning.</p>
 
-      <p>If you’re moving out of an apartment, condo, or house in Boca Raton, Delray Beach, Boynton Beach, or anywhere in Palm Beach County, here’s the checklist we use on every <a href="/services/move-in-out">move-out cleaning</a> &mdash; the same one that gets our clients their full deposit back.</p>
+      <p>If you’re moving out of an apartment, condo, or house in Boca Raton, Delray Beach, Boynton Beach, or anywhere in Palm Beach County, here’s the full checklist landlords inspect against. Our <a href="/services/move-in-out">move-out cleaning</a> covers the rooms top to bottom; the inside of the oven, fridge and cabinets are add-ons you can tick on the <a href="/quote">quote page</a> &mdash; most move-outs add them, because landlords check.</p>
 
       <h2>What Florida landlords are actually allowed to deduct for</h2>
 

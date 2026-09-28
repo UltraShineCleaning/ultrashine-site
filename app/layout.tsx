@@ -73,7 +73,7 @@ const SERVICE_OFFERS = [
     slug: 'deep-cleaning',
     name: 'Deep Cleaning',
     description:
-      'Top-to-bottom reset: baseboards, inside oven, inside fridge, grout, ceiling fans, cabinet exteriors.',
+      'Top-to-bottom reset: baseboards, grout, ceiling fans, light fixtures, vents, appliance and cabinet exteriors.',
     minPrice: 220,
     maxPrice: 480,
   },
@@ -81,7 +81,7 @@ const SERVICE_OFFERS = [
     slug: 'move-in-out',
     name: 'Move-In / Move-Out Cleaning',
     description:
-      'Empty home, full detail. Includes inside cabinets, inside drawers, inside appliances. Deposit-back standard.',
+      'Empty home, full detail: baseboards, blinds, closets, wall scuffs. Inside appliances and cabinets available as add-ons. Deposit-back standard.',
     minPrice: 260,
     maxPrice: 550,
   },

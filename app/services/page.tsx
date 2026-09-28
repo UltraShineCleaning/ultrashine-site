@@ -47,7 +47,7 @@ const SERVICES: ServiceItem[] = [
     name: 'Deep Cleaning',
     tagline: 'Quarterly Reset',
     description:
-      'Baseboards, inside oven + fridge, grout, light fixtures, ceiling fans, vents. The full reset every ~90 days — pairs with Regular to keep the bar high.',
+      'Baseboards, grout, light fixtures, ceiling fans, vents, range hood. The full reset every ~90 days — pairs with Regular to keep the bar high.',
     image: '/images/flow_hand_marble.jpg',
     bestFor: 'First-time clients + quarterly resets',
   },
@@ -57,7 +57,7 @@ const SERVICES: ServiceItem[] = [
     name: 'Move-In / Move-Out',
     tagline: 'Landlord-Grade Detail',
     description:
-      'Empty-home detail clean — inside every cabinet, drawer, oven, fridge. Documented before/after. The clean that gets your deposit back.',
+      'Empty-home detail clean — every baseboard, blind, closet and wall scuff. Add inside oven, fridge and cabinets as extras. The clean that gets your deposit back.',
     image: '/images/service_movein_boxes.jpg',
     bestFor: 'Renters + sellers + property managers',
   },
@@ -292,6 +292,7 @@ export default function ServicesIndexPage() {
                   ['Grout scrubbed + tile reset',        false, true,  true,  false, true],
                   ['Light fixtures + ceiling fans',      false, true,  true,  false, true],
                   ['Vents + air returns',                false, true,  true,  false, true],
+                  ['Inside oven, fridge, cabinets, windows', false, false, false, false, true],
                   ['Drywall + construction dust',        false, false, false, false, true],
                   ['After-hours scheduling',             false, false, false, true,  true],
                 ].map((row, idx) => (
@@ -313,8 +314,9 @@ export default function ServicesIndexPage() {
             and our 100% satisfaction guarantee.
             <br />
             <br />
-            <strong>Add-ons available on any service:</strong> inside oven, inside fridge,
-            inside cabinets + drawers, inside windows, laundry fold. Pricing on request.
+            <strong>Add-ons on every service:</strong> inside oven, inside fridge,
+            inside cabinets + drawers, inside windows, laundry fold. Post-Construction
+            already includes the insides. Pick add-ons on the quote page and they&apos;re priced upfront.
           </p>
         </div>
       </section>

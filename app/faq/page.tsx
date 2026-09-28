@@ -62,7 +62,7 @@ const CATEGORIES: FaqCategory[] = [
       },
       {
         q: 'Do you do move-in or move-out cleanings?',
-        a: "Yes. Move-In/Out is one of our 5 services. We do landlord-grade detail work — inside all cabinets, wall scuff spot-clean, blinds, window tracks, every appliance interior. Most clients get their full security deposit back.",
+        a: "Yes. Move-In/Out is one of our 5 services. We do landlord-grade detail work — every baseboard, blinds, closets, wall scuff spot-clean. Inside oven, fridge, cabinets and windows can be added on the quote page. Most clients get their full security deposit back.",
       },
       {
         q: 'Do you clean commercial spaces?',

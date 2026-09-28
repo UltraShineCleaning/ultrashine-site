@@ -4,7 +4,7 @@ import ServicePage, { type ServiceData } from '../_components/ServicePage';
 export const metadata: Metadata = {
   title: { absolute: 'Deep Cleaning Service in Boca Raton, FL · Ultra Shine' },
   description:
-    'Deep cleaning service in Boca Raton, Delray Beach + South Florida. Baseboards hand-wiped, inside oven + fridge, grout scrubbed, ceiling fans + light fixtures, cabinet exteriors. Background-checked team. Custom quote in 1 hour.',
+    'Deep cleaning service in Boca Raton, Delray Beach + South Florida. Baseboards hand-wiped, grout scrubbed, ceiling fans + light fixtures, appliance and cabinet exteriors. Background-checked team. Custom quote in 1 hour.',
   alternates: {
     canonical: 'https://ultrashinecleaningfl.com/services/deep-cleaning',
   },
@@ -21,8 +21,8 @@ const data: ServiceData = {
     'Quarterly deep cleaning in Palm Beach + Broward — the every-90-day rescue that finds the corners regular cleans skip.',
   included: {
     kitchen: [
-      'Inside oven + drip pans + range hood filter',
-      'Inside fridge + freezer + drawers',
+      'Appliance exteriors + handles polished',
+      'Range hood degreased',
       'Cabinet exteriors + tops + handles polished',
       'Backsplash deep scrub',
       'Stovetop + grates degreased',
@@ -39,7 +39,7 @@ const data: ServiceData = {
     livingBedrooms: [
       'Baseboards + door frames hand-wiped',
       'Ceiling fans + light fixtures dusted',
-      'Inside windows + window tracks',
+      'Window sills + blinds dusted',
       'Air vent grilles cleaned',
       'Under furniture vacuumed',
       'Mattress vacuum (if requested)',
@@ -85,7 +85,7 @@ const data: ServiceData = {
     thisItems: [
       'Everything in Regular, PLUS:',
       'Baseboards + door frames hand-wiped',
-      'Inside oven, fridge, dishwasher',
+      'Range hood + appliance fronts degreased',
       'Grout scrubbed + tile reset',
       'Light fixtures, ceiling fans, vents',
       'Full reset — every 90 days recommended',
@@ -95,6 +95,10 @@ const data: ServiceData = {
     {
       q: 'How long does a deep clean take?',
       a: "Every home is different — square footage, layout, number of bathrooms, level of buildup, pets, kids all change the timing. We give you a precise estimate when we walk through your space for the quote. No two homes get the same number.",
+    },
+    {
+      q: 'Is the inside of the oven and fridge included?',
+      a: "Not in a deep clean — inside oven, inside fridge, inside cabinets and inside windows are add-ons. Tick the ones you want on the quote page and they're priced upfront, before we ever arrive.",
     },
     {
       q: 'Do I need to prep before you arrive?',

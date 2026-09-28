@@ -16,11 +16,11 @@ import {
  * RECOMPUTES it from the form choices; it never trusts a price sent by the
  * browser.
  *
- * The add-on table lives here too. Before 2026-09-24 it was typed twice, once
- * on the page and once in the email route, and neither knew that Deep,
- * Move-In/Out and Post-Construction already include the inside of the oven
- * and fridge, so a Deep clean with "Inside Oven" ticked showed an extra
- * $40–$60 for something the service page says is included.
+ * The add-on table lives here too, used by both the page and the email route.
+ *
+ * WHAT IS INCLUDED (owner, 2026-09-28): inside oven, fridge, windows and
+ * cabinets are add-ons on EVERY service except Post-Construction, which is the
+ * only one that includes them. The service pages say the same.
  */
 
 export type QuoteServiceKey = 'regular' | 'deep' | 'move' | 'post' | 'commercial';
@@ -34,16 +34,15 @@ export type QuoteAddOn = {
   high: number;
   /** Priced per window / per cabinet — can't be totalled without a count. */
   perItem?: boolean;
-  /** Services whose own "included" list already covers this. Matches the
-   *  service pages: deep-cleaning, move-in-out, post-construction. */
+  /** Services that already include this. Only Post-Construction does. */
   includedIn: QuoteServiceKey[];
 };
 
 export const QUOTE_ADD_ONS: QuoteAddOn[] = [
-  { key: 'oven', name: 'Inside Oven', label: '+$40–$60', low: 40, high: 60, includedIn: ['deep', 'move', 'post'] },
-  { key: 'fridge', name: 'Inside Fridge', label: '+$40–$100', low: 40, high: 100, includedIn: ['deep', 'move', 'post'] },
-  { key: 'windows', name: 'Inside Windows', label: '+$5–$10 / window', low: 0, high: 0, perItem: true, includedIn: ['deep', 'move', 'post'] },
-  { key: 'cabinets', name: 'Inside Cabinets', label: '+$5–$10 / cabinet', low: 0, high: 0, perItem: true, includedIn: ['move', 'post'] },
+  { key: 'oven', name: 'Inside Oven', label: '+$40–$60', low: 40, high: 60, includedIn: ['post'] },
+  { key: 'fridge', name: 'Inside Fridge', label: '+$40–$100', low: 40, high: 100, includedIn: ['post'] },
+  { key: 'windows', name: 'Inside Windows', label: '+$5–$10 / window', low: 0, high: 0, perItem: true, includedIn: ['post'] },
+  { key: 'cabinets', name: 'Inside Cabinets', label: '+$5–$10 / cabinet', low: 0, high: 0, perItem: true, includedIn: ['post'] },
   { key: 'laundry', name: 'Laundry Fold', label: '+$35 up', low: 35, high: 70, includedIn: [] },
   { key: 'pet', name: 'Pet-Safe Products', label: 'Free', low: 0, high: 0, includedIn: [] },
 ];

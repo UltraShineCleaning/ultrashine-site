@@ -96,7 +96,7 @@ const data: ServiceData = {
     thisItems: [
       'Everything in Regular, PLUS:',
       'Baseboards + door frames hand-wiped',
-      'Inside oven, fridge, dishwasher',
+      'Range hood + appliance fronts degreased',
       'Grout scrubbed + tile reset',
       'Light fixtures, ceiling fans, vents',
       'Ideal every 90 days as a full reset',

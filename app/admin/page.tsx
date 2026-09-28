@@ -1,9 +1,5 @@
-import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
-import Link from 'next/link';
 import type { Metadata } from 'next';
-import styles from './page.module.css';
-import SendReviewRequestCard from './_components/SendReviewRequestCard';
 import JobberStatusCard from './_components/JobberStatusCard';
 import AdminShell from './_components/AdminShell';
 import ClientsTab from './_components/ClientsTab';
@@ -12,9 +8,8 @@ import SocialTab from './_components/SocialTab';
 import InsightsTab from './_components/InsightsTab';
 import HomeTab from './_components/HomeTab';
 import LeadsTab from './_components/LeadsTab';
-import ReviewRequestsCard from './_components/ReviewRequestsCard';
+import ReviewsTab from './_components/ReviewsTab';
 import { getJobberClients, getJobberMoney, getRecentlyCompletedVisits } from '../_lib/jobberClient';
-import { COUNT as GOOGLE_REVIEW_COUNT, RATING as GOOGLE_RATING } from '../_lib/google-reviews';
 import { isAdmin } from '../_lib/adminAuth';
 import { getGoals } from '../_lib/insights/goals';
 import { demoEnabled } from '../_lib/insights/demo';
@@ -79,44 +74,8 @@ export default async function AdminDashboard({
   // its own pipeline from /api/leads so stage changes save without a reload.
   const leadsPanel = <LeadsTab />;
 
-  const reviewsPanel = (
-    <>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14, marginBottom: 24 }}>
-        <div className={styles.statCard}>
-          <div className={styles.statLabel}>Google · {GOOGLE_REVIEW_COUNT} reviews</div>
-          <div className={styles.statValue}>{GOOGLE_RATING.toFixed(1)} ★</div>
-          <div className={styles.statSub}>
-            <a href="https://search.google.com/local/reviews" target="_blank" rel="noopener noreferrer" style={{ color: '#d4d4d8', fontWeight: 600 }}>
-              Manage on Google →
-            </a>
-          </div>
-        </div>
-        <div className={styles.statCard}>
-          <div className={styles.statLabel}>HomeAdvisor · 25 reviews</div>
-          <div className={styles.statValue}>4.9 ★</div>
-          <div className={styles.statSub}>
-            <a href="https://www.homeadvisor.com/rated.UltraShineCleaning.68124585.html" target="_blank" rel="noopener noreferrer" style={{ color: '#d4d4d8', fontWeight: 600 }}>
-              Open profile →
-            </a>
-          </div>
-        </div>
-      </div>
-
-      <SendReviewRequestCard />
-
-      <ReviewRequestsCard />
-
-      <p className={styles.sectionLabel} style={{ marginTop: 28 }}>Print materials</p>
-      <div className={styles.quickActions}>
-        <Link href="/review-card" target="_blank" className={styles.quickAction}>
-          🖨 Print review cards
-        </Link>
-        <Link href="/leave-a-review" target="_blank" className={styles.quickAction}>
-          ★ View leave-a-review page
-        </Link>
-      </div>
-    </>
-  );
+  // Reviews — design locked 2026-09-28 (00_STATE/design-reviews-dark.html).
+  const reviewsPanel = <ReviewsTab />;
 
   // Social tab — the dark Instagram/Facebook workspace. Recent finished jobs
   // feed its "From your jobs" card; ?social=… carries the result of the Meta

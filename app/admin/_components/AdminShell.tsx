@@ -82,7 +82,7 @@ const TABS: Tab[] = [
     group: 'Grow',
     label: 'Reviews',
     glyph: '★',
-    description: 'Send review-request emails + see Google + HomeAdvisor ratings',
+    description: 'Your rating, the automatic review requests, and the latest reviews to reply to',
   },
   {
     id: 'social',

@@ -55,6 +55,8 @@ export default function QuotePage() {
   const [email, setEmail] = useState('');
   const [notes, setNotes] = useState('');
   const [heardFrom, setHeardFrom] = useState('');
+  // ?src=gbp → came from the Book button on our Google Business Profile.
+  const [fromGoogleBook, setFromGoogleBook] = useState(false);
   // Tracked link from an Instagram/Facebook DM (…/quote?ref=abc123). Lets the
   // dashboard match this form to the conversation and cancel the follow-up.
   const [ref, setRef] = useState('');
@@ -99,6 +101,7 @@ export default function QuotePage() {
 
     const refParam = params.get('ref');
     if (refParam && /^[A-Za-z0-9]{4,16}$/.test(refParam)) setRef(refParam);
+    if (params.get('src') === 'gbp') setFromGoogleBook(true);
   }, []);
 
   /* ----- Helpers ----- */
@@ -171,7 +174,9 @@ export default function QuotePage() {
         addOns: Array.from(addOns).map((k) => ADD_ONS.find((a) => a.key === k)?.name),
         contact: { first, last, phone, email },
         notes,
-        heardFrom: heardFrom || undefined,
+        heardFrom: fromGoogleBook
+          ? heardFrom ? `${heardFrom} (via Google Book button)` : 'Google Book button'
+          : heardFrom || undefined,
         ref: ref || undefined,
         submittedAt: new Date().toISOString(),
       };

@@ -129,8 +129,10 @@ function sourceLabel(l: LeadRecord): string | null {
   if (l.kind === 'social') return l.platform === 'facebook' ? 'Facebook' : 'Instagram';
   const h = (l.heardFrom || '').toLowerCase();
   if (!h) return null;
+  if (h.includes('book button')) return 'Google Book button';
   if (h.includes('instagram')) return 'Instagram';
   if (h.includes('facebook')) return 'Facebook';
+  if (h.includes('google maps')) return 'Google Maps';
   if (h.includes('google')) return 'Google search';
   if (h.includes('referr') || h.includes('friend')) return 'Referral';
   if (h.includes('nextdoor')) return 'Nextdoor';

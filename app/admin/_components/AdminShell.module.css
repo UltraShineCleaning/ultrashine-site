@@ -117,6 +117,39 @@
   letter-spacing: -0.005em;
 }
 
+.navGroup {
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #5b5d68;
+  padding: 14px 11px 5px;
+}
+
+.navBadge {
+  margin-left: auto;
+  background: #4d7cff;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1;
+  border-radius: 999px;
+  padding: 3px 7px;
+  font-variant-numeric: tabular-nums;
+}
+.navBadgeRed {
+  background: #f87171;
+}
+
+/* Home draws its own header — keep only the phone sign-out button. */
+.pageHeaderBare > :not(.mobileOut) {
+  display: none;
+}
+.pageHeaderBare {
+  margin: 0;
+}
+
 .sidebarFoot {
   display: flex;
   flex-direction: column;
@@ -239,6 +272,22 @@
   }
   .navLabel {
     flex: none;
+  }
+  .navGroup {
+    display: none;
+  }
+  .navItem {
+    position: relative;
+  }
+  .navBadge {
+    position: absolute;
+    top: 2px;
+    right: 6px;
+    padding: 2px 5px;
+    font-size: 9px;
+  }
+  .pageHeaderBare {
+    height: 30px;
   }
   .main {
     padding: 14px 10px 110px;

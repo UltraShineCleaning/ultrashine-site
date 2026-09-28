@@ -11,6 +11,7 @@ import ClientsTab from './_components/ClientsTab';
 import MoneyTab from './_components/MoneyTab';
 import SocialTab from './_components/SocialTab';
 import InsightsTab from './_components/InsightsTab';
+import HomeTab from './_components/HomeTab';
 import ReviewRequestsCard from './_components/ReviewRequestsCard';
 import { getJobberClients, getJobberMoney, getRecentlyCompletedVisits } from '../_lib/jobberClient';
 import { COUNT as GOOGLE_REVIEW_COUNT, RATING as GOOGLE_RATING } from '../_lib/google-reviews';
@@ -24,8 +25,6 @@ export const metadata: Metadata = {
 // Re-fetch every request — we want live data
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
-
-const VERCEL_PROJECT = 'https://vercel.com/contact-8079s-projects/ultrashine-site';
 
 type LeadKind = 'quote' | 'application' | 'social' | 'other';
 
@@ -98,11 +97,6 @@ function formatRelative(date: Date): string {
   return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 }
 
-function countInLastDays(leads: Lead[], days: number): number {
-  const cutoff = Date.now() - days * 86_400_000;
-  return leads.filter((l) => l.createdAt.getTime() >= cutoff).length;
-}
-
 async function fetchLeads(): Promise<{ leads: Lead[]; error?: string }> {
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) return { leads: [], error: 'RESEND_API_KEY not set in Vercel env' };
@@ -141,23 +135,6 @@ export default async function AdminDashboard({
     getJobberMoney({ force }),
     getRecentlyCompletedVisits(7).catch(() => ({ visits: [] })),
   ]);
-
-  const quoteLeads = leads.filter((l) => l.kind === 'quote');
-  const applicationLeads = leads.filter((l) => l.kind === 'application');
-
-  const stats = {
-    quotesToday: countInLastDays(quoteLeads, 1),
-    quotesThisWeek: countInLastDays(quoteLeads, 7),
-    quotesThisMonth: countInLastDays(quoteLeads, 30),
-    applicationsThisWeek: countInLastDays(applicationLeads, 7),
-    applicationsThisMonth: countInLastDays(applicationLeads, 30),
-  };
-
-  // Recent 8 leads for Overview tab
-  const recent = [...leads]
-    .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
-    .filter((l) => l.kind !== 'other')
-    .slice(0, 8);
 
   // Full leads list for the Leads tab
   const allLeads = [...leads]
@@ -227,152 +204,9 @@ export default async function AdminDashboard({
   // TAB PANELS — each is server-rendered JSX passed to AdminShell
   // ============================================================
 
-  const overviewPanel = (
-    <>
-      {error && (
-        <div className={styles.errorState}>
-          ⚠️ Couldn&apos;t load live data: {error}. Tile links below still work.
-        </div>
-      )}
-
-      <p className={styles.sectionLabel}>Today · this week · this month</p>
-      <div className={styles.statsRow}>
-        <div className={`${styles.statCard} ${styles.statCardHi}`}>
-          <div className={styles.statLabel}>Quotes · today</div>
-          <div className={styles.statValue}>
-            {stats.quotesToday > 0 ? stats.quotesToday : <em>—</em>}
-          </div>
-          <div className={styles.statSub}>
-            {stats.quotesToday === 0 ? 'No new quotes yet today' : `${stats.quotesToday === 1 ? '1 lead' : `${stats.quotesToday} leads`} today`}
-          </div>
-        </div>
-        <div className={styles.statCard}>
-          <div className={styles.statLabel}>Quotes · 7 days</div>
-          <div className={styles.statValue}>
-            {stats.quotesThisWeek > 0 ? stats.quotesThisWeek : <em>—</em>}
-          </div>
-          <div className={styles.statSub}>
-            {stats.quotesThisWeek === 0 ? 'No new quotes yet' : `${stats.quotesThisWeek === 1 ? '1 lead' : `${stats.quotesThisWeek} leads`} this week`}
-          </div>
-        </div>
-        <div className={styles.statCard}>
-          <div className={styles.statLabel}>Quotes · 30 days</div>
-          <div className={styles.statValue}>
-            {stats.quotesThisMonth > 0 ? stats.quotesThisMonth : <em>—</em>}
-          </div>
-          <div className={styles.statSub}>Quote requests this month</div>
-        </div>
-        <div className={styles.statCard}>
-          <div className={styles.statLabel}>Applicants · 7 days</div>
-          <div className={styles.statValue}>
-            {stats.applicationsThisWeek > 0 ? stats.applicationsThisWeek : <em>—</em>}
-          </div>
-          <div className={styles.statSub}>
-            {stats.applicationsThisWeek === 0 ? 'No new applicants' : `${stats.applicationsThisWeek} this week`}
-          </div>
-        </div>
-        <div className={styles.statCard}>
-          <div className={styles.statLabel}>Total · all time</div>
-          <div className={styles.statValue}>
-            <em>{quoteLeads.length + applicationLeads.length}</em>
-          </div>
-          <div className={styles.statSub}>
-            {quoteLeads.length} quotes · {applicationLeads.length} applicants
-          </div>
-        </div>
-      </div>
-
-      <div className={styles.leadsWrap}>
-        <p className={styles.sectionLabel}>Recent leads</p>
-        {recent.length === 0 ? (
-          <div className={styles.emptyState}>
-            No leads yet. As soon as someone submits the quote form or cleaner application, they&apos;ll appear here.
-          </div>
-        ) : (
-          <div className={styles.leadsList}>
-            {recent.map((lead) => <LeadCard key={lead.id} lead={lead} />)}
-          </div>
-        )}
-      </div>
-
-      <p className={styles.sectionLabel}>Analytics</p>
-      <a href="#insights" className={styles.tile} style={{ display: 'block', marginBottom: 8, minHeight: 0 }}>
-        <div className={styles.tileLabel}>INSIGHTS · ON THIS DASHBOARD</div>
-        <div className={styles.tileTitle}>How the business is growing</div>
-        <div className={styles.tileBody}>
-          Website visitors, Google searches, Instagram + Facebook, revenue and reviews — all in the Insights tab, nothing opens in a new tab.
-        </div>
-        <div className={styles.tileLink}>Open Insights</div>
-      </a>
-
-      <p className={styles.sectionLabel}>Daily automation</p>
-      <div style={{
-        background: '#0d0e11',
-        border: '1px solid #25262d',
-        borderRadius: 12,
-        padding: '16px 20px',
-        display: 'flex',
-        alignItems: 'center',
-        gap: 14,
-        marginBottom: 8,
-      }}>
-        <span style={{
-          width: 10,
-          height: 10,
-          borderRadius: '50%',
-          background: '#34d399',
-          boxShadow: '0 0 0 4px rgba(27, 127, 58, 0.15)',
-          flexShrink: 0,
-        }} />
-        <div style={{ flex: 1 }}>
-          <div style={{ fontFamily: 'var(--font-poppins), sans-serif', fontWeight: 700, fontSize: 14, color: '#f4f4f5' }}>
-            Morning digest: ON
-          </div>
-          <div style={{ fontFamily: 'var(--font-poppins), sans-serif', fontSize: 12, color: '#8b8d98', marginTop: 2 }}>
-            Emailed every morning at 7am ET to contact@ultrashinecleaningfl.com — yesterday&apos;s leads, today&apos;s Jobber jobs, this week&apos;s revenue, unpaid invoices.
-          </div>
-        </div>
-        <a
-          href="/api/cron/daily-summary"
-          target="_blank"
-          rel="noopener noreferrer"
-          style={{
-            padding: '8px 14px',
-            borderRadius: 999,
-            background: '#f4f4f5',
-            color: '#0d0e11',
-            textDecoration: 'none',
-            fontFamily: 'var(--font-poppins), sans-serif',
-            fontSize: 11,
-            fontWeight: 600,
-            letterSpacing: '0.04em',
-            whiteSpace: 'nowrap',
-          }}
-        >
-          Send test now →
-        </a>
-      </div>
-
-      <p className={styles.sectionLabel}>Quick links</p>
-      <div className={styles.quickActions}>
-        <a href={VERCEL_PROJECT} target="_blank" rel="noopener noreferrer" className={styles.quickAction}>
-          ⚡ Vercel project
-        </a>
-        <a href="https://github.com/UltraShineCleaning/ultrashine-site" target="_blank" rel="noopener noreferrer" className={styles.quickAction}>
-          ⚙ GitHub repo
-        </a>
-        <a href="https://resend.com/api-keys" target="_blank" rel="noopener noreferrer" className={styles.quickAction}>
-          ✉ Resend keys
-        </a>
-        <Link href="/quote" className={styles.quickAction}>
-          ✦ Test quote form
-        </Link>
-        <Link href="/review-card" target="_blank" className={styles.quickAction}>
-          🖨 Print review cards
-        </Link>
-      </div>
-    </>
-  );
+  // Home — design locked 2026-09-28 (00_STATE/design-home-dark.html). Loads its
+  // own numbers from /api/home so it can refresh without reloading the page.
+  const overviewPanel = <HomeTab />;
 
   // The Jobber tab merged into Schedule (calendar focus) + Money (invoices).
   // JobberStatusCard renders the full live dashboard when connected, OR the
@@ -391,6 +225,11 @@ export default async function AdminDashboard({
 
   const leadsPanel = (
     <div className={styles.leadsWrap} style={{ marginTop: 0 }}>
+      {error && (
+        <div className={styles.errorState}>
+          ⚠️ Couldn&apos;t load leads: {error}
+        </div>
+      )}
       {allLeads.length === 0 ? (
         <div className={styles.emptyState}>
           No leads yet. As soon as someone submits the quote form or cleaner application, they&apos;ll appear here.

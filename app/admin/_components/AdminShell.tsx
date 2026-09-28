@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, type ReactNode } from 'react';
+import { Fragment, useEffect, useState, type ReactNode } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import styles from './AdminShell.module.css';
@@ -38,6 +38,8 @@ type Tab = {
   glyph: string;
   /** Short description shown under the active tab title */
   description: string;
+  /** Sidebar section heading this tab sits under (none = top of the list). */
+  group?: 'Run the business' | 'Grow';
 };
 
 const TABS: Tab[] = [
@@ -45,46 +47,53 @@ const TABS: Tab[] = [
     id: 'overview',
     label: 'Home',
     glyph: '✦',
-    description: 'Live snapshot — today\'s jobs, recent leads, key numbers, quick actions',
+    description: 'What needs you, today\'s jobs, the key numbers and the latest leads',
   },
   {
     id: 'schedule',
+    group: 'Run the business',
     label: 'Schedule',
     glyph: '◷',
     description: 'Month-view calendar of every scheduled visit — pulled live from Jobber',
   },
   {
     id: 'clients',
+    group: 'Run the business',
     label: 'Clients',
     glyph: '◉',
     description: 'Searchable directory of every active Jobber client + their details',
   },
   {
     id: 'money',
+    group: 'Run the business',
     label: 'Money',
     glyph: '$',
     description: 'Invoices, payments, weekly revenue, outstanding balances',
   },
   {
     id: 'leads',
+    group: 'Grow',
     label: 'Leads',
     glyph: '✉',
     description: 'Every inbound quote request + cleaner application from the website',
   },
   {
     id: 'reviews',
+    group: 'Grow',
     label: 'Reviews',
     glyph: '★',
     description: 'Send review-request emails + see Google + HomeAdvisor ratings',
   },
   {
     id: 'social',
+    group: 'Grow',
     label: 'Social',
     glyph: '◈',
     description: 'Instagram + Facebook — plan, approve and auto-post; DM inbox + automations',
   },
   {
     id: 'insights',
+    group: 'Grow',
     label: 'Insights',
     glyph: '◐',
     description: 'How people find us and how the business is growing — website, Google, Instagram + Facebook, money and reviews',
@@ -115,6 +124,14 @@ export default function AdminShell({
   insights: ReactNode;
 }) {
   const [active, setActive] = useState<TabId>('overview');
+  // Little counters beside Money / Leads / Social / Reviews. The Home tab
+  // computes them (it already reads every source) and announces them here.
+  const [badges, setBadges] = useState<Partial<Record<TabId, number>>>({});
+  useEffect(() => {
+    const on = (e: Event) => setBadges((e as CustomEvent).detail ?? {});
+    window.addEventListener('admin:badges', on);
+    return () => window.removeEventListener('admin:badges', on);
+  }, []);
 
   // On mount + on hashchange — read tab from URL hash
   useEffect(() => {
@@ -165,17 +182,28 @@ export default function AdminShell({
         </div>
 
         <nav className={styles.nav}>
-          {TABS.map((tab) => (
-            <button
-              key={tab.id}
-              type="button"
-              onClick={() => selectTab(tab.id)}
-              className={`${styles.navItem} ${active === tab.id ? styles.navItemActive : ''}`}
-            >
-              <span className={styles.navGlyph}>{tab.glyph}</span>
-              <span className={styles.navLabel}>{tab.label}</span>
-            </button>
-          ))}
+          {TABS.map((tab, i) => {
+            const n = badges[tab.id] ?? 0;
+            const showGroup = tab.group && tab.group !== TABS[i - 1]?.group;
+            return (
+              <Fragment key={tab.id}>
+                {showGroup && <div className={styles.navGroup}>{tab.group}</div>}
+                <button
+                  type="button"
+                  onClick={() => selectTab(tab.id)}
+                  className={`${styles.navItem} ${active === tab.id ? styles.navItemActive : ''}`}
+                >
+                  <span className={styles.navGlyph}>{tab.glyph}</span>
+                  <span className={styles.navLabel}>{tab.label}</span>
+                  {n > 0 && (
+                    <span className={`${styles.navBadge} ${tab.id === 'money' ? styles.navBadgeRed : ''}`} aria-label={`${n} waiting`}>
+                      {n > 9 ? '9+' : n}
+                    </span>
+                  )}
+                </button>
+              </Fragment>
+            );
+          })}
         </nav>
 
         <div className={styles.sidebarFoot}>
@@ -188,8 +216,9 @@ export default function AdminShell({
 
       {/* ===== MAIN CONTENT ===== */}
       <main className={styles.main}>
-        {/* Active-tab header */}
-        <header className={styles.pageHeader}>
+        {/* Active-tab header. Home draws its own (greeting + date), so it only
+            keeps the phone sign-out button from this one. */}
+        <header className={`${styles.pageHeader} ${active === 'overview' ? styles.pageHeaderBare : ''}`}>
           <p className={styles.pageEyebrow}>{activeMeta.label.toUpperCase()}</p>
           <h1 className={styles.pageTitle}>
             {active === 'overview'

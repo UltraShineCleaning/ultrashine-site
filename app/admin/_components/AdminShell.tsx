@@ -54,14 +54,14 @@ const TABS: Tab[] = [
     group: 'Run the business',
     label: 'Schedule',
     glyph: '◷',
-    description: 'Month-view calendar of every scheduled visit — pulled live from Jobber',
+    description: 'Every visit from Jobber — the month, the day, and who\'s cleaning where',
   },
   {
     id: 'clients',
     group: 'Run the business',
     label: 'Clients',
     glyph: '◉',
-    description: 'Searchable directory of every active Jobber client + their details',
+    description: 'Everyone you clean for — how often, what they pay, their home, and what\'s next',
   },
   {
     id: 'money',

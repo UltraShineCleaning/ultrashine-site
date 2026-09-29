@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation';
 import type { Metadata } from 'next';
-import JobberStatusCard from './_components/JobberStatusCard';
+import SchedulePanel from './_components/SchedulePanel';
 import AdminShell from './_components/AdminShell';
 import ClientsTab from './_components/ClientsTab';
 import MoneyTab from './_components/MoneyTab';
@@ -9,7 +9,7 @@ import InsightsTab from './_components/InsightsTab';
 import HomeTab from './_components/HomeTab';
 import LeadsTab from './_components/LeadsTab';
 import ReviewsTab from './_components/ReviewsTab';
-import { getJobberClients, getJobberMoney, getRecentlyCompletedVisits } from '../_lib/jobberClient';
+import { getJobberMoney, getRecentlyCompletedVisits } from '../_lib/jobberClient';
 import { isAdmin } from '../_lib/adminAuth';
 import { getGoals } from '../_lib/insights/goals';
 import { demoEnabled } from '../_lib/insights/demo';
@@ -38,8 +38,7 @@ export default async function AdminDashboard({
   const force = !!(searchParams?.t || searchParams?.refresh);
 
   // Live data from Jobber (clients + money) in parallel. Home and Leads load their own.
-  const [jobberClientsRes, moneyRes, recentVisits, goals] = await Promise.all([
-    getJobberClients({ force }),
+  const [moneyRes, recentVisits, goals] = await Promise.all([
     // Local screenshots only (INSIGHTS_DEMO=1, never in production): sample invoices.
     demoEnabled() ? demoHomeDeps().money!() : getJobberMoney({ force }),
     getRecentlyCompletedVisits(7).catch(() => ({ visits: [] })),
@@ -60,11 +59,11 @@ export default async function AdminDashboard({
   // setup/reconnect flow when not — so we use it in BOTH the Schedule and
   // Home tabs in different contexts. Schedule wants the full thing
   // (calendar + upcoming list). Home wants compact stats only.
-  const schedulePanel = <JobberStatusCard force={force} />;
+  const schedulePanel = <SchedulePanel force={force} />;
 
-  const clientsPanel = (
-    <ClientsTab clients={jobberClientsRes.clients} error={jobberClientsRes.error} />
-  );
+  // Clients — design locked 2026-09-29 (00_STATE/design-clients-dark.html).
+  // Loads its own profiles (frequency, price, home size…) from /api/clients.
+  const clientsPanel = <ClientsTab />;
 
   const moneyPanel = <MoneyTab money={moneyRes} monthlyGoal={goals?.revenue || null} />;
 

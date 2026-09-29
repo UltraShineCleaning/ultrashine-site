@@ -428,6 +428,8 @@ export type JobberClient = {
   phone: string | null;
   address: string | null;
   city: string | null;
+  /** When the client was added to Jobber ("client since"). */
+  createdAt?: string | null;
 };
 
 /**
@@ -455,6 +457,7 @@ export async function getJobberClients(opts: { force?: boolean } = {}): Promise<
         name?: string | null;
         companyName?: string | null;
         isCompany?: boolean | null;
+        createdAt?: string | null;
         emails?: Array<{ primary?: boolean | null; address?: string | null }> | null;
         phoneNumbers?: Array<{ primary?: boolean | null; number?: string | null }> | null;
         billingAddress?: {
@@ -474,6 +477,7 @@ export async function getJobberClients(opts: { force?: boolean } = {}): Promise<
           name
           companyName
           isCompany
+          createdAt
           emails { primary address }
           phoneNumbers: phones { primary number }
           billingAddress { street1 street2 city province }
@@ -531,6 +535,7 @@ export async function getJobberClients(opts: { force?: boolean } = {}): Promise<
       phone: primaryPhone?.number ?? null,
       address: addr ? [addr.street1, addr.street2].filter(Boolean).join(', ') || null : null,
       city: titleCaseCity(addr?.city),
+      createdAt: n.createdAt ?? null,
     };
   });
 

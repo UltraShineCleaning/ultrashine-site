@@ -99,6 +99,15 @@ export default function QuotePage() {
 
     if (notesParam) setNotes(notesParam);
 
+    // Homepage instant-estimate card (…/quote?bedrooms=3&bathrooms=2&src=home):
+    // carry the home size over so nobody answers the same question twice.
+    const bedsParam = Number(params.get('bedrooms'));
+    if (Number.isInteger(bedsParam) && bedsParam >= 1 && bedsParam <= 10) setBedrooms(bedsParam);
+    const bathsParam = Number(params.get('bathrooms'));
+    if (Number.isInteger(bathsParam) && bathsParam >= 1 && bathsParam <= 10) setBathrooms(bathsParam);
+    const sqftParam = Number(params.get('sqft'));
+    if (Number.isFinite(sqftParam) && sqftParam >= 300 && sqftParam <= 15000) setSqft(Math.round(sqftParam));
+
     const refParam = params.get('ref');
     if (refParam && /^[A-Za-z0-9]{4,16}$/.test(refParam)) setRef(refParam);
     if (params.get('src') === 'gbp') setFromGoogleBook(true);

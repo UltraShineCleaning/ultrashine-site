@@ -3,7 +3,7 @@ import Link from 'next/link';
 import styles from './page.module.css';
 import FaqSection from './_components/FaqSection';
 import HeroScrollHome from './_components/HeroScrollHome';
-import HeroScrollMobile from './_components/HeroScrollMobile';
+import HeroVideoMobile from './_components/HeroVideoMobile';
 import ServiceAreaMap from './_components/ServiceAreaMap';
 import MotionSection, { MotionItem } from './_components/MotionSection';
 import TiltCard from './_components/TiltCard';
@@ -111,9 +111,12 @@ export default async function HomePage() {
         </div>
       </nav>
 
-      {/* ============ HERO (cinematic 4-scene scroll-through) ============ */}
+      {/* ============ HERO ============
+          Desktop: cinematic scroll-through (HeroScrollHome).
+          Phones: the walkthrough video plays on its own with the instant-estimate
+          quote card on the first screen (HeroVideoMobile, approved 2026-09-30). */}
       <HeroScrollHome />
-      <HeroScrollMobile />
+      <HeroVideoMobile rating={liveRating} />
 
       {/* ============ TRUST STRIP ============ */}
       <MotionSection className={styles.trustStrip}>
@@ -158,7 +161,7 @@ export default async function HomePage() {
 
       {/* ============ SERVICES ============ */}
       <MotionSection id="services" className={`${styles.services} dot-grid`}>
-        <p className="eyebrow">WHAT WE OFFER</p>
+        <p className="eyebrow">HOUSE CLEANING SERVICES IN BOCA RATON</p>
         <h2 className={`fraunces ${styles.sectionHeadline}`}>
           Five services, one <em>standard</em>.
         </h2>

@@ -1,0 +1,416 @@
+/* Phone homepage hero — approved design A (00_STATE/home-video-quote-preview). */
+
+.hero {
+  position: relative;
+  height: 100svh;
+  min-height: 640px;
+  max-height: 940px;
+  overflow: hidden;
+  background: #0b1a3a;
+  color: #fff;
+  font-family: var(--font-poppins), sans-serif;
+}
+@media (min-width: 1025px) {
+  .hero {
+    display: none;
+  }
+}
+
+.video {
+  /* Poster is a CSS background (not the poster attribute) so desktop, where
+     this whole section is display:none, never downloads it. */
+  background: #0b1a3a url('/videos/hero_mobile_poster.webp') center / cover no-repeat;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+}
+.shade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 20, 60, 0.62) 0%,
+    rgba(0, 20, 60, 0.05) 30%,
+    rgba(0, 20, 60, 0) 40%,
+    rgba(0, 16, 50, 0.55) 58%,
+    rgba(0, 12, 40, 0.85) 100%
+  );
+  pointer-events: none;
+}
+
+/* ---- headline (the page's nav sits above this) ---- */
+.copy {
+  position: absolute;
+  left: 20px;
+  right: 20px;
+  top: calc(env(safe-area-inset-top, 0px) + 104px);
+  z-index: 2;
+}
+.eyebrow {
+  margin: 0;
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  opacity: 0.92;
+  white-space: nowrap;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+.headline {
+  margin: 8px 0 0;
+  font-size: clamp(32px, 9.4vw, 40px);
+  line-height: 1.08;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  text-shadow: 0 4px 22px rgba(0, 0, 0, 0.55);
+}
+.headline em {
+  font-style: italic;
+  color: var(--blue-soft, #5e8fff);
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.75);
+}
+.rate {
+  margin: 10px 0 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12px;
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  border-radius: 999px;
+  padding: 5px 11px;
+}
+.rate b {
+  color: var(--gold, #ffc857);
+  letter-spacing: 1px;
+  font-size: 11px;
+}
+
+/* ---- quote card ---- */
+.card {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 12px);
+  z-index: 3;
+  background: #fff;
+  color: #0f1b33;
+  border-radius: 26px;
+  padding: 16px 16px 13px;
+  box-shadow: 0 4px 12px rgba(0, 44, 152, 0.1), 0 24px 60px -16px rgba(0, 10, 40, 0.55);
+}
+.kick {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--blue, #1c61f0);
+}
+.kick i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--blue, #1c61f0);
+  box-shadow: 0 0 0 4px rgba(28, 97, 240, 0.15);
+}
+.title {
+  margin: 4px 0 0;
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+  color: #0f1b33;
+}
+.title em {
+  font-style: italic;
+  color: var(--blue, #1c61f0);
+}
+
+.services {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 7px;
+  margin-top: 12px;
+}
+.card button {
+  min-height: 0; /* globals.css gives every button a 44px touch minimum */
+  font-family: var(--font-poppins), sans-serif;
+  -webkit-tap-highlight-color: transparent;
+}
+.svc {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1.5px solid rgba(28, 97, 240, 0.14);
+  background: #fff;
+  border-radius: 14px;
+  padding: 8px;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  color: #262626;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.18s, border-color 0.18s, color 0.18s;
+}
+.svcIco {
+  width: 28px;
+  height: 28px;
+  border-radius: 9px;
+  background: #f5f7fa;
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  transition: background 0.18s;
+}
+.svcIco svg {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: var(--blue-deep, #002c98);
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.svcOn {
+  border-color: var(--blue, #1c61f0);
+  background: var(--blue-tint, #eaf1ff);
+  color: var(--blue-deep, #002c98);
+  font-weight: 600;
+}
+.svcOn .svcIco {
+  background: var(--blue, #1c61f0);
+}
+.svcOn .svcIco svg {
+  stroke: #fff;
+}
+
+.steppers {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 7px;
+  margin-top: 8px;
+}
+.stepper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1.5px solid rgba(28, 97, 240, 0.14);
+  border-radius: 14px;
+  padding: 5px 5px 5px 11px;
+}
+.stLabel {
+  font-size: 11.5px;
+  color: var(--gray, #5a5f6b);
+  white-space: nowrap;
+}
+.stShort {
+  display: none;
+}
+@media (max-width: 385px) {
+  .stLong {
+    display: none;
+  }
+  .stShort {
+    display: inline;
+  }
+}
+.stepper > div {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+.stepper b {
+  font-size: 15px;
+  font-weight: 600;
+  min-width: 22px;
+  text-align: center;
+}
+.stepper button {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 0;
+  background: var(--blue-tint, #eaf1ff);
+  color: var(--blue, #1c61f0);
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0;
+}
+.stepper button:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+.stepper button:active:not(:disabled) {
+  transform: scale(0.92);
+}
+
+.seg {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  background: #f1f4f9;
+  border-radius: 14px;
+  padding: 3px;
+  margin-top: 8px;
+}
+.segPill {
+  position: absolute;
+  top: 3px;
+  bottom: 3px;
+  left: 3px;
+  width: calc((100% - 6px) / 4);
+  background: #fff;
+  border-radius: 11px;
+  box-shadow: 0 1px 3px rgba(0, 44, 152, 0.12), 0 4px 10px -4px rgba(0, 44, 152, 0.18);
+  transition: transform 0.28s cubic-bezier(0.3, 0.8, 0.3, 1);
+}
+.segBtn {
+  position: relative;
+  z-index: 1;
+  border: 0;
+  background: none;
+  font-size: 11.5px;
+  font-weight: 500;
+  color: var(--gray, #5a5f6b);
+  padding: 7px 0 6px;
+  line-height: 1.15;
+  cursor: pointer;
+}
+.segBtn small {
+  display: block;
+  font-size: 8.5px;
+  font-weight: 600;
+  color: var(--blue, #1c61f0);
+  letter-spacing: 0.02em;
+}
+.segOn {
+  color: var(--blue-deep, #002c98);
+  font-weight: 600;
+}
+
+.price {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 12px;
+  padding: 10px 14px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #f3f7ff 0%, #eaf1ff 100%);
+  border: 1px solid rgba(28, 97, 240, 0.14);
+}
+.priceLab {
+  display: block;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gray, #5a5f6b);
+  font-weight: 600;
+}
+.priceVal {
+  display: block;
+  font-size: 25px;
+  font-weight: 700;
+  color: var(--blue-deep, #002c98);
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+.per {
+  font-size: 11px;
+  color: var(--gray, #5a5f6b);
+}
+
+.cta {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: 16px;
+  background: linear-gradient(135deg, var(--blue, #1c61f0) 0%, var(--blue-deep, #002c98) 100%);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  padding: 11px 12px 11px 18px;
+  text-decoration: none;
+  box-shadow: 0 12px 26px -12px rgba(28, 97, 240, 0.9);
+}
+.cta i {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.18);
+  display: grid;
+  place-items: center;
+  font-style: normal;
+  transition: transform 0.2s;
+}
+.cta:active i {
+  transform: translateX(3px);
+}
+
+.trust {
+  margin: 9px 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 10.5px;
+  color: var(--gray, #5a5f6b);
+}
+.trust b {
+  color: #e0a800;
+  letter-spacing: 1px;
+}
+.trust span {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--gray-light, #b5bbc5);
+}
+
+/* Short phones (SE, landscape-ish browsers): tighten so headline and card never collide. */
+@media (max-height: 720px) {
+  .copy {
+    top: calc(env(safe-area-inset-top, 0px) + 88px);
+  }
+  .headline {
+    font-size: 30px;
+  }
+  .rate {
+    display: none;
+  }
+  .card {
+    padding: 13px 13px 11px;
+  }
+  .services {
+    margin-top: 9px;
+  }
+  .price {
+    margin-top: 9px;
+    padding: 8px 12px;
+  }
+  .priceVal {
+    font-size: 22px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .segPill,
+  .svc,
+  .svcIco {
+    transition: none;
+  }
+}

@@ -143,7 +143,7 @@
 }
 
 /* Home draws its own header — keep only the phone sign-out button. */
-.pageHeaderBare > :not(.mobileOut) {
+.pageHeaderBare > :not(.mobileOut):not(.mobileLogo) {
   display: none;
 }
 .pageHeaderBare {
@@ -227,6 +227,9 @@
 .mobileOut {
   display: none;
 }
+.mobileLogo {
+  display: none;
+}
 
 /* ===== PHONE — sidebar becomes a bottom tab bar ===== */
 @media (max-width: 900px) {
@@ -303,6 +306,21 @@
     position: absolute;
     top: 0;
     right: 0;
+  }
+  .pageHeader {
+    position: relative;
+    padding-top: 66px;
+  }
+  .pageHeaderBare {
+    padding-top: 66px;
+  }
+  .mobileLogo {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 92px;
+    height: auto;
   }
   .mobileOut button {
     background: #141519;

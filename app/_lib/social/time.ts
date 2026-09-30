@@ -6,8 +6,12 @@ export const TZ = 'America/New_York';
 
 export type EtParts = { y: number; m: number; d: number; h: number; min: number; s: number; dow: number };
 
+// Built once and reused: creating an Intl.DateTimeFormat is ~100× slower than
+// using one, and the Insights/Home builders call etParts thousands of times.
+let ET_FMT: Intl.DateTimeFormat | null = null;
+
 export function etParts(ms: number): EtParts {
-  const f = new Intl.DateTimeFormat('en-US', {
+  ET_FMT ??= new Intl.DateTimeFormat('en-US', {
     timeZone: TZ,
     year: 'numeric',
     month: '2-digit',
@@ -17,7 +21,8 @@ export function etParts(ms: number): EtParts {
     second: '2-digit',
     weekday: 'short',
     hour12: false,
-  }).formatToParts(new Date(ms));
+  });
+  const f = ET_FMT.formatToParts(new Date(ms));
   const get = (t: string) => f.find((p) => p.type === t)?.value ?? '0';
   const dow = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].indexOf(get('weekday'));
   return { y: +get('year'), m: +get('month'), d: +get('day'), h: +get('hour') % 24, min: +get('minute'), s: +get('second'), dow };

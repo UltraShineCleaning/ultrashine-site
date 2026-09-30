@@ -26,6 +26,7 @@ export default function StickyQuoteCta() {
   const skip =
     pathname === '/quote' ||
     pathname.startsWith('/admin') ||
+    pathname.startsWith('/demo') ||
     pathname.startsWith('/api');
 
   useEffect(() => {

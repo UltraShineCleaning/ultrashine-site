@@ -226,7 +226,9 @@ export default function AdminShell({
               : activeMeta.label}
           </h1>
           <p className={styles.pageSub}>{activeMeta.description}</p>
-          {/* Phones: the sidebar is a bottom tab bar, so sign-out lives here */}
+          {/* Phones: the sidebar (and its logo) becomes a bottom tab bar, so the logo + sign-out live here */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/images/logo_white_tight.png" alt="Ultra Shine" className={styles.mobileLogo} width={294} height={149} />
           <form action="/api/admin/logout" method="post" className={styles.mobileOut}>
             <button type="submit">Sign out</button>
           </form>

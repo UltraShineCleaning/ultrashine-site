@@ -100,6 +100,9 @@ const fromInputs = (d: string, t: string) => {
   return y && m && dd ? etToMs(y, m, dd, h || 0, mi || 0) : null;
 };
 const thumbOf = (p: SocialPost) => p.cover?.url ?? p.media.find((m) => m.type === 'image')?.url ?? null;
+/** Only the public sample dashboard at /demo sets window.__DEMO__ — there, files stay in the browser instead of going to Blob storage. */
+const isDemo = () => typeof window !== 'undefined' && (window as { __DEMO__?: boolean }).__DEMO__ === true;
+const localUpload = (b: Blob) => ({ url: URL.createObjectURL(b), pathname: 'local' });
 const cx = (...c: (string | false | undefined | null)[]) => c.filter(Boolean).join(' ');
 
 function Chip({ status }: { status: PostStatus }) {
@@ -435,7 +438,7 @@ export default function SocialTab({ recentJobs, flash }: { recentJobs: RecentJob
             { label: 'Open Automations', run: () => setView('auto') },
             { label: 'Open Insights', run: () => setView('ins') },
             { label: 'Refresh everything', run: loadAll },
-            ...(status?.metaApp ? [{ label: status.connected ? 'Reconnect Instagram + Facebook' : 'Connect Instagram + Facebook', run: () => (window.location.href = '/api/social/meta/connect') }] : []),
+            ...(status?.metaApp ? [{ label: status.connected ? 'Reconnect Instagram + Facebook' : 'Connect Instagram + Facebook', run: () => (isDemo() ? toast('Instagram + Facebook are connected') : (window.location.href = '/api/social/meta/connect')) }] : []),
           ]}
         />
       )}
@@ -996,7 +999,10 @@ function Composer(props: {
   const [cover, setCover] = useState<Cover | null>(null);
   const coverInput = useRef<HTMLInputElement>(null);
   const [caption, setCaption] = useState('');
-  const [platforms, setPlatforms] = useState<Platform[]>(['instagram', 'facebook']);
+  // Instagram only by default: the owner has Instagram → Facebook sharing turned on in Meta's
+  // Accounts Center, so posting to both here would put everything on Facebook twice.
+  // Facebook stays one tap away for any post that should go there directly.
+  const [platforms, setPlatforms] = useState<Platform[]>(['instagram']);
   const [job, setJob] = useState(props.init.job ? `${props.init.job.title}${props.init.job.city ? ` · ${props.init.job.city}` : ''}` : '');
   const [city, setCity] = useState(props.init.job?.city ?? '');
   const [busy, setBusy] = useState(false);
@@ -1043,7 +1049,7 @@ function Composer(props: {
     try {
       const body = await toJpeg(f, false); // keep the 9:16 frame uncropped, like stories
       const safe = f.name.replace(/\.[^.]+$/, '').replace(/[^a-z0-9-]+/gi, '-').slice(0, 40) || 'cover';
-      const res = await upload(`social/cover-${Date.now()}-${safe}.jpg`, body, {
+      const res = isDemo() ? localUpload(body) : await upload(`social/cover-${Date.now()}-${safe}.jpg`, body, {
         access: 'public',
         handleUploadUrl: '/api/social/upload',
         contentType: 'image/jpeg',
@@ -1078,7 +1084,7 @@ function Composer(props: {
         try {
           const body: Blob = isVideo ? f : await toJpeg(f, kind !== 'STORY');
           const safe = f.name.replace(/\.[^.]+$/, '').replace(/[^a-z0-9-]+/gi, '-').slice(0, 40) || 'media';
-          const res = await upload(`social/${Date.now()}-${safe}.${isVideo ? (f.type.includes('quicktime') ? 'mov' : 'mp4') : 'jpg'}`, body, {
+          const res = isDemo() ? localUpload(body) : await upload(`social/${Date.now()}-${safe}.${isVideo ? (f.type.includes('quicktime') ? 'mov' : 'mp4') : 'jpg'}`, body, {
             access: 'public',
             handleUploadUrl: '/api/social/upload',
             contentType: isVideo ? f.type : 'image/jpeg',

@@ -19,7 +19,8 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: '*',
       allow: '/',
-      disallow: ['/api/', '/_next/'],
+      // /demo is the public sample dashboard we send to other business owners — never index it.
+      disallow: ['/api/', '/_next/', '/demo'],
     },
     sitemap: 'https://ultrashinecleaningfl.com/sitemap.xml',
     host: 'https://ultrashinecleaningfl.com',

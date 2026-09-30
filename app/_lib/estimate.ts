@@ -171,13 +171,44 @@ export const SERVICE_LABEL: Record<Service, string> = {
   postconstruction: 'Post-Construction',
 };
 
-/** Hourly rate per cleaner. Premium South FL positioning (Boca/Palm Beach). */
+/** Hourly rate per cleaner. Premium South FL positioning (Boca/Palm Beach).
+ *  Raised 2026-09-30 (Tiago): regular 45–55 → 50–60, deep + move-out 50–60 → 55–65.
+ *  The old low end quoted small homes at $70–$100, well under both what our
+ *  real clients pay ($120–$200 a visit in Jobber) and the Boca market
+ *  (~$145–$189 for a 3–4 bed, HomeGuide/Care.com, Sept 2026). */
 export const HOURLY_RATE_RANGE: Record<Service, [number, number]> = {
-  regular: [45, 55],
-  deep: [50, 60],
-  moveout: [50, 60],
+  regular: [50, 60],
+  deep: [55, 65],
+  moveout: [55, 65],
   postconstruction: [55, 65],
 };
+
+/** The low end of a price range uses 90% of the estimated hours (it used 85%,
+ *  which made the "from" number too optimistic). Hours shown to the visitor
+ *  are unchanged — this only affects the price. */
+const PRICE_LOW_HOURS_FACTOR = 0.9;
+
+/** Minimum price per visit (Tiago, 2026-09-30) — a small condo still needs a
+ *  crew, travel and supplies. [low, high] floor of the quoted range.
+ *  Regular is split: recurring visits vs a one-time regular clean. */
+export const MIN_PRICE: {
+  regularRecurring: [number, number];
+  regularOneTime: [number, number];
+  deep: [number, number];
+  moveout: [number, number];
+  postconstruction: [number, number];
+} = {
+  regularRecurring: [130, 160],
+  regularOneTime: [170, 210],
+  deep: [260, 320],
+  moveout: [300, 360],
+  postconstruction: [500, 650],
+};
+
+export function minPriceFor(service: Service, frequency: Frequency): [number, number] {
+  if (service === 'regular') return frequency === 'one' ? MIN_PRICE.regularOneTime : MIN_PRICE.regularRecurring;
+  return MIN_PRICE[service];
+}
 
 /** Recurring homes stay maintained, so each visit takes less time.
  *  Only applies to regular cleaning. */
@@ -254,8 +285,10 @@ export function computeEstimate(input: EstimateInput): Estimate {
   const wallHigh = Math.round((high / cleaners) * 10) / 10;
 
   const [rateLow, rateHigh] = HOURLY_RATE_RANGE[service];
-  const priceLow = Math.round((low * rateLow) / 10) * 10;
-  const priceHigh = Math.round((high * rateHigh) / 10) * 10;
+  const priceLowHours = Math.max(1.5, Math.round(totalHours * PRICE_LOW_HOURS_FACTOR * 10) / 10);
+  const [minLow, minHigh] = minPriceFor(service, frequency);
+  const priceLow = Math.max(minLow, Math.round((priceLowHours * rateLow) / 10) * 10);
+  const priceHigh = Math.max(minHigh, priceLow, Math.round((high * rateHigh) / 10) * 10);
 
   return { low, high, cleaners, wallLow, wallHigh, priceLow, priceHigh };
 }

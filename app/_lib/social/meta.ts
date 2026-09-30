@@ -192,7 +192,9 @@ export async function publishInstagram(p: SocialPost, conn: MetaConnection): Pro
     const c = await graph<{ id: string }>(`${ig}/media`, {
       method: 'POST',
       token,
-      params: { media_type: 'REELS', video_url: video.url, caption: p.caption, share_to_feed: 'true' },
+      // cover_url: our designed cover (JPEG, 9:16). Instagram crops the middle 1:1 when it
+      // shares the reel to the feed, so covers keep the title inside the middle square.
+      params: { media_type: 'REELS', video_url: video.url, caption: p.caption, share_to_feed: 'true', cover_url: p.cover?.url },
     });
     containerId = c.id;
     await waitForContainer(containerId, token);
@@ -226,6 +228,32 @@ export async function publishInstagram(p: SocialPost, conn: MetaConnection): Pro
   const pub = await graph<{ id: string }>(`${ig}/media_publish`, { method: 'POST', token, params: { creation_id: containerId } });
   const info = await graph<{ permalink?: string }>(pub.id, { token, params: { fields: 'permalink' } }).catch(() => ({ permalink: undefined }));
   return { ok: true, id: pub.id, permalink: info.permalink, at: Date.now() };
+}
+
+/**
+ * Facebook video cover: POST /{video-id}/thumbnails with the image file (multipart `source`)
+ * and is_preferred=true. Facebook only takes an uploaded file here (not a URL), so we fetch
+ * our cover and send the bytes. Best effort: if it fails, the video is already posted and
+ * simply keeps Facebook's auto-picked frame — never fail the whole post over a cover.
+ * https://developers.facebook.com/docs/graph-api/reference/video/thumbnails/
+ */
+async function setFacebookVideoCover(videoId: string, coverUrl: string, token: string): Promise<void> {
+  try {
+    const img = await fetch(coverUrl, { cache: 'no-store' });
+    if (!img.ok) return;
+    const form = new FormData();
+    form.set('is_preferred', 'true');
+    form.set('access_token', token);
+    form.set('source', new Blob([await img.arrayBuffer()], { type: 'image/jpeg' }), 'cover.jpg');
+    // Facebook may still be processing the upload — try a few times.
+    for (let i = 0; i < 4; i++) {
+      const r = await fetch(`${GRAPH}/${videoId}/thumbnails`, { method: 'POST', body: form, cache: 'no-store' });
+      if (r.ok) return;
+      await sleep(8_000);
+    }
+  } catch {
+    /* keep the auto thumbnail */
+  }
 }
 
 export async function publishFacebook(p: SocialPost, conn: MetaConnection): Promise<PlatformResult> {
@@ -262,6 +290,7 @@ export async function publishFacebook(p: SocialPost, conn: MetaConnection): Prom
       params: { file_url: (video ?? first).url, description: p.caption },
     });
     postId = v.id;
+    if (p.cover) await setFacebookVideoCover(v.id, p.cover.url, token);
   } else if (p.media.length > 1) {
     // Facebook multi-photo post: upload each unpublished, then one feed post that attaches them.
     const ids: string[] = [];

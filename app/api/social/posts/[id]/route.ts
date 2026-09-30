@@ -14,7 +14,7 @@ type Params = { params: { id: string } };
  * PATCH /api/social/posts/:id
  * body: {
  *   action?: 'approve' | 'to-draft' | 'request-changes' | 'publish-now' | 'retry',
- *   caption?, platforms?, scheduledAt?, note?
+ *   caption?, platforms?, scheduledAt?, note?, cover? ({ url, pathname? } | null — reels only)
  * }
  * Every edit to a scheduled post re-queues its timer, so moving a post (drag
  * in the calendar) can never leave a stale one behind.
@@ -32,6 +32,15 @@ export async function PATCH(req: Request, { params }: Params) {
   if (editable && Array.isArray(b.platforms)) {
     const pl = b.platforms.filter((x: any) => x === 'instagram' || x === 'facebook') as Platform[];
     if (pl.length) p.platforms = pl;
+  }
+  // Reel cover: { url, pathname? } to set/replace, null to remove (Instagram then uses the first frame).
+  if (editable && p.kind === 'REEL' && b.cover !== undefined) {
+    const old = p.cover;
+    if (b.cover === null) p.cover = undefined;
+    else if (typeof b.cover?.url === 'string' && /^https:\/\//.test(b.cover.url))
+      p.cover = { url: b.cover.url, type: 'image', pathname: typeof b.cover.pathname === 'string' ? b.cover.pathname : undefined };
+    if (old && old.url !== p.cover?.url && process.env.BLOB_READ_WRITE_TOKEN) await blobDel(old.url).catch(() => undefined);
+    addHistory(p, p.cover ? 'Cover image set' : 'Cover image removed');
   }
   if (editable && (typeof b.scheduledAt === 'number' || b.scheduledAt === null)) {
     if (b.scheduledAt && b.scheduledAt < Date.now() - 60_000 && p.status === 'scheduled')
@@ -89,7 +98,8 @@ export async function DELETE(_req: Request, { params }: Params) {
   if (!p) return NextResponse.json({ ok: true });
   if (p.status === 'publishing') return NextResponse.json({ error: 'It is publishing right now.' }, { status: 409 });
   await unschedulePost(p);
-  if (process.env.BLOB_READ_WRITE_TOKEN && p.media.length) await blobDel(p.media.map((m) => m.url)).catch(() => undefined);
+  const urls = [...p.media.map((m) => m.url), ...(p.cover ? [p.cover.url] : [])];
+  if (process.env.BLOB_READ_WRITE_TOKEN && urls.length) await blobDel(urls).catch(() => undefined);
   await deletePost(p.id);
   // Deleting here never deletes a post that's already live on Instagram/Facebook — that stays up.
   return NextResponse.json({ ok: true, wasPublished: p.status === 'published' });

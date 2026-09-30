@@ -109,12 +109,13 @@ export async function cleanupOldMedia(): Promise<number> {
   if (!process.env.BLOB_READ_WRITE_TOKEN) return 0;
   const now = Date.now();
   const old = (await listPosts(now - 60 * 86_400_000, now - 14 * 86_400_000)).filter(
-    (p) => p.status === 'published' && p.media.length,
+    (p) => p.status === 'published' && (p.media.length || p.cover),
   );
   for (const p of old) {
-    await blobDel(p.media.map((m) => m.url)).catch(() => undefined);
+    await blobDel([...p.media.map((m) => m.url), ...(p.cover ? [p.cover.url] : [])]).catch(() => undefined);
     await updatePost(p.id, (x) => {
       x.media = [];
+      x.cover = undefined;
     });
   }
   return old.length;

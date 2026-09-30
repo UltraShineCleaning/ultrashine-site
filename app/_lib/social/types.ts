@@ -39,6 +39,12 @@ export type SocialPost = {
   city?: string;
   /** Text burned on top of the image/video in the preview (optional). */
   overlay?: string;
+  /**
+   * Reels only: a JPEG cover (9:16). Instagram shows it in the Reels tab (cover_url);
+   * Facebook gets it as the preferred video thumbnail. Keep the title inside the middle
+   * square — the grid and feed crop the cover. Without one, Instagram uses the first frame.
+   */
+  cover?: MediaItem;
   qstashMessageId?: string;
   results: Partial<Record<Platform, PlatformResult>>;
   history: { at: number; text: string }[];

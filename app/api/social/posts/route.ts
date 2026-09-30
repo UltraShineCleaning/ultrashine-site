@@ -24,7 +24,8 @@ export async function GET(req: Request) {
 
 /**
  * POST /api/social/posts — create a post.
- * body: { kind, media[], caption, platforms[], scheduledAt|null, mode: 'draft' | 'schedule' | 'now', jobRef?, city?, overlay? }
+ * body: { kind, media[], cover?, caption, platforms[], scheduledAt|null, mode: 'draft' | 'schedule' | 'now', jobRef?, city?, overlay? }
+ * cover (reels only): { url, pathname? } — a public JPEG used as the reel's cover.
  */
 export async function POST(req: Request) {
   const deny = denyUnlessAdmin();
@@ -40,6 +41,11 @@ export async function POST(req: Request) {
     : [];
   if (!media.length) return NextResponse.json({ error: 'Add a photo or video first.' }, { status: 400 });
   if (kind === 'REEL' && !media.some((m) => m.type === 'video')) return NextResponse.json({ error: 'A reel needs a video.' }, { status: 400 });
+  // Optional reel cover — a public JPEG (Instagram only accepts JPEG covers).
+  const cover: MediaItem | undefined =
+    kind === 'REEL' && typeof b.cover?.url === 'string' && /^https:\/\//.test(b.cover.url)
+      ? { url: b.cover.url, type: 'image', pathname: typeof b.cover.pathname === 'string' ? b.cover.pathname : undefined }
+      : undefined;
 
   const platforms: Platform[] = Array.isArray(b.platforms) ? b.platforms.filter((p: any) => PLATFORMS.includes(p)) : PLATFORMS;
   if (!platforms.length) return NextResponse.json({ error: 'Pick Instagram, Facebook or both.' }, { status: 400 });
@@ -53,6 +59,7 @@ export async function POST(req: Request) {
     id: newId(),
     kind,
     media,
+    cover,
     caption,
     platforms,
     scheduledAt: mode === 'now' ? Date.now() : scheduledAt,

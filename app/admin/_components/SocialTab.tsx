@@ -99,7 +99,7 @@ const fromInputs = (d: string, t: string) => {
   const [h, mi] = (t || '09:00').split(':').map(Number);
   return y && m && dd ? etToMs(y, m, dd, h || 0, mi || 0) : null;
 };
-const thumbOf = (p: SocialPost) => p.media.find((m) => m.type === 'image')?.url ?? null;
+const thumbOf = (p: SocialPost) => p.cover?.url ?? p.media.find((m) => m.type === 'image')?.url ?? null;
 const cx = (...c: (string | false | undefined | null)[]) => c.filter(Boolean).join(' ');
 
 function Chip({ status }: { status: PostStatus }) {
@@ -871,6 +871,12 @@ function PostDrawer(props: {
         <div className={s.dB}>
           <IgPreview kind={p.kind} media={p.media} caption={caption} />
           {!p.media.length && <div className={s.small + ' ' + s.mut} style={{ textAlign: 'center' }}>Media was cleared from storage after publishing — the post lives on Instagram/Facebook.</div>}
+          {p.kind === 'REEL' && p.cover && (
+            <div className={s.coverRow}>
+              <div className={s.coverTh} style={{ backgroundImage: `url(${p.cover.url})` }} />
+              <span className={cx(s.small, s.mut)}>Cover set</span>
+            </div>
+          )}
 
           {errs.length > 0 && (
             <div className={s.alertRed}>
@@ -974,6 +980,7 @@ function PostDrawer(props: {
 /* ================================ COMPOSER ================================ */
 
 type Up = { key: string; name: string; type: 'image' | 'video'; preview: string; url?: string; pathname?: string; progress: number; error?: string };
+type Cover = { key: string; preview: string; url?: string; pathname?: string; progress: number; error?: string };
 
 function Composer(props: {
   init: { day?: number; job?: RecentJob };
@@ -986,6 +993,8 @@ function Composer(props: {
 }) {
   const [kind, setKind] = useState<PostKind>('POST');
   const [items, setItems] = useState<Up[]>([]);
+  const [cover, setCover] = useState<Cover | null>(null);
+  const coverInput = useRef<HTMLInputElement>(null);
   const [caption, setCaption] = useState('');
   const [platforms, setPlatforms] = useState<Platform[]>(['instagram', 'facebook']);
   const [job, setJob] = useState(props.init.job ? `${props.init.job.title}${props.init.job.city ? ` · ${props.init.job.city}` : ''}` : '');
@@ -1017,8 +1026,35 @@ function Composer(props: {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [kind]);
 
-  const uploading = items.some((i) => !i.url && !i.error);
+  // The cover only counts while this is a reel — switching kind keeps it in state but never sends it.
+  const coverUploading = kind === 'REEL' && !!cover && !cover.url && !cover.error;
+  const uploading = items.some((i) => !i.url && !i.error) || coverUploading;
   const ready = items.filter((i) => i.url);
+
+  async function pickCover(files: FileList | null) {
+    const f = files?.[0];
+    if (!f) return;
+    if (!props.status?.uploads) return props.toast('Uploads are not set up yet — connect a Blob store in Vercel → Storage.');
+    if (!f.type.startsWith('image/')) return props.toast('The cover must be a photo.');
+    const key = Math.random().toString(36).slice(2);
+    setCover({ key, preview: URL.createObjectURL(f), progress: 0 });
+    // Only the latest pick may land — an older upload finishing late is ignored.
+    const mine = (patch: Partial<Cover>) => setCover((c) => (c?.key === key ? { ...c, ...patch } : c));
+    try {
+      const body = await toJpeg(f, false); // keep the 9:16 frame uncropped, like stories
+      const safe = f.name.replace(/\.[^.]+$/, '').replace(/[^a-z0-9-]+/gi, '-').slice(0, 40) || 'cover';
+      const res = await upload(`social/cover-${Date.now()}-${safe}.jpg`, body, {
+        access: 'public',
+        handleUploadUrl: '/api/social/upload',
+        contentType: 'image/jpeg',
+        onUploadProgress: ({ percentage }) => mine({ progress: percentage }),
+      });
+      mine({ url: res.url, pathname: res.pathname, progress: 100 });
+    } catch (e) {
+      mine({ error: (e as Error).message });
+      props.toast((e as Error).message);
+    }
+  }
 
   async function addFiles(files: FileList | null) {
     if (!files?.length) return;
@@ -1080,9 +1116,10 @@ function Composer(props: {
     setBusy(true);
     try {
       const media: MediaItem[] = ready.map((i) => ({ url: i.url!, type: i.type, pathname: i.pathname }));
+      const coverBody = kind === 'REEL' && cover?.url ? { cover: { url: cover.url, pathname: cover.pathname } } : {};
       const r = await api<{ post: SocialPost; result?: { ok: boolean; errors?: string[] } }>('/api/social/posts', {
         method: 'POST',
-        json: { kind, media, caption, platforms, scheduledAt: typeof when === 'number' ? when : null, mode: when === 'now' && mode !== 'draft' ? 'now' : mode, jobRef: job || undefined, city: city || undefined },
+        json: { kind, media, ...coverBody, caption, platforms, scheduledAt: typeof when === 'number' ? when : null, mode: when === 'now' && mode !== 'draft' ? 'now' : mode, jobRef: job || undefined, city: city || undefined },
       });
       const msg =
         r.result && !r.result.ok ? r.result.errors?.[0] ?? "It didn't publish — open it to see why." :
@@ -1139,6 +1176,26 @@ function Composer(props: {
                       {!i.url && !i.error && <div className={s.thBar} style={{ width: `${i.progress}%` }} />}
                     </div>
                   ))}
+                </div>
+              )}
+              {kind === 'REEL' && (
+                <div className={s.coverRow}>
+                  <div className={cx(s.coverTh, !cover && s.coverEmpty)} style={cover ? { backgroundImage: `url(${cover.url ?? cover.preview})` } : undefined}>
+                    {cover && !cover.url && !cover.error && <div className={s.thBar} style={{ width: `${cover.progress}%` }} />}
+                  </div>
+                  <div className={s.coverTx}>
+                    <b style={{ fontSize: 13 }}>Cover</b>
+                    {cover?.error ? (
+                      <span className={cx(s.small, s.danger)}>{cover.error}</span>
+                    ) : (
+                      <span className={cx(s.small, s.mut)}>
+                        {!cover ? 'Optional — without one, Instagram uses the first frame.' : !cover.url ? 'Uploading…' : 'Shown on your grid and in the Reels tab. JPEG, 9:16.'}
+                      </span>
+                    )}
+                  </div>
+                  <button type="button" className={cx(s.btn, s.sm)} onClick={() => coverInput.current?.click()}>{cover ? 'Change' : 'Add cover'}</button>
+                  {cover && <button type="button" className={cx(s.btn, s.sm, s.ghost)} onClick={() => setCover(null)}>Remove</button>}
+                  <input ref={coverInput} type="file" accept="image/*" style={{ display: 'none' }} onChange={(e) => { pickCover(e.target.files); e.target.value = ''; }} />
                 </div>
               )}
               <div className={s.row}>

@@ -17,12 +17,12 @@ export async function GET(req: Request) {
   if (deny) return deny;
   const u = new URL(req.url);
   // Month plans made in a Claude session appear here on the first visit (see importer.ts).
-  await importPlannedPosts().catch((e) => console.error('[social] plan import failed', e));
+  const planImport = await importPlannedPosts().catch((e) => ({ error: (e as Error).message }));
   const now = Date.now();
   const from = Number(u.searchParams.get('from')) || now - 14 * 86_400_000;
   const to = Number(u.searchParams.get('to')) || now + 28 * 86_400_000;
   const posts = await listPosts(from, to);
-  return NextResponse.json({ posts });
+  return NextResponse.json({ posts, planImport });
 }
 
 /**

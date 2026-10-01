@@ -538,11 +538,11 @@ export function buildWorld(now = Date.now()) {
     { kind: 'REEL', imgs: ['cover_oven.jpg'], caption: 'Inside the oven 👀 Wait for the after. #satisfying #deepcleaning', cover: 'cover_oven.jpg' },
     { kind: 'REEL', imgs: ['cover_stove.jpg'], caption: 'The side nobody cleans. Before → after on a Boca kitchen. 🔥', cover: 'cover_stove.jpg' },
     { kind: 'REEL', imgs: ['cover_grates.jpg'], caption: 'Grates, degreased. Sound on for the scrub. 🎧', cover: 'cover_grates.jpg' },
-    { kind: 'REEL', imgs: ['cover_shower.jpg'], caption: 'The shower door track — you know the one. 😬➡️✨', cover: 'cover_shower.jpg' },
+    { kind: 'REEL', imgs: ['cover_shower.jpg'], caption: 'The shower drain nobody checks. 4 steps to clean it — save this. 👀', cover: 'cover_shower.jpg' },
     { kind: 'REEL', imgs: ['cover_bed.jpg'], caption: 'Hotel corners, every bed. How we make a bed in 60 seconds. 🛏️', cover: 'cover_bed.jpg' },
     { kind: 'REEL', imgs: ['cover_bedroom.jpg'], caption: 'Bedroom reset, sped up. Delray Beach, Tuesday morning. ⏩', cover: 'cover_bedroom.jpg' },
     { kind: 'REEL', imgs: ['cover_floors.jpg'], caption: 'Every inch, every corner. Hardwood floors done right. 🪵', cover: 'cover_floors.jpg' },
-    { kind: 'REEL', imgs: ['cover_fridge.jpg'], caption: 'Fridge, reset. Add it to your next deep clean. 🧊', cover: 'cover_fridge.jpg' },
+    { kind: 'REEL', imgs: ['cover_fridge.jpg'], caption: '4 steps to a fresh fridge — save this for cleaning day. 🧊', cover: 'cover_fridge.jpg' },
   ];
   const STORIES: Plan[] = [
     { kind: 'STORY', imgs: ['oct01_am_room.jpg'], caption: '' },

@@ -170,6 +170,27 @@ async function waitForContainer(id: string, token: string, maxMs = 240_000): Pro
   throw new MetaError('Instagram is still processing the video. Tap Retry in a minute.');
 }
 
+/**
+ * Location tag ("Boca Raton, Florida") on every feed post, reel and carousel.
+ * IG_LOCATION_ID = the ID of the Facebook Page for the place (Meta's location_id). Instagram's
+ * API does NOT allow a location on Stories (stickers aren't supported there) or on the single
+ * items inside a carousel, only on the carousel itself.
+ * If Meta ever rejects the ID, we post again WITHOUT the location: a missing tag must never stop
+ * a post going out.
+ * https://developers.facebook.com/docs/instagram-platform/instagram-graph-api/reference/ig-user/media/
+ */
+const LOCATION_ID = (process.env.IG_LOCATION_ID || '').trim();
+async function createTopContainer(ig: string, token: string, params: Record<string, unknown>): Promise<{ id: string }> {
+  if (!/^\d{5,25}$/.test(LOCATION_ID)) return graph<{ id: string }>(`${ig}/media`, { method: 'POST', token, params });
+  try {
+    return await graph<{ id: string }>(`${ig}/media`, { method: 'POST', token, params: { ...params, location_id: LOCATION_ID } });
+  } catch (e) {
+    if (!/location/i.test(String((e as Error)?.message))) throw e;
+    console.warn('[social] location_id rejected, posting without it:', (e as Error).message);
+    return graph<{ id: string }>(`${ig}/media`, { method: 'POST', token, params });
+  }
+}
+
 function imgOrVideo(m: MediaItem) {
   return m.type === 'video' ? { video_url: m.url } : { image_url: m.url };
 }
@@ -189,12 +210,10 @@ export async function publishInstagram(p: SocialPost, conn: MetaConnection): Pro
   } else if (p.kind === 'REEL') {
     const video = p.media.find((m) => m.type === 'video');
     if (!video) throw new MetaError('A reel needs a video.');
-    const c = await graph<{ id: string }>(`${ig}/media`, {
-      method: 'POST',
-      token,
-      // cover_url: our designed cover (JPEG, 9:16). Instagram crops the middle 1:1 when it
-      // shares the reel to the feed, so covers keep the title inside the middle square.
-      params: { media_type: 'REELS', video_url: video.url, caption: p.caption, share_to_feed: 'true', cover_url: p.cover?.url },
+    // cover_url: our designed cover (JPEG, 9:16). Instagram crops the middle 1:1 when it
+    // shares the reel to the feed, so covers keep the title inside the middle square.
+    const c = await createTopContainer(ig, token, {
+      media_type: 'REELS', video_url: video.url, caption: p.caption, share_to_feed: 'true', cover_url: p.cover?.url,
     });
     containerId = c.id;
     await waitForContainer(containerId, token);
@@ -209,18 +228,14 @@ export async function publishInstagram(p: SocialPost, conn: MetaConnection): Pro
       if (m.type === 'video') await waitForContainer(c.id, token);
       children.push(c.id);
     }
-    const c = await graph<{ id: string }>(`${ig}/media`, {
-      method: 'POST',
-      token,
-      params: { media_type: 'CAROUSEL', children: children.join(','), caption: p.caption },
-    });
+    const c = await createTopContainer(ig, token, { media_type: 'CAROUSEL', children: children.join(','), caption: p.caption });
     containerId = c.id;
   } else {
-    const c = await graph<{ id: string }>(`${ig}/media`, {
-      method: 'POST',
+    const c = await createTopContainer(
+      ig,
       token,
-      params: first.type === 'video' ? { media_type: 'REELS', video_url: first.url, caption: p.caption } : { image_url: first.url, caption: p.caption },
-    });
+      first.type === 'video' ? { media_type: 'REELS', video_url: first.url, caption: p.caption } : { image_url: first.url, caption: p.caption },
+    );
     containerId = c.id;
     if (first.type === 'video') await waitForContainer(containerId, token);
   }

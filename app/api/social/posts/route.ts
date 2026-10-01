@@ -3,6 +3,7 @@ import { ACTOR, denyUnlessAdmin } from '../../../_lib/social/guard';
 import { publishPost, schedulePost } from '../../../_lib/social/publisher';
 import { addHistory, getPost, listPosts, newId, savePost } from '../../../_lib/social/store';
 import type { MediaItem, Platform, PostKind, SocialPost } from '../../../_lib/social/types';
+import { importPlannedPosts } from '../../../_lib/social/importer';
 
 export const dynamic = 'force-dynamic';
 export const maxDuration = 300; // "Post now" can wait on Instagram video processing
@@ -15,6 +16,8 @@ export async function GET(req: Request) {
   const deny = denyUnlessAdmin();
   if (deny) return deny;
   const u = new URL(req.url);
+  // Month plans made in a Claude session appear here on the first visit (see importer.ts).
+  await importPlannedPosts().catch((e) => console.error('[social] plan import failed', e));
   const now = Date.now();
   const from = Number(u.searchParams.get('from')) || now - 14 * 86_400_000;
   const to = Number(u.searchParams.get('to')) || now + 28 * 86_400_000;

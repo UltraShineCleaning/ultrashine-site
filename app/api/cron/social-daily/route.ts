@@ -5,6 +5,7 @@ import { refreshInsights } from '../../../_lib/social/insights';
 import { snapshotReviewCount } from '../../../_lib/insights/build';
 import { syncVercelDays, vercelConfigured } from '../../../_lib/insights/vercel';
 import { cleanupOldMedia, publishOverdue } from '../../../_lib/social/publisher';
+import { importPlannedPosts } from '../../../_lib/social/importer';
 
 export const dynamic = 'force-dynamic';
 export const maxDuration = 300;
@@ -34,6 +35,7 @@ export async function GET(req: Request) {
       out[name] = { error: (e as Error).message };
     }
   };
+  await step('planImport', importPlannedPosts);
   await step('overduePublished', publishOverdue);
   await step('reviewRequests', () => sweepCompletedVisits());
   await step('insights', async () => {

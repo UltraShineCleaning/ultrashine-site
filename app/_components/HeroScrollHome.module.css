@@ -34,7 +34,7 @@
   object-position: center;
   /* Hint to compositor: this layer redraws on every scroll tick */
   will-change: transform;
-  background: var(--navy-deep);
+  background: var(--navy-deep) url('/videos/walkthrough_poster.webp') center / cover no-repeat;
   pointer-events: none;
 }
 

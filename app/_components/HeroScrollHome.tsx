@@ -351,7 +351,12 @@ export default function HeroScrollHome() {
         // MATCH the video exactly. The old poster was 4K over a 1080p video,
         // so the hero visibly softened the moment the first frame decoded —
         // the opposite of the pixel-identical handoff this was meant to be.
-        poster="/videos/walkthrough_poster.webp"
+        // Poster now lives in CSS (.video background), not the poster
+        // attribute: browsers fetch a poster even when the section is
+        // display:none, so every phone was downloading 116 KB it never shows.
+        // A CSS background on a display:none element is never fetched, and
+        // app/page.tsx preloads it for computers only. Same image, same
+        // pixel-identical handoff (cover + center, like object-fit).
         muted
         playsInline
         // preload="metadata" only fetches the moov atom + dimensions

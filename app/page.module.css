@@ -919,12 +919,12 @@
 /* ============ PROMISE ============ */
 .promise {
   padding: 72px 80px;
-  background:
-    linear-gradient(rgba(0, 44, 152, 0.88), rgba(0, 44, 152, 0.92)),
-    url('/images/flow_sparkles.jpg') center/cover no-repeat;
+  /* Photo + blue wash come from <LazyBg> in page.tsx (loads only near the screen). */
+  background: #0a2f8f;
   color: var(--cream);
   position: relative;
   overflow: hidden;
+  isolation: isolate;
 }
 .promise::before {
   content: '✦';
@@ -1037,6 +1037,8 @@
   border-radius: var(--r-lg);
   position: relative;
   overflow: hidden;
+  isolation: isolate; /* LazyBg photo layer sits behind the tag */
+  background-color: var(--blue-tint);
   box-shadow: 0 20px 50px rgba(28, 97, 240, 0.12);
 }
 .faqImage::after {

@@ -1,6 +1,9 @@
 import Link from 'next/link';
 import { CITIES } from '../areas/_data/cities';
 import styles from './ServiceAreaMap.module.css';
+import ServiceAreaIllustration from './ServiceAreaIllustration';
+import ServiceAreaMapFacade from './ServiceAreaMapFacade';
+import LazyBg from './LazyBg';
 
 /**
  * Service Area Map — Google Maps embed centered on the Palm Beach + Broward
@@ -37,6 +40,11 @@ export default function ServiceAreaMap() {
 
   return (
     <section className={styles.section}>
+      <LazyBg
+        src="/images/hero_3d_map_area.jpg"
+        position="center top"
+        overlay="linear-gradient(180deg, rgba(255, 255, 255, 0.88) 0%, rgba(255, 255, 255, 0.96) 55%, rgba(255, 255, 255, 0.99) 100%)"
+      />
       <div className={styles.inner}>
         <p className={styles.eyebrow}>WHERE WE CLEAN</p>
         <h2 className={`fraunces ${styles.head}`}>
@@ -47,16 +55,11 @@ export default function ServiceAreaMap() {
           inland communities. Click your city to see neighborhoods we cover.
         </p>
 
-        <div className={styles.mapWrap}>
-          <iframe
-            title="Ultra Shine Cleaning service area — Palm Beach + Broward County, Florida"
-            src={MAP_EMBED_URL}
-            className={styles.mapIframe}
-            loading="lazy"
-            referrerPolicy="no-referrer-when-downgrade"
-            allowFullScreen
-          />
-        </div>
+        {/* Speed (2026-10-01): our own drawn map paints instantly; the heavy
+            Google map loads only if someone taps "Open the live map". */}
+        <ServiceAreaMapFacade embedUrl={MAP_EMBED_URL}>
+          <ServiceAreaIllustration cities={[...palmBeach, ...broward]} />
+        </ServiceAreaMapFacade>
 
         <div className={styles.citiesGroups}>
           <div className={styles.citiesGroup}>

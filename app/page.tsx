@@ -5,6 +5,7 @@ import FaqSection from './_components/FaqSection';
 import HeroScrollHome from './_components/HeroScrollHome';
 import HeroVideoMobile from './_components/HeroVideoMobile';
 import ServiceAreaMap from './_components/ServiceAreaMap';
+import LazyBg from './_components/LazyBg';
 import MotionSection, { MotionItem } from './_components/MotionSection';
 import TiltCard from './_components/TiltCard';
 import CountUp from './_components/CountUp';
@@ -70,6 +71,17 @@ export default async function HomePage() {
 
   return (
     <main>
+      {/* Desktop hero poster = the first big thing painted on a computer, so it's
+          preloaded — but ONLY on computers (media), and only on this page. Phones
+          show the video hero instead and never download it. */}
+      <link
+        rel="preload"
+        as="image"
+        href="/videos/walkthrough_poster.webp"
+        type="image/webp"
+        media="(min-width: 1025px)"
+        fetchPriority="high"
+      />
       {/*
         The homepage's ONE h1. Until 2026-09-19 this page shipped TEN of them:
         HeroScrollHome and HeroScrollMobile each render an h1 per scene and both
@@ -412,6 +424,7 @@ export default async function HomePage() {
 
       {/* ============ PROMISE ============ */}
       <MotionSection className={styles.promise}>
+        <LazyBg src="/images/flow_sparkles.jpg" overlay="linear-gradient(rgba(0, 44, 152, 0.88), rgba(0, 44, 152, 0.92))" />
         <div className={styles.promiseGrid}>
           <div>
             <div className={styles.promiseTag}>THE PROMISE</div>

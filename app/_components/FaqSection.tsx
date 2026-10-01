@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import styles from '../page.module.css';
+import LazyBg from './LazyBg';
 
 const FAQS = [
   {
@@ -56,10 +57,8 @@ export default function FaqSection() {
           <p className={`fraunces ${styles.faqHeadBody}`}>
             Everything we wish every new client already knew. Don't see yours? Just text us — we answer fast.
           </p>
-          <div
-            className={styles.faqImage}
-            style={{ backgroundImage: 'url(/images/flow_bathroom_sunset.jpg)' }}
-          >
+          <div className={styles.faqImage}>
+            <LazyBg src="/images/flow_bathroom_sunset.jpg" />
             <div className={styles.faqImageTag}>
               <div className={styles.photoTagEye}>DETAIL · CARE · TRUST</div>
               <div className={`fraunces ${styles.photoTagH}`}>Every corner.<br />Every visit.</div>

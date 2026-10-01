@@ -3,6 +3,7 @@ import { useRef } from 'react';
 import { motion, useMotionValue, useSpring, useTransform, useReducedMotion } from 'framer-motion';
 import Link from 'next/link';
 import styles from '../page.module.css';
+import { useLazyBgUrl } from './LazyBg';
 
 type Props = {
   href: string;
@@ -16,6 +17,8 @@ type Props = {
 export default function TiltCard({ href, image, label, points, wide }: Props) {
   const ref = useRef<HTMLAnchorElement>(null);
   const reducedMotion = useReducedMotion();
+  // Photo downloads only when the card is near the screen, small WebP on phones.
+  const bgUrl = useLazyBgUrl(image, ref);
 
   // Track mouse position over the card (0 to 1 on each axis)
   const mouseX = useMotionValue(0.5);
@@ -76,7 +79,7 @@ export default function TiltCard({ href, image, label, points, wide }: Props) {
         <motion.div
           className={styles.serviceImg}
           style={{
-            backgroundImage: `url(${image})`,
+            backgroundImage: bgUrl ? `url(${bgUrl})` : undefined,
             backgroundPositionX: reducedMotion ? '50%' : bgX,
             backgroundPositionY: reducedMotion ? '50%' : bgY,
           }}

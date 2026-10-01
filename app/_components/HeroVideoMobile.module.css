@@ -48,6 +48,12 @@
   right: 20px;
   top: calc(env(safe-area-inset-top, 0px) + 104px);
   z-index: 2;
+  transition: opacity 0.35s ease;
+}
+/* While they fill in steps 2 and 3 the headline steps aside so the screen stays calm. */
+.copyAway {
+  opacity: 0;
+  pointer-events: none;
 }
 .eyebrow {
   margin: 0;
@@ -101,8 +107,318 @@
   background: #fff;
   color: #0f1b33;
   border-radius: 26px;
-  padding: 16px 16px 13px;
+  overflow: hidden;
   box-shadow: 0 4px 12px rgba(0, 44, 152, 0.1), 0 24px 60px -16px rgba(0, 10, 40, 0.55);
+}
+
+/* ---- the 3 steps slide sideways inside the one card ----
+   Every step sits in the same grid cell, so the card is always as tall as the
+   tallest step (step 1) and never grows down the page. */
+.track {
+  display: grid;
+}
+.pane {
+  grid-area: 1 / 1;
+  display: flex;
+  flex-direction: column;
+  padding: 16px 16px 13px;
+  min-width: 0;
+  visibility: hidden;
+  transition: transform 0.45s cubic-bezier(0.3, 0.8, 0.25, 1), visibility 0s linear 0.45s;
+}
+.paneOn {
+  visibility: visible;
+  transition: transform 0.45s cubic-bezier(0.3, 0.8, 0.25, 1), visibility 0s;
+}
+.paneHead {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 28px;
+}
+.dots {
+  display: flex;
+  gap: 5px;
+  margin-left: auto;
+}
+.dots b {
+  width: 18px;
+  height: 4px;
+  border-radius: 4px;
+  background: #dfe6f3;
+}
+.dots b.dotOn {
+  background: var(--blue, #1c61f0);
+}
+.card .back {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 0;
+  background: var(--blue-tint, #eaf1ff);
+  color: var(--blue, #1c61f0);
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1;
+  padding: 0 0 2px;
+  cursor: pointer;
+  flex: 0 0 auto;
+}
+.chip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 9px;
+  padding: 7px 10px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #f3f7ff 0%, #eaf1ff 100%);
+  border: 1px solid rgba(28, 97, 240, 0.14);
+  font-size: 11px;
+  color: var(--gray, #5a5f6b);
+  white-space: nowrap;
+}
+.chip span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.chip strong {
+  margin-left: auto;
+  color: var(--blue-deep, #002c98);
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+}
+.card .chip button {
+  border: 0;
+  background: none;
+  color: var(--blue, #1c61f0);
+  font-size: 11px;
+  font-weight: 600;
+  padding: 0;
+  cursor: pointer;
+}
+
+/* ---- boxes (16px text so iPhones don't zoom in when tapped) ---- */
+.field {
+  position: relative;
+  display: block;
+  margin-top: 8px;
+}
+.field input {
+  width: 100%;
+  border: 1.5px solid rgba(28, 97, 240, 0.14);
+  border-radius: 14px;
+  padding: 19px 12px 5px 38px;
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 16px;
+  color: #0f1b33;
+  background: #fff;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  -webkit-appearance: none;
+  appearance: none;
+}
+.field input::placeholder {
+  color: #9aa1ad;
+}
+.field input:focus {
+  border-color: var(--blue, #1c61f0);
+  box-shadow: 0 0 0 4px rgba(28, 97, 240, 0.1);
+}
+.field > span {
+  position: absolute;
+  left: 38px;
+  top: 5px;
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gray, #5a5f6b);
+  pointer-events: none;
+}
+.field > span b {
+  color: var(--blue, #1c61f0);
+}
+.field svg {
+  position: absolute;
+  left: 12px;
+  top: 16px;
+  width: 17px;
+  height: 17px;
+  fill: none;
+  stroke: var(--blue, #1c61f0);
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  pointer-events: none;
+}
+.fieldBad input {
+  border-color: #e0607a;
+  box-shadow: 0 0 0 4px rgba(224, 96, 122, 0.12);
+}
+.fieldBad {
+  animation: usShake 0.35s;
+}
+@keyframes usShake {
+  25% {
+    transform: translateX(-5px);
+  }
+  75% {
+    transform: translateX(5px);
+  }
+}
+.two {
+  display: grid;
+  grid-template-columns: 1fr 1.25fr;
+  gap: 7px;
+}
+.lab {
+  display: flex;
+  justify-content: space-between;
+  margin: 11px 0 0;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gray, #5a5f6b);
+}
+.lab small {
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: none;
+}
+.adds {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  margin-top: 6px;
+}
+.add {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 4px;
+  border: 1.5px solid rgba(28, 97, 240, 0.14);
+  border-radius: 12px;
+  padding: 7px 9px;
+  background: #fff;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: #0f1b33;
+  text-align: left;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+.add small {
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--gray, #5a5f6b);
+}
+.addOn {
+  border-color: var(--blue, #1c61f0);
+  background: var(--blue-tint, #eaf1ff);
+  color: var(--blue-deep, #002c98);
+}
+.addOn small {
+  color: var(--blue, #1c61f0);
+}
+.fine,
+.fineErr {
+  margin: 8px 0 0;
+  font-size: 10.5px;
+  text-align: center;
+  color: var(--gray, #5a5f6b);
+}
+.fineErr {
+  color: #b83a3a;
+  font-weight: 500;
+}
+.fineErr a {
+  color: inherit;
+}
+
+/* ---- sent ---- */
+.done {
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+.okc {
+  width: 62px;
+  height: 62px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--blue, #1c61f0), var(--blue-deep, #002c98));
+  display: grid;
+  place-items: center;
+  color: #fff;
+  font-size: 28px;
+  box-shadow: 0 14px 30px -12px rgba(28, 97, 240, 0.8);
+  transform: scale(0.6);
+  opacity: 0;
+  transition: transform 0.5s 0.25s cubic-bezier(0.3, 1.6, 0.4, 1), opacity 0.4s 0.25s;
+}
+.paneOn .okc {
+  transform: scale(1);
+  opacity: 1;
+}
+.doneTitle {
+  margin: 14px 0 0;
+  font-size: 21px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+.doneTitle em {
+  font-style: italic;
+  color: var(--blue, #1c61f0);
+}
+.doneBody {
+  margin: 6px 0 0;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--gray, #5a5f6b);
+}
+.tl {
+  width: 100%;
+  list-style: none;
+  margin: 14px 0 0;
+  padding: 2px 12px;
+  border: 1px solid rgba(28, 97, 240, 0.14);
+  border-radius: 16px;
+  text-align: left;
+}
+.tl li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+  font-size: 12px;
+  color: var(--gray, #5a5f6b);
+}
+.tl li + li {
+  border-top: 1px solid #eef1f6;
+}
+.tl b {
+  color: #0f1b33;
+}
+.tl i {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--blue-tint, #eaf1ff);
+  color: var(--blue-deep, #002c98);
+  font-style: normal;
+  font-weight: 700;
+  font-size: 11px;
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+}
+.call {
+  margin-top: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--blue, #1c61f0);
+  text-decoration: none;
 }
 .kick {
   margin: 0;
@@ -334,7 +650,11 @@
 }
 
 .cta {
-  margin-top: 10px;
+  margin-top: auto;
+  width: 100%;
+  border: 0;
+  cursor: pointer;
+  font-family: var(--font-poppins), sans-serif;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -359,6 +679,17 @@
 }
 .cta:active i {
   transform: translateX(3px);
+}
+.ctaOff {
+  opacity: 0.45;
+  box-shadow: none;
+}
+.cta:disabled {
+  opacity: 0.7;
+}
+/* step 1 keeps its 10px gap above the button */
+.price + .cta {
+  margin-top: 10px;
 }
 
 .trust {
@@ -392,7 +723,7 @@
   .rate {
     display: none;
   }
-  .card {
+  .pane {
     padding: 13px 13px 11px;
   }
   .services {
@@ -408,6 +739,9 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .pane,
+  .paneOn,
+  .okc,
   .segPill,
   .svc,
   .svcIco {

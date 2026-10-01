@@ -48,7 +48,7 @@ export default function QuotePage() {
   const [street, setStreet] = useState('');
   const [city, setCity] = useState('Boca Raton');
   const [zip, setZip] = useState('33428');
-  const [addOns, setAddOns] = useState<Set<AddOnKey>>(() => new Set<AddOnKey>(['oven']));
+  const [addOns, setAddOns] = useState<Set<AddOnKey>>(() => new Set<AddOnKey>()); // nothing pre-ticked: extras are the customer's choice
   const [first, setFirst] = useState('');
   const [last, setLast] = useState('');
   const [phone, setPhone] = useState('');
@@ -416,12 +416,11 @@ export default function QuotePage() {
               <div className={styles.successTestimonial}>
                 <div className={styles.successStars}>★ ★ ★ ★ ★</div>
                 <p className={styles.successQuote}>
-                  &ldquo;Francine and her team are very professional, easy to work
-                  with, accommodate customer schedules, and I highly recommend
-                  Ultra Shine Cleaning.&rdquo;
+                  &ldquo;Ultra Shine Cleaning is the BEST cleaning service that I&apos;ve had.
+                  They go over and beyond.&rdquo;
                 </p>
                 <p className={styles.successAttr}>
-                  Verified client · HomeAdvisor
+                  Cindy F. · Google
                 </p>
               </div>
 

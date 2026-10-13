@@ -1,5 +1,5 @@
 import { getJSON, kvConfigured, setJSON } from '../kv';
-import { schedulePost } from './publisher';
+import { schedulePost, unschedulePost } from './publisher';
 import { addHistory, getPost, listPosts, savePost } from './store';
 import type { MediaItem, PostKind, SocialPost } from './types';
 import oct2026 from '../../_data/social-schedule/2026-10.json';
@@ -34,9 +34,12 @@ type PlanItem = {
   note?: string;
 };
 
-const PLANS: { name: string; items: PlanItem[] }[] = [
-  { name: '2026-10', items: oct2026 as PlanItem[] },
-  { name: '2026-10-reels', items: oct2026Reels as PlanItem[] },
+// October 2026 is being posted BY HAND (owner, 2026-10-13: "so I can do this batch manually"),
+// so its plans are switched off here: nothing new gets created and nothing can double-post.
+// To use a plan again, set enabled: true.
+const PLANS: { name: string; items: PlanItem[]; enabled: boolean }[] = [
+  { name: '2026-10', items: oct2026 as PlanItem[], enabled: false },
+  { name: '2026-10-reels', items: oct2026Reels as PlanItem[], enabled: false },
 ];
 
 const doneKey = (id: string) => `social:import:${id}`;
@@ -60,6 +63,24 @@ export async function importPlannedPosts(): Promise<ImportResult> {
   }
   const now = Date.now();
   for (const plan of PLANS) {
+    if (!plan.enabled) {
+      // Switched-off plan: anything it already put on the calendar becomes a draft, so the
+      // owner's hand-posted copy is the only one that goes out. Runs once per plan.
+      if (!(await getJSON<string>(planKey(plan.name) + ':off'))) {
+        for (const it of plan.items) {
+          const p = await getPost(it.id).catch(() => null);
+          if (p && p.status === 'scheduled') {
+            await unschedulePost(p).catch(() => undefined);
+            p.status = 'draft';
+            p.qstashMessageId = undefined;
+            addHistory(p, 'Moved to drafts: October is being posted by hand');
+            await savePost(p);
+          }
+        }
+        await setJSON(planKey(plan.name) + ':off', '1', 60 * 60 * 24 * 120);
+      }
+      continue;
+    }
     if (await getJSON<string>(planKey(plan.name))) continue; // whole plan already handled
     for (const it of plan.items) {
       try {

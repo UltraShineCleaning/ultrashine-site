@@ -46,7 +46,7 @@ const SERVICES: { slug: string; name: string; desc: string }[] = [
   {
     slug: 'deep-cleaning',
     name: 'Deep Cleaning',
-    desc: 'Every-90-day reset. Baseboards hand-wiped, grout scrubbed, ceiling fans, light fixtures and vents. Inside oven, fridge, cabinets and windows are add-ons on every service except Post-Construction.',
+    desc: 'Every-90-day reset. Baseboards hand-wiped, grout scrubbed, ceiling fans, light fixtures and vents. Inside oven and inside fridge are add-ons on every service; inside cabinets and inside windows are add-ons except on Post-Construction, which includes them.',
   },
   {
     slug: 'move-in-out',

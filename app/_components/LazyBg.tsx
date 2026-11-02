@@ -29,7 +29,7 @@ export function useLazyBgUrl(src: string, ref: React.RefObject<Element>) {
           io.disconnect();
         }
       },
-      { rootMargin: '700px 0px' },
+      { rootMargin: '1400px 0px' }, // start fetching ~2 screens early so photos are there when you arrive
     );
     io.observe(el);
     return () => io.disconnect();

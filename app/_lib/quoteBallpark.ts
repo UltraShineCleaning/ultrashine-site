@@ -18,9 +18,10 @@ import {
  *
  * The add-on table lives here too, used by both the page and the email route.
  *
- * WHAT IS INCLUDED (owner, 2026-09-28): inside oven, fridge, windows and
- * cabinets are add-ons on EVERY service except Post-Construction, which is the
- * only one that includes them. The service pages say the same.
+ * WHAT IS INCLUDED (owner, corrected 2026-11-02): inside oven and inside fridge
+ * are add-ons on EVERY service, Post-Construction included. Inside cabinets and
+ * inside windows are add-ons on every service EXCEPT Post-Construction, which
+ * includes those two. The service pages say the same.
  */
 
 export type QuoteServiceKey = 'regular' | 'deep' | 'move' | 'post' | 'commercial';
@@ -34,13 +35,13 @@ export type QuoteAddOn = {
   high: number;
   /** Priced per window / per cabinet — can't be totalled without a count. */
   perItem?: boolean;
-  /** Services that already include this. Only Post-Construction does. */
+  /** Services that already include this (Post-Construction: inside cabinets + inside windows only). */
   includedIn: QuoteServiceKey[];
 };
 
 export const QUOTE_ADD_ONS: QuoteAddOn[] = [
-  { key: 'oven', name: 'Inside Oven', label: '+$40–$60', low: 40, high: 60, includedIn: ['post'] },
-  { key: 'fridge', name: 'Inside Fridge', label: '+$40–$100', low: 40, high: 100, includedIn: ['post'] },
+  { key: 'oven', name: 'Inside Oven', label: '+$40–$60', low: 40, high: 60, includedIn: [] },
+  { key: 'fridge', name: 'Inside Fridge', label: '+$40–$100', low: 40, high: 100, includedIn: [] },
   { key: 'windows', name: 'Inside Windows', label: '+$5–$10 / window', low: 0, high: 0, perItem: true, includedIn: ['post'] },
   { key: 'cabinets', name: 'Inside Cabinets', label: '+$5–$10 / cabinet', low: 0, high: 0, perItem: true, includedIn: ['post'] },
   { key: 'laundry', name: 'Laundry Fold', label: '+$35 up', low: 35, high: 70, includedIn: [] },

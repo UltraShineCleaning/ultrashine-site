@@ -81,7 +81,7 @@ const data: ServiceData = {
     thisLabel: 'Post-Construction',
     regularItems: [
       'Standard household dust + grime',
-      'Inside oven, fridge, dishwasher',
+      'Inside oven + fridge: add-ons',
       'Baseboards + door frames',
       'Grout scrubbed',
       'Done in lived-in home',
@@ -123,6 +123,10 @@ const data: ServiceData = {
     {
       q: 'Do you work with builders + GCs?',
       a: "Yes. We work with local builders and contractors, and we'd be happy to work with you. If you have more than one home coming up, ask us about pricing for repeat work. We can send our certificate of insurance before the first job.",
+    },
+    {
+      q: 'Is the inside of the oven and fridge included?',
+      a: "Inside cabinets, drawers and inside windows are included in every post-construction clean. Inside the oven and inside the fridge are add-ons, like on every service: tick them on the quote page and they're priced upfront.",
     },
     {
       q: 'Do you remove construction debris?',

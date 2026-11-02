@@ -38,11 +38,16 @@ export default function MotionSection({
     <Tag
       id={id}
       className={className}
-      initial={{ opacity: 0, y: 60 }}
+      // Speed (2026-11-02, owner: "the five services section takes long to load on the phone"):
+      // the reveal used to wait until 15% of the section was on screen. On a phone the
+      // services section is ~2,500px tall, so that meant ~375px of BLANK space scrolled
+      // into view before the cards even started fading in, plus a 0.9s fade. Now it starts
+      // the moment the section's top edge enters the screen, moves less and finishes faster.
+      initial={{ opacity: 0, y: 24 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.15, margin: '-80px' }}
+      viewport={{ once: true, amount: 0, margin: '0px 0px -6% 0px' }}
       transition={{
-        duration: 0.9,
+        duration: 0.55,
         delay,
         ease: [0.16, 1, 0.3, 1], // ease-out-expo (premium feel)
         ...(stagger && { staggerChildren: 0.1 }),
@@ -58,10 +63,10 @@ export function MotionItem({ children, className, delay = 0 }: { children: React
   return (
     <motion.div
       className={className}
-      initial={{ opacity: 0, y: 30 }}
+      initial={{ opacity: 0, y: 18 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.2 }}
-      transition={{ duration: 0.7, delay, ease: [0.16, 1, 0.3, 1] }}
+      viewport={{ once: true, amount: 0 }}
+      transition={{ duration: 0.5, delay, ease: [0.16, 1, 0.3, 1] }}
     >
       {children}
     </motion.div>

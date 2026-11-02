@@ -465,7 +465,8 @@ export default function CleaningTimeEstimatorPage() {
               <h3 className={styles.factorTitle}>Add-ons requested</h3>
               <p className={styles.factorBody}>
                 Inside oven, inside fridge, inside cabinets, inside windows —
-                each adds 30 min to 2+ hours depending on size.
+                each adds 30 min to 2+ hours depending on size. (Post-construction
+                already includes inside cabinets and windows.)
               </p>
             </div>
             <div className={styles.factorCard}>

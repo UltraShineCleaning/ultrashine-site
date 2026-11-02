@@ -292,7 +292,8 @@ export default function ServicesIndexPage() {
                   ['Grout scrubbed + tile reset',        false, true,  true,  false, true],
                   ['Light fixtures + ceiling fans',      false, true,  true,  false, true],
                   ['Vents + air returns',                false, true,  true,  false, true],
-                  ['Inside oven, fridge, cabinets, windows', false, false, false, false, true],
+                  ['Inside cabinets + inside windows',    false, false, false, false, true],
+                  ['Inside oven + fridge (add-on)',      false, false, false, false, false],
                   ['Drywall + construction dust',        false, false, false, false, true],
                   ['After-hours scheduling',             false, false, false, true,  true],
                 ].map((row, idx) => (
@@ -316,7 +317,8 @@ export default function ServicesIndexPage() {
             <br />
             <strong>Add-ons on every service:</strong> inside oven, inside fridge,
             inside cabinets + drawers, inside windows, laundry fold. Post-Construction
-            already includes the insides. Pick add-ons on the quote page and they&apos;re priced upfront.
+            already includes inside cabinets and inside windows; inside oven and fridge
+            are add-ons there too. Pick add-ons on the quote page and they&apos;re priced upfront.
           </p>
         </div>
       </section>

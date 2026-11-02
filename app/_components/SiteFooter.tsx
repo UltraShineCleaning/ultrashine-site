@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import styles from '../page.module.css';
+import SocialIcons from './SocialIcons';
 
 export default function SiteFooter() {
   return (
@@ -15,6 +16,7 @@ export default function SiteFooter() {
           />
           <p className={styles.footerTagline}>Boca Raton + South Florida</p>
           <p className={styles.footerAddr}>Serving 13 cities across Palm Beach + Broward.</p>
+          <SocialIcons />
         </div>
         <div className={styles.footerCol}>
           <h4>Services</h4>
@@ -29,6 +31,7 @@ export default function SiteFooter() {
         <div className={styles.footerCol}>
           <h4>Company</h4>
           <Link href="/about">About</Link>
+          <Link href="/house-cleaning-cost-boca-raton">Cleaning Prices</Link>
           {/* SEO: /areas and /pricing-philosophy were effectively orphaned —
               /areas had 2 inbound links, /pricing-philosophy had 1 and it sat
               inside the post-submit success state of /quote, so a crawler

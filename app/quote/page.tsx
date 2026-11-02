@@ -264,7 +264,8 @@ export default function QuotePage() {
             </p>
             <p className={styles.leftEstimatorHint}>
               Just looking for a rough time idea first?{' '}
-              <Link href="/cleaning-time-estimator">Try the 60-second estimator →</Link>
+              <Link href="/cleaning-time-estimator">Try the 60-second estimator →</Link>{' '}
+              or <Link href="/house-cleaning-cost-boca-raton">see typical prices</Link>.
             </p>
           </motion.div>
 

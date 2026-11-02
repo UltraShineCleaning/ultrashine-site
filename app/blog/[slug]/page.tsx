@@ -47,7 +47,10 @@ export default function BlogPostPage({ params }: { params: Params }) {
   const post = getPost(params.slug);
   if (!post) notFound();
 
-  const otherPosts = POSTS.filter((p) => p.slug !== post.slug).slice(0, 2);
+  // Same-topic articles first, then the newest — keeps readers (and crawlers) inside one subject.
+  const otherPosts = POSTS.filter((p) => p.slug !== post.slug)
+    .sort((a, b) => Number(b.category === post.category) - Number(a.category === post.category))
+    .slice(0, 2);
 
   // Schema.org Article — tells Google this is an article (rich snippet eligibility)
   const articleSchema = {
@@ -57,10 +60,10 @@ export default function BlogPostPage({ params }: { params: Params }) {
     description: post.excerpt,
     image: `https://ultrashinecleaningfl.com${post.coverImage}`,
     datePublished: post.publishedAt,
-    author: {
-      '@type': 'Person',
-      name: post.author,
-    },
+    author:
+      post.author === 'Ultra Shine Cleaning'
+        ? { '@id': 'https://ultrashinecleaningfl.com/#business' }
+        : { '@type': 'Person', name: post.author },
     publisher: {
       '@id': 'https://ultrashinecleaningfl.com/#business',
     },
@@ -85,9 +88,22 @@ export default function BlogPostPage({ params }: { params: Params }) {
     ],
   };
 
+  const faqSchema = post.faq?.length
+    ? {
+        '@context': 'https://schema.org',
+        '@type': 'FAQPage',
+        mainEntity: post.faq.map((f) => ({
+          '@type': 'Question',
+          name: f.q,
+          acceptedAnswer: { '@type': 'Answer', text: f.a },
+        })),
+      }
+    : null;
+
   return (
     <main>
       <JsonLd data={articleSchema} />
+      {faqSchema && <JsonLd data={faqSchema} />}
       <JsonLd data={breadcrumbSchema} />
       <SiteHeader inPage={false} />
 
@@ -133,6 +149,20 @@ export default function BlogPostPage({ params }: { params: Params }) {
           className={styles.body}
           dangerouslySetInnerHTML={{ __html: post.bodyHtml }}
         />
+
+        {post.faq && post.faq.length > 0 && (
+          <section className={styles.faq} aria-labelledby="post-faq">
+            <h2 id="post-faq" className="fraunces">
+              Quick answers
+            </h2>
+            {post.faq.map((f, i) => (
+              <details key={f.q} open={i === 0}>
+                <summary>{f.q}</summary>
+                <p>{f.a}</p>
+              </details>
+            ))}
+          </section>
+        )}
 
         {/* Author card removed per product decision (May 23, 2026) —
             having "Tiago Rena · Co-founder" at the bottom of every post

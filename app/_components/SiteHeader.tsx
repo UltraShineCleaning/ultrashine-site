@@ -2,6 +2,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import MobileNav from './MobileNav';
+import NavServices from './NavServices';
 import styles from '../page.module.css';
 
 type Props = {
@@ -26,7 +27,8 @@ export default function SiteHeader({ inPage = true }: Props) {
         />
       </Link>
       <div className={styles.navMenu}>
-        <Link href="/services">Services</Link>
+        <NavServices />
+        <Link href="/house-cleaning-cost-boca-raton">Prices</Link>
         <Link href="/areas">Areas</Link>
         <Link href="/about">About</Link>
         <Link href="/blog">Blog</Link>

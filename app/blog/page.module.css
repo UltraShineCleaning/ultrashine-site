@@ -251,3 +251,76 @@
   .finalHead { font-size: 28px; }
   .finalSub { font-size: 14px; margin-bottom: 24px; }
 }
+
+/* ===== SEARCH + TOPICS (2026-11-02) ===== */
+.searchBox {
+  margin-bottom: 36px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.searchField {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #fff;
+  border: 1px solid rgba(28, 97, 240, 0.18);
+  border-radius: 999px;
+  padding: 0 20px;
+  height: 54px;
+  color: var(--blue);
+  box-shadow: 0 10px 30px -18px rgba(0, 30, 90, 0.35);
+}
+.searchField input {
+  flex: 1;
+  border: 0;
+  outline: 0;
+  font: inherit;
+  font-size: 16px;
+  background: transparent;
+  color: var(--ink, #0f1b33);
+  min-width: 0;
+}
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.chip {
+  min-height: 0;
+  border: 1px solid rgba(28, 97, 240, 0.2);
+  background: #fff;
+  color: #374151;
+  border-radius: 999px;
+  padding: 8px 15px;
+  font: inherit;
+  font-size: 13.5px;
+  cursor: pointer;
+}
+.chipOn {
+  background: var(--blue);
+  border-color: var(--blue);
+  color: #fff;
+}
+.quick {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  font-size: 13.5px;
+  color: #5a5f6b;
+}
+.quick a {
+  color: var(--blue);
+  font-weight: 600;
+}
+.cardTopic {
+  color: var(--blue);
+  font-weight: 600;
+  margin-right: 6px;
+}
+@media (max-width: 640px) {
+  .searchField { height: 50px; padding: 0 16px; }
+  .chips { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 4px; -webkit-overflow-scrolling: touch; }
+  .chip { flex: 0 0 auto; }
+  .quick { flex-direction: column; gap: 6px; }
+}

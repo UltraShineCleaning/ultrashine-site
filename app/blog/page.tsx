@@ -2,6 +2,7 @@ import Link from 'next/link';
 import SiteHeader from '../_components/SiteHeader';
 import SiteFooter from '../_components/SiteFooter';
 import { POSTS } from './_data/posts';
+import BlogSearch, { type BlogCard } from './BlogSearch';
 import styles from './page.module.css';
 
 /**
@@ -12,6 +13,19 @@ import styles from './page.module.css';
  */
 export default function BlogIndexPage() {
   const sorted = [...POSTS].sort((a, b) => (a.publishedAt < b.publishedAt ? 1 : -1));
+  const cards: BlogCard[] = sorted.map((p) => ({
+    slug: p.slug,
+    title: p.title,
+    excerpt: p.excerpt,
+    coverImage: p.coverImage,
+    publishedAt: p.publishedAt,
+    readingMinutes: p.readingMinutes,
+    tags: p.tags,
+    category: p.category,
+    haystack: [p.title, p.excerpt, p.category ?? '', ...p.tags, ...(p.faq ?? []).map((f) => f.q)]
+      .join(' ')
+      .toLowerCase(),
+  }));
 
   return (
     <main>
@@ -45,49 +59,7 @@ export default function BlogIndexPage() {
       {/* ============ POSTS GRID ============ */}
       <section className={styles.postsSection}>
         <div className={styles.postsInner}>
-          {sorted.length === 0 ? (
-            <p className={styles.empty}>
-              First post coming soon &mdash; check back shortly.
-            </p>
-          ) : (
-            <div className={styles.grid}>
-              {sorted.map((post) => (
-                <Link
-                  key={post.slug}
-                  href={`/blog/${post.slug}`}
-                  className={`${styles.card} card-lift`}
-                >
-                  <div
-                    className={styles.cardImage}
-                    style={{ backgroundImage: `url(${post.coverImage})` }}
-                  />
-                  <div className={styles.cardBody}>
-                    <div className={styles.cardMeta}>
-                      <span className={styles.cardDate}>
-                        {formatDate(post.publishedAt)}
-                      </span>
-                      <span className={styles.cardDot}>·</span>
-                      <span className={styles.cardReading}>
-                        {post.readingMinutes} min read
-                      </span>
-                    </div>
-                    <h2 className={`fraunces ${styles.cardTitle}`}>{post.title}</h2>
-                    <p className={styles.cardExcerpt}>{post.excerpt}</p>
-                    <div className={styles.cardFooter}>
-                      <div className={styles.cardTags}>
-                        {post.tags.slice(0, 2).map((tag) => (
-                          <span key={tag} className={styles.cardTag}>
-                            {tag}
-                          </span>
-                        ))}
-                      </div>
-                      <span className={styles.cardArrow}>Read →</span>
-                    </div>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          )}
+          <BlogSearch posts={cards} />
         </div>
       </section>
 
@@ -114,11 +86,3 @@ export default function BlogIndexPage() {
   );
 }
 
-function formatDate(iso: string): string {
-  const d = new Date(`${iso}T00:00:00`);
-  return d.toLocaleDateString('en-US', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-  });
-}

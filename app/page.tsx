@@ -2,7 +2,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 import styles from './page.module.css';
 import FaqSection from './_components/FaqSection';
-import HeroScrollHome from './_components/HeroScrollHome';
 import HeroVideoMobile from './_components/HeroVideoMobile';
 import ServiceAreaMap from './_components/ServiceAreaMap';
 import LazyBg from './_components/LazyBg';
@@ -10,6 +9,8 @@ import MotionSection, { MotionItem } from './_components/MotionSection';
 import TiltCard from './_components/TiltCard';
 import CountUp from './_components/CountUp';
 import MobileNav from './_components/MobileNav';
+import NavServices from './_components/NavServices';
+import SocialIcons from './_components/SocialIcons';
 import { fetchGoogleReviews } from './_lib/google-reviews';
 
 // Fallback testimonials — sourced from the HomeAdvisor profile
@@ -108,7 +109,8 @@ export default async function HomePage() {
           />
         </Link>
         <div className={styles.navMenu}>
-          <a href="#services">Services</a>
+          <NavServices href="#services" />
+          <Link href="/house-cleaning-cost-boca-raton">Prices</Link>
           <a href="#areas">Areas</a>
           <Link href="/about">About</Link>
           <Link href="/blog">Blog</Link>
@@ -124,10 +126,10 @@ export default async function HomePage() {
       </nav>
 
       {/* ============ HERO ============
-          Desktop: cinematic scroll-through (HeroScrollHome).
-          Phones: the walkthrough video plays on its own with the instant-estimate
-          quote card on the first screen (HeroVideoMobile, approved 2026-09-30). */}
-      <HeroScrollHome />
+          Every screen size: the walkthrough video plays on its own with the 3-step
+          quote card on the first screen (HeroVideoMobile). The scroll-through
+          (HeroScrollHome) was retired 2026-11-02, owner's request. The card shows
+          no price here; the price lives on /house-cleaning-cost-boca-raton. */}
       <HeroVideoMobile rating={liveRating} />
 
       {/* ============ TRUST STRIP ============ */}
@@ -483,6 +485,7 @@ export default async function HomePage() {
           />
           <p className={styles.footerTagline}>Boca Raton + South Florida</p>
           <p className={styles.footerAddr}>Serving 13 cities across Palm Beach + Broward.</p>
+          <SocialIcons />
         </div>
         {/* SEO: this footer is the homepage's own (it does not use SiteFooter),
             and it was the weakest link hub on the site — the Company column
@@ -498,7 +501,8 @@ export default async function HomePage() {
           <Link href="/services/move-in-out">Move-In / Out</Link>
           <Link href="/services/commercial">Commercial</Link>
           <Link href="/services/post-construction">Post-Construction</Link>
-          <Link href="/cleaning-time-estimator">Cost Calculator</Link>
+          <Link href="/house-cleaning-cost-boca-raton">Cleaning Prices</Link>
+          <Link href="/cleaning-time-estimator">Time Estimator</Link>
         </div>
         <div className={styles.footerCol}>
           <h4>Company</h4>

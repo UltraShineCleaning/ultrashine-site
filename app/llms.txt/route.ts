@@ -105,6 +105,7 @@ ${cityLines}
 ## Answers to common questions
 
 - [Frequently asked questions](${BASE}/faq): 27 answers covering cost, scheduling, who enters your home, supplies, pets, gated communities, apartments and condos, and vacation rental turnovers.
+- [House cleaning prices in Boca Raton (2026)](${BASE}/house-cleaning-cost-boca-raton): price ranges by home size for regular, deep, move-out and post-construction cleaning, local averages with sources, add-on prices and an instant estimate.
 - [Why we don't list flat prices](${BASE}/pricing-philosophy): why a 2,000 sq ft Boca condo and a 4,500 sq ft Parkland home cannot honestly share one published rate.
 - [Cleaning cost calculator](${BASE}/cleaning-time-estimator): a few quick questions including square footage and floors, returns a ballpark price range and time estimate. No email required.
 

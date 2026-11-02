@@ -1,4 +1,5 @@
-/* Phone homepage hero — approved design A (00_STATE/home-video-quote-preview). */
+/* Homepage hero — phone design A (00_STATE/home-video-quote-preview), and since 2026-11-02
+   the computer version too (00_STATE/site-update-nov-preview §1): video + quote card. */
 
 .hero {
   position: relative;
@@ -10,15 +11,9 @@
   color: #fff;
   font-family: var(--font-poppins), sans-serif;
 }
-@media (min-width: 1025px) {
-  .hero {
-    display: none;
-  }
-}
 
 .video {
-  /* Poster is a CSS background (not the poster attribute) so desktop, where
-     this whole section is display:none, never downloads it. */
+  /* Poster as a CSS background, one per screen size, so each device downloads only its own. */
   background: #0b1a3a url('/videos/hero_mobile_poster.webp') center / cover no-repeat;
   position: absolute;
   inset: 0;
@@ -90,6 +85,59 @@
   backdrop-filter: blur(8px);
   border-radius: 999px;
   padding: 5px 11px;
+}
+.rate {
+  color: #fff;
+  text-decoration: none;
+}
+.chips {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.deskSub,
+.deskOnly {
+  display: none;
+}
+.trust a {
+  color: var(--blue, #1c61f0);
+  font-weight: 600;
+  text-decoration: none;
+}
+/* the "what happens next" row that replaced the price on the homepage card */
+.assure {
+  margin-top: 12px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #f3f7ff 0%, #eaf1ff 100%);
+  border: 1px solid rgba(28, 97, 240, 0.14);
+  padding: 10px 8px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 4px;
+  text-align: center;
+}
+.assure div {
+  font-size: 10.5px;
+  color: var(--gray, #5a5f6b);
+  line-height: 1.3;
+}
+.assure b {
+  display: block;
+  font-size: 14px;
+  color: var(--blue-deep, #002c98);
+}
+/* the card on its own (price guide page), not floating over a video */
+.cardStatic {
+  position: relative !important;
+  left: auto !important;
+  right: auto !important;
+  bottom: auto !important;
+  top: auto !important;
+  transform: none !important;
+  width: 100% !important;
+  max-width: 460px;
+  margin: 0 auto;
+  box-shadow: 0 4px 12px rgba(0, 44, 152, 0.08), 0 24px 50px -24px rgba(0, 10, 40, 0.4) !important;
 }
 .rate b {
   color: var(--gold, #ffc857);
@@ -746,5 +794,75 @@
   .svc,
   .svcIco {
     transition: none;
+  }
+}
+
+/* ================= COMPUTERS (≥1025px): video + headline left, card right ================= */
+@media (min-width: 1025px) {
+  .hero {
+    height: 100vh;
+    min-height: 700px;
+    max-height: 920px;
+  }
+  .video {
+    background-image: url('/videos/walkthrough_poster.webp');
+  }
+  .shade {
+    background: linear-gradient(90deg, rgba(0, 18, 55, 0.8) 0%, rgba(0, 18, 55, 0.48) 44%, rgba(0, 18, 55, 0.12) 68%, rgba(0, 18, 55, 0.28) 100%),
+      linear-gradient(180deg, rgba(0, 18, 55, 0.55), transparent 24%);
+  }
+  .copy {
+    left: max(64px, calc((100vw - 1320px) / 2 + 64px));
+    right: auto;
+    top: 50%;
+    transform: translateY(-46%);
+    width: min(560px, 42vw);
+  }
+  .copyAway {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .eyebrow {
+    font-size: 11.5px;
+    letter-spacing: 0.2em;
+  }
+  .headline {
+    font-size: clamp(48px, 4.6vw, 68px);
+    line-height: 1.03;
+    margin-top: 12px;
+  }
+  .deskSub {
+    display: block;
+    margin: 16px 0 0;
+    font-size: 16px;
+    line-height: 1.6;
+    opacity: 0.92;
+    max-width: 470px;
+    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.35);
+  }
+  .deskOnly {
+    display: inline-flex;
+  }
+  .phoneOnly {
+    display: none;
+  }
+  .chips {
+    margin-top: 22px;
+  }
+  .chips .rate {
+    margin: 0;
+    font-size: 12.5px;
+    padding: 7px 13px;
+  }
+  .card {
+    left: auto;
+    right: max(56px, calc((100vw - 1320px) / 2 + 56px));
+    top: 50%;
+    bottom: auto;
+    transform: translateY(-46%);
+    width: 440px;
+  }
+  .pane {
+    padding: 20px 20px 16px;
   }
 }

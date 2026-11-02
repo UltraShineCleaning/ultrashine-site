@@ -11,6 +11,7 @@ import {
   type QuoteServiceKey,
 } from '../_lib/quoteBallpark';
 import { DEFAULT_SQFT_FOR_HOME, SQFT_BAND_VALUE } from '../_lib/estimate';
+import { GOOGLE_PROFILE_URL } from '../_lib/social-links';
 
 /**
  * Phone homepage hero — approved by Tiago 2026-09-30 ("design A, refined card"),
@@ -149,7 +150,23 @@ function useTween(target: number) {
 
 const digits = (s: string) => s.replace(/\D/g, '');
 
-export default function HeroVideoMobile({ rating = 5.0 }: { rating?: number }) {
+/**
+ * 2026-11-02 (owner + his wife's mentor): the homepage card no longer shows a price, people
+ * were seeing a number before we'd talked to them. It shows what happens next instead, and
+ * links to the price guide. The price lives on /house-cleaning-cost-boca-raton, which renders
+ * this same card with mode="card" + showPrice, so the two can never disagree.
+ * The hero now also runs on computers (it replaced the scroll-through HeroScrollHome).
+ */
+export default function HeroVideoMobile({
+  rating = 5.0,
+  mode = 'hero',
+  showPrice = false,
+}: {
+  rating?: number;
+  /** 'hero' = full-screen video + card (homepage). 'card' = just the card (price guide page). */
+  mode?: 'hero' | 'card';
+  showPrice?: boolean;
+}) {
   const heroRef = useRef<HTMLElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const [step, setStep] = useState(0);
@@ -180,11 +197,11 @@ export default function HeroVideoMobile({ rating = 5.0 }: { rating?: number }) {
     const v = videoRef.current;
     const hero = heroRef.current;
     if (!v || !hero) return;
-    if (window.matchMedia('(min-width: 1025px)').matches) return;
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     const conn = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection;
     if (conn?.saveData) return;
-    v.src = '/videos/hero_mobile.mp4';
+    // Computers get the wide walkthrough, phones the portrait cut. Each downloads only its own.
+    v.src = window.matchMedia('(min-width: 1025px)').matches ? '/videos/hero_desktop.mp4' : '/videos/hero_mobile.mp4';
     const play = () => v.play().catch(() => {
       /* Low Power Mode blocks autoplay — the poster frame stays, which is fine. */
     });
@@ -256,7 +273,7 @@ export default function HeroVideoMobile({ rating = 5.0 }: { rating?: number }) {
       city: city.trim(),
       zip,
       contact: { first, last: rest.join(' '), phone: phone.trim(), email: email.trim() },
-      notes: notes.trim() ? `${notes.trim()}\n(Sent from the homepage quote card.)` : '(Sent from the homepage quote card.)',
+      notes: (notes.trim() ? notes.trim() + '\n' : '') + (mode === 'card' ? '(Sent from the price guide calculator.)' : '(Sent from the homepage quote card.)'),
       submittedAt: new Date().toISOString(),
     };
     try {
@@ -279,42 +296,27 @@ export default function HeroVideoMobile({ rating = 5.0 }: { rating?: number }) {
   const paneStyle = (i: number) => ({ transform: `translateX(${(i - step) * 100}%)` });
   const fieldClass = (id: string) => `${styles.field} ${bad.includes(id) ? styles.fieldBad : ''}`;
 
-  return (
-    <section ref={heroRef} id="us-hero-mobile" className={styles.hero} aria-labelledby="us-hero-mobile-title">
-      <video
-        ref={videoRef}
-        className={styles.video}
-        muted
-        loop
-        playsInline
-        preload="none"
-        aria-hidden="true"
-        tabIndex={-1}
-      />
-      <div className={styles.shade} aria-hidden="true" />
-
-      <div className={`${styles.copy} ${step > 0 ? styles.copyAway : ''}`}>
-        <p className={styles.eyebrow}>House cleaning · Boca Raton, FL</p>
-        <p className={styles.headline}>
-          A home that <em>shines</em>.
-        </p>
-        <p className={styles.rate}>
-          <b aria-hidden="true">★★★★★</b> {rating.toFixed(1)} on Google
-        </p>
-      </div>
-
-      <div className={styles.card}>
+  const card = (
+      <div className={`${styles.card} ${mode === 'card' ? styles.cardStatic : ''}`}>
         <div className={styles.track}>
           {/* ---------- STEP 1 · instant estimate ---------- */}
           <div className={paneClass(0)} style={paneStyle(0)} aria-hidden={step !== 0}>
             <div className={styles.paneHead}>
               <p className={styles.kick}>
-                <i aria-hidden="true" /> Instant estimate
+                <i aria-hidden="true" /> {showPrice ? 'Instant estimate' : 'Free quote'}
               </p>
               <Dots n={1} />
             </div>
-            <h2 id="us-hero-mobile-title" className={styles.title}>
-              What would your <em>cleaning</em> cost?
+            <h2 id={mode === 'card' ? 'price-calculator-title' : 'us-hero-mobile-title'} className={styles.title}>
+              {showPrice ? (
+                <>
+                  What would your <em>cleaning</em> cost?
+                </>
+              ) : (
+                <>
+                  Your <em>free</em> cleaning quote
+                </>
+              )}
             </h2>
 
             <div className={styles.services} role="radiogroup" aria-label="Type of cleaning">
@@ -365,25 +367,45 @@ export default function HeroVideoMobile({ rating = 5.0 }: { rating?: number }) {
               ))}
             </div>
 
-            <div className={styles.price} aria-live="polite">
-              <div>
-                <span className={styles.priceLab}>Estimate</span>
-                <span className={styles.priceVal}>{priceText}</span>
+            {showPrice ? (
+              <div className={styles.price} aria-live="polite">
+                <div>
+                  <span className={styles.priceLab}>Estimate</span>
+                  <span className={styles.priceVal}>{priceText}</span>
+                </div>
+                <span className={styles.per}>
+                  {recurring ? 'per visit' : 'one-time'}
+                  <br />
+                  confirmed at walkthrough
+                </span>
               </div>
-              <span className={styles.per}>
-                {recurring ? 'per visit' : 'one-time'}
-                <br />
-                confirmed at walkthrough
-              </span>
-            </div>
+            ) : (
+              <div className={styles.assure}>
+                <div>
+                  <b>Free</b>no obligation
+                </div>
+                <div>
+                  <b>1 hour</b>reply by text
+                </div>
+                <div>
+                  <b>{rating.toFixed(1)} ★</b>on Google
+                </div>
+              </div>
+            )}
 
             <button type="button" className={styles.cta} onClick={() => setStep(1)}>
-              Get my exact quote
+              {showPrice ? 'Get my exact quote' : 'Get my free quote'}
               <i aria-hidden="true">→</i>
             </button>
-            <p className={styles.trust}>
-              <b aria-hidden="true">★★★★★</b> {rating.toFixed(1)} Google <span aria-hidden="true" /> Text reply within the hour
-            </p>
+            {showPrice ? (
+              <p className={styles.trust}>
+                <b aria-hidden="true">★★★★★</b> {rating.toFixed(1)} Google <span aria-hidden="true" /> Text reply within the hour
+              </p>
+            ) : (
+              <p className={styles.trust}>
+                Curious about typical prices? <a href="/house-cleaning-cost-boca-raton">See our price guide</a>
+              </p>
+            )}
           </div>
 
           {/* ---------- STEP 2 · where's home ---------- */}
@@ -403,7 +425,7 @@ export default function HeroVideoMobile({ rating = 5.0 }: { rating?: number }) {
               <button type="button" onClick={() => setStep(0)}>
                 Edit
               </button>
-              <strong>{priceText}</strong>
+              {showPrice && <strong>{priceText}</strong>}
             </div>
 
             <label className={fieldClass('street')}>
@@ -488,7 +510,7 @@ export default function HeroVideoMobile({ rating = 5.0 }: { rating?: number }) {
             </p>
             <div className={styles.chip}>
               <span>{summary}</span>
-              <strong>{priceText}</strong>
+              {showPrice && <strong>{priceText}</strong>}
             </div>
 
             <label className={fieldClass('name')}>
@@ -609,6 +631,46 @@ export default function HeroVideoMobile({ rating = 5.0 }: { rating?: number }) {
           </div>
         </div>
       </div>
+  );
+
+  if (mode === 'card') return card;
+
+  return (
+    <section ref={heroRef} id="us-hero-mobile" className={styles.hero} aria-labelledby="us-hero-mobile-title">
+      <video
+        ref={videoRef}
+        className={styles.video}
+        muted
+        loop
+        playsInline
+        preload="none"
+        aria-hidden="true"
+        tabIndex={-1}
+      />
+      <div className={styles.shade} aria-hidden="true" />
+
+      <div className={`${styles.copy} ${step > 0 ? styles.copyAway : ''}`}>
+        <p className={styles.eyebrow}>
+          House cleaning · Boca Raton<span className={styles.deskOnly}>&nbsp;+ South Florida</span>
+          <span className={styles.phoneOnly}>, FL</span>
+        </p>
+        <p className={styles.headline}>
+          A home that <em>shines</em>.
+        </p>
+        <p className={styles.deskSub}>
+          Regular, deep, move-out and post-construction cleaning across 13 cities in Palm Beach + Broward.
+          Insured, bonded, background-checked.
+        </p>
+        <div className={styles.chips}>
+          <a className={styles.rate} href={GOOGLE_PROFILE_URL} target="_blank" rel="noopener noreferrer">
+            <b aria-hidden="true">★★★★★</b> {rating.toFixed(1)} on Google
+          </a>
+          <span className={`${styles.rate} ${styles.deskOnly}`}>Insured + bonded</span>
+          <span className={`${styles.rate} ${styles.deskOnly}`}>Reply within the hour</span>
+        </div>
+      </div>
+
+      {card}
     </section>
   );
 }

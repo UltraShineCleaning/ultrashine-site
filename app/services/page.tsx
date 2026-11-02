@@ -341,8 +341,8 @@ export default function ServicesIndexPage() {
             <Link href="/quote" className="btn btn-coral">
               Request Your Free Quote
             </Link>
-            <Link href="/pricing-philosophy" className={styles.helpSecondary}>
-              Why we don&apos;t list prices →
+            <Link href="/house-cleaning-cost-boca-raton" className={styles.helpSecondary}>
+              See typical prices →
             </Link>
           </div>
         </div>

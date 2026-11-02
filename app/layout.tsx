@@ -1,3 +1,4 @@
+import { SOCIAL_LINKS } from './_lib/social-links';
 import type { Metadata, Viewport } from 'next';
 import { Poppins } from 'next/font/google';
 import { Analytics } from '@vercel/analytics/react';
@@ -241,7 +242,7 @@ const SITE_SCHEMA = [
       },
     ],
     sameAs: [
-      'https://maps.app.goo.gl/EGeuJViEFazQQe579',
+      ...SOCIAL_LINKS.map((l) => l.href),
       'https://www.homeadvisor.com/rated.UltraShineCleaning.68124585.html',
     ],
     hasOfferCatalog: {

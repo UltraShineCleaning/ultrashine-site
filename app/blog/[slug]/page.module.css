@@ -387,3 +387,31 @@
   .moreCardImage { height: 160px; }
   .moreCardTitle { font-size: 17px; }
 }
+
+/* ===== Per-article FAQ (2026-11-02) ===== */
+.faq {
+  margin-top: 40px;
+  border-top: 1px solid rgba(28, 97, 240, 0.14);
+  padding-top: 24px;
+}
+.faq h2 {
+  font-size: 26px;
+  margin: 0 0 6px;
+  color: var(--ink, #0f1b33);
+}
+.faq details {
+  border-bottom: 1px solid #eef1f6;
+  padding: 14px 0;
+}
+.faq summary {
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+  color: var(--ink, #0f1b33);
+}
+.faq p {
+  margin: 8px 0 0;
+  font-size: 15.5px;
+  line-height: 1.7;
+  color: #374151;
+}

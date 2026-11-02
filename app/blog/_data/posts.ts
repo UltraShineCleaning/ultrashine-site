@@ -32,6 +32,11 @@ export type BlogPost = {
    * <figure><img/><figcaption/></figure>. The article CSS styles all of these.
    */
   bodyHtml: string;
+  /** Optional Q&A shown at the end of the article AND emitted as FAQPage schema,
+   *  so Google and AI assistants can quote the answers directly. */
+  faq?: { q: string; a: string }[];
+  /** Topic shown on the blog index chips + used by search. */
+  category?: 'Cleaning tips' | 'Deep cleaning' | 'Moving' | 'Seasonal + hosting' | 'Pets + family' | 'Hiring a cleaner' | 'Prices';
 };
 
 /* ============ INLINE IMAGE HELPER ============
@@ -39,12 +44,9 @@ export type BlogPost = {
      ${img('/images/flow_bathroom_sunset.jpg', 'Bathroom after Ultra Shine deep clean')}
    Produces a figure with caption styled by /blog/[slug]/page.module.css.
 */
-function img(src: string, caption: string): string {
-  return `<figure class="bodyFigure">
-    <img src="${src}" alt="${caption.replace(/"/g, '&quot;')}" loading="lazy" />
-    <figcaption>${caption}</figcaption>
-  </figure>`;
-}
+import { img } from './img';
+import { NOV_A } from './posts_nov_a';
+import { NOV_B } from './posts_nov_b';
 
 export const POSTS: BlogPost[] = [
   // ============ POST 1 — Humidity / Deep clean cadence ============
@@ -54,11 +56,12 @@ export const POSTS: BlogPost[] = [
       'How Often Should You Deep Clean Your Home in Boca Raton’s Humid Climate?',
     excerpt:
       'The standard "every 3 months" deep cleaning advice misses what humidity does to South Florida homes. Here’s the real Boca Raton schedule.',
-    author: 'Tiago Rena',
+    author: 'Ultra Shine Cleaning',
     publishedAt: '2026-05-17',
     readingMinutes: 5,
     coverImage: '/images/blog/humidity-boca-raton.jpg',
     tags: ['Deep Cleaning', 'Boca Raton', 'Florida Living'],
+    category: 'Deep cleaning',
     bodyHtml: `
       <p>If you Google "how often should I deep clean my house," every article gives you the same answer: <strong>every three months</strong>. That guidance comes from northern-climate cleaning companies. It does not account for what 80% summer humidity does to a Boca Raton home.</p>
 
@@ -125,11 +128,12 @@ export const POSTS: BlogPost[] = [
       'Move-Out Cleaning Checklist for Palm Beach County Renters: Get Your Full Deposit Back',
     excerpt:
       'Florida landlords return less than 60% of security deposits. Here’s the room-by-room move-out cleaning checklist that gets yours back in full.',
-    author: 'Tiago Rena',
+    author: 'Ultra Shine Cleaning',
     publishedAt: '2026-05-17',
     readingMinutes: 6,
     coverImage: '/images/blog/move-out-cleaning.jpg',
     tags: ['Move-In/Out', 'Palm Beach County', 'Renters'],
+    category: 'Moving',
     bodyHtml: `
       <p>According to the Florida Department of Business and Professional Regulation, fewer than 60% of Florida renters get their full security deposit back. The number one reason cited by landlords? <strong>"Cleaning condition."</strong> Not damage. Not unpaid rent. Cleaning.</p>
 
@@ -222,11 +226,12 @@ export const POSTS: BlogPost[] = [
     title: 'What to Expect from Post-Construction Cleanup in South Florida',
     excerpt:
       'Drywall dust gets everywhere — even in rooms your contractor never entered. Here’s what a real post-construction cleanup looks like.',
-    author: 'Tiago Rena',
+    author: 'Ultra Shine Cleaning',
     publishedAt: '2026-05-17',
     readingMinutes: 5,
     coverImage: '/images/blog/post-construction.jpg',
     tags: ['Post-Construction', 'South Florida', 'Renovation'],
+    category: 'Moving',
     bodyHtml: `
       <p>The contractor finishes. They sweep up the obvious debris and call the job done. You walk in expecting a clean space &mdash; and instead, there’s a fine layer of dust on every horizontal surface, every blade of every ceiling fan, every shelf inside every cabinet, and somehow inside the refrigerator that wasn’t even moved.</p>
 
@@ -294,11 +299,12 @@ export const POSTS: BlogPost[] = [
       '5 Spots Your Cleaner Probably Misses (And How to Politely Ask Them to Fix It)',
     excerpt:
       'Even great cleaners miss the same 5 spots. Here’s where to check after every visit — and the simple script to ask without sounding picky.',
-    author: 'Tiago Rena',
+    author: 'Ultra Shine Cleaning',
     publishedAt: '2026-05-17',
     readingMinutes: 4,
     coverImage: '/images/blog/5-spots-missed.jpg',
     tags: ['Cleaning Tips', 'How-To', 'Standards'],
+    category: 'Cleaning tips',
     bodyHtml: `
       <p>Even cleaning services we respect tend to miss the same spots. It’s not because the team is sloppy &mdash; it’s because these spots are out of the standard scan-pattern of a 45-minute room clean. They take an extra 30 seconds each, but if no one trained the cleaner to look there, they get skipped every visit until someone says something.</p>
 
@@ -353,11 +359,12 @@ export const POSTS: BlogPost[] = [
       'How to Verify a Cleaning Service is Actually Licensed, Bonded, and Insured in Florida',
     excerpt:
       'Every cleaning website says "licensed, bonded, and insured." Half of them aren’t. Here’s the 4-step verification you can do right now.',
-    author: 'Tiago Rena',
+    author: 'Ultra Shine Cleaning',
     publishedAt: '2026-05-17',
     readingMinutes: 5,
     coverImage: '/images/blog/verify-licensed.jpg',
     tags: ['Hiring Guide', 'Trust', 'Florida'],
+    category: 'Hiring a cleaner',
     bodyHtml: `
       <p>Open any cleaning company’s website in Florida and you’ll see the same three words near the top: "<strong>Licensed, Bonded, and Insured.</strong>" It’s become so standard that it’s lost meaning &mdash; and many companies that advertise it actually aren’t.</p>
 
@@ -426,6 +433,9 @@ export const POSTS: BlogPost[] = [
     `,
   },
 ];
+
+// newest first on the blog index
+POSTS.unshift(...NOV_B, ...NOV_A);
 
 export function getPost(slug: string): BlogPost | undefined {
   return POSTS.find((p) => p.slug === slug);

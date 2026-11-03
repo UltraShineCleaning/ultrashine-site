@@ -4,7 +4,6 @@ import { Poppins } from 'next/font/google';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import './globals.css';
-import SmoothScrollProvider from './_components/SmoothScrollProvider';
 import JsonLd from './_components/JsonLd';
 // The Google rating + review count live in ONE place. The JSON-LD below reads
 // them from there instead of carrying its own copy, which had drifted.
@@ -367,6 +366,12 @@ export const metadata: Metadata = {
   },
 };
 
+const REVEAL_SCRIPT = `(function(){var d=document;function all(){var l=d.querySelectorAll('.rv:not([data-in])');for(var i=0;i<l.length;i++)l[i].setAttribute('data-in','')}
+if(!('IntersectionObserver' in window)){d.readyState==='loading'?d.addEventListener('DOMContentLoaded',all):all();return}
+var io=new IntersectionObserver(function(es){for(var i=0;i<es.length;i++){if(es[i].isIntersecting){es[i].target.setAttribute('data-in','');io.unobserve(es[i].target)}}},{rootMargin:'0px 0px -6% 0px'});
+function scan(){var l=d.querySelectorAll('.rv:not([data-in])');for(var i=0;i<l.length;i++){if(!l[i].__rv){l[i].__rv=1;io.observe(l[i])}}}
+scan();new MutationObserver(scan).observe(d.body,{childList:true,subtree:true})})();`;
+
 export default function RootLayout({
   children,
 }: {
@@ -385,7 +390,20 @@ export default function RootLayout({
             EPA-safe, 5.0 Google, family-owned since 2018) is already
             covered by the homepage Trust Strip, per-page trust rows,
             and the city-level trust signals on /areas/[city] pages. */}
-        <SmoothScrollProvider>{children}</SmoothScrollProvider>
+        {/* Speed pass 2026-11-02: the Lenis + GSAP smooth-scroll wrapper is gone. It ran a
+            JavaScript loop on every frame of every page to serve the retired scroll-scrub hero,
+            which is what made scrolling feel delayed. Native scrolling + CSS smooth anchors now. */}
+        {children}
+        <noscript>
+          <style>{'.rv{opacity:1!important;transform:none!important}'}</style>
+        </noscript>
+        {/* Scroll reveal: marks .rv elements as they reach the screen (see globals.css). Runs
+            before React loads, so sections appear as fast as the HTML arrives. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: REVEAL_SCRIPT,
+          }}
+        />
         <StickyQuoteCta />
         <Analytics />
         <SpeedInsights />

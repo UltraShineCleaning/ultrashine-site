@@ -12,8 +12,18 @@
   background:
     linear-gradient(180deg, rgba(0, 30, 107, 0.70) 0%, rgba(0, 44, 152, 0.72) 50%, rgba(0, 30, 107, 0.92) 100%),
     radial-gradient(ellipse 800px 600px at 70% 0%, rgba(28, 97, 240, 0.18) 0%, transparent 60%),
-    url('/images/hero_3d_estimator.jpg') center/cover no-repeat;
+    url('/images/opt/hero_3d_estimator-sm.webp') center/cover no-repeat;
 }
+/* Speed pass 2026-11-02: phones get the 900px WebP above, computers this one. */
+@media (min-width: 900px) {
+  .hero {
+    background:
+      linear-gradient(180deg, rgba(0, 30, 107, 0.70) 0%, rgba(0, 44, 152, 0.72) 50%, rgba(0, 30, 107, 0.92) 100%),
+      radial-gradient(ellipse 800px 600px at 70% 0%, rgba(28, 97, 240, 0.18) 0%, transparent 60%),
+      url('/images/opt/hero_3d_estimator-lg.webp') center/cover no-repeat;
+  }
+}
+
 .heroOverlay {
   position: absolute;
   inset: 0;

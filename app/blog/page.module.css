@@ -13,12 +13,17 @@
 .heroBg {
   position: absolute;
   inset: 0;
-  background-image: url('/images/hero_3d_blog.jpg');
+  background-image: url('/images/opt/hero_3d_blog-sm.webp');
   background-size: cover;
   background-position: center;
   transform: scale(1.05);
   opacity: 0.35;
 }
+/* Speed pass 2026-11-02: phones get the 900px WebP above, computers this one. */
+@media (min-width: 900px) {
+  .heroBg { background-image: url('/images/opt/hero_3d_blog-lg.webp'); }
+}
+
 .heroOverlay {
   position: absolute;
   inset: 0;

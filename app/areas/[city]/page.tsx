@@ -7,6 +7,7 @@ import JsonLd from '../../_components/JsonLd';
 import ServiceAreaMap from '../../_components/ServiceAreaMap';
 import { CITIES, getCity } from '../_data/cities';
 import styles from './page.module.css';
+import { bgStyle } from '../../_lib/optImage';
 
 type Params = { city: string };
 
@@ -91,8 +92,8 @@ export default function CityPage({ params }: { params: Params }) {
       {/* ============== HERO ============== */}
       <section className={styles.hero}>
         <div
-          className={styles.heroBg}
-          style={{ backgroundImage: `url(${city.heroImage})` }}
+          className={`${styles.heroBg} bg-resp`}
+          style={bgStyle(city.heroImage) as React.CSSProperties}
         />
         <div className={styles.heroOverlay} />
         <div className={styles.heroContent}>

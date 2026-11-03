@@ -1,6 +1,5 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import SocialIcons from './SocialIcons';
 import { SERVICE_NAV } from '../_lib/service-nav';
@@ -44,34 +43,25 @@ export default function MobileNav() {
         }}
         className="mobile-nav-trigger"
       >
-        <motion.div
-          animate={{ rotate: open ? 90 : 0 }}
-          transition={{ duration: 0.3 }}
-          style={{ display: 'flex', flexDirection: 'column', gap: 4 }}
+        <div
+          style={{ display: 'flex', flexDirection: 'column', gap: 4, transform: open ? 'rotate(90deg)' : 'none', transition: 'transform .3s ease' }}
         >
-          <motion.span
-            animate={{ rotate: open ? 45 : 0, y: open ? 6 : 0 }}
-            style={{ width: 24, height: 2, background: open ? 'var(--cream)' : 'currentColor', display: 'block', transformOrigin: 'center' }}
+          <span
+            style={{ width: 24, height: 2, background: open ? 'var(--cream)' : 'currentColor', display: 'block', transformOrigin: 'center', transform: open ? 'translateY(6px) rotate(45deg)' : 'none', transition: 'transform .3s ease, opacity .3s ease' }}
           />
-          <motion.span
-            animate={{ opacity: open ? 0 : 1 }}
-            style={{ width: 24, height: 2, background: 'currentColor', display: 'block' }}
+          <span
+            style={{ width: 24, height: 2, background: 'currentColor', display: 'block', opacity: open ? 0 : 1, transition: 'transform .3s ease, opacity .3s ease' }}
           />
-          <motion.span
-            animate={{ rotate: open ? -45 : 0, y: open ? -6 : 0 }}
-            style={{ width: 24, height: 2, background: open ? 'var(--cream)' : 'currentColor', display: 'block', transformOrigin: 'center' }}
+          <span
+            style={{ width: 24, height: 2, background: open ? 'var(--cream)' : 'currentColor', display: 'block', transformOrigin: 'center', transform: open ? 'translateY(-6px) rotate(-45deg)' : 'none', transition: 'transform .3s ease, opacity .3s ease' }}
           />
-        </motion.div>
+        </div>
       </button>
 
       {/* Fullscreen menu */}
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
+      {open && (
+          <div
+            className="mnav-panel"
             style={{
               position: 'fixed',
               inset: 0,
@@ -87,12 +77,7 @@ export default function MobileNav() {
             }}
           >
             {/* Services opens the list of all five (+ "All services"), owner 2026-11-02 */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-              style={{ width: '100%', maxWidth: 360, textAlign: 'center' }}
-            >
+            <div className="mnav-item" style={{ width: '100%', maxWidth: 360, textAlign: 'center', ['--d' as string]: '0.1s' }}>
               <button
                 type="button"
                 onClick={() => setSvcOpen((v) => !v)}
@@ -128,7 +113,7 @@ export default function MobileNav() {
                   ))}
                 </div>
               )}
-            </motion.div>
+            </div>
             {[
               { href: '/house-cleaning-cost-boca-raton', label: 'Prices' },
               { href: '/areas', label: 'Areas' },
@@ -138,39 +123,29 @@ export default function MobileNav() {
               { href: '/leave-a-review', label: '★ Leave Review' },
               { href: '/faq', label: 'FAQ' },
             ].map((item, i) => (
-              <motion.a
+              <Link
                 key={item.href}
                 href={item.href}
                 onClick={handleLinkClick}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, delay: 0.16 + i * 0.05, ease: [0.16, 1, 0.3, 1] }}
-                className="fraunces"
-                style={BIG}
+                className="fraunces mnav-item"
+                style={{ ...BIG, ['--d' as string]: `${0.16 + i * 0.05}s` }}
               >
                 {item.label}
-              </motion.a>
+              </Link>
             ))}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
-              style={{ marginTop: 24, display: 'flex', flexDirection: 'column', gap: 14, alignItems: 'center' }}
+            <div
+              className="mnav-item"
+              style={{ ['--d' as string]: '0.5s', marginTop: 24, display: 'flex', flexDirection: 'column', gap: 14, alignItems: 'center' }}
             >
               <a href="tel:5615836694" style={{ color: 'var(--blue-soft)', fontSize: 18, fontFamily: 'var(--font-poppins)', fontWeight: 600, letterSpacing: '0.02em' }}>(561) 583-6694</a>
               <Link href="/quote" onClick={handleLinkClick} className="btn btn-coral">Request Your Free Quote</Link>
               <SocialIcons center />
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Show hamburger only on mobile */}
-      <style jsx>{`
-        @media (max-width: 1024px) {
-          .mobile-nav-trigger { display: flex !important; }
-        }
-      `}</style>
+            </div>
+          </div>
+      )}
+      {/* The "show hamburger on phones" rule lives in globals.css (.mobile-nav-trigger) so it
+          is in the first paint — as a styled-jsx block it arrived after the JavaScript and the
+          header jumped sideways when the icon popped in (a layout shift Google counts). */}
     </>
   );
 }

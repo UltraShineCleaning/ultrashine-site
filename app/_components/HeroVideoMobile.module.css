@@ -14,7 +14,7 @@
 
 .video {
   /* Poster as a CSS background, one per screen size, so each device downloads only its own. */
-  background: #0b1a3a url('/videos/hero_mobile_poster.webp') center / cover no-repeat;
+  background: #0b1a3a url('/videos/hero_mobile_poster_1080.webp') center / cover no-repeat;
   position: absolute;
   inset: 0;
   width: 100%;
@@ -805,7 +805,7 @@
     max-height: 920px;
   }
   .video {
-    background-image: url('/videos/walkthrough_poster.webp');
+    background-image: url('/videos/hero_desktop_poster.webp');
   }
   .shade {
     background: linear-gradient(90deg, rgba(0, 18, 55, 0.8) 0%, rgba(0, 18, 55, 0.48) 44%, rgba(0, 18, 55, 0.12) 68%, rgba(0, 18, 55, 0.28) 100%),

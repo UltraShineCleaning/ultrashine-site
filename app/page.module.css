@@ -273,7 +273,11 @@
   box-shadow: var(--shadow-soft);
   text-decoration: none;
   color: var(--navy-deep);
-  transition: box-shadow 0.25s ease;
+  /* Tilt (2026-11-02 speed pass): TiltCard sets --rx/--ry/--mx/--my straight on the
+     element; the transition does the smoothing on the GPU — no animation library. */
+  transform: perspective(1200px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) scale(var(--sc, 1));
+  transition: box-shadow 0.25s ease, transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+  will-change: transform;
   /* Trimmed 320 → 288. The cards were taller than their content needed,
      which is what made the row feel oversized next to the hero. */
   min-height: 288px;
@@ -379,6 +383,28 @@
   font-size: 22px;
   color: var(--blush);
   align-self: flex-start;
+  transition: transform 0.3s ease;
+}
+.serviceCard:hover .serviceArrow {
+  transform: translateX(6px);
+}
+.serviceCard:active {
+  --sc: 0.99;
+}
+.serviceShine {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: var(--r-lg);
+  background: radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgba(28, 97, 240, 0.18) 0%, transparent 50%);
+}
+@media (hover: hover) and (pointer: fine) {
+  .serviceCard:hover {
+    --sc: 1.025;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .serviceCard { transform: none; transition: box-shadow 0.25s ease; }
 }
 
 /* ============ HOW IT WORKS ============ */
@@ -1325,4 +1351,29 @@
   color: var(--gold, #FFC857);
   font-size: 13px;
   letter-spacing: 1px;
+}
+
+/* ===== FAQ open/close (2026-11-02 speed pass — replaces framer-motion) ===== */
+.faqABox {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition: grid-template-rows 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+}
+.faqABox > div {
+  overflow: hidden;
+  min-height: 0;
+}
+.faqItemOpen .faqABox {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+.faqQIcon {
+  transition: transform 0.3s ease;
+}
+.faqItemOpen .faqQIcon {
+  transform: rotate(180deg);
+}
+@media (hover: hover) {
+  .faqItem:hover { transform: translateY(-2px); }
 }

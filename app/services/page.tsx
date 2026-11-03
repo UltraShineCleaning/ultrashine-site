@@ -4,6 +4,7 @@ import SiteFooter from '../_components/SiteFooter';
 import JsonLd from '../_components/JsonLd';
 import styles from './page.module.css';
 import { computeEstimate, exampleConditionLine, exampleInput } from '../_lib/estimate';
+import { bgStyle } from '../_lib/optImage';
 
 /** The deep-clean example card below reads the SAME formula as the
  *  calculator. It used to be typed in by hand and had drifted ($280 vs the
@@ -226,8 +227,8 @@ export default function ServicesIndexPage() {
               className={`${styles.card} ${i === 0 ? styles.cardWide : ''} card-lift`}
             >
               <div
-                className={styles.cardImage}
-                style={{ backgroundImage: `url(${service.image})` }}
+                className={`${styles.cardImage} bg-resp`}
+                style={bgStyle(service.image) as React.CSSProperties}
               />
               <div className={styles.cardOverlay} />
 

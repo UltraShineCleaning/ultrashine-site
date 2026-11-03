@@ -78,9 +78,18 @@ export default async function HomePage() {
       <link
         rel="preload"
         as="image"
-        href="/videos/walkthrough_poster.webp"
+        href="/videos/hero_desktop_poster.webp"
         type="image/webp"
         media="(min-width: 1025px)"
+        fetchPriority="high"
+      />
+      {/* Phones: the hero poster is the biggest thing on screen, so fetch it before the CSS asks. */}
+      <link
+        rel="preload"
+        as="image"
+        href="/videos/hero_mobile_poster_1080.webp"
+        type="image/webp"
+        media="(max-width: 1024px)"
         fetchPriority="high"
       />
       {/*

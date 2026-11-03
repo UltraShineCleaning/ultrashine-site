@@ -8,11 +8,20 @@
   /* Dark overlay layered over the hero image so headline text reads cleanly */
   background:
     linear-gradient(180deg, rgba(0, 30, 107, 0.70) 0%, rgba(0, 44, 152, 0.75) 50%, rgba(0, 30, 107, 0.92) 100%),
-    url('/images/hero_3d_reviews.jpg') center/cover no-repeat;
+    url('/images/opt/hero_3d_reviews-sm.webp') center/cover no-repeat;
   color: var(--cream);
   text-align: center;
   overflow: hidden;
 }
+/* Speed pass 2026-11-02: phones get the 900px WebP above, computers this one. */
+@media (min-width: 900px) {
+  .hero {
+    background:
+      linear-gradient(180deg, rgba(0, 30, 107, 0.70) 0%, rgba(0, 44, 152, 0.75) 50%, rgba(0, 30, 107, 0.92) 100%),
+      url('/images/opt/hero_3d_reviews-lg.webp') center/cover no-repeat;
+  }
+}
+
 .hero::before {
   content: '';
   position: absolute;
@@ -323,7 +332,7 @@
 
 /* MOBILE */
 @media (max-width: 1024px) {
-  .hero { padding: 44px 32px 40px; }
+  .hero { padding: 120px 32px 40px; }
   .gridSection, .ctaSection { padding: 56px 32px; }
   .h1 { font-size: 44px; }
   .heroSub { font-size: 17px; }
@@ -332,7 +341,7 @@
   .ctaCard { padding: 40px 28px; }
 }
 @media (max-width: 640px) {
-  .hero { padding: 32px 22px 32px; }
+  .hero { padding: 108px 22px 32px; }
   .gridSection, .ctaSection { padding: 44px 22px; }
   .h1 { font-size: 32px; }
   .heroSub { font-size: 15px; }

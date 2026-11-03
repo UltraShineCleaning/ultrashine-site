@@ -6,7 +6,7 @@
  * TODO(owner): paste the exact Instagram + Facebook page links below.
  */
 export const GOOGLE_PROFILE_URL = 'https://maps.app.goo.gl/EGeuJViEFazQQe579';
-export const INSTAGRAM_URL = '';
+export const INSTAGRAM_URL = 'https://www.instagram.com/ultrashinecleaning/';
 export const FACEBOOK_URL = '';
 
 export type SocialLink = { key: 'instagram' | 'facebook' | 'google'; label: string; href: string };

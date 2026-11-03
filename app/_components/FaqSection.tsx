@@ -1,6 +1,5 @@
 'use client';
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import styles from '../page.module.css';
 import LazyBg from './LazyBg';
 
@@ -69,39 +68,34 @@ export default function FaqSection() {
           {FAQS.map((item, i) => {
             const open = openIndex === i;
             return (
-              <motion.div
+              <div
                 key={i}
                 className={`${styles.faqItem} ${open ? styles.faqItemOpen : ''}`}
                 onClick={() => setOpenIndex(open ? null : i)}
-                whileHover={{ y: -2 }}
-                transition={{ duration: 0.2 }}
-                layout
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    setOpenIndex(open ? null : i);
+                  }
+                }}
+                role="button"
+                tabIndex={0}
+                aria-expanded={open}
               >
                 <div className={`fraunces ${styles.faqQ}`}>
                   <span>{item.q}</span>
-                  <motion.span
-                    className={styles.faqQIcon}
-                    animate={{ rotate: open ? 180 : 0 }}
-                    transition={{ duration: 0.3 }}
-                  >
+                  <span className={styles.faqQIcon} aria-hidden="true">
                     {open ? '−' : '+'}
-                  </motion.span>
+                  </span>
                 </div>
-                <AnimatePresence initial={false}>
-                  {open && (
-                    <motion.div
-                      key="content"
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: 'auto', opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-                      style={{ overflow: 'hidden' }}
-                    >
-                      <div className={styles.faqA}>{item.a}</div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </motion.div>
+                {/* Every answer is in the HTML (Google and AI assistants read closed ones too);
+                    CSS opens and closes it. Speed pass 2026-11-02: no animation library. */}
+                <div className={styles.faqABox}>
+                  <div>
+                    <div className={styles.faqA}>{item.a}</div>
+                  </div>
+                </div>
+              </div>
             );
           })}
         </div>

@@ -97,7 +97,25 @@ html, body {
 @media (max-width: 640px) {
   :root { --top-bar-h: 0px; }
 }
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; scroll-padding-top: 84px; }
+
+/* ===== Scroll reveal (2026-11-02, speed pass) =====
+   Replaces framer-motion: one tiny observer script in app/layout.tsx sets data-in
+   on .rv elements as they reach the screen. Pure CSS transition = runs on the GPU,
+   no JavaScript per frame, and no 40 KB animation library on every page. */
+.rv {
+  opacity: 0;
+  transform: translate3d(0, 24px, 0);
+  transition: opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1), transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+  transition-delay: var(--rv-d, 0s);
+}
+.rv[data-in] {
+  opacity: 1;
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .rv { opacity: 1; transform: none; transition: none; }
+}
 body {
   font-family: var(--font-poppins), -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
   font-weight: 400;
@@ -250,3 +268,108 @@ h1.fraunces em, h2.fraunces em, h3.fraunces em, h4.fraunces em {
   transform: translateY(-4px);
   box-shadow: 0 16px 40px rgba(28, 97, 240, 0.12);
 }
+
+/* ===== Phone menu (MobileNav) — 2026-11-02 speed pass ===== */
+@media (max-width: 1024px) {
+  .mobile-nav-trigger { display: flex !important; }
+}
+.mnav-panel { animation: mnavFade 0.3s ease both; }
+.mnav-item { animation: mnavUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) both; animation-delay: var(--d, 0s); }
+@keyframes mnavFade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes mnavUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) {
+  .mnav-panel, .mnav-item { animation: none; }
+}
+
+/* ===== Sticky "Get Quote" pill (StickyQuoteCta) — CSS only, 2026-11-02 speed pass ===== */
+.sqc {
+  opacity: 0;
+  transform: translateY(16px) scale(0.85);
+  pointer-events: none;
+  visibility: hidden;
+  transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1), transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), visibility 0s linear 0.35s;
+}
+.sqc.sqc-on {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+  visibility: visible;
+  transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1), transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), visibility 0s;
+}
+.sqc-bob { position: relative; }
+.sqc-on .sqc-bob { animation: sqcBob 3.2s ease-in-out infinite; }
+.sqc-bob:hover { animation: none; transform: translateY(-3px); transition: transform 0.2s; }
+.sqc-arrow { transition: transform 0.2s; }
+.sqc-bob:hover .sqc-arrow { transform: translateX(4px); }
+.sqc-shine {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  mix-blend-mode: screen;
+  background: linear-gradient(115deg, transparent 30%, rgba(255, 255, 255, 0.28) 50%, transparent 70%);
+  transform: translateX(-100%);
+}
+.sqc-on .sqc-shine { animation: sqcShine 4s ease-in-out infinite; }
+.sqc-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  pointer-events: none;
+  z-index: -1;
+  opacity: 0;
+}
+.sqc-ring1 { background: linear-gradient(135deg, #1c61f0 0%, #002c98 100%); }
+.sqc-ring2 { background: linear-gradient(135deg, #5e8fff 0%, #1c61f0 100%); }
+.sqc-on .sqc-ring1 { animation: sqcRing1 2s ease-out infinite; }
+.sqc-on .sqc-ring2 { animation: sqcRing2 2.5s ease-out 0.6s infinite; }
+@keyframes sqcBob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+@keyframes sqcShine { 0% { transform: translateX(-100%); } 35%, 100% { transform: translateX(200%); } }
+@keyframes sqcRing1 { from { transform: scale(1); opacity: 0.45; } to { transform: scale(1.25); opacity: 0; } }
+@keyframes sqcRing2 { from { transform: scale(1); opacity: 0.3; } to { transform: scale(1.45); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) {
+  .sqc-on .sqc-bob, .sqc-on .sqc-shine, .sqc-on .sqc-ring1, .sqc-on .sqc-ring2 { animation: none; }
+}
+
+/* ===== Accordions + entrances + hero parallax (2026-11-02 speed pass, replaces framer-motion) ===== */
+.acc {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition: grid-template-rows 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+}
+.acc > div { overflow: hidden; min-height: 0; }
+.acc.acc-open { grid-template-rows: 1fr; opacity: 1; }
+.acc-icon { display: inline-block; transition: transform 0.3s ease; }
+.acc-icon.acc-open { transform: rotate(180deg); }
+
+/* Entrance on first paint: starts with the HTML, no waiting for JavaScript. */
+.in { animation: inFx var(--t, 0.8s) cubic-bezier(0.16, 1, 0.3, 1) var(--d, 0s) both; }
+@keyframes inFx { from { opacity: 0; transform: translate3d(var(--fx, 0px), var(--fy, 0px), 0); } }
+.in-line { display: inline-block; width: 40px; animation: inLine 0.8s cubic-bezier(0.16, 1, 0.3, 1) var(--d, 0s) both; }
+@keyframes inLine { from { width: 0; } }
+
+.press { transition: transform 0.2s ease; }
+.press:active { transform: scale(0.98); }
+.lift { transition: transform 0.2s ease; }
+@media (hover: hover) and (pointer: fine) {
+  .press:hover { transform: scale(1.04); }
+  .lift:hover { transform: translateY(-4px); }
+}
+
+/* Hero photo drifts and the hero text fades as you scroll — driven by the browser's own
+   scroll timeline (GPU, zero JavaScript). Browsers without it keep a still photo. */
+.hero-par { transform: scale(1.05); }
+@supports (animation-timeline: scroll()) {
+  .hero-par { animation: heroPar linear both; animation-timeline: scroll(root); animation-range: 0 100vh; }
+  .hero-fade { animation: heroFade linear both; animation-timeline: scroll(root); animation-range: 0 70vh; }
+  @keyframes heroPar { from { transform: translateY(0) scale(1.05); } to { transform: translateY(20%) scale(1.15); } }
+  @keyframes heroFade { from { opacity: 1; } to { opacity: 0; } }
+}
+@media (prefers-reduced-motion: reduce) {
+  .in, .in-line { animation: none; }
+  .hero-par, .hero-fade { animation: none; }
+}
+
+/* Responsive background photo (bgStyle() in app/_lib/optImage.ts) */
+.bg-resp { background-image: var(--bg-sm); }
+@media (min-width: 900px) { .bg-resp { background-image: var(--bg-lg); } }

@@ -198,17 +198,52 @@ export default function HeroVideoMobile({
     const hero = heroRef.current;
     if (!v || !hero) return;
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    const conn = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection;
+    const conn = (navigator as Navigator & { connection?: { saveData?: boolean; effectiveType?: string } }).connection;
     if (conn?.saveData) return;
-    // Computers get the wide walkthrough, phones the portrait cut. Each downloads only its own.
-    v.src = window.matchMedia('(min-width: 1025px)').matches ? '/videos/hero_desktop.mp4' : '/videos/hero_mobile.mp4';
+    // Sharpest file the screen can actually show (2026-11-02, re-cut from the 4K masters).
+    // Physical pixels = CSS width x pixel density: a 1440px retina laptop is 2880 wide and
+    // gets 1440p; only screens over 3000 physical pixels download the 4K file. A slow
+    // connection gets the light file, so the page never waits on the video.
+    const slow = !!conn?.effectiveType && /2g|3g/.test(conn.effectiveType);
+    const desk = window.matchMedia('(min-width: 1025px)').matches;
+    const px = window.innerWidth * Math.min(window.devicePixelRatio || 1, 3);
+    const file = desk
+      ? slow
+        ? '/videos/hero_desktop_1080.mp4'
+        : px > 3000
+          ? '/videos/hero_desktop_2160.mp4'
+          : px > 2000
+            ? '/videos/hero_desktop_1440.mp4'
+            : '/videos/hero_desktop_1080.mp4'
+      : slow
+        ? '/videos/hero_mobile.mp4'
+        : '/videos/hero_mobile_1080.mp4';
     const play = () => v.play().catch(() => {
       /* Low Power Mode blocks autoplay — the poster frame stays, which is fine. */
     });
-    play();
-    const io = new IntersectionObserver(([e]) => (e.isIntersecting ? play() : v.pause()), { threshold: 0.05 });
-    io.observe(hero);
-    return () => io.disconnect();
+    let io: IntersectionObserver | null = null;
+    let cancelled = false;
+    // The sharp poster paints first; the video only starts downloading once the page has
+    // finished loading and the browser is idle, so it never slows the first paint or taps.
+    const start = () => {
+      if (cancelled) return;
+      v.src = file;
+      play();
+      io = new IntersectionObserver(([e]) => (e.isIntersecting ? play() : v.pause()), { threshold: 0.05 });
+      io.observe(hero);
+    };
+    const idle = () => {
+      const ric = (window as Window & { requestIdleCallback?: (cb: () => void, o?: { timeout: number }) => number }).requestIdleCallback;
+      if (ric) ric(start, { timeout: 1200 });
+      else setTimeout(start, 300);
+    };
+    if (document.readyState === 'complete') idle();
+    else window.addEventListener('load', idle, { once: true });
+    return () => {
+      cancelled = true;
+      window.removeEventListener('load', idle);
+      io?.disconnect();
+    };
   }, []);
 
   const frequency: Freq = service === 'regular' ? freq : 'one';

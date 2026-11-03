@@ -4,6 +4,7 @@ import SiteHeader from '../_components/SiteHeader';
 import SiteFooter from '../_components/SiteFooter';
 import { CITIES } from './_data/cities';
 import styles from './[city]/page.module.css';
+import { bgStyle } from '../_lib/optImage';
 
 export const metadata: Metadata = {
   // Was 72 characters BEFORE the root template appended the brand again — 95
@@ -25,8 +26,8 @@ export default function AreasIndexPage() {
       {/* HERO */}
       <section className={styles.hero}>
         <div
-          className={styles.heroBg}
-          style={{ backgroundImage: 'url(/images/hero_3d_areas.jpg)' }}
+          className={`${styles.heroBg} bg-resp`}
+          style={bgStyle('/images/hero_3d_areas.jpg') as React.CSSProperties}
         />
         <div className={styles.heroOverlay} />
         <div className={styles.heroContent}>

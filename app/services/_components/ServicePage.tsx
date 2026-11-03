@@ -1,8 +1,6 @@
 'use client';
 import Link from 'next/link';
-import { motion, useScroll, useTransform, useReducedMotion } from 'framer-motion';
-import { useRef, useState } from 'react';
-import { AnimatePresence } from 'framer-motion';
+import { useState } from 'react';
 import {
   computeEstimate,
   CREW_IS_FIXED_PAIR,
@@ -24,6 +22,7 @@ import MotionSection from '../../_components/MotionSection';
 import JsonLd from '../../_components/JsonLd';
 import styles from '../../page.module.css';
 import service from './ServicePage.module.css';
+import { bgStyle } from '../../_lib/optImage';
 
 export type ServiceData = {
   /** URL slug (e.g. "deep-cleaning") */
@@ -79,14 +78,6 @@ function renderHeadline(text: string) {
 }
 
 export default function ServicePage({ data }: { data: ServiceData }) {
-  const heroRef = useRef<HTMLElement>(null);
-  const reducedMotion = useReducedMotion();
-
-  // Hero parallax
-  const { scrollYProgress } = useScroll({ target: heroRef, offset: ['start start', 'end start'] });
-  const photoY = useTransform(scrollYProgress, [0, 1], ['0%', '20%']);
-  const photoScale = useTransform(scrollYProgress, [0, 1], [1.05, 1.15]);
-  const contentOpacity = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
 
   const [openFaq, setOpenFaq] = useState<number | null>(0);
 
@@ -169,79 +160,57 @@ export default function ServicePage({ data }: { data: ServiceData }) {
       <SiteHeader inPage={false} />
 
       {/* HERO */}
-      <section ref={heroRef} className={styles.hero}>
-        <motion.div
-          className={styles.heroBg}
-          style={{
-            backgroundImage: `url(${data.heroImage})`,
-            y: reducedMotion ? '0%' : photoY,
-            scale: reducedMotion ? 1.05 : photoScale,
-          }}
+      <section className={styles.hero}>
+        <div
+          className={`${styles.heroBg} hero-par bg-resp`}
+          style={bgStyle(data.heroImage) as React.CSSProperties}
         />
         <div className={styles.heroOverlay} />
-        <motion.div className={styles.heroContent} style={{ opacity: reducedMotion ? 1 : contentOpacity }}>
+        <div className={`${styles.heroContent} hero-fade`}>
           {/* Breadcrumb */}
-          <motion.p
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            className={service.breadcrumb}
-          >
+          <p
+            className={`${service.breadcrumb} in`}
+           style={{ '--fy': '-10px', '--t': '0.6s', '--d': '0.1s' } as React.CSSProperties}>
             <Link href="/">Home</Link>
             <span> / </span>
             <Link href="/#services">Services</Link>
             <span> / </span>
             <span style={{ opacity: 0.8 }}>{data.name}</span>
-          </motion.p>
+          </p>
 
-          <motion.p
-            className="eyebrow"
-            style={{ color: 'var(--cream)', display: 'flex', alignItems: 'center', gap: 16, marginBottom: 36, marginTop: 20 }}
-            initial={{ opacity: 0, x: -30 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+          <p
+            className="eyebrow in"
+            style={{ color: 'var(--cream)', display: 'flex', alignItems: 'center', gap: 16, marginBottom: 36, marginTop: 20, '--fx': '-30px', '--t': '0.8s', '--d': '0.2s' } as React.CSSProperties}
           >
-            <motion.span
-              initial={{ width: 0 }}
-              animate={{ width: 40 }}
-              transition={{ duration: 0.8, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
-              style={{ display: 'inline-block', height: 1, background: 'var(--blush)' }}
+            <span className="in-line"
+              style={{ display: 'inline-block', height: 1, background: 'var(--blush)', '--d': '0.4s' } as React.CSSProperties}
             />
             SERVICE NO. {data.number}
-          </motion.p>
+          </p>
 
-          <motion.h1
-            className={`fraunces ${styles.heroHeadline}`}
-            initial={{ opacity: 0, y: 60 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1.1, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
-          >
+          <h1
+            className={`fraunces ${styles.heroHeadline} in`}
+           style={{ '--fy': '60px', '--t': '1.1s', '--d': '0.4s' } as React.CSSProperties}>
             {renderHeadline(data.headline)}
-          </motion.h1>
+          </h1>
 
-          <motion.p
-            className={`fraunces ${styles.heroSub}`}
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.9, delay: 0.7 }}
-          >
+          <p
+            className={`fraunces ${styles.heroSub} in`}
+           style={{ '--fy': '30px', '--t': '0.9s', '--d': '0.7s' } as React.CSSProperties}>
             {data.subheadline}
-          </motion.p>
+          </p>
 
-          <motion.div
-            className={styles.heroCtaRow}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.95 }}
-          >
-            <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.98 }}>
+          <div
+            className={`${styles.heroCtaRow} in`}
+           style={{ '--fy': '20px', '--t': '0.8s', '--d': '0.95s' } as React.CSSProperties}>
+            <div className="press"  >
               <Link href="/quote" className="btn btn-primary">Request Your Free Quote</Link>
-            </motion.div>
-            <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.98 }}>
+            </div>
+            <div className="press"  >
               <a href="#whats-included" className="btn btn-secondary">See What's Included</a>
-            </motion.div>
-          </motion.div>
-        </motion.div>
+            </div>
+          </div>
+        </div>
       </section>
 
       {/* WHAT'S INCLUDED */}
@@ -339,16 +308,14 @@ export default function ServicePage({ data }: { data: ServiceData }) {
         </h2>
         <div className={service.scenariosGrid}>
           {data.scenarios.map((s, i) => (
-            <motion.div
+            <div
               key={i}
-              className={service.scenarioCard}
-              whileHover={{ y: -4 }}
-              transition={{ duration: 0.2 }}
+              className={`${service.scenarioCard} lift`}
             >
               <div className={service.scenarioBullet}>✦</div>
               <h3 className={`fraunces ${service.scenarioTitle}`}>{s.title}</h3>
               <p className={service.scenarioBody}>{s.body}</p>
-            </motion.div>
+            </div>
           ))}
         </div>
       </MotionSection>
@@ -389,39 +356,33 @@ export default function ServicePage({ data }: { data: ServiceData }) {
           {data.faq.map((item, i) => {
             const open = openFaq === i;
             return (
-              <motion.div
+              <div
                 key={i}
-                className={`${service.faqItem} ${open ? service.faqItemOpen : ''}`}
+                className={`${service.faqItem} ${open ? service.faqItemOpen : ''} lift`}
                 onClick={() => setOpenFaq(open ? null : i)}
-                whileHover={{ y: -2 }}
-                transition={{ duration: 0.2 }}
-                layout
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    setOpenFaq(open ? null : i);
+                  }
+                }}
+                role="button"
+                tabIndex={0}
+                aria-expanded={open}
               >
                 <div className={`fraunces ${service.faqQ}`}>
                   <span>{item.q}</span>
-                  <motion.span
-                    className={service.faqQIcon}
-                    animate={{ rotate: open ? 180 : 0 }}
-                    transition={{ duration: 0.3 }}
-                  >
+                  <span className={`${service.faqQIcon} acc-icon ${open ? 'acc-open' : ''}`} aria-hidden="true">
                     {open ? '−' : '+'}
-                  </motion.span>
+                  </span>
                 </div>
-                <AnimatePresence initial={false}>
-                  {open && (
-                    <motion.div
-                      key="content"
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: 'auto', opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-                      style={{ overflow: 'hidden' }}
-                    >
-                      <div className={service.faqA}>{item.a}</div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </motion.div>
+                {/* Always in the HTML (Google reads every answer); CSS opens/closes it. */}
+                <div className={`acc ${open ? 'acc-open' : ''}`}>
+                  <div>
+                    <div className={service.faqA}>{item.a}</div>
+                  </div>
+                </div>
+              </div>
             );
           })}
         </div>

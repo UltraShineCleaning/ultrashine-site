@@ -3,7 +3,6 @@
 import { useState, useMemo, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { motion, AnimatePresence } from 'framer-motion';
 import styles from './page.module.css';
 import {
   QUOTE_ADD_ONS,
@@ -238,11 +237,8 @@ export default function QuotePage() {
             <span className={styles.leftStepTag}>Est. 2018</span>
           </div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-          >
+          <div className="in"
+           style={{ '--fy': '20px', '--t': '0.7s' } as React.CSSProperties}>
             {/* SEO: "Free House Cleaning Quote" carries the keyword and is one
                 character SHORTER than "A Free, No-Obligation Quote", so this
                 12px 0.42em-tracked line cannot wrap where it didn't before.
@@ -267,7 +263,7 @@ export default function QuotePage() {
               <Link href="/cleaning-time-estimator">Try the 60-second estimator →</Link>{' '}
               or <Link href="/house-cleaning-cost-boca-raton">see typical prices</Link>.
             </p>
-          </motion.div>
+          </div>
 
           {/* Live ballpark — follows the visitor down the page (desktop) and
               moves as they pick. Hidden on phones, where the same number sits
@@ -345,16 +341,11 @@ export default function QuotePage() {
           </span>
         </a>
 
-        <AnimatePresence mode="wait">
           {submitted ? (
-            <motion.div
+            <div
               key="success"
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
-              className={styles.successPanel}
-            >
+              className={`${styles.successPanel} in`}
+             style={{ '--fy': '16px', '--t': '0.55s' } as React.CSSProperties}>
               <div className={styles.successSpark}>✦</div>
               <h2 className={styles.successTitle}>
                 Got it, {first}. <em>You&apos;re set.</em>
@@ -448,14 +439,11 @@ export default function QuotePage() {
                   Leave us a Google review →
                 </a>
               </p>
-            </motion.div>
+            </div>
           ) : (
-            <motion.form
+            <form className="in"
               key="form"
               onSubmit={onSubmit}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
             >
               <div className={styles.formHeading}>
                 <div className={styles.formEyebrow}>Get Your Free Quote</div>
@@ -838,9 +826,8 @@ export default function QuotePage() {
                 Or, prefer to talk? Call us anytime
                 <a href="tel:5615836694">(561) 583-6694</a>
               </div>
-            </motion.form>
+            </form>
           )}
-        </AnimatePresence>
       </section>
     </main>
   );

@@ -1,12 +1,12 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
-import { motion, useScroll, useTransform, useReducedMotion, AnimatePresence } from 'framer-motion';
 import SiteHeader from '../_components/SiteHeader';
 import SiteFooter from '../_components/SiteFooter';
 import MotionSection from '../_components/MotionSection';
 import styles from './page.module.css';
+import { bgStyle } from '../_lib/optImage';
 
 const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
@@ -28,11 +28,6 @@ const LANGUAGE_OPTS = [
 ];
 
 export default function WorkForUsPage() {
-  const heroRef = useRef<HTMLElement>(null);
-  const reducedMotion = useReducedMotion();
-  const { scrollYProgress } = useScroll({ target: heroRef, offset: ['start start', 'end start'] });
-  const photoY = useTransform(scrollYProgress, [0, 1], ['0%', '18%']);
-  const photoScale = useTransform(scrollYProgress, [0, 1], [1.04, 1.14]);
 
   // Form state
   const [first, setFirst] = useState('');
@@ -108,55 +103,39 @@ export default function WorkForUsPage() {
       <SiteHeader inPage={false} />
 
       {/* ============== HERO ============== */}
-      <section ref={heroRef} className={styles.hero}>
-        <motion.div
-          className={styles.heroBg}
-          style={{
-            backgroundImage: 'url(/images/team_van.jpg)',
-            y: reducedMotion ? '0%' : photoY,
-            scale: reducedMotion ? 1.04 : photoScale,
-          }}
+      <section className={styles.hero}>
+        <div
+          className={`${styles.heroBg} hero-par bg-resp`}
+          style={bgStyle('/images/team_van.jpg') as React.CSSProperties}
         />
         <div className={styles.heroOverlay} />
         <div className={styles.heroContent}>
-          <motion.p
-            className={styles.breadcrumb}
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-          >
+          <p
+            className={`${styles.breadcrumb} in`}
+           style={{ '--fy': '-10px', '--t': '0.6s' } as React.CSSProperties}>
             <Link href="/">Home</Link>
             <span> / </span>
             <span style={{ opacity: 0.8 }}>Work For Us</span>
-          </motion.p>
+          </p>
 
-          <motion.p
-            className={styles.heroEyebrow}
-            initial={{ opacity: 0, x: -30 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-          >
+          <p
+            className={`${styles.heroEyebrow} in`}
+           style={{ '--fx': '-30px', '--t': '0.8s', '--d': '0.2s' } as React.CSSProperties}>
             JOIN THE TEAM · NOW HIRING
-          </motion.p>
+          </p>
 
-          <motion.h1
-            className={styles.heroHeadline}
-            initial={{ opacity: 0, y: 60 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1.1, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
-          >
+          <h1
+            className={`${styles.heroHeadline} in`}
+           style={{ '--fy': '60px', '--t': '1.1s', '--d': '0.4s' } as React.CSSProperties}>
             A family business that treats cleaners <em>right</em>.
-          </motion.h1>
+          </h1>
 
-          <motion.p
-            className={styles.heroSub}
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.9, delay: 0.7 }}
-          >
+          <p
+            className={`${styles.heroSub} in`}
+           style={{ '--fy': '30px', '--t': '0.9s', '--d': '0.7s' } as React.CSSProperties}>
             Fair pay. Paid drive time. Same routes, same clients —
             you build relationships, not turnover. Apply below.
-          </motion.p>
+          </p>
         </div>
       </section>
 
@@ -209,8 +188,8 @@ export default function WorkForUsPage() {
       <MotionSection className={`${styles.section} ${styles.sectionAlt}`}>
         <div className={styles.lookForGrid}>
           <div
-            className={styles.lookForImage}
-            style={{ backgroundImage: 'url(/images/flow_hand_marble.jpg)' }}
+            className={`${styles.lookForImage} bg-resp`}
+            style={bgStyle('/images/flow_hand_marble.jpg') as React.CSSProperties}
           />
           <div>
             <p className={styles.eyebrow}>What we look for</p>
@@ -232,16 +211,11 @@ export default function WorkForUsPage() {
       {/* ============== APPLICATION FORM ============== */}
       <section className={styles.formSection}>
         <div className={styles.formWrap}>
-          <AnimatePresence mode="wait">
             {submitted ? (
-              <motion.div
+              <div
                 key="success"
-                initial={{ opacity: 0, y: 16 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
-                className={styles.successCard}
-              >
+                className={`${styles.successCard} in`}
+               style={{ '--fy': '16px', '--t': '0.55s' } as React.CSSProperties}>
                 <div className={styles.successSpark}>✦</div>
                 <h2 className={styles.successTitle}>
                   Thanks, {first}. <em>Got your application.</em>
@@ -250,14 +224,11 @@ export default function WorkForUsPage() {
                   Our team will review your info and reach out at <strong>{phone}</strong>{' '}
                   within a few business days to set up a quick interview. If we move forward, the next steps are a background check + a paid trial shift.
                 </p>
-              </motion.div>
+              </div>
             ) : (
-              <motion.form
+              <form className="in"
                 key="form"
                 onSubmit={onSubmit}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
               >
                 <div className={styles.formHead}>
                   <p className={styles.eyebrow}>Application</p>
@@ -438,9 +409,8 @@ export default function WorkForUsPage() {
                     {submitting ? 'Sending…' : 'Submit Application'}
                   </button>
                 </div>
-              </motion.form>
+              </form>
             )}
-          </AnimatePresence>
         </div>
       </section>
 

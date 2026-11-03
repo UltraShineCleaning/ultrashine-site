@@ -1,7 +1,5 @@
 'use client';
 import { useRef } from 'react';
-import { motion, useMotionValue, useSpring, useTransform, useReducedMotion } from 'framer-motion';
-import Link from 'next/link';
 import styles from '../page.module.css';
 import { useLazyBgUrl } from './LazyBg';
 
@@ -14,76 +12,60 @@ type Props = {
   wide?: boolean;
 };
 
+/**
+ * Service card with a gentle 3D tilt + shine that follows the mouse.
+ *
+ * Speed pass (2026-11-02): no framer-motion. The pointer position is written straight
+ * into CSS variables (once per animation frame at most) and the CSS transition in
+ * page.module.css (.serviceCard) does the smoothing, so React never re-renders while
+ * the mouse moves. Touch screens never tilt (no mouse), exactly as before.
+ *
+ * At rest the card is scale 1 — an idle card must never be bigger than its grid cell
+ * (see the old liftScale bug: a 4% resting scale swallowed the 20px gutter).
+ */
 export default function TiltCard({ href, image, label, points, wide }: Props) {
   const ref = useRef<HTMLAnchorElement>(null);
-  const reducedMotion = useReducedMotion();
+  const frame = useRef(0);
   // Photo downloads only when the card is near the screen, small WebP on phones.
   const bgUrl = useLazyBgUrl(image, ref);
 
-  // Track mouse position over the card (0 to 1 on each axis)
-  const mouseX = useMotionValue(0.5);
-  const mouseY = useMotionValue(0.5);
-
-  // Spring-smoothed values (more natural feel than direct)
-  const springConfig = { stiffness: 120, damping: 18, mass: 0.4 };
-  const smoothX = useSpring(mouseX, springConfig);
-  const smoothY = useSpring(mouseY, springConfig);
-
-  // Convert position to rotation degrees (max ±8°)
-  const rotateY = useTransform(smoothX, [0, 1], [-8, 8]);
-  const rotateX = useTransform(smoothY, [0, 1], [6, -6]);
-  // 🔴 There used to be a `liftScale` here mapped to [1.02, 1.04, 1.02].
-  // Read the middle number: at REST the pointer sits at y = 0.5, so every
-  // card rendered permanently 4 % larger than the grid cell holding it.
-  // On a ~600 px card that is 24 px of extra width — 12 px bleeding out of
-  // each side, which swallowed the entire 20 px gutter and made the cards
-  // appear to touch in the middle of the row. An idle card must be exactly
-  // 1. The lift now lives on whileHover, where it belongs.
-  // Background image gets gentle parallax against the card tilt
-  const bgX = useTransform(smoothX, [0, 1], ['52%', '48%']);
-  const bgY = useTransform(smoothY, [0, 1], ['52%', '48%']);
-
   function handleMouseMove(e: React.MouseEvent<HTMLAnchorElement>) {
-    if (reducedMotion) return;
-    const rect = ref.current?.getBoundingClientRect();
-    if (!rect) return;
-    mouseX.set((e.clientX - rect.left) / rect.width);
-    mouseY.set((e.clientY - rect.top) / rect.height);
+    const el = ref.current;
+    if (!el) return;
+    const x = e.clientX;
+    const y = e.clientY;
+    cancelAnimationFrame(frame.current);
+    frame.current = requestAnimationFrame(() => {
+      const r = el.getBoundingClientRect();
+      const px = (x - r.left) / r.width;
+      const py = (y - r.top) / r.height;
+      el.style.setProperty('--ry', `${(px - 0.5) * 16}deg`);
+      el.style.setProperty('--rx', `${(0.5 - py) * 12}deg`);
+      el.style.setProperty('--mx', `${px * 100}%`);
+      el.style.setProperty('--my', `${py * 100}%`);
+    });
   }
 
   function handleMouseLeave() {
-    mouseX.set(0.5);
-    mouseY.set(0.5);
+    const el = ref.current;
+    cancelAnimationFrame(frame.current);
+    if (!el) return;
+    el.style.setProperty('--ry', '0deg');
+    el.style.setProperty('--rx', '0deg');
+    el.style.setProperty('--mx', '50%');
+    el.style.setProperty('--my', '50%');
   }
 
   return (
-    <motion.div
-      style={{ perspective: 1200 }}
-      className={wide ? styles.serviceCardWideWrapper : ''}
-    >
-      <motion.a
+    <div className={wide ? styles.serviceCardWideWrapper : ''}>
+      <a
         ref={ref}
         href={href}
         className={`${styles.serviceCard} ${wide ? styles.serviceCardWide : ''}`}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
-        style={{
-          rotateY: reducedMotion ? 0 : rotateY,
-          rotateX: reducedMotion ? 0 : rotateX,
-          transformStyle: 'preserve-3d',
-        }}
-        whileHover={reducedMotion ? undefined : { scale: 1.025 }}
-        transition={{ type: 'spring', stiffness: 260, damping: 24 }}
-        whileTap={{ scale: 0.99 }}
       >
-        <motion.div
-          className={styles.serviceImg}
-          style={{
-            backgroundImage: bgUrl ? `url(${bgUrl})` : undefined,
-            backgroundPositionX: reducedMotion ? '50%' : bgX,
-            backgroundPositionY: reducedMotion ? '50%' : bgY,
-          }}
-        />
+        <div className={styles.serviceImg} style={{ backgroundImage: bgUrl ? `url(${bgUrl})` : undefined }} />
         <div className={styles.serviceContent}>
           <h3 className="fraunces">{label}</h3>
           {/* A sentence has to be read start-to-finish before it means
@@ -94,30 +76,11 @@ export default function TiltCard({ href, image, label, points, wide }: Props) {
               <li key={p}>{p}</li>
             ))}
           </ul>
-          <motion.span
-            className={styles.serviceArrow}
-            initial={{ x: 0 }}
-            whileHover={{ x: 6 }}
-            transition={{ duration: 0.3 }}
-          >
-            →
-          </motion.span>
+          <span className={styles.serviceArrow}>→</span>
         </div>
-        {/* Subtle shine that follows mouse */}
-        <motion.div
-          style={{
-            position: 'absolute',
-            inset: 0,
-            pointerEvents: 'none',
-            background: useTransform(
-              [smoothX, smoothY] as any,
-              ([x, y]: any) =>
-                `radial-gradient(circle at ${x * 100}% ${y * 100}%, rgba(28, 97, 240,0.18) 0%, transparent 50%)`,
-            ),
-            borderRadius: 'var(--r-lg)',
-          }}
-        />
-      </motion.a>
-    </motion.div>
+        {/* Subtle shine that follows the mouse */}
+        <div className={styles.serviceShine} aria-hidden="true" />
+      </a>
+    </div>
   );
 }

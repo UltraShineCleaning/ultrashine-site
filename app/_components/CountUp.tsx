@@ -1,6 +1,5 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
-import { useInView, useMotionValue, useSpring, useReducedMotion } from 'framer-motion';
 
 type Props = {
   to: number;
@@ -15,57 +14,54 @@ type Props = {
 /**
  * Counts up from 0 to `to` when scrolled into view.
  * Used in trust strip ("13 Cities Served") and review rating ("5.0 Google").
+ *
+ * Speed pass (2026-11-02): no framer-motion. One IntersectionObserver + a short
+ * requestAnimationFrame loop that stops when the number lands. The FINAL number is
+ * what the server renders, so Google, screen readers and no-JS visitors always read
+ * the real value (the old version shipped "0" in the HTML until it animated).
  */
 export default function CountUp({ to, duration = 1.6, prefix = '', suffix = '', className, decimals = 0 }: Props) {
   const ref = useRef<HTMLSpanElement>(null);
-  // amount: 0.1 (was 0.5) so the badge counts up even when only a sliver is in
-  // view — the trust strip badges are short and on tall hero pages the user
-  // can land with the strip already half-visible, which the old 0.5 threshold
-  // never satisfied.
-  const inView = useInView(ref, { once: true, amount: 0.1 });
-  const reducedMotion = useReducedMotion();
-  const motionValue = useMotionValue(0);
-  const spring = useSpring(motionValue, { duration: duration * 1000, bounce: 0 });
-  // Stored as string so trailing-zero decimals (e.g. "5.0") survive — Number()
-  // strips them, so "5.0" would render as "5" without a string round-trip.
-  const [display, setDisplay] = useState<string>(() =>
-    reducedMotion ? to.toFixed(decimals) : (0).toFixed(decimals)
-  );
-  const hasFired = useRef(false);
+  const fmt = (n: number) => (decimals > 0 ? n.toFixed(decimals) : String(Math.round(n)));
+  const [display, setDisplay] = useState<string>(() => fmt(to));
 
-  // Primary trigger: IntersectionObserver via framer-motion's useInView.
   useEffect(() => {
-    if (reducedMotion) {
-      setDisplay(to.toFixed(decimals));
-      return;
-    }
-    if (inView && !hasFired.current) {
-      hasFired.current = true;
-      motionValue.set(to);
-    }
-  }, [inView, to, motionValue, reducedMotion, decimals]);
-
-  // Fallback: on mount, if the element is already in the viewport (e.g. the
-  // user lands deep-linked or clicks "Skip Intro" and the trust strip is
-  // immediately visible), IntersectionObserver may not fire an entry event in
-  // every browser. Check bounding rect once on mount and fire if needed.
-  useEffect(() => {
-    if (reducedMotion || hasFired.current) return;
     const el = ref.current;
     if (!el) return;
-    const rect = el.getBoundingClientRect();
-    const inViewport = rect.bottom > 0 && rect.top < window.innerHeight;
-    if (inViewport) {
-      hasFired.current = true;
-      motionValue.set(to);
-    }
-  }, [to, motionValue, reducedMotion]);
-
-  useEffect(() => {
-    return spring.on('change', (latest) => {
-      setDisplay(decimals > 0 ? latest.toFixed(decimals) : String(Math.round(latest)));
-    });
-  }, [spring, decimals]);
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (!('IntersectionObserver' in window)) return;
+    let raf = 0;
+    let done = false;
+    const run = () => {
+      if (done) return;
+      done = true;
+      const t0 = performance.now();
+      const ms = duration * 1000;
+      const tick = (t: number) => {
+        const p = Math.min(1, (t - t0) / ms);
+        const eased = 1 - Math.pow(1 - p, 3); // ease-out
+        setDisplay(fmt(to * eased));
+        if (p < 1) raf = requestAnimationFrame(tick);
+      };
+      setDisplay(fmt(0));
+      raf = requestAnimationFrame(tick);
+    };
+    const io = new IntersectionObserver(
+      ([e]) => {
+        if (e.isIntersecting) {
+          io.disconnect();
+          run();
+        }
+      },
+      { threshold: 0.1 },
+    );
+    io.observe(el);
+    return () => {
+      io.disconnect();
+      cancelAnimationFrame(raf);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [to, duration, decimals]);
 
   return (
     <span ref={ref} className={className}>

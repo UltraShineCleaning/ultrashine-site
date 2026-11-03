@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { motion, AnimatePresence } from 'framer-motion';
 import SiteHeader from '../_components/SiteHeader';
 import SiteFooter from '../_components/SiteFooter';
 import JsonLd from '../_components/JsonLd';
@@ -251,30 +250,31 @@ export default function FaqPage() {
                 const key = `${cat.id}-${i}`;
                 const isOpen = open === key;
                 return (
-                  <motion.div
+                  <div
                     key={key}
                     className={`${styles.faqItem} ${isOpen ? styles.faqItemOpen : ''}`}
                     onClick={() => setOpen(isOpen ? null : key)}
-                    layout
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        setOpen(isOpen ? null : key);
+                      }
+                    }}
+                    role="button"
+                    tabIndex={0}
+                    aria-expanded={isOpen}
                   >
                     <div className={styles.faqQ}>
                       <span>{q.q}</span>
                       <span className={styles.faqQIcon}>+</span>
                     </div>
-                    <AnimatePresence initial={false}>
-                      {isOpen && (
-                        <motion.div
-                          initial={{ height: 0, opacity: 0 }}
-                          animate={{ height: 'auto', opacity: 1 }}
-                          exit={{ height: 0, opacity: 0 }}
-                          transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-                          style={{ overflow: 'hidden' }}
-                        >
-                          <div className={styles.faqA}>{q.a}</div>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </motion.div>
+                    {/* Always in the HTML (Google reads every answer); CSS opens/closes it. */}
+                    <div className={`acc ${isOpen ? 'acc-open' : ''}`}>
+                      <div>
+                        <div className={styles.faqA}>{q.a}</div>
+                      </div>
+                    </div>
+                  </div>
                 );
               })}
             </div>

@@ -1,89 +1,62 @@
-'use client';
-
 import Link from 'next/link';
-import { useRef } from 'react';
-import { motion, useScroll, useTransform, useReducedMotion } from 'framer-motion';
 import SiteHeader from '../_components/SiteHeader';
 import SiteFooter from '../_components/SiteFooter';
 import MotionSection from '../_components/MotionSection';
 import ServiceAreaMap from '../_components/ServiceAreaMap';
 import CountUp from '../_components/CountUp';
 import styles from './page.module.css';
+import { bgStyle } from '../_lib/optImage';
 
 export default function AboutPage() {
-  const heroRef = useRef<HTMLElement>(null);
-  const reducedMotion = useReducedMotion();
-
-  const { scrollYProgress } = useScroll({ target: heroRef, offset: ['start start', 'end start'] });
-  const photoY = useTransform(scrollYProgress, [0, 1], ['0%', '20%']);
-  const photoScale = useTransform(scrollYProgress, [0, 1], [1.05, 1.18]);
-  const contentOpacity = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
-
   return (
     <main>
       <SiteHeader inPage={false} />
 
       {/* ============== HERO ============== */}
-      <section ref={heroRef} className={styles.hero}>
-        <motion.div
-          className={styles.heroBg}
-          style={{
-            backgroundImage: `url(/images/hero_3d_about.jpg)`,
-            y: reducedMotion ? '0%' : photoY,
-            scale: reducedMotion ? 1.05 : photoScale,
-          }}
+      <section className={styles.hero}>
+        <div
+          className={`${styles.heroBg} hero-par bg-resp`}
+          style={bgStyle('/images/hero_3d_about.jpg') as React.CSSProperties}
         />
         <div className={styles.heroOverlay} />
 
-        <motion.div className={styles.heroContent} style={{ opacity: reducedMotion ? 1 : contentOpacity }}>
-          <motion.p
-            className={styles.breadcrumb}
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-          >
+        <div className={`${styles.heroContent} hero-fade`}>
+          <p
+            className={`${styles.breadcrumb} in`}
+           style={{ '--fy': '-10px', '--t': '0.6s', '--d': '0.1s' } as React.CSSProperties}>
             <Link href="/">Home</Link>
             <span> / </span>
             <span style={{ opacity: 0.8 }}>About</span>
-          </motion.p>
+          </p>
 
-          <motion.p
-            className={styles.heroEyebrow}
-            initial={{ opacity: 0, x: -30 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-          >
+          <p
+            className={`${styles.heroEyebrow} in`}
+           style={{ '--fx': '-30px', '--t': '0.8s', '--d': '0.2s' } as React.CSSProperties}>
             OUR STORY · EST. 2018
-          </motion.p>
+          </p>
 
-          <motion.h1
-            className={styles.heroHeadline}
-            initial={{ opacity: 0, y: 60 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1.1, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
-          >
+          <h1
+            className={`${styles.heroHeadline} in`}
+           style={{ '--fy': '60px', '--t': '1.1s', '--d': '0.4s' } as React.CSSProperties}>
             From a Connecticut <em>basement</em> to thirteen <em>South Florida</em> cities.
-          </motion.h1>
+          </h1>
 
-          <motion.p
-            className={styles.heroSub}
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.9, delay: 0.7 }}
-          >
+          <p
+            className={`${styles.heroSub} in`}
+           style={{ '--fy': '30px', '--t': '0.9s', '--d': '0.7s' } as React.CSSProperties}>
             Tiago + Francine Rena built Ultra Shine Cleaning the slow way —
             one home at a time, every clean done by people we'd hand the
             keys to ourselves.
-          </motion.p>
-        </motion.div>
+          </p>
+        </div>
       </section>
 
       {/* ============== STORY: THE FOUNDING ============== */}
       <MotionSection className={styles.section}>
         <div className={styles.storyGrid}>
           <div
-            className={styles.storyImage}
-            style={{ backgroundImage: `url(/images/flow_hand_marble.jpg)` }}
+            className={`${styles.storyImage} bg-resp`}
+            style={bgStyle('/images/flow_hand_marble.jpg') as React.CSSProperties}
           />
           <div>
             <p className={styles.eyebrow}>How it started</p>
@@ -222,20 +195,20 @@ export default function AboutPage() {
         </div>
 
         <div className={styles.teamGrid}>
-          <div className={styles.teamTile} style={{ backgroundImage: `url(/images/team_van.jpg)` }}>
+          <div className={`${styles.teamTile} bg-resp`} style={bgStyle('/images/team_van.jpg') as React.CSSProperties}>
             <div className={styles.teamTileLabel}>
               On the road
               <em>13 cities, 7 days a week</em>
             </div>
           </div>
           <div className={styles.teamCol}>
-            <div className={styles.teamTile} style={{ backgroundImage: `url(/images/flow_hand_marble.jpg)` }}>
+            <div className={`${styles.teamTile} bg-resp`} style={bgStyle('/images/flow_hand_marble.jpg') as React.CSSProperties}>
               <div className={styles.teamTileLabel}>
                 Detail work
                 <em>By hand, every surface</em>
               </div>
             </div>
-            <div className={styles.teamTile} style={{ backgroundImage: `url(/images/flow_sparkles.jpg)` }}>
+            <div className={`${styles.teamTile} bg-resp`} style={bgStyle('/images/flow_sparkles.jpg') as React.CSSProperties}>
               <div className={styles.teamTileLabel}>
                 The finish
                 <em>Spotless, every visit</em>
@@ -243,13 +216,13 @@ export default function AboutPage() {
             </div>
           </div>
           <div className={styles.teamCol}>
-            <div className={styles.teamTile} style={{ backgroundImage: `url(/images/flow_living_room_navy.jpg)` }}>
+            <div className={`${styles.teamTile} bg-resp`} style={bgStyle('/images/flow_living_room_navy.jpg') as React.CSSProperties}>
               <div className={styles.teamTileLabel}>
                 The reset
                 <em>Calm, ordered, fresh</em>
               </div>
             </div>
-            <div className={styles.teamTile} style={{ backgroundImage: `url(/images/flow_bathroom_sunset.jpg)` }}>
+            <div className={`${styles.teamTile} bg-resp`} style={bgStyle('/images/flow_bathroom_sunset.jpg') as React.CSSProperties}>
               <div className={styles.teamTileLabel}>
                 The standard
                 <em>Hotel-grade, every time</em>

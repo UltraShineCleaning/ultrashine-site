@@ -27,13 +27,18 @@
 .leftBg {
   position: absolute;
   inset: 0;
-  background-image: url('/images/hero_3d_quote.jpg');
+  background-image: url('/images/opt/hero_3d_quote-sm.webp');
   background-size: cover;
   background-position: center;
   opacity: 0.32;
   filter: saturate(1.05);
   mix-blend-mode: normal;
 }
+/* Speed pass 2026-11-02: phones get the 900px WebP above, computers this one. */
+@media (min-width: 900px) {
+  .leftBg { background-image: url('/images/opt/hero_3d_quote-lg.webp'); }
+}
+
 
 /* Decorative sparkles */
 .spark {

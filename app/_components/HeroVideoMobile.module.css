@@ -739,6 +739,12 @@
 .price + .cta {
   margin-top: 10px;
 }
+/* Steps 2 and 3: the button sits at the bottom of the card (margin-top: auto), but when
+   the card is full that auto gap shrinks to zero and the button touched the add-on chips
+   (owner, 2026-11-02). Always keep breathing room above it. */
+.pane > *:not(.price):has(+ .cta) {
+  margin-bottom: 14px;
+}
 
 .trust {
   margin: 9px 0 0;

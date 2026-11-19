@@ -1,9 +1,11 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useRef, useState, type DragEvent } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState, type DragEvent, type ReactNode } from 'react';
+import { createPortal } from 'react-dom';
 import s from './PipelineTab.module.css';
 import {
   LEAD_SOURCES,
+  BOARD_STAGES,
   OPEN_STAGES,
   STAGE_LABEL,
   STAGE_WEIGHT,
@@ -32,8 +34,8 @@ import {
  */
 
 const DAY = 86_400_000;
-const STAGE_CLASS: Record<Stage, string> = { new: s.stNew, contacted: s.stCon, walkthrough: s.stWalk, quoted: s.stQuote, booked: s.stWon, lost: s.stLost };
-const STAGE_DOT: Record<Stage, string> = { new: '#9fbfe8', contacted: '#d8f23f', walkthrough: '#f07a55', quoted: '#ede6d6', booked: '#d8f23f', lost: '#7e7970' };
+const STAGE_CLASS: Record<Stage, string> = { new: s.stNew, contacted: s.stCon, walkthrough: s.stWalk, quoted: s.stQuote, booked: s.stWon, done: s.stDone, lost: s.stLost };
+const STAGE_DOT: Record<Stage, string> = { new: '#9fbfe8', contacted: '#d8f23f', walkthrough: '#f07a55', quoted: '#ede6d6', booked: '#d8f23f', done: '#8fd18a', lost: '#7e7970' };
 const SRC_BG: Record<string, string> = { W: '#B9D7F7', '@': '#F2C6A8', IG: '#E7C1F2', FB: '#BFD3F7', G: '#D8F2B8', R: '#F7E2C8', N: '#C9F2DD', Y: '#F7C6C6' };
 const SERVICES = ['Regular Cleaning', 'Deep Cleaning', 'Move-In / Move-Out', 'Post-Construction', 'Commercial'];
 const LOST_REASONS = ['Price', 'Picked another company', 'No reply', 'Outside our area', 'Not a fit', 'Other'];
@@ -70,6 +72,8 @@ function cardDate(l: LeadRecord, now: number): string {
     return `Quote sent ${day(l.stageAt)}${late ? ' · follow up' : ''}`;
   }
   if (l.stage === 'contacted') return `Contacted ${day(l.stageAt)}`;
+  if (l.stage === 'booked') return `Booked ${day(l.stageAt)}${l.jobberClientId ? ' · in Jobber' : ''}`;
+  if (l.stage === 'done') return `Cleaned ${day(l.doneAt ?? l.stageAt)}`;
   return `Requested ${day(l.at)} · ${ago(l.at, now)}`;
 }
 function valueText(l: LeadRecord): string {
@@ -176,7 +180,7 @@ export default function PipelineTab() {
   const live = prospects.filter((l) => !l.archived);
   const byStage = (st: Stage) =>
     live
-      .filter((l) => l.stage === st)
+      .filter((l) => l.stage === st && (st !== 'booked' || now - l.stageAt < 60 * DAY))
       .sort((a, b) => (st === 'walkthrough' ? (a.walkthroughAt ?? 9e15) - (b.walkthroughAt ?? 9e15) : b.at - a.at));
 
   const monthStart = useMemo(() => {
@@ -186,7 +190,8 @@ export default function PipelineTab() {
   const open = live.filter((l) => OPEN_STAGES.includes(l.stage) && now - l.stageAt < 60 * DAY);
   const openValue = open.reduce((a, l) => a + leadValue(l), 0);
   const weighted = open.reduce((a, l) => a + leadValue(l) * STAGE_WEIGHT[l.stage], 0);
-  const bookedMonth = live.filter((l) => l.stage === 'booked' && l.stageAt >= monthStart);
+  const bookedMonth = live.filter((l) => (l.stage === 'booked' || l.stage === 'done') && l.stageAt >= monthStart);
+  const doneMonth = live.filter((l) => l.stage === 'done' && l.stageAt >= monthStart);
   const lostMonth = live.filter((l) => l.stage === 'lost' && l.stageAt >= monthStart);
   const applicants = visible.filter((l) => l.kind === 'application' && !l.archived);
   const waiting = live.filter((l) => l.stage === 'new' && now - l.at > 3600_000).length;
@@ -241,7 +246,10 @@ export default function PipelineTab() {
         aria-label={`${l.name}, ${title(l)}, ${STAGE_LABEL[l.stage]}`}
       >
         <span className={s.more} aria-hidden="true">⋯</span>
-        <div className={s.d}>{cardDate(l, now)}</div>
+        <div className={s.d}>
+          {cardDate(l, now)}
+          {hot && <span className={s.hot}> · reply now</span>}
+        </div>
         <h4>{title(l)}</h4>
         <div className={s.c}>
           {l.name}
@@ -250,7 +258,6 @@ export default function PipelineTab() {
         <div className={s.v}>
           <b>{valueText(l)}</b>
           <span className={s.srcRow}>
-            {hot && <span className={s.hot}>reply now</span>}
             <span className={s.src} style={{ background: SRC_BG[src.code] ?? '#EDE6D6' }} title={src.label}>{src.code}</span>
           </span>
         </div>
@@ -331,7 +338,7 @@ export default function PipelineTab() {
 
       {leads && view === 'board' && (
         <div className={s.board}>
-          {OPEN_STAGES.map((st) => {
+          {BOARD_STAGES.map((st) => {
             const items = byStage(st);
             const val = items.reduce((a, l) => a + leadValue(l), 0);
             return (
@@ -346,17 +353,17 @@ export default function PipelineTab() {
                   </div>
                   {st === 'new' && <button className={s.add} onClick={() => setAdding(true)} aria-label="Add a lead">+</button>}
                 </div>
-                {items.length === 0 && <p className={s.empty}>{st === 'new' ? 'New website requests land here.' : 'Drag a card here.'}</p>}
+                {items.length === 0 && <p className={s.empty}>{st === 'new' ? 'New website requests land here.' : st === 'booked' ? 'Drag a card here when they book.' : 'Drag a card here.'}</p>}
                 {items.map((l) => <Card key={l.id} l={l} />)}
               </section>
             );
           })}
           <div className={s.side}>
-            <div className={`${s.drop} ${s.won} ${dragOver === 'booked' ? s.dropOver : ''}`} onDragOver={over('booked')} onDragLeave={() => setDragOver(null)} onDrop={dropTo('booked')} onClick={() => setView('closed')} role="button" tabIndex={0}>
+            <div className={`${s.drop} ${s.won} ${dragOver === 'done' ? s.dropOver : ''}`} onDragOver={over('done')} onDragLeave={() => setDragOver(null)} onDrop={dropTo('done')} onClick={() => setView('closed')} role="button" tabIndex={0}>
               <span className={s.o}>✓</span>
-              <b>Booked</b>
-              <span>{bookedMonth.length} this month</span>
-              {bookedMonth.length > 0 && <span>{money(bookedMonth.reduce((a, l) => a + leadValue(l), 0))}</span>}
+              <b>Cleaning done</b>
+              <span>{doneMonth.length} this month</span>
+              <span className={s.zoneHint}>moves here by itself when Jobber marks the visit complete</span>
             </div>
             <div className={`${s.drop} ${s.lost} ${dragOver === 'lost' ? s.dropOver : ''}`} onDragOver={over('lost')} onDragLeave={() => setDragOver(null)} onDrop={dropTo('lost')} onClick={() => setView('closed')} role="button" tabIndex={0}>
               <span className={s.o}>✕</span>
@@ -373,12 +380,12 @@ export default function PipelineTab() {
             view === 'applicants'
               ? applicants
               : view === 'closed'
-                ? live.filter((l) => l.stage === 'booked' || l.stage === 'lost').sort((a, b) => b.stageAt - a.stageAt)
+                ? live.filter((l) => l.stage === 'booked' || l.stage === 'done' || l.stage === 'lost').sort((a, b) => b.stageAt - a.stageAt)
                 : [...prospects].sort((a, b) => b.at - a.at)
           }
           now={now}
           onOpen={setOpenId}
-          title={view === 'applicants' ? 'Job applicants' : view === 'closed' ? 'Booked + lost' : 'All leads'}
+          title={view === 'applicants' ? 'Job applicants' : view === 'closed' ? 'Booked, cleaned + lost' : 'All leads'}
           back={view === 'closed' ? () => setView('board') : undefined}
         />
       )}
@@ -387,8 +394,9 @@ export default function PipelineTab() {
         Drag a card to move it, or open it. Website quote requests land in “New lead” on their own; older email requests and Instagram/Facebook DMs tagged as leads appear too. Archive hides a card — nothing is ever deleted.
       </p>
 
-      {sel && <Drawer l={sel} now={now} onClose={() => setOpenId(null)} patch={patch} />}
+      {sel && <Portal><Drawer l={sel} now={now} onClose={() => setOpenId(null)} patch={patch} onJobber={(lead) => setLeads((cur) => cur?.map((x) => (x.id === lead.id ? { ...x, ...lead } : x)) ?? cur)} /></Portal>}
       {adding && (
+        <Portal>
         <NewLead
           onClose={() => setAdding(false)}
           onSaved={(l) => {
@@ -398,6 +406,7 @@ export default function PipelineTab() {
             flash('Lead added');
           }}
         />
+        </Portal>
       )}
       {toast && <div className={s.toast} role="status">{toast}</div>}
     </div>
@@ -459,11 +468,30 @@ function LeadList({ rows, now, onOpen, title, back }: { rows: LeadRecord[]; now:
 }
 
 /* ================================================================ drawer */
-function Drawer({ l, now, onClose, patch }: { l: LeadRecord; now: number; onClose: () => void; patch: (id: string, b: Partial<LeadRecord> & { stage?: Stage }, m?: string) => Promise<void> }) {
+function Drawer({ l, now, onClose, patch, onJobber }: { l: LeadRecord; now: number; onClose: () => void; patch: (id: string, b: Partial<LeadRecord> & { stage?: Stage }, m?: string) => Promise<void>; onJobber: (lead: LeadRecord) => void }) {
   const [notes, setNotes] = useState(l.ownerNotes ?? '');
   const [price, setPrice] = useState(l.quotedPrice ? String(l.quotedPrice) : '');
   const [walk, setWalk] = useState(toLocalInput(l.walkthroughAt));
   const [losing, setLosing] = useState(false);
+  const [jb, setJb] = useState<'idle' | 'busy'>('idle');
+  const [jbMsg, setJbMsg] = useState<string | null>(null);
+
+  /** Finds or creates the client in Jobber + a request for this job (POST /api/leads/jobber). */
+  const sendToJobber = async () => {
+    setJb('busy');
+    setJbMsg(null);
+    try {
+      const r = await fetch('/api/leads/jobber', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ id: l.id }) });
+      const d = await r.json();
+      if (!r.ok) throw new Error(d.error || 'Could not add to Jobber');
+      if (d.lead) onJobber(d.lead);
+      setJbMsg(d.note || 'Added to Jobber ✓');
+    } catch (e) {
+      setJbMsg((e as Error).message);
+    } finally {
+      setJb('idle');
+    }
+  };
 
   useEffect(() => {
     setNotes(l.ownerNotes ?? '');
@@ -484,7 +512,7 @@ function Drawer({ l, now, onClose, patch }: { l: LeadRecord; now: number; onClos
   const mail = mailHref(l);
   const map = mapHref(l);
   const home = homeLine(l);
-  const chev: Stage[] = ['new', 'contacted', 'walkthrough', 'quoted', 'booked'];
+  const chev: Stage[] = ['new', 'contacted', 'walkthrough', 'quoted', 'booked', 'done'];
   const src = sourceLabel(l);
 
   const savePrice = () => {
@@ -525,7 +553,7 @@ function Drawer({ l, now, onClose, patch }: { l: LeadRecord; now: number; onClos
           <div className={s.chev} role="group" aria-label="Stage">
             {chev.map((st) => (
               <button key={st} className={l.stage === st ? s.chevOn : ''} onClick={() => l.stage !== st && patch(l.id, { stage: st }, `Moved to ${STAGE_LABEL[st]}`)} aria-pressed={l.stage === st}>
-                {STAGE_LABEL[st].replace('New lead', 'New')}
+                {STAGE_LABEL[st].replace('New lead', 'New').replace('Cleaning done', 'Done')}
               </button>
             ))}
           </div>
@@ -556,6 +584,11 @@ function Drawer({ l, now, onClose, patch }: { l: LeadRecord; now: number; onClos
               <div className={s.span2}><small>Extras</small>{l.addOns?.length ? l.addOns.join(', ') : 'None'}</div>
               <div className={s.span2}><small>Address</small>{[l.street, l.city, l.zip].filter(Boolean).join(', ') || '—'}</div>
               {l.estimate && <div className={s.span2}><small>Website estimate</small>{l.estimate}</div>}
+              <div className={s.span2}>
+                <small>Jobber</small>
+                {l.jobberClientId ? (l.jobberRequestId ? 'Client + request in Jobber' : 'Client is in Jobber') : 'Not in Jobber yet — use “Add to Jobber” when they book'}
+                {l.doneAt ? ` · first clean ${day(l.doneAt)}` : ''}
+              </div>
             </>
           )}
         </div>
@@ -608,12 +641,16 @@ function Drawer({ l, now, onClose, patch }: { l: LeadRecord; now: number; onClos
           </div>
         ) : (
           <div className={s.foot}>
-            {l.kind !== 'application' && l.stage !== 'booked' && <button className={`${s.btn} ${s.lime}`} onClick={() => patch(l.id, { stage: 'booked' }, 'Booked! 🎉')}>✓ Mark booked</button>}
+            {l.kind !== 'application' && l.stage !== 'booked' && l.stage !== 'done' && <button className={`${s.btn} ${s.lime}`} onClick={() => patch(l.id, { stage: 'booked' }, 'Booked! 🎉')}>✓ Mark booked</button>}
+            {l.kind !== 'application' && l.stage === 'booked' && <button className={`${s.btn} ${s.lime}`} onClick={() => patch(l.id, { stage: 'done' }, 'Cleaning done ✓')}>✓ Cleaning done</button>}
+            {l.kind !== 'application' && !l.jobberClientId && <button className={s.btn} onClick={sendToJobber} disabled={jb === 'busy'}>{jb === 'busy' ? 'Adding…' : '⇪ Add to Jobber'}</button>}
+            {l.jobberUrl && <a className={s.btn} href={l.jobberUrl} target="_blank" rel="noreferrer">Open in Jobber ↗</a>}
             {l.kind !== 'application' && l.stage !== 'lost' && <button className={s.btn} onClick={() => setLosing(true)}>✕ Mark lost</button>}
             {l.kind === 'social' && <button className={s.btn} onClick={() => window.dispatchEvent(new CustomEvent('admin:go', { detail: 'social' }))}>Open conversation</button>}
             <button className={s.btn} onClick={() => patch(l.id, { archived: !l.archived }, l.archived ? 'Restored' : 'Archived')}>{l.archived ? '↺ Restore' : '⇩ Archive'}</button>
           </div>
         )}
+        {jbMsg && <p className={s.jbMsg}>{jbMsg}</p>}
       </aside>
     </div>
   );
@@ -679,4 +716,14 @@ function NewLead({ onClose, onSaved }: { onClose: () => void; onSaved: (l: LeadR
       </aside>
     </div>
   );
+}
+
+/**
+ * Popups render straight into <body> so they always sit in the middle of the screen above
+ * everything (the tab panel's fade-in animation would otherwise trap them under the top bar).
+ */
+function Portal({ children }: { children: ReactNode }) {
+  const [ready, setReady] = useState(false);
+  useEffect(() => setReady(true), []);
+  return ready ? createPortal(<div className={s.portalRoot}>{children}</div>, document.body) : null;
 }

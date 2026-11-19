@@ -8,7 +8,7 @@ const P = require('path').resolve(__dirname, '../../app/_lib');
 let pass = 0, fail = 0;
 const ok = (c: any, name: string) => { if (c) { pass++; } else { fail++; console.log('  ✗', name); } };
 
-const { parseQuoteText, parseApplicationText, leadFromQuote, leadFromApplication, updateLead, saveLead, listLeads, syncSocial } = require(`${P}/leads/store`);
+const { parseQuoteText, parseApplicationText, leadFromQuote, leadFromApplication, updateLead, saveLead, listLeads, syncSocial, createManualLead, markDoneFromVisits, getLead } = require(`${P}/leads/store`);
 const T = require(`${P}/leads/types`);
 const { demoLeads } = require(`${P}/leads/demo`);
 
@@ -78,6 +78,29 @@ const { demoLeads } = require(`${P}/leads/demo`);
   const soc = all.find((x: any) => x.id === 'soc_instagram_9');
   ok(soc && soc.name === '@jess.boca' && soc.lastMessage === 'price?', 'social lead from a tagged conversation');
   ok(!all.find((x: any) => x.id === 'soc_instagram_8'), 'untagged conversation skipped');
+
+  console.log('pipeline v2 (walkthrough, price, manual lead, archive, cleaning done from Jobber)');
+  const w2 = await updateLead('s1', { stage: 'walkthrough', quotedPrice: 420, walkthroughAt: Date.now() + 86_400_000 });
+  ok(w2.stage === 'walkthrough' && w2.quotedPrice === 420 && w2.walkthroughAt, 'walkthrough + quoted price + date');
+  ok(T.leadValue(w2) === 420, 'value = quoted price once set');
+  ok((await updateLead('s1', { quotedPrice: -5 })).quotedPrice === 420, 'bad price ignored');
+  const lostL = await updateLead('s1', { stage: 'lost', lostReason: 'Price' });
+  ok(lostL.stage === 'lost' && lostL.lostReason === 'Price', 'lost with a reason');
+  const backOpen = await updateLead('s1', { stage: 'contacted' });
+  ok(!backOpen.lostReason, 'reason cleared when it comes back');
+  ok((await updateLead('s1', { archived: true })).archived === true, 'archive (never deleted)');
+  ok(T.leadStats([await getLead('s1')]).counts.contacted === 0, 'archived leads leave the counts');
+  await updateLead('s1', { archived: false });
+  const man = await createManualLead({ name: 'Rita Gomez', phone: '5615550100', email: 'rita@example.com', service: 'Deep Cleaning', source: 'Referral' });
+  ok(man && man.origin === 'manual' && man.stage === 'new' && T.sourceLabel(man) === 'Referral', 'manual lead');
+  ok((await createManualLead({ name: '  ' })) === null, 'manual lead needs a name');
+  await updateLead(man.id, { stage: 'booked' });
+  const movedN = await markDoneFromVisits([{ clientId: 'J1', clientName: 'Someone Else', email: 'RITA@example.com', completedAt: Date.now() }]);
+  const doneL = await getLead(man.id);
+  ok(movedN === 1 && doneL.stage === 'done' && doneL.doneAt && doneL.jobberClientId === 'J1', 'booked → cleaning done from a Jobber visit (email match)');
+  ok((await markDoneFromVisits([{ clientId: 'J1', clientName: 'x', email: 'rita@example.com', completedAt: Date.now() }])) === 0, 'never moves a lead twice');
+  const csv = T.leadsToCsv([doneL]);
+  ok(csv.split('\n').length === 2 && csv.includes('Cleaning done') && csv.includes('Rita Gomez'), 'CSV export');
 
   console.log('stats (demo leads)');
   const now = Date.now();

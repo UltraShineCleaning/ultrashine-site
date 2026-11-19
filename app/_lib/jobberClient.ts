@@ -1293,3 +1293,89 @@ export async function getRecentlyCompletedVisits(days = 3): Promise<{ visits: Co
   }
   return { visits };
 }
+
+/* =====================================================================
+   WRITE — Pipeline "Add to Jobber" (2026-11-18)
+   Needs the write_clients + write_requests scopes on the Jobber app and
+   one Reconnect. Every failure comes back as plain words for the drawer.
+   ===================================================================== */
+
+export type JobberLeadInput = {
+  name: string;
+  phone?: string;
+  email?: string;
+  title: string;
+  details?: string;
+};
+
+export type JobberLeadResult =
+  | { ok: true; clientId: string; requestId: string | null; url: string | null; reusedClient: boolean; note?: string }
+  | { ok: false; error: string };
+
+function writeError(msgs: string[]): string {
+  const m = msgs.join(' · ');
+  if (/scope|permission|not authorized|unauthorized|access denied|forbidden/i.test(m))
+    return 'Jobber blocked it: the app needs permission to create clients and requests. Turn on "Clients – write" and "Requests – write" in the Jobber Developer Center, then Reconnect Jobber on the Schedule tab.';
+  return `Jobber said: ${m.slice(0, 240)}`;
+}
+
+/** Find a client by email or phone so we never create a duplicate. */
+async function findJobberClient(email?: string, phone?: string): Promise<{ id: string; webUri?: string } | null> {
+  for (const term of [email, phone?.replace(/\D/g, '').slice(-10)].filter(Boolean) as string[]) {
+    const r = await jobberQuery<{ clients: { nodes: { id: string; webUri?: string; emails?: { address?: string }[]; phones?: { number?: string }[] }[] } }>(
+      `query FindClient($q: String!) { clients(searchTerm: $q, first: 5) { nodes { id webUri emails { address } phones { number } } } }`,
+      { q: term },
+    );
+    const nodes = r?.data?.clients?.nodes ?? [];
+    const hit = nodes.find(
+      (n) =>
+        (email && n.emails?.some((e) => e.address?.toLowerCase() === email.toLowerCase())) ||
+        (phone && n.phones?.some((p) => (p.number ?? '').replace(/\D/g, '').endsWith(phone.replace(/\D/g, '').slice(-10)))),
+    );
+    if (hit) return hit;
+  }
+  return null;
+}
+
+export async function addLeadToJobber(input: JobberLeadInput): Promise<JobberLeadResult> {
+  if (!isJobberConfigured()) return { ok: false, error: 'Jobber is not connected — connect it on the Schedule tab first.' };
+  const token = await getAccessToken();
+  if (!token) return { ok: false, error: getLastTokenError() ?? 'Jobber connection expired — Reconnect it on the Schedule tab.' };
+
+  let client = await findJobberClient(input.email, input.phone).catch(() => null);
+  const reused = !!client;
+  if (!client) {
+    const parts = input.name.replace(/^@/, '').trim().split(/\s+/);
+    const firstName = parts[0] || 'New';
+    const lastName = parts.slice(1).join(' ') || 'Client';
+    const vars: Record<string, unknown> = {
+      input: {
+        firstName,
+        lastName,
+        ...(input.email ? { emails: [{ description: 'MAIN', primary: true, address: input.email }] } : {}),
+        ...(input.phone ? { phones: [{ description: 'MAIN', primary: true, number: input.phone }] } : {}),
+      },
+    };
+    const r = await jobberQuery<{ clientCreate: { client: { id: string; webUri?: string } | null; userErrors: { message: string }[] } }>(
+      `mutation NewClient($input: ClientCreateInput!) { clientCreate(input: $input) { client { id webUri } userErrors { message path } } }`,
+      vars,
+    );
+    if (!r) return { ok: false, error: 'Could not reach Jobber — try again.' };
+    if (r.errors?.length) return { ok: false, error: writeError(r.errors.map((e) => e.message)) };
+    const ue = r.data?.clientCreate?.userErrors ?? [];
+    if (ue.length || !r.data?.clientCreate?.client) return { ok: false, error: writeError(ue.map((e) => e.message).concat(ue.length ? [] : ['no client returned'])) };
+    client = r.data.clientCreate.client;
+  }
+
+  const req = await jobberQuery<{ requestCreate: { request: { id: string; webUri?: string } | null; userErrors: { message: string }[] } }>(
+    `mutation NewRequest($input: RequestCreateInput!) { requestCreate(input: $input) { request { id webUri } userErrors { message path } } }`,
+    { input: { clientId: client.id, title: input.title.slice(0, 120) } },
+  );
+  const reqErr = req?.errors?.length ? req.errors.map((e) => e.message) : (req?.data?.requestCreate?.userErrors ?? []).map((e) => e.message);
+  const request = req?.data?.requestCreate?.request ?? null;
+  if (!request) {
+    // The client exists in Jobber either way — report that, plus why the request didn't go in.
+    return { ok: true, clientId: client.id, requestId: null, url: client.webUri ?? null, reusedClient: reused, note: reqErr.length ? `Client is in Jobber, but the request wasn't created: ${writeError(reqErr)}` : undefined };
+  }
+  return { ok: true, clientId: client.id, requestId: request.id, url: request.webUri ?? client.webUri ?? null, reusedClient: reused };
+}

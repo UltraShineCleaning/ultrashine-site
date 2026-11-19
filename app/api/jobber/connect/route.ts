@@ -31,6 +31,10 @@ const JOBBER_SCOPES = [
   'read_invoices',
   'read_users',
   'read_jobber_payments',
+  // 2026-11-18: "Add to Jobber" on the Pipeline creates the client + a request. Turn these two on in the
+  // Jobber Developer Center app too, then Reconnect Jobber once (scopes are fixed at connect time).
+  'write_clients',
+  'write_requests',
 ].join(' ');
 
 export async function GET() {

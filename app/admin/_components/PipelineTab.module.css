@@ -214,7 +214,7 @@
 /* board */
 .board {
   display: grid;
-  grid-template-columns: repeat(4, minmax(240px, 1fr)) 150px;
+  grid-template-columns: repeat(5, minmax(220px, 1fr)) 150px;
   gap: 14px;
   overflow-x: auto;
   padding-bottom: 8px;
@@ -367,11 +367,24 @@
   color: #1d1a12;
 }
 .hot {
-  font-size: 10px;
-  font-weight: 600;
-  padding: 2px 7px;
-  border-radius: 99px;
-  background: rgba(0, 0, 0, 0.25);
+  font-weight: 700;
+  color: #fff;
+}
+/* Portal root carries the admin palette (popups live outside the shell in <body>). */
+.portalRoot {
+  --hq-card: rgba(255, 255, 255, 0.045);
+  --hq-line: rgba(255, 255, 255, 0.08);
+  --hq-line2: rgba(255, 255, 255, 0.14);
+  --hq-tx: #f3f1ec;
+  --hq-tx2: #b9b4aa;
+  --hq-tx3: #7e7970;
+  --hq-lime: #d8f23f;
+  --hq-coral: #f07a55;
+  --hq-blue: #9fbfe8;
+  --hq-cream: #ede6d6;
+  font-family: var(--font-poppins), system-ui, sans-serif;
+  color: #f3f1ec;
+  color-scheme: dark;
 }
 .stNew {
   background: linear-gradient(160deg, #6f87a9, #526a8b);
@@ -387,6 +400,9 @@
 }
 .stWon {
   background: linear-gradient(160deg, #a7bd2a, #7f9318);
+}
+.stDone {
+  background: linear-gradient(160deg, #5f8f5a, #456d41);
 }
 .stLost {
   background: linear-gradient(160deg, #4d4945, #393532);
@@ -437,6 +453,18 @@
 .lost .o {
   background: rgba(255, 255, 255, 0.08);
   color: var(--hq-tx2);
+}
+.zoneHint {
+  font-size: 10.5px;
+  color: var(--hq-tx3);
+  line-height: 1.35;
+  margin-top: 4px;
+}
+.jbMsg {
+  font-size: 12.5px;
+  color: var(--hq-tx2);
+  margin-top: 10px;
+  line-height: 1.5;
 }
 .hint {
   font-size: 11.5px;
@@ -527,23 +555,28 @@
   cursor: pointer;
 }
 .drawer {
+  /* Centered popup (owner, 2026-11-18: "open in the center, not on the side") */
   position: absolute;
-  top: 16px;
-  right: 16px;
-  bottom: 16px;
-  width: 440px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 560px;
   max-width: calc(100vw - 32px);
+  max-height: calc(100vh - 48px);
+  max-height: calc(100dvh - 48px);
+  box-shadow: 0 40px 100px rgba(0, 0, 0, 0.6);
   background: #1f1d1b;
   border: 1px solid var(--hq-line2);
   border-radius: 28px;
   padding: 20px;
   overflow-y: auto;
-  animation: slideIn 0.32s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  animation: popIn 0.24s cubic-bezier(0.2, 0.8, 0.2, 1) both;
   color: var(--hq-tx);
 }
-@keyframes slideIn {
+@keyframes popIn {
   from {
-    transform: translateX(110%);
+    opacity: 0;
+    transform: translate(-50%, -48%) scale(0.97);
   }
 }
 .dh {
@@ -831,13 +864,10 @@
     min-height: 360px;
   }
   .drawer {
-    top: auto;
-    left: 8px;
-    right: 8px;
-    bottom: 8px;
-    width: auto;
-    max-height: 90vh;
-    animation-name: slideUp;
+    width: calc(100vw - 20px);
+    max-height: calc(100dvh - 24px);
+    padding: 16px;
+    border-radius: 24px;
   }
   .acts {
     grid-template-columns: repeat(4, 1fr);

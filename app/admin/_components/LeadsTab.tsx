@@ -29,7 +29,7 @@ import {
 
 type Src = 'all' | 'web' | 'instagram' | 'facebook';
 
-const STAGE_DOT: Record<Stage, string> = { new: 'var(--blue)', contacted: 'var(--amber)', walkthrough: 'var(--amber)', quoted: 'var(--violet)', booked: 'var(--green)', lost: 'var(--soft)' };
+const STAGE_DOT: Record<Stage, string> = { new: 'var(--blue)', contacted: 'var(--amber)', walkthrough: 'var(--amber)', quoted: 'var(--violet)', booked: 'var(--green)', done: 'var(--green)', lost: 'var(--soft)' };
 
 function ago(ms: number, now: number) {
   const d = Math.max(0, now - ms);
@@ -200,6 +200,7 @@ export default function LeadsTab() {
     walkthrough: 'visit booked',
     quoted: stats!.quotedValue ? `price sent · ${stats!.quotedValue}` : 'price sent',
     booked: stats!.bookedValue ? `≈ $${stats!.bookedValue.toLocaleString('en-US')} in first cleans` : 'last 30 days',
+    done: 'first clean done',
     lost: 'last 30 days',
   };
 

@@ -15,7 +15,7 @@ import { OPEN_STAGES, STAGE_LABEL, leadValue, sourceCode, type LeadRecord, type 
  */
 
 type Goals = { quotes: number; jobs: number; revenue: number; reviews: number } | null;
-const STAGE_DOT: Record<Stage, string> = { new: '#9fbfe8', contacted: '#d8f23f', walkthrough: '#f07a55', quoted: '#ede6d6', booked: '#d8f23f', lost: '#7e7970' };
+const STAGE_DOT: Record<Stage, string> = { new: '#9fbfe8', contacted: '#d8f23f', walkthrough: '#f07a55', quoted: '#ede6d6', booked: '#d8f23f', done: '#8fd18a', lost: '#7e7970' };
 const SRC_BG: Record<string, string> = { W: '#B9D7F7', '@': '#F2C6A8', IG: '#E7C1F2', FB: '#BFD3F7', G: '#D8F2B8', R: '#F7E2C8' };
 const DAY = 86_400_000;
 
@@ -101,9 +101,9 @@ export default function OverviewTab() {
       .sort((a, b) => b.at - a.at)
       .slice(0, 5);
     const monthStart = new Date(new Date(now).getFullYear(), new Date(now).getMonth(), 1).getTime();
-    const closed = (leads ?? []).filter((l) => l.kind !== 'application' && (l.stage === 'booked' || l.stage === 'lost') && now - l.stageAt < 90 * DAY);
-    const rate = closed.length >= 3 ? Math.round((closed.filter((l) => l.stage === 'booked').length / closed.length) * 100) : null;
-    const bookedMonth = (leads ?? []).filter((l) => l.stage === 'booked' && l.stageAt >= monthStart).length;
+    const closed = (leads ?? []).filter((l) => l.kind !== 'application' && (l.stage === 'booked' || l.stage === 'done' || l.stage === 'lost') && now - l.stageAt < 90 * DAY);
+    const rate = closed.length >= 3 ? Math.round((closed.filter((l) => l.stage === 'booked' || l.stage === 'done').length / closed.length) * 100) : null;
+    const bookedMonth = (leads ?? []).filter((l) => (l.stage === 'booked' || l.stage === 'done') && l.stageAt >= monthStart).length;
     return { by, total, count: open.length, recent, rate, bookedMonth };
   }, [leads, now]);
 

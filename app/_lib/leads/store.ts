@@ -36,6 +36,9 @@ export async function listLeads(limit = 300): Promise<LeadRecord[]> {
 }
 
 export type LeadPatch = {
+  jobberClientId?: string;
+  jobberRequestId?: string;
+  jobberUrl?: string;
   stage?: string;
   ownerNotes?: string;
   quotedPrice?: number | null;
@@ -67,6 +70,7 @@ export async function updateLead(id: string, patch: LeadPatch, now = Date.now())
     l.stageAt = now;
     if (stage !== 'new' && !l.contactedAt) l.contactedAt = now;
     if (stage !== 'lost') delete l.lostReason;
+    if (stage === 'done' && !l.doneAt) l.doneAt = now;
     log(`Moved to ${STAGE_LABEL[stage]}`);
   }
   if (typeof patch.ownerNotes === 'string') l.ownerNotes = patch.ownerNotes.slice(0, 2000);
@@ -91,6 +95,10 @@ export async function updateLead(id: string, patch: LeadPatch, now = Date.now())
   if (typeof patch.archived === 'boolean' && patch.archived !== !!l.archived) {
     l.archived = patch.archived;
     log(patch.archived ? 'Archived' : 'Restored');
+  }
+  for (const k of ['jobberClientId', 'jobberRequestId', 'jobberUrl'] as const) {
+    const v = text(patch[k], 300);
+    if (v) l[k] = v;
   }
   for (const k of ['name', 'phone', 'email', 'service', 'city'] as const) {
     const v = text(patch[k], k === 'name' ? 80 : 120);
@@ -316,4 +324,40 @@ export async function syncLeads(force = false): Promise<void> {
   } catch {
     /* no Redis — nothing to sync */
   }
+}
+
+/* ------------------------------------------------------------ Jobber: first clean done */
+
+const norm = (s?: string | null) => (s ?? '').trim().toLowerCase().replace(/\s+/g, ' ');
+
+/**
+ * Moves Booked leads to "Cleaning done" when Jobber shows a completed visit for the same client
+ * (matched by the Jobber client id saved by "Add to Jobber", else by email, else by exact name).
+ * Never moves anything backwards and never touches leads in other stages. Returns how many moved.
+ */
+export async function markDoneFromVisits(
+  visits: { clientId: string; clientName: string; email: string | null; completedAt: number }[],
+  now = Date.now(),
+): Promise<number> {
+  if (!visits.length) return 0;
+  const booked = (await listLeads(300)).filter((l) => l.stage === 'booked' && l.kind !== 'application');
+  let moved = 0;
+  for (const l of booked) {
+    const v = visits.find(
+      (x) =>
+        x.completedAt >= l.stageAt - 86_400_000 &&
+        ((l.jobberClientId && x.clientId === l.jobberClientId) ||
+          (l.email && x.email && norm(x.email) === norm(l.email)) ||
+          (norm(l.name).length > 3 && norm(x.clientName) === norm(l.name))),
+    );
+    if (!v) continue;
+    l.stage = 'done';
+    l.stageAt = now;
+    l.doneAt = v.completedAt;
+    if (!l.jobberClientId) l.jobberClientId = v.clientId;
+    l.history = [...(l.history ?? []), { at: now, text: 'First cleaning completed (from Jobber)' }].slice(-40);
+    await saveLead(l);
+    moved++;
+  }
+  return moved;
 }

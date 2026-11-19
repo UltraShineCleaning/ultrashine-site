@@ -6,13 +6,18 @@
 export type LeadKind = 'quote' | 'social' | 'application';
 // 'walkthrough' added 2026-11-18 for the Pipeline board (New → Contacted → Walkthrough → Quote sent → Booked / Lost).
 // The key stays 'quoted' (stored on every lead since September); only its label became "Quote sent".
-export type Stage = 'new' | 'contacted' | 'walkthrough' | 'quoted' | 'booked' | 'lost';
-export const STAGES: Stage[] = ['new', 'contacted', 'walkthrough', 'quoted', 'booked', 'lost'];
-/** The four columns of the board; booked + lost are the drop zones beside them. */
+// 'done' (Cleaning done) added 2026-11-18 after Booked: set by hand or automatically when Jobber marks the first visit complete.
+export type Stage = 'new' | 'contacted' | 'walkthrough' | 'quoted' | 'booked' | 'done' | 'lost';
+export const STAGES: Stage[] = ['new', 'contacted', 'walkthrough', 'quoted', 'booked', 'done', 'lost'];
+/** Still being sold (the "open pipeline"). */
 export const OPEN_STAGES: Stage[] = ['new', 'contacted', 'walkthrough', 'quoted'];
-export const STAGE_LABEL: Record<Stage, string> = { new: 'New lead', contacted: 'Contacted', walkthrough: 'Walkthrough', quoted: 'Quote sent', booked: 'Booked', lost: 'Lost' };
+/** The five columns of the board; Cleaning done + Lost are the drop zones beside them. */
+export const BOARD_STAGES: Stage[] = ['new', 'contacted', 'walkthrough', 'quoted', 'booked'];
+/** Won = booked or already cleaned. */
+export const WON_STAGES: Stage[] = ['booked', 'done'];
+export const STAGE_LABEL: Record<Stage, string> = { new: 'New lead', contacted: 'Contacted', walkthrough: 'Walkthrough', quoted: 'Quote sent', booked: 'Booked', done: 'Cleaning done', lost: 'Lost' };
 /** Rough chance an open lead books, for the "likely to book" number. Tuned to a cleaning business, not a guess about any one lead. */
-export const STAGE_WEIGHT: Record<Stage, number> = { new: 0.2, contacted: 0.35, walkthrough: 0.6, quoted: 0.5, booked: 1, lost: 0 };
+export const STAGE_WEIGHT: Record<Stage, number> = { new: 0.2, contacted: 0.35, walkthrough: 0.6, quoted: 0.5, booked: 1, done: 1, lost: 0 };
 export const LEAD_SOURCES = ['Website', 'Email', 'Instagram', 'Facebook', 'Google', 'Referral', 'Nextdoor', 'Yelp', 'Phone call', 'Other'] as const;
 
 export type LeadRecord = {
@@ -61,6 +66,12 @@ export type LeadRecord = {
   archived?: boolean;
   /** For leads typed in by hand: where they came from. */
   source?: string;
+  /** Jobber ids once the lead was added to Jobber ("Add to Jobber") or matched to a Jobber client. */
+  jobberClientId?: string;
+  jobberRequestId?: string;
+  jobberUrl?: string;
+  /** When the first cleaning was completed (from Jobber or marked by hand). */
+  doneAt?: number;
   history: { at: number; text: string }[];
   /** Where the details came from: the form itself, read back from an older email, a DM, or typed in by hand. */
   origin: 'form' | 'email' | 'social' | 'manual';
@@ -167,9 +178,9 @@ export function leadStats(all: LeadRecord[], now = Date.now()): LeadStats {
   const DAY = 86_400_000;
   const prospects = all.filter((l) => l.kind !== 'application' && !l.archived);
   const recent = prospects.filter((l) => now - l.at < 30 * DAY);
-  const counts: Record<Stage, number> = { new: 0, contacted: 0, walkthrough: 0, quoted: 0, booked: 0, lost: 0 };
+  const counts: Record<Stage, number> = { new: 0, contacted: 0, walkthrough: 0, quoted: 0, booked: 0, done: 0, lost: 0 };
   for (const l of prospects) {
-    if ((l.stage === 'booked' || l.stage === 'lost') && now - l.stageAt >= 30 * DAY) continue;
+    if ((l.stage === 'booked' || l.stage === 'done' || l.stage === 'lost') && now - l.stageAt >= 30 * DAY) continue;
     // Open leads nobody has touched in 60 days have gone cold — keep them in the list, not the counts.
     if (now - l.stageAt >= 60 * DAY) continue;
     counts[l.stage]++;
@@ -177,7 +188,7 @@ export function leadStats(all: LeadRecord[], now = Date.now()): LeadStats {
   const newWaiting = prospects.filter((l) => l.stage === 'new' && now - l.at > 3600_000).length;
   const quoted = prospects.filter((l) => l.stage === 'quoted' && l.estimate);
   const bookedLows = prospects
-    .filter((l) => l.stage === 'booked' && now - l.stageAt < 30 * DAY)
+    .filter((l) => (l.stage === 'booked' || l.stage === 'done') && now - l.stageAt < 30 * DAY)
     .map((l) => estimateLow(l.estimate))
     .filter((n): n is number => n != null);
   const replies = prospects
@@ -195,7 +206,7 @@ export function leadStats(all: LeadRecord[], now = Date.now()): LeadStats {
     newWaiting,
     quotedValue: quoted.length === 1 ? quoted[0].estimate! : null,
     bookedValue: bookedLows.length ? bookedLows.reduce((a, n) => a + n, 0) : null,
-    bookedRate: recent.length >= 3 ? Math.round((recent.filter((l) => l.stage === 'booked').length / recent.length) * 100) : null,
+    bookedRate: recent.length >= 3 ? Math.round((recent.filter((l) => l.stage === 'booked' || l.stage === 'done').length / recent.length) * 100) : null,
     medianReplyMin: replies.length ? Math.round(replies[Math.floor(replies.length / 2)]) : null,
     bestSource: best ? best[0] : null,
   };

@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import { denyUnlessAdmin } from '../../_lib/social/guard';
-import { createManualLead, listLeads, syncLeads, updateLead, type LeadPatch } from '../../_lib/leads/store';
+import { createManualLead, listLeads, markDoneFromVisits, syncLeads, updateLead, type LeadPatch } from '../../_lib/leads/store';
+import { getRecentlyCompletedVisits, isJobberConfigured } from '../../_lib/jobberClient';
+import { getJSON, setJSON } from '../../_lib/kv';
 import { leadStats } from '../../_lib/leads/types';
 import { demoEnabled } from '../../_lib/insights/demo';
 import { demoLeads } from '../../_lib/leads/demo';
@@ -24,7 +26,22 @@ export async function GET(req: Request) {
     const leads = demoLeads();
     return NextResponse.json({ leads, stats: leadStats(leads) });
   }
-  await syncLeads(new URL(req.url).searchParams.get('refresh') === '1');
+  const refresh = new URL(req.url).searchParams.get('refresh') === '1';
+  await syncLeads(refresh);
+  // Booked → "Cleaning done" when Jobber shows the first visit completed. At most every 10 minutes
+  // (Jobber rate limit), or right away on Refresh. Never blocks the board if Jobber is down.
+  if (isJobberConfigured()) {
+    try {
+      const last = await getJSON<number>('leads:jobber-done-check');
+      if (refresh || !last || Date.now() - last > 600_000) {
+        await setJSON('leads:jobber-done-check', Date.now(), 3600);
+        const { visits } = await getRecentlyCompletedVisits(45);
+        await markDoneFromVisits(visits);
+      }
+    } catch {
+      /* Jobber unavailable — the board still loads */
+    }
+  }
   const leads = await listLeads(300);
   return NextResponse.json({ leads, stats: leadStats(leads) });
 }

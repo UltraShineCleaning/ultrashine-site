@@ -252,7 +252,9 @@ export default function SocialTab({ recentJobs, flash }: { recentJobs: RecentJob
 
   const replacePost = (p: SocialPost) => setPosts((all) => [...all.filter((x) => x.id !== p.id), p]);
   const openPost = posts.find((p) => p.id === openId) ?? null;
-  const drafts = posts.filter((p) => p.status === 'draft').sort((a, b) => (a.scheduledAt ?? 0) - (b.scheduledAt ?? 0));
+  // "Waiting for approval" = drafts with no time yet or a time still ahead. Old drafts from past days
+  // (e.g. the October plan that was posted by hand) stay on the calendar but don't count as waiting.
+  const drafts = posts.filter((p) => p.status === 'draft' && (!p.scheduledAt || p.scheduledAt > Date.now() - 3_600_000)).sort((a, b) => (a.scheduledAt ?? 0) - (b.scheduledAt ?? 0));
   const failed = posts.filter((p) => p.status === 'failed');
 
   async function patch(id: string, body: Record<string, unknown>, msg?: string) {

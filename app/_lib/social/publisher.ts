@@ -25,8 +25,15 @@ export async function schedulePost(p: SocialPost): Promise<SocialPost> {
   await cancelJob(p.qstashMessageId);
   p.qstashMessageId = undefined;
   if (p.status === 'scheduled' && p.scheduledAt) {
-    const id = await scheduleJob({ type: 'publish', postId: p.id, version: p.scheduledAt }, p.scheduledAt);
-    p.qstashMessageId = id ?? undefined;
+    try {
+      const id = await scheduleJob({ type: 'publish', postId: p.id, version: p.scheduledAt }, p.scheduledAt);
+      p.qstashMessageId = id ?? undefined;
+    } catch (e) {
+      // QStash may refuse timers far ahead (plan limit ~7 days). The post stays approved; its timer is
+      // booked later by rebookUpcoming() (Social tab visit + daily cron), and publishOverdue() is the net.
+      if (p.scheduledAt - Date.now() < 6 * 86_400_000) throw e;
+      addHistory(p, 'Approved · timer will be set automatically within 6 days of posting');
+    }
   }
   return savePost(p);
 }

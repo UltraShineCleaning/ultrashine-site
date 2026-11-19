@@ -1,9 +1,10 @@
 import { getJSON, kvConfigured, setJSON } from '../kv';
 import { schedulePost, unschedulePost } from './publisher';
 import { addHistory, getPost, listPosts, savePost } from './store';
-import type { MediaItem, PostKind, SocialPost } from './types';
+import type { MediaItem, Platform, PostKind, SocialPost } from './types';
 import oct2026 from '../../_data/social-schedule/2026-10.json';
 import oct2026Reels from '../../_data/social-schedule/2026-10-reels.json';
+import nov2026 from '../../_data/social-schedule/2026-11.json';
 
 /**
  * Month plans made in a Claude session land in the Social calendar by themselves.
@@ -31,6 +32,8 @@ type PlanItem = {
   caption: string;
   at: number;
   status: 'scheduled' | 'draft';
+  /** Where it goes. Default: Instagram only (the October plans). */
+  platforms?: Platform[];
   note?: string;
 };
 
@@ -40,6 +43,10 @@ type PlanItem = {
 const PLANS: { name: string; items: PlanItem[]; enabled: boolean }[] = [
   { name: '2026-10', items: oct2026 as PlanItem[], enabled: false },
   { name: '2026-10-reels', items: oct2026Reels as PlanItem[], enabled: false },
+  // Nov 19 → Dec 2: made in a Claude session (owner, 2026-11-18: "load everything into the dashboard").
+  // Every item lands as a DRAFT on its day + time: nothing posts until Tiago or Francine approves it
+  // (one by one, or "Approve all"). Feed posts go to Instagram + Facebook; Stories to Instagram.
+  { name: '2026-11', items: nov2026 as PlanItem[], enabled: true },
 ];
 
 const doneKey = (id: string) => `social:import:${id}`;
@@ -100,7 +107,7 @@ export async function importPlannedPosts(): Promise<ImportResult> {
           media: it.media.map((m) => ({ url: m.url, type: m.type === 'video' ? 'video' : 'image' })),
           cover: it.cover ? { url: it.cover.url, type: 'image' } : undefined,
           caption: it.caption,
-          platforms: ['instagram'],
+          platforms: it.platforms?.length ? it.platforms : ['instagram'],
           scheduledAt: it.at,
           status: it.status,
           createdAt: now,
@@ -111,9 +118,14 @@ export async function importPlannedPosts(): Promise<ImportResult> {
         if (it.status === 'scheduled') {
           post.approvedBy = 'Tiago (approved the month plan)';
           post.approvedAt = now;
-          addHistory(post, `Loaded from the October plan and scheduled${it.note ? ` · ${it.note}` : ''}`);
+          addHistory(post, `Loaded from the ${plan.name} plan and scheduled${it.note ? ` · ${it.note}` : ''}`);
         } else {
-          addHistory(post, `Loaded from the October plan as a draft: add music and post it from the Instagram app${it.note ? ` · ${it.note}` : ''}`);
+          addHistory(
+            post,
+            it.kind === 'REEL'
+              ? `Loaded from the ${plan.name} plan as a draft: add music and post it from the Instagram app${it.note ? ` · ${it.note}` : ''}`
+              : `Loaded from the ${plan.name} plan as a draft: approve it and it posts by itself at this time${it.note ? ` · ${it.note}` : ''}`,
+          );
         }
         await savePost(post); // on the calendar no matter what happens next
         await setJSON(doneKey(it.id), '1', 60 * 60 * 24 * 120);

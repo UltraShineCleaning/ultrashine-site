@@ -342,10 +342,24 @@
 }
 
 /* ===== SETTINGS SHEET ===== */
+/* The settings popup is portalled into <body>, so it carries its own tokens.
+   Centred with grid (no translate maths) so no browser can place it low. */
 .sheetWrap {
+  --hq-line: rgba(255, 255, 255, 0.08);
+  --hq-line2: rgba(255, 255, 255, 0.14);
+  --hq-tx: #f3f1ec;
+  --hq-tx2: #b9b4aa;
+  --hq-tx3: #7e7970;
+  --hq-lime: #d8f23f;
   position: fixed;
   inset: 0;
-  z-index: 60;
+  z-index: 200;
+  display: grid;
+  place-items: center;
+  padding: 24px 16px;
+  color: var(--hq-tx);
+  color-scheme: dark;
+  font-family: var(--font-poppins), system-ui, sans-serif;
 }
 .scrim {
   position: absolute;
@@ -358,13 +372,11 @@
   cursor: pointer;
 }
 .sheet {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  position: relative;
   width: 460px;
-  max-width: calc(100vw - 32px);
+  max-width: 100%;
   max-height: calc(100vh - 48px);
+  max-height: calc(100dvh - 48px);
   box-shadow: 0 40px 100px rgba(0, 0, 0, 0.6);
   overflow-y: auto;
   background: #1f1d1b;
@@ -376,7 +388,7 @@
 @keyframes popIn {
   from {
     opacity: 0;
-    transform: translate(-50%, -48%) scale(0.97);
+    transform: translateY(10px) scale(0.97);
   }
 }
 .sheetHead {
@@ -500,8 +512,12 @@
   .h1 {
     font-size: 28px;
   }
+  .sheetWrap {
+    padding: 12px 10px;
+  }
   .sheet {
-    width: calc(100vw - 20px);
+    width: 100%;
+    max-height: calc(100dvh - 24px);
   }
 }
 @keyframes slideUp {

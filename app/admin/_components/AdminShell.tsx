@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { createPortal } from 'react-dom';
 import styles from './AdminShell.module.css';
 
 /**
@@ -285,7 +286,9 @@ function SettingsSheet({ onClose }: { onClose: () => void }) {
     </label>
   );
 
-  return (
+  // Rendered straight into <body> so no parent box can push it off-centre (owner, 2026-11-18:
+  // "the popup is too far down, it needs to be in the center").
+  return createPortal(
     <div className={styles.sheetWrap} role="dialog" aria-modal="true" aria-label="Settings and goals">
       <button type="button" className={styles.scrim} aria-label="Close" onClick={onClose} />
       <div className={styles.sheet}>
@@ -313,6 +316,7 @@ function SettingsSheet({ onClose }: { onClose: () => void }) {
           <a href="https://search.google.com/search-console" target="_blank" rel="noreferrer">Search Console ↗</a>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }

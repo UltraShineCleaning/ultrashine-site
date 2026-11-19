@@ -542,7 +542,10 @@
 .drawerWrap {
   position: fixed;
   inset: 0;
-  z-index: 60;
+  z-index: 200;
+  display: grid;
+  place-items: center;
+  padding: 24px 16px;
 }
 .scrim {
   position: absolute;
@@ -556,12 +559,9 @@
 }
 .drawer {
   /* Centered popup (owner, 2026-11-18: "open in the center, not on the side") */
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  position: relative;
   width: 560px;
-  max-width: calc(100vw - 32px);
+  max-width: 100%;
   max-height: calc(100vh - 48px);
   max-height: calc(100dvh - 48px);
   box-shadow: 0 40px 100px rgba(0, 0, 0, 0.6);
@@ -576,7 +576,7 @@
 @keyframes popIn {
   from {
     opacity: 0;
-    transform: translate(-50%, -48%) scale(0.97);
+    transform: translateY(10px) scale(0.97);
   }
 }
 .dh {
@@ -863,8 +863,11 @@
   .col {
     min-height: 360px;
   }
+  .drawerWrap {
+    padding: 12px 10px;
+  }
   .drawer {
-    width: calc(100vw - 20px);
+    width: 100%;
     max-height: calc(100dvh - 24px);
     padding: 16px;
     border-radius: 24px;

@@ -2,13 +2,13 @@
    Scoped under .root like the other dark tabs. */
 
 .root {
-  --panel: #0d0e11; --panel2: #141519; --panel3: #1b1c22;
+  --panel: rgba(255,255,255,.045); --panel2: rgba(255,255,255,.065); --panel3: rgba(255,255,255,.09);
   --line: rgba(255,255,255,.07); --line2: rgba(255,255,255,.12);
-  --text: #f4f4f5; --muted: #8b8d98; --soft: #5b5d68;
-  --blue: #4d7cff; --green: #34d399; --amber: #fbbf24; --red: #f87171;
+  --text: #f3f1ec; --muted: #b9b4aa; --soft: #7e7970;
+  --blue: #d8f23f; --green: #34d399; --amber: #fbbf24; --red: #f87171;
   --r: 24px;
   color: var(--text);
-  font-family: Inter, system-ui, -apple-system, 'Segoe UI', sans-serif; font-size: 13.5px;
+  font-family: var(--font-poppins), system-ui, -apple-system, 'Segoe UI', sans-serif; font-size: 13.5px;
   -webkit-font-smoothing: antialiased; position: relative;
 }
 .root * { box-sizing: border-box; }
@@ -80,7 +80,7 @@
 .st_sent { background: rgba(52,211,153,.12); color: var(--green); }
 .st_rev { background: rgba(251,191,36,.14); color: var(--amber); }
 .st_skip { background: var(--panel3); color: var(--soft); }
-.st_wait { background: rgba(77,124,255,.16); color: #8aa8ff; }
+.st_wait { background: rgba(216,242,63,.16); color: #d8f23f; }
 .st_fail { background: rgba(248,113,113,.13); color: var(--red); }
 .sub2 { font-size: 11px; color: var(--soft); text-transform: uppercase; letter-spacing: .16em; font-weight: 600; margin: 16px 0 6px; }
 
@@ -92,7 +92,7 @@
 .s5star { color: var(--amber); font-size: 12px; letter-spacing: 1px; }
 .top em { font-style: normal; color: var(--soft); font-size: 11.5px; margin-left: auto; white-space: nowrap; }
 .rvw p { margin: 6px 0 0; color: #c4c4cc; font-size: 12.5px; line-height: 1.55; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
-.rep { display: inline-block; margin-top: 6px; font-size: 11.5px; color: #8aa8ff !important; }
+.rep { display: inline-block; margin-top: 6px; font-size: 11.5px; color: #d8f23f !important; }
 
 /* ask now */
 .form { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }

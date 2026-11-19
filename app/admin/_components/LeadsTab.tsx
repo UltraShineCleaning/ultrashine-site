@@ -18,6 +18,8 @@ import {
 } from '../../_lib/leads/types';
 
 /**
+ * LEGACY (replaced by PipelineTab on 2026-11-18). Kept so nothing is lost; not mounted anywhere.
+ *
  * Admin → Leads. Design locked 2026-09-28 (00_STATE/design-leads-dark.html).
  *
  * A simple pipeline — New → Contacted → Quoted → Booked / Lost — so no quote
@@ -27,7 +29,7 @@ import {
 
 type Src = 'all' | 'web' | 'instagram' | 'facebook';
 
-const STAGE_DOT: Record<Stage, string> = { new: 'var(--blue)', contacted: 'var(--amber)', quoted: 'var(--violet)', booked: 'var(--green)', lost: 'var(--soft)' };
+const STAGE_DOT: Record<Stage, string> = { new: 'var(--blue)', contacted: 'var(--amber)', walkthrough: 'var(--amber)', quoted: 'var(--violet)', booked: 'var(--green)', lost: 'var(--soft)' };
 
 function ago(ms: number, now: number) {
   const d = Math.max(0, now - ms);
@@ -195,6 +197,7 @@ export default function LeadsTab() {
   const hint: Record<Stage, string> = {
     new: stats!.newWaiting ? `${stats!.newWaiting} waiting over an hour` : stats!.counts.new ? 'all answered quickly' : 'nothing new',
     contacted: 'reached, no price yet',
+    walkthrough: 'visit booked',
     quoted: stats!.quotedValue ? `price sent · ${stats!.quotedValue}` : 'price sent',
     booked: stats!.bookedValue ? `≈ $${stats!.bookedValue.toLocaleString('en-US')} in first cleans` : 'last 30 days',
     lost: 'last 30 days',

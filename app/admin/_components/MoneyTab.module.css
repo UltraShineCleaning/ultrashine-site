@@ -2,13 +2,13 @@
    Scoped under .root like the Home, Social and Insights tabs. */
 
 .root {
-  --panel: #0d0e11; --panel2: #141519; --panel3: #1b1c22;
+  --panel: rgba(255,255,255,.045); --panel2: rgba(255,255,255,.065); --panel3: rgba(255,255,255,.09);
   --line: rgba(255,255,255,.07); --line2: rgba(255,255,255,.12);
-  --text: #f4f4f5; --muted: #8b8d98; --soft: #5b5d68;
-  --blue: #4d7cff; --green: #34d399; --amber: #fbbf24; --red: #f87171;
+  --text: #f3f1ec; --muted: #b9b4aa; --soft: #7e7970;
+  --blue: #d8f23f; --green: #34d399; --amber: #fbbf24; --red: #f87171;
   --r: 24px;
   color: var(--text);
-  font-family: Inter, system-ui, -apple-system, 'Segoe UI', sans-serif; font-size: 13.5px;
+  font-family: var(--font-poppins), system-ui, -apple-system, 'Segoe UI', sans-serif; font-size: 13.5px;
   -webkit-font-smoothing: antialiased; position: relative;
 }
 .root * { box-sizing: border-box; }

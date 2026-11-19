@@ -2,14 +2,14 @@
    Scoped under .root like the other dark tabs. */
 
 .root {
-  --panel: #0d0e11; --panel2: #141519; --panel3: #1b1c22;
+  --panel: rgba(255,255,255,.045); --panel2: rgba(255,255,255,.065); --panel3: rgba(255,255,255,.09);
   --line: rgba(255,255,255,.07); --line2: rgba(255,255,255,.12);
-  --text: #f4f4f5; --muted: #8b8d98; --soft: #5b5d68;
-  --blue: #4d7cff; --violet: #a78bfa; --green: #34d399; --amber: #fbbf24; --red: #f87171;
+  --text: #f3f1ec; --muted: #b9b4aa; --soft: #7e7970;
+  --blue: #d8f23f; --violet: #a78bfa; --green: #34d399; --amber: #fbbf24; --red: #f87171;
   --ig: linear-gradient(45deg,#f58529,#dd2a7b 45%,#8134af 75%,#515bd4); --fb: #1877f2;
   --r: 24px;
   color: var(--text);
-  font-family: Inter, system-ui, -apple-system, 'Segoe UI', sans-serif; font-size: 13.5px;
+  font-family: var(--font-poppins), system-ui, -apple-system, 'Segoe UI', sans-serif; font-size: 13.5px;
   -webkit-font-smoothing: antialiased; position: relative;
 }
 .root * { box-sizing: border-box; }
@@ -40,7 +40,7 @@
 /* grid */
 .bento { display: grid; grid-template-columns: repeat(12, minmax(0,1fr)); gap: 12px; margin-bottom: 12px; align-items: start; }
 .card { background: var(--panel); border: 1px solid var(--line); border-radius: var(--r); padding: 18px; min-width: 0; position: relative; overflow: hidden; }
-.glow::before { content: ""; position: absolute; inset: -40% -10% auto auto; width: 60%; height: 120%; background: radial-gradient(closest-side, rgba(77,124,255,.12), transparent); pointer-events: none; }
+.glow::before { content: ""; position: absolute; inset: -40% -10% auto auto; width: 60%; height: 120%; background: radial-gradient(closest-side, rgba(216,242,63,.12), transparent); pointer-events: none; }
 .s5 { grid-column: span 5; } .s7 { grid-column: span 7; } .s12 { grid-column: span 12; }
 .ch { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; position: relative; }
 .ch h3 { font-size: 13px; font-weight: 500; color: #d4d4d8; margin: 0; font-family: inherit; }
@@ -68,11 +68,11 @@
 .av { width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; font-weight: 600; font-size: 12px; background: var(--panel3); color: #d4d4d8; flex-shrink: 0; }
 .avBig { width: 44px; height: 44px; font-size: 14px; }
 .src { display: inline-flex; align-items: center; font-size: 11px; font-weight: 600; border-radius: 999px; padding: 3px 9px; white-space: nowrap; }
-.src_web { background: rgba(77,124,255,.14); color: #8aa8ff; }
+.src_web { background: rgba(216,242,63,.14); color: #d8f23f; }
 .src_ig { background: rgba(236,72,153,.14); color: #f9a8d4; }
 .src_fb { background: rgba(24,119,242,.16); color: #7fb2ff; }
 .st { font-size: 11px; font-weight: 600; border-radius: 999px; padding: 3px 9px; white-space: nowrap; }
-.st_new { background: rgba(77,124,255,.16); color: #8aa8ff; }
+.st_new { background: rgba(216,242,63,.16); color: #d8f23f; }
 .st_contacted { background: rgba(251,191,36,.12); color: var(--amber); }
 .st_quoted { background: rgba(167,139,250,.14); color: #c4b5fd; }
 .st_booked { background: rgba(52,211,153,.12); color: var(--green); }
@@ -94,7 +94,7 @@
 .kv { display: grid; grid-template-columns: 96px minmax(0,1fr); gap: 8px 12px; font-size: 12.5px; padding: 12px 0; margin: 0; border-top: 1px solid var(--line); position: relative; }
 .kv dt { color: var(--soft); }
 .kv dd { margin: 0; color: #e4e4e7; }
-.kv dd a { color: #8aa8ff; }
+.kv dd a { color: #d8f23f; }
 .quote { background: var(--panel2); border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; font-size: 12.5px; color: #c4c4cc; line-height: 1.5; font-style: italic; position: relative; }
 .move { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 12px; align-items: center; position: relative; }
 .move > span { font-size: 12px; color: var(--muted); margin-right: 4px; }

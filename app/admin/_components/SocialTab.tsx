@@ -30,6 +30,10 @@ type Status = {
   metaApp: boolean;
   webhook: boolean;
   connected: { page: string; instagram: string | null; since: number } | null;
+  /** Live check against Meta (2026-11-18) — null when nothing is connected. */
+  health?: { ok: boolean; instagramOk: boolean | null; problem: string | null } | null;
+  callbackBase?: string;
+  baseWarning?: string | null;
   customerEmail: boolean;
   ai: boolean;
 };
@@ -295,13 +299,13 @@ export default function SocialTab({ recentJobs, flash }: { recentJobs: RecentJob
             {status.connected.instagram && (
               <span className={s.acct}>
                 <span className={s.ico} style={{ background: 'var(--ig)' }}>◎</span>@{status.connected.instagram}
-                <span className={s.dot} />
+                <span className={cx(s.dot, status.health && status.health.instagramOk === false && s.dotBad)} />
               </span>
             )}
             <span className={s.acct}>
               <span className={s.ico} style={{ background: 'var(--fb)' }}>f</span>{status.connected.page}
-              <span className={cx(s.dot, failed.some((f) => /Reconnect/.test(Object.values(f.results).map((r) => r?.error).join(' '))) && s.dotBad)} />
-              {failed.some((f) => /Reconnect/.test(Object.values(f.results).map((r) => r?.error).join(' '))) && (
+              <span className={cx(s.dot, (status.health?.ok === false || failed.some((f) => /Reconnect/.test(Object.values(f.results).map((r) => r?.error).join(' ')))) && s.dotBad)} />
+              {(status.health?.ok === false || failed.some((f) => /Reconnect/.test(Object.values(f.results).map((r) => r?.error).join(' ')))) && (
                 <a className={cx(s.btn, s.sm, s.danger)} href="/api/social/meta/connect">Reconnect</a>
               )}
             </span>
@@ -316,6 +320,21 @@ export default function SocialTab({ recentJobs, flash }: { recentJobs: RecentJob
         </button>
         <button type="button" className={cx(s.btn, s.primary)} onClick={() => setComposer({})}>+ Create</button>
       </div>
+
+      {/* Connection problems, spelled out (2026-11-18). */}
+      {status?.connected && status.health && (!status.health.ok || status.health.instagramOk === false) && (
+        <div className={s.connWarn} role="alert">
+          <b>Instagram / Facebook connection needs attention.</b>
+          <span>{status.health.problem}</span>
+          <a className={cx(s.btn, s.sm, s.primary)} href="/api/social/meta/connect">Reconnect</a>
+        </div>
+      )}
+      {status?.baseWarning && (
+        <div className={s.connWarn} role="alert">
+          <b>Callback address needs updating.</b>
+          <span>{status.baseWarning}</span>
+        </div>
+      )}
 
       <div className={s.bar}>
         <div className={s.seg}>

@@ -45,7 +45,7 @@
   gap: 14px;
 }
 .stat {
-  background: #0d0e11;
+  background: rgba(255,255,255,.045);
   border: 1px solid #25262d;
   border-radius: 12px;
   padding: 18px 20px;
@@ -69,7 +69,7 @@
 }
 .statAlert {
   border-color: rgba(251,191,36,0.32);
-  background: linear-gradient(180deg, rgba(251,191,36,0.10) 0%, #0d0e11 100%);
+  background: linear-gradient(180deg, rgba(251,191,36,0.10) 0%, rgba(255,255,255,.045) 100%);
 }
 
 .statLabel {
@@ -107,7 +107,7 @@
 
 /* ----- Upcoming visits block ----- */
 .upcomingBlock {
-  background: #0d0e11;
+  background: rgba(255,255,255,.045);
   border: 1px solid #25262d;
   border-radius: 12px;
   padding: 24px 28px;
@@ -159,7 +159,7 @@
   font-family: var(--font-poppins), sans-serif;
   font-size: 13px;
   color: #8b8d98;
-  background: #050506;
+  background: #1d1b19;
   border-radius: 10px;
   padding: 18px 20px;
 }
@@ -174,13 +174,13 @@
   justify-content: space-between;
   align-items: center;
   padding: 14px 16px;
-  background: #050506;
+  background: #1d1b19;
   border: 1px solid transparent;
   border-radius: 10px;
   transition: background 0.15s, transform 0.15s, border-color 0.15s;
 }
 .visit:hover {
-  background: #0d0e11;
+  background: rgba(255,255,255,.045);
   border-color: #25262d;
   transform: translateY(-1px);
 }

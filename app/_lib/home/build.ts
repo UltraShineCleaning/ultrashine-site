@@ -44,6 +44,8 @@ export type HomePayload = {
     jobs: { value: number; clients: number; spark: number[] } | null;
   };
   leads: HomeLead[];
+  /** Overview revenue card (2026-11-18): last 12 months of collected revenue from Jobber, oldest first. */
+  revenue: { months: { label: string; amount: number }[]; thisMonth: number; lastMonth: number; total12: number } | null;
   social: {
     connected: boolean;
     igUsername: string | null;
@@ -446,6 +448,14 @@ export async function buildHome(deps: HomeDeps, now = Date.now()): Promise<HomeP
       jobs: jobsKpi,
     },
     leads: homeLeads,
+    revenue: moneyOk
+      ? {
+          months: moneyRes!.monthlyRevenue.map((m) => ({ label: m.label, amount: m.amount })),
+          thisMonth: moneyRes!.paidThisMonth,
+          lastMonth: moneyRes!.paidLastMonth,
+          total12: moneyRes!.monthlyRevenue.reduce((a, m) => a + m.amount, 0),
+        }
+      : null,
     social: {
       connected: !!meta,
       igUsername: meta?.igUsername ?? null,

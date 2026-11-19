@@ -396,15 +396,16 @@
   align-items: center;
   justify-content: center;
   padding: 40px 20px;
-  background: radial-gradient(ellipse 900px 600px at 50% 0%, rgba(77, 124, 255, 0.10) 0%, transparent 60%), #050506;
-  color: #f4f4f5;
+  background: radial-gradient(1000px 640px at 70% -10%, #3a2c24 0%, transparent 60%), radial-gradient(800px 560px at 0% 100%, #2a201b 0%, transparent 55%), linear-gradient(180deg, #1d1b19, #141312);
+  color: #f3f1ec;
 }
 .loginCard {
   max-width: 400px;
   width: 100%;
-  background: #0d0e11;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 26px;
+  background: rgba(255, 255, 255, 0.045);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 28px;
+  backdrop-filter: blur(14px);
   padding: 40px 32px 34px;
   text-align: center;
   box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
@@ -437,9 +438,9 @@
 .loginInput {
   width: 100%;
   padding: 13px 16px;
-  background: #141519;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
   font-family: var(--font-poppins), sans-serif;
   font-size: 16px;
   color: #f4f4f5;
@@ -449,15 +450,16 @@
   margin-bottom: 12px;
 }
 .loginInput:focus {
-  border-color: rgba(255, 255, 255, 0.3);
+  border-color: #d8f23f;
 }
 .loginBtn {
   width: 100%;
   padding: 13px 22px;
-  background: #ffffff;
-  color: #000000;
+  background: #d8f23f;
+  color: #1d200a;
   border: none;
-  border-radius: 14px;
+  border-radius: 999px;
+  box-shadow: 0 10px 26px rgba(216, 242, 63, 0.25);
   font-family: var(--font-poppins), sans-serif;
   font-weight: 600;
   font-size: 14px;

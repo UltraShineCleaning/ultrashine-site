@@ -156,6 +156,26 @@ export async function exchangeCodeForConnection(code: string, redirectUri: strin
   };
 }
 
+/**
+ * Live check that the saved connection still works (2026-11-18). The status route used to
+ * report "connected" whenever a token was stored, even after Meta had revoked it — so the
+ * Social tab looked fine while every post and DM silently failed.
+ */
+export async function checkConnection(conn: MetaConnection): Promise<{ ok: boolean; instagramOk: boolean | null; problem: string | null }> {
+  try {
+    await graph(conn.pageId, { token: conn.pageToken, params: { fields: 'id,name' } });
+  } catch (e) {
+    return { ok: false, instagramOk: null, problem: friendlyError(e) };
+  }
+  if (!conn.igUserId) return { ok: true, instagramOk: null, problem: 'The Facebook Page is connected, but no Instagram business account is linked to it.' };
+  try {
+    await graph(conn.igUserId, { token: conn.pageToken, params: { fields: 'id,username' } });
+    return { ok: true, instagramOk: true, problem: null };
+  } catch (e) {
+    return { ok: true, instagramOk: false, problem: `Facebook works but Instagram doesn't: ${friendlyError(e)}` };
+  }
+}
+
 /* ================= Publishing ================= */
 
 async function waitForContainer(id: string, token: string, maxMs = 240_000): Promise<void> {

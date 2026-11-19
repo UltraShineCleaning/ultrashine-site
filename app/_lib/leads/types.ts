@@ -4,9 +4,16 @@
  */
 
 export type LeadKind = 'quote' | 'social' | 'application';
-export type Stage = 'new' | 'contacted' | 'quoted' | 'booked' | 'lost';
-export const STAGES: Stage[] = ['new', 'contacted', 'quoted', 'booked', 'lost'];
-export const STAGE_LABEL: Record<Stage, string> = { new: 'New', contacted: 'Contacted', quoted: 'Quoted', booked: 'Booked', lost: 'Lost' };
+// 'walkthrough' added 2026-11-18 for the Pipeline board (New → Contacted → Walkthrough → Quote sent → Booked / Lost).
+// The key stays 'quoted' (stored on every lead since September); only its label became "Quote sent".
+export type Stage = 'new' | 'contacted' | 'walkthrough' | 'quoted' | 'booked' | 'lost';
+export const STAGES: Stage[] = ['new', 'contacted', 'walkthrough', 'quoted', 'booked', 'lost'];
+/** The four columns of the board; booked + lost are the drop zones beside them. */
+export const OPEN_STAGES: Stage[] = ['new', 'contacted', 'walkthrough', 'quoted'];
+export const STAGE_LABEL: Record<Stage, string> = { new: 'New lead', contacted: 'Contacted', walkthrough: 'Walkthrough', quoted: 'Quote sent', booked: 'Booked', lost: 'Lost' };
+/** Rough chance an open lead books, for the "likely to book" number. Tuned to a cleaning business, not a guess about any one lead. */
+export const STAGE_WEIGHT: Record<Stage, number> = { new: 0.2, contacted: 0.35, walkthrough: 0.6, quoted: 0.5, booked: 1, lost: 0 };
+export const LEAD_SOURCES = ['Website', 'Email', 'Instagram', 'Facebook', 'Google', 'Referral', 'Nextdoor', 'Yelp', 'Phone call', 'Other'] as const;
 
 export type LeadRecord = {
   id: string;
@@ -44,9 +51,19 @@ export type LeadRecord = {
   stageAt: number;
   contactedAt?: number;
   ownerNotes?: string;
+  /** Price actually quoted after the walkthrough, in dollars (the estimate is the website's range). */
+  quotedPrice?: number;
+  /** Walkthrough appointment (ms). */
+  walkthroughAt?: number;
+  /** Why it was lost, picked when marking lost. */
+  lostReason?: string;
+  /** Hidden from the board (never deleted). */
+  archived?: boolean;
+  /** For leads typed in by hand: where they came from. */
+  source?: string;
   history: { at: number; text: string }[];
-  /** Where the details came from: the form itself, or read back from an older email. */
-  origin: 'form' | 'email' | 'social';
+  /** Where the details came from: the form itself, read back from an older email, a DM, or typed in by hand. */
+  origin: 'form' | 'email' | 'social' | 'manual';
 };
 
 export const digits = (s?: string) => (s || '').replace(/\D/g, '');
@@ -125,7 +142,8 @@ export type LeadStats = {
   bestSource: string | null;
 };
 
-function sourceLabel(l: LeadRecord): string | null {
+export function sourceLabel(l: LeadRecord): string | null {
+  if (l.source) return l.source;
   if (l.kind === 'social') return l.platform === 'facebook' ? 'Facebook' : 'Instagram';
   const h = (l.heardFrom || '').toLowerCase();
   if (!h) return null;
@@ -147,9 +165,9 @@ function sourceLabel(l: LeadRecord): string | null {
  */
 export function leadStats(all: LeadRecord[], now = Date.now()): LeadStats {
   const DAY = 86_400_000;
-  const prospects = all.filter((l) => l.kind !== 'application');
+  const prospects = all.filter((l) => l.kind !== 'application' && !l.archived);
   const recent = prospects.filter((l) => now - l.at < 30 * DAY);
-  const counts: Record<Stage, number> = { new: 0, contacted: 0, quoted: 0, booked: 0, lost: 0 };
+  const counts: Record<Stage, number> = { new: 0, contacted: 0, walkthrough: 0, quoted: 0, booked: 0, lost: 0 };
   for (const l of prospects) {
     if ((l.stage === 'booked' || l.stage === 'lost') && now - l.stageAt >= 30 * DAY) continue;
     // Open leads nobody has touched in 60 days have gone cold — keep them in the list, not the counts.
@@ -181,4 +199,26 @@ export function leadStats(all: LeadRecord[], now = Date.now()): LeadStats {
     medianReplyMin: replies.length ? Math.round(replies[Math.floor(replies.length / 2)]) : null,
     bestSource: best ? best[0] : null,
   };
+}
+
+/** Value of a lead in dollars: the quoted price once there is one, otherwise the low end of the website estimate. */
+export function leadValue(l: LeadRecord): number {
+  if (l.quotedPrice && l.quotedPrice > 0) return l.quotedPrice;
+  return estimateLow(l.estimate) ?? 0;
+}
+
+/** Short source code for the little circle on a card. */
+export function sourceCode(l: LeadRecord): { code: string; label: string } {
+  const s = sourceLabel(l) || (l.origin === 'email' ? 'Email' : l.kind === 'quote' ? 'Website' : 'Other');
+  const map: Record<string, string> = { Website: 'W', Email: '@', Instagram: 'IG', Facebook: 'FB', 'Google search': 'G', 'Google Maps': 'G', 'Google Book button': 'G', Google: 'G', Referral: 'R', Nextdoor: 'N', Yelp: 'Y', 'Phone call': '☎' };
+  return { code: map[s] ?? s.slice(0, 1).toUpperCase(), label: s };
+}
+
+/** One CSV row per lead (for Export). */
+export function leadsToCsv(leads: LeadRecord[]): string {
+  const cols = ['Received', 'Name', 'Phone', 'Email', 'Service', 'Frequency', 'City', 'Estimate', 'Quoted price', 'Stage', 'Source', 'Walkthrough', 'Notes'];
+  const q = (v: unknown) => `"${String(v ?? '').replace(/"/g, '""')}"`;
+  const d = (ms?: number) => (ms ? new Date(ms).toISOString().slice(0, 16).replace('T', ' ') : '');
+  const rows = leads.map((l) => [d(l.at), l.name, prettyPhone(l.phone) ?? '', l.email ?? '', l.service ?? '', l.frequency ?? '', l.city ?? '', l.estimate ?? '', l.quotedPrice ?? '', STAGE_LABEL[l.stage], sourceLabel(l) ?? '', d(l.walkthroughAt), (l.ownerNotes ?? '').replace(/\s+/g, ' ')].map(q).join(','));
+  return [cols.map(q).join(','), ...rows].join('\n');
 }

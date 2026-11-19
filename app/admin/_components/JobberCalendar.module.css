@@ -4,7 +4,7 @@
    ========================================================== */
 
 .wrap {
-  background: #0d0e11;
+  background: rgba(255,255,255,.045);
   border: 1px solid #25262d;
   border-radius: 12px;
   padding: 22px 24px;
@@ -58,7 +58,7 @@
   width: 36px;
   height: 36px;
   border-radius: 8px;
-  background: #1b1c22;
+  background: rgba(255,255,255,.09);
   border: 1px solid #25262d;
   color: #d4d4d8;
   font-size: 20px;
@@ -77,7 +77,7 @@
   height: 36px;
   padding: 0 14px;
   border-radius: 8px;
-  background: #0d0e11;
+  background: rgba(255,255,255,.045);
   border: 1px solid #25262d;
   color: #d4d4d8;
   font-family: var(--font-poppins), sans-serif;
@@ -129,7 +129,7 @@
 }
 
 .cell {
-  background: #050506;
+  background: #1d1b19;
   border: 1px solid #25262d;
   border-radius: 8px;
   padding: 6px 6px 6px;
@@ -145,7 +145,7 @@
   transition: background 0.15s, border-color 0.15s, transform 0.1s;
 }
 .cell:hover {
-  background: #1b1c22;
+  background: rgba(255,255,255,.09);
   border-color: #8b8d98;
   box-shadow: 0 2px 8px rgba(0,0,0,0.35);
 }
@@ -163,7 +163,7 @@
   color: #6b6d78;
 }
 .cellHasVisits {
-  background: #0d0e11;
+  background: rgba(255,255,255,.045);
 }
 .cellHasVisits .cellDay {
   color: #f4f4f5;
@@ -253,7 +253,7 @@
   transform: translateY(-0.5px);
 }
 .visitBarPast {
-  background: #1b1c22;
+  background: rgba(255,255,255,.09);
   border-color: #25262d;
   text-decoration: line-through;
   text-decoration-color: #6b6d78;
@@ -330,7 +330,7 @@
 }
 
 .detailEmpty {
-  background: #050506;
+  background: #1d1b19;
   border: 1px dashed #34353d;
   border-radius: 10px;
   padding: 16px 18px;
@@ -350,14 +350,14 @@
   grid-template-columns: 70px 1fr auto;
   gap: 14px;
   padding: 14px 16px;
-  background: #050506;
+  background: #1d1b19;
   border: 1px solid transparent;
   border-radius: 10px;
   align-items: start;
   transition: background 0.15s, border-color 0.15s;
 }
 .visit:hover {
-  background: #0d0e11;
+  background: rgba(255,255,255,.045);
   border-color: #25262d;
 }
 .visitCompleted .visitClient,
@@ -426,7 +426,7 @@
 .teamChip {
   display: inline-flex;
   align-items: center;
-  background: #0d0e11;
+  background: rgba(255,255,255,.045);
   border: 1px solid #34353d;
   border-radius: 999px;
   padding: 3px 10px;
@@ -470,7 +470,7 @@
 }
 .popoverCard {
   position: relative;
-  background: #0d0e11;
+  background: rgba(255,255,255,.045);
   border-radius: 16px;
   width: 100%;
   max-width: 460px;
@@ -490,7 +490,7 @@
   width: 30px;
   height: 30px;
   border-radius: 50%;
-  background: #1b1c22;
+  background: rgba(255,255,255,.09);
   border: 0;
   color: #8b8d98;
   font-size: 20px;

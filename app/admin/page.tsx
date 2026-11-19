@@ -6,8 +6,8 @@ import ClientsTab from './_components/ClientsTab';
 import MoneyTab from './_components/MoneyTab';
 import SocialTab from './_components/SocialTab';
 import InsightsTab from './_components/InsightsTab';
-import HomeTab from './_components/HomeTab';
-import LeadsTab from './_components/LeadsTab';
+import OverviewTab from './_components/OverviewTab';
+import PipelineTab from './_components/PipelineTab';
 import ReviewsTab from './_components/ReviewsTab';
 import { getJobberMoney, getRecentlyCompletedVisits } from '../_lib/jobberClient';
 import { isAdmin } from '../_lib/adminAuth';
@@ -52,7 +52,8 @@ export default async function AdminDashboard({
 
   // Home — design locked 2026-09-28 (00_STATE/design-home-dark.html). Loads its
   // own numbers from /api/home so it can refresh without reloading the page.
-  const overviewPanel = <HomeTab />;
+  // Overview — redesign 2026-11-18 (00_STATE/admin-redesign-preview). Reads /api/home + /api/leads.
+  const overviewPanel = <OverviewTab />;
 
   // The Jobber tab merged into Schedule (calendar focus) + Money (invoices).
   // JobberStatusCard renders the full live dashboard when connected, OR the
@@ -71,7 +72,8 @@ export default async function AdminDashboard({
 
   // Leads — design locked 2026-09-28 (00_STATE/design-leads-dark.html). Loads
   // its own pipeline from /api/leads so stage changes save without a reload.
-  const leadsPanel = <LeadsTab />;
+  // Pipeline board — redesign 2026-11-18. Same /api/leads store; drag cards between stages.
+  const leadsPanel = <PipelineTab />;
 
   // Reviews — design locked 2026-09-28 (00_STATE/design-reviews-dark.html).
   const reviewsPanel = <ReviewsTab />;

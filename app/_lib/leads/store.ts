@@ -35,18 +35,86 @@ export async function listLeads(limit = 300): Promise<LeadRecord[]> {
   return (await mgetJSON<LeadRecord>(ids.map(KEY))).filter((l): l is LeadRecord => !!l);
 }
 
-export async function updateLead(id: string, patch: { stage?: string; ownerNotes?: string }, now = Date.now()): Promise<LeadRecord | null> {
+export type LeadPatch = {
+  stage?: string;
+  ownerNotes?: string;
+  quotedPrice?: number | null;
+  walkthroughAt?: number | null;
+  lostReason?: string;
+  archived?: boolean;
+  name?: string;
+  phone?: string;
+  email?: string;
+  service?: string;
+  city?: string;
+};
+
+const money = (v: unknown) => {
+  const n = Math.round(Number(v));
+  return Number.isFinite(n) && n > 0 && n < 1_000_000 ? n : undefined;
+};
+const text = (v: unknown, max = 200) => (typeof v === 'string' ? v.trim().slice(0, max) : undefined);
+
+export async function updateLead(id: string, patch: LeadPatch, now = Date.now()): Promise<LeadRecord | null> {
   const l = await getLead(id);
   if (!l) return null;
+  const log = (t: string) => {
+    l.history = [...(l.history ?? []), { at: now, text: t }].slice(-40);
+  };
   if (patch.stage && STAGES.includes(patch.stage as Stage) && patch.stage !== l.stage) {
     const stage = patch.stage as Stage;
     l.stage = stage;
     l.stageAt = now;
     if (stage !== 'new' && !l.contactedAt) l.contactedAt = now;
-    l.history = [...(l.history ?? []), { at: now, text: `Moved to ${STAGE_LABEL[stage]}` }].slice(-40);
+    if (stage !== 'lost') delete l.lostReason;
+    log(`Moved to ${STAGE_LABEL[stage]}`);
   }
   if (typeof patch.ownerNotes === 'string') l.ownerNotes = patch.ownerNotes.slice(0, 2000);
+  if (patch.quotedPrice === null) delete l.quotedPrice;
+  else if (patch.quotedPrice !== undefined) {
+    const p = money(patch.quotedPrice);
+    if (p && p !== l.quotedPrice) {
+      l.quotedPrice = p;
+      log(`Quoted $${p.toLocaleString('en-US')}`);
+    }
+  }
+  if (patch.walkthroughAt === null) delete l.walkthroughAt;
+  else if (patch.walkthroughAt !== undefined) {
+    const t = Number(patch.walkthroughAt);
+    if (Number.isFinite(t) && t > 1_600_000_000_000 && t < 4_000_000_000_000 && t !== l.walkthroughAt) {
+      l.walkthroughAt = t;
+      log('Walkthrough scheduled');
+    }
+  }
+  const reason = text(patch.lostReason, 120);
+  if (reason !== undefined) l.lostReason = reason || undefined;
+  if (typeof patch.archived === 'boolean' && patch.archived !== !!l.archived) {
+    l.archived = patch.archived;
+    log(patch.archived ? 'Archived' : 'Restored');
+  }
+  for (const k of ['name', 'phone', 'email', 'service', 'city'] as const) {
+    const v = text(patch[k], k === 'name' ? 80 : 120);
+    if (v !== undefined && v !== '') l[k] = v;
+  }
   return saveLead(l);
+}
+
+/** A lead typed in by hand (phone call, referral, someone at a job). Never emails anyone. */
+export async function createManualLead(
+  p: { name?: string; phone?: string; email?: string; service?: string; city?: string; source?: string; notes?: string; estimate?: string },
+  now = Date.now(),
+): Promise<LeadRecord | null> {
+  const name = text(p.name, 80);
+  if (!name) return null;
+  const id = `man_${now.toString(36)}${Math.random().toString(36).slice(2, 7)}`;
+  return saveLead({
+    id, kind: 'quote', at: now, origin: 'manual', name,
+    phone: text(p.phone, 40) || undefined, email: text(p.email, 120) || undefined,
+    service: text(p.service, 80) || undefined, city: text(p.city, 60) || undefined,
+    estimate: text(p.estimate, 40) || undefined, source: text(p.source, 40) || 'Other',
+    ownerNotes: text(p.notes, 2000) || undefined,
+    stage: 'new', stageAt: now, history: [{ at: now, text: 'Added by hand' }],
+  });
 }
 
 /* ------------------------------------------------------------ from forms */

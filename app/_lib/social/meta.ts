@@ -211,6 +211,26 @@ async function createTopContainer(ig: string, token: string, params: Record<stri
   }
 }
 
+/** True when a valid location id is set, so every feed post / reel / carousel gets the location tag. */
+export function locationConfigured(): boolean {
+  return /^\d{5,25}$/.test(LOCATION_ID);
+}
+
+/**
+ * Facebook posts get the same place tag (`place` = the location's Page id). Same rule as Instagram:
+ * if Facebook rejects it, post again without it, never block the post.
+ */
+async function fbPost<T>(path: string, token: string, params: Record<string, unknown>): Promise<T> {
+  if (!locationConfigured()) return graph<T>(path, { method: 'POST', token, params });
+  try {
+    return await graph<T>(path, { method: 'POST', token, params: { ...params, place: LOCATION_ID } });
+  } catch (e) {
+    if (!/place|location/i.test(String((e as Error)?.message))) throw e;
+    console.warn('[social] facebook place rejected, posting without it:', (e as Error).message);
+    return graph<T>(path, { method: 'POST', token, params });
+  }
+}
+
 function imgOrVideo(m: MediaItem) {
   return m.type === 'video' ? { video_url: m.url } : { image_url: m.url };
 }
@@ -319,11 +339,7 @@ export async function publishFacebook(p: SocialPost, conn: MetaConnection): Prom
 
   const video = p.media.find((m) => m.type === 'video');
   if (p.kind === 'REEL' || (video && p.media.length === 1)) {
-    const v = await graph<{ id: string }>(`${page}/videos`, {
-      method: 'POST',
-      token,
-      params: { file_url: (video ?? first).url, description: p.caption },
-    });
+    const v = await fbPost<{ id: string }>(`${page}/videos`, token, { file_url: (video ?? first).url, description: p.caption });
     postId = v.id;
     if (p.cover) await setFacebookVideoCover(v.id, p.cover.url, token);
   } else if (p.media.length > 1) {
@@ -333,18 +349,10 @@ export async function publishFacebook(p: SocialPost, conn: MetaConnection): Prom
       const ph = await graph<{ id: string }>(`${page}/photos`, { method: 'POST', token, params: { url: m.url, published: 'false' } });
       ids.push(ph.id);
     }
-    const post = await graph<{ id: string }>(`${page}/feed`, {
-      method: 'POST',
-      token,
-      params: { message: p.caption, attached_media: ids.map((id) => ({ media_fbid: id })) },
-    });
+    const post = await fbPost<{ id: string }>(`${page}/feed`, token, { message: p.caption, attached_media: ids.map((id) => ({ media_fbid: id })) });
     postId = post.id;
   } else {
-    const ph = await graph<{ id: string; post_id?: string }>(`${page}/photos`, {
-      method: 'POST',
-      token,
-      params: { url: first.url, caption: p.caption, published: 'true' },
-    });
+    const ph = await fbPost<{ id: string; post_id?: string }>(`${page}/photos`, token, { url: first.url, caption: p.caption, published: 'true' });
     postId = ph.post_id || ph.id;
   }
   const info = await graph<{ permalink_url?: string }>(postId, { token, params: { fields: 'permalink_url' } }).catch(() => ({ permalink_url: undefined }));

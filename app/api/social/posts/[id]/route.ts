@@ -87,8 +87,20 @@ export async function PATCH(req: Request, { params }: Params) {
     }
   }
 
-  const saved = await schedulePost(p); // re-queues (or cancels) the timer to match the status + time
-  return NextResponse.json({ post: saved });
+  try {
+    const saved = await schedulePost(p); // re-queues (or cancels) the timer to match the status + time
+    return NextResponse.json({ post: saved });
+  } catch (e) {
+    // The approval itself is kept (saved without a timer); the Social tab + daily cron retry the timer.
+    // Say exactly what the scheduler answered so it can be fixed, instead of a blank "error".
+    p.qstashMessageId = undefined;
+    addHistory(p, `Approved, but the posting timer could not be set: ${(e as Error).message}`);
+    await savePost(p);
+    return NextResponse.json(
+      { error: `Approved, but the posting timer didn't set: ${(e as Error).message}`, post: p },
+      { status: 502 },
+    );
+  }
 }
 
 export async function DELETE(_req: Request, { params }: Params) {

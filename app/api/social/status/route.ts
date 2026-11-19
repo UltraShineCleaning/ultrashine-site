@@ -3,7 +3,7 @@ import { kvConfigured } from '../../../_lib/kv';
 import { customerFromAddress } from '../../../_lib/reviewEmail';
 import { aiEnabled } from '../../../_lib/social/ai';
 import { denyUnlessAdmin } from '../../../_lib/social/guard';
-import { checkConnection, metaAppConfigured } from '../../../_lib/social/meta';
+import { checkConnection, locationConfigured, metaAppConfigured } from '../../../_lib/social/meta';
 import { qstashConfigured, siteBaseUrl } from '../../../_lib/social/qstash';
 import { clearMeta, getMeta } from '../../../_lib/social/store';
 
@@ -38,6 +38,7 @@ export async function GET() {
     health,
     callbackBase: base,
     baseWarning,
+    location: locationConfigured(),
     customerEmail: !!customerFromAddress(),
     ai: aiEnabled(),
   });

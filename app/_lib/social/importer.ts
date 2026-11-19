@@ -44,8 +44,8 @@ const PLANS: { name: string; items: PlanItem[]; enabled: boolean }[] = [
   { name: '2026-10', items: oct2026 as PlanItem[], enabled: false },
   { name: '2026-10-reels', items: oct2026Reels as PlanItem[], enabled: false },
   // Nov 19 → Dec 2: made in a Claude session (owner, 2026-11-18: "load everything into the dashboard").
-  // Every item lands as a DRAFT on its day + time: nothing posts until Tiago or Francine approves it
-  // (one by one, or "Approve all"). Feed posts go to Instagram + Facebook; Stories to Instagram.
+  // Loaded as DRAFTS on their day + time; Tiago approves in Social (one by one or "Approve all") and
+  // each then posts by itself. Feed posts go to Instagram + Facebook; Stories to Instagram.
   { name: '2026-11', items: nov2026 as PlanItem[], enabled: true },
 ];
 
@@ -116,7 +116,7 @@ export async function importPlannedPosts(): Promise<ImportResult> {
           history: [],
         };
         if (it.status === 'scheduled') {
-          post.approvedBy = 'Tiago (approved the month plan)';
+          post.approvedBy = 'Tiago (approved the plan in chat)';
           post.approvedAt = now;
           addHistory(post, `Loaded from the ${plan.name} plan and scheduled${it.note ? ` · ${it.note}` : ''}`);
         } else {

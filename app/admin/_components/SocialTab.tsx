@@ -34,6 +34,7 @@ type Status = {
   health?: { ok: boolean; instagramOk: boolean | null; problem: string | null } | null;
   callbackBase?: string;
   baseWarning?: string | null;
+  location?: boolean;
   customerEmail: boolean;
   ai: boolean;
 };
@@ -519,6 +520,7 @@ function Overview(props: {
         [status.metaApp, 'Meta app', 'META_APP_ID + META_APP_SECRET in Vercel'],
         [!!status.connected, 'Instagram + Facebook connected', 'Tap Connect at the top'],
         [status.webhook, 'DMs + comments feed (webhook)', 'META_WEBHOOK_VERIFY_TOKEN in Vercel + webhook added in the Meta app'],
+        [!!status.location, 'Location tag on every post, reel + carousel', 'IG_LOCATION_ID in Vercel (the Boca Raton place id). Stories can’t carry a location through Meta’s API'],
         [status.customerEmail, 'Emails to customers (review requests)', 'Verify your domain in Resend + set QUOTE_FROM_EMAIL'],
       ]
     : [];

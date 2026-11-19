@@ -24,7 +24,13 @@ export function qstashConfigured(): boolean {
 }
 
 export function siteBaseUrl(): string {
-  if (process.env.SOCIAL_BASE_URL) return process.env.SOCIAL_BASE_URL.replace(/\/$/, '');
+  // Forgiving about how the value was typed in Vercel: spaces, missing https://, trailing slash,
+  // or the old www host (it 308-redirects, and QStash / Meta don't follow redirects).
+  const raw = (process.env.SOCIAL_BASE_URL || '').trim().replace(/\/+$/, '');
+  if (raw) {
+    const withProto = /^https?:\/\//i.test(raw) ? raw : `https://${raw}`;
+    return withProto.replace(/^(https?:\/\/)www\.ultrashinecleaningfl\.com/i, '$1ultrashinecleaningfl.com');
+  }
   if (process.env.VERCEL_PROJECT_PRODUCTION_URL) return `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`;
   if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
   return 'http://localhost:3000';

@@ -40,13 +40,15 @@ type PlanItem = {
 // October 2026 is being posted BY HAND (owner, 2026-10-13: "so I can do this batch manually"),
 // so its plans are switched off here: nothing new gets created and nothing can double-post.
 // To use a plan again, set enabled: true.
-const PLANS: { name: string; items: PlanItem[]; enabled: boolean }[] = [
+const PLANS: { name: string; items: PlanItem[]; enabled: boolean; approvedBy?: string }[] = [
   { name: '2026-10', items: oct2026 as PlanItem[], enabled: false },
   { name: '2026-10-reels', items: oct2026Reels as PlanItem[], enabled: false },
   // Nov 19 → Dec 2: made in a Claude session (owner, 2026-11-18: "load everything into the dashboard").
-  // Loaded as DRAFTS on their day + time; Tiago approves in Social (one by one or "Approve all") and
-  // each then posts by itself. Feed posts go to Instagram + Facebook; Stories to Instagram.
-  { name: '2026-11', items: nov2026 as PlanItem[], enabled: true },
+  // It first loaded as drafts; Tiago then approved the WHOLE batch in chat (2026-11-18, 11pm: "I already
+  // approved them all, so go ahead and approve them and post them on schedule"). approvedBy makes the
+  // importer approve this plan's still-draft, future posts ONCE; anything moved back to draft after that
+  // stays a draft. Feed posts go to Instagram + Facebook; Stories to Instagram.
+  { name: '2026-11', items: nov2026 as PlanItem[], enabled: true, approvedBy: 'Tiago (approved the whole batch in chat, Nov 18)' },
 ];
 
 const doneKey = (id: string) => `social:import:${id}`;
@@ -137,6 +139,27 @@ export async function importPlannedPosts(): Promise<ImportResult> {
     }
     const allDone = (await Promise.all(plan.items.map((it) => getJSON<string>(doneKey(it.id))))).every(Boolean);
     if (allDone) await setJSON(planKey(plan.name), '1', 60 * 60 * 24 * 120);
+  }
+  // Owner approved a whole plan in chat → approve its still-draft future posts, once per plan.
+  for (const plan of PLANS) {
+    if (!plan.enabled || !plan.approvedBy) continue;
+    const key = planKey(plan.name) + ':approved';
+    if (await getJSON<string>(key)) continue;
+    for (const it of plan.items) {
+      try {
+        const p = await getPost(it.id);
+        if (!p || p.status !== 'draft' || !p.scheduledAt || p.scheduledAt < Date.now() + 60_000) continue;
+        p.status = 'scheduled';
+        p.approvedBy = plan.approvedBy;
+        p.approvedAt = Date.now();
+        p.qstashMessageId = undefined;
+        addHistory(p, `Approved by ${plan.approvedBy}`);
+        await savePost(p); // timer booked just below (rebookUpcoming) or on a later visit / the daily cron
+      } catch (e) {
+        if (res.errors.length < 8) res.errors.push(`approve ${it.id}: ${(e as Error).message}`);
+      }
+    }
+    await setJSON(key, '1', 60 * 60 * 24 * 120); // once: later "move to draft" choices are respected
   }
   res.rebooked = await rebookUpcoming(res.errors);
   await setJSON('social:import:last', res, 60 * 60 * 24 * 30).catch(() => undefined);

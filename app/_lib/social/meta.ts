@@ -61,7 +61,8 @@ export function friendlyError(e: unknown): string {
   if (/aspect ratio/i.test(msg)) return "Meta rejected the shape of the photo/video. Instagram accepts 4:5 to 1.91:1 for posts and 9:16 for reels and stories.";
   if (/image format|jpeg|JPG/i.test(msg)) return 'Instagram only accepts JPEG photos. Re-upload it as a JPG.';
   if (/duration|too long|too short/i.test(msg)) return 'Meta rejected the video length.';
-  return msg.length > 220 ? msg.slice(0, 220) + '…' : msg;
+  const short = msg.length > 220 ? msg.slice(0, 220) + '…' : msg;
+  return err?.code ? `${short} (Meta code ${err.code})` : short;
 }
 
 type GraphInit = { method?: 'GET' | 'POST' | 'DELETE'; params?: Record<string, unknown>; token: string };
@@ -205,10 +206,35 @@ async function createTopContainer(ig: string, token: string, params: Record<stri
   try {
     return await graph<{ id: string }>(`${ig}/media`, { method: 'POST', token, params: { ...params, location_id: LOCATION_ID } });
   } catch (e) {
-    if (!/location/i.test(String((e as Error)?.message))) throw e;
-    console.warn('[social] location_id rejected, posting without it:', (e as Error).message);
+    // Meta doesn't always say "location" when it rejects the id (often just "Invalid parameter"),
+    // so ANY failure with the tag gets one more try without it. If that also fails, its error is the real one.
+    console.warn('[social] post with location_id failed, trying without it:', (e as Error).message);
     return graph<{ id: string }>(`${ig}/media`, { method: 'POST', token, params });
   }
+}
+
+/**
+ * Instagram publishes a container only once it is FINISHED. Photos are usually ready at once, but not
+ * always (carousels especially): publishing too early fails with "Media ID is not available" (9007).
+ * So: wait for the container, then publish, retrying a few times if Meta still says it isn't ready.
+ */
+async function publishWhenReady(ig: string, containerId: string, token: string): Promise<{ id: string }> {
+  await waitForContainer(containerId, token, 90_000).catch((e) => {
+    if (/couldn't process/i.test(String((e as Error)?.message))) throw e;
+  });
+  let last: unknown;
+  for (let i = 0; i < 4; i++) {
+    try {
+      return await graph<{ id: string }>(`${ig}/media_publish`, { method: 'POST', token, params: { creation_id: containerId } });
+    } catch (e) {
+      last = e;
+      const m = String((e as Error)?.message);
+      const notReady = (e as MetaError)?.code === 9007 || /not (yet )?(ready|available)|try again/i.test(m);
+      if (!notReady) throw e;
+      await sleep(6_000);
+    }
+  }
+  throw last;
 }
 
 /** True when a valid location id is set, so every feed post / reel / carousel gets the location tag. */
@@ -280,7 +306,7 @@ export async function publishInstagram(p: SocialPost, conn: MetaConnection): Pro
     if (first.type === 'video') await waitForContainer(containerId, token);
   }
 
-  const pub = await graph<{ id: string }>(`${ig}/media_publish`, { method: 'POST', token, params: { creation_id: containerId } });
+  const pub = await publishWhenReady(ig, containerId, token);
   const info = await graph<{ permalink?: string }>(pub.id, { token, params: { fields: 'permalink' } }).catch(() => ({ permalink: undefined }));
   return { ok: true, id: pub.id, permalink: info.permalink, at: Date.now() };
 }
